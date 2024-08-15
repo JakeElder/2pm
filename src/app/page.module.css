@@ -1,4 +1,18 @@
 .main {
   display: flex;
   align-items: center;
+  justify-content: center;
+  height: 100dvh;
+  background-image: url("/universe.png");
+  background-size: cover;
+  background-position: center;
+}
+
+.module {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+  min-height: 70dvh;
+  width: 80%;
 }
