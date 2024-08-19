@@ -1,5 +1,5 @@
 import React from "react";
-import Image, { StaticImageData } from "next/image";
+import Image from "next/image";
 import css from "./Terminal.module.css";
 
 /*
@@ -43,14 +43,22 @@ export const Main = ({ children }: MainProps) => {
  */
 
 interface AvatarProps {
-  image: StaticImageData;
+  src: string;
+  width: number;
+  height: number;
   alt: string;
 }
 
-export const Avatar = ({ alt, image }: AvatarProps) => {
+export const Avatar = ({ src, width, height, alt }: AvatarProps) => {
   return (
     <div className={css["avatar"]}>
-      <Image {...image} alt={alt} style={{ width: 64, height: 64 }} />
+      <Image
+        src={src}
+        width={width}
+        height={height}
+        alt={alt}
+        style={{ width: 64, height: 64 }}
+      />
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import * as Terminal from "./Terminal";
-import ivan from "../../../public/ivan.png";
+import ivan from "../../../public/images/ivan.png";
 
 const meta: Meta<typeof Terminal.Root> = {
   title: "Components/Terminal",
