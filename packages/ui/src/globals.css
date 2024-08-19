@@ -1,0 +1,18 @@
+:root {
+  /* Font Families */
+  --font-family-0: "OCR-B";
+
+  /* Borders */
+  --border-0: 1px solid rgba(255, 255, 255, 0.7);
+
+  /* Backgrounds */
+  --background-0: rgba(255, 255, 255, 0.05);
+
+  /* Text Shadows */
+  --text-shadow-0: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+@font-face {
+  font-family: "OCR-B";
+  src: url("/fonts/ocr-b.woff2") format("woff2");
+}

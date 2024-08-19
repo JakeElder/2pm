@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import "./globals.css";
+import "@2pm/ui/globals.css";
 
 export const metadata: Metadata = {
   title: "2PM",

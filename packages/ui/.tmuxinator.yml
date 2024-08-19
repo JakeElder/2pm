@@ -1,0 +1,8 @@
+name: "UI"
+tmux_options: -L 2pm
+attach: false
+
+windows:
+  - Vim: vim
+  - Terminal:
+  - Server: bun dev
