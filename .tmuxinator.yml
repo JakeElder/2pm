@@ -1,0 +1,7 @@
+name: "Workspace"
+attach: false
+tmux_options: -L 2pm
+
+windows:
+  - Vim: vim
+  - Terminal:

@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+packages=(
+  .
+  apps/*
+  packages/*
+)
+
+for i in "${packages[@]}"
+do
+  if test -f "$i/.tmuxinator.yml"; then
+    echo "Loading $i/.tmuxinator.yml"
+    $(cd "$i" && tmuxinator start)
+  fi
+done
+
+tmux -L 2pm attach
