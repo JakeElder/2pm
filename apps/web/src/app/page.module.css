@@ -1,9 +1,14 @@
 .main {
+  height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100dvh;
   background-image: url("/universe.png");
   background-size: cover;
   background-position: center;
+}
+
+.module {
+  height: 70dvh;
+  width: 70dvw;
 }

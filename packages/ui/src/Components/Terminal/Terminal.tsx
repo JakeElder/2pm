@@ -78,3 +78,37 @@ export const Header = ({ name }: HeaderProps) => {
     </header>
   );
 };
+
+/*
+ * Body
+ */
+
+interface BodyProps {
+  children: React.ReactNode;
+}
+
+export const Body = ({ children }: BodyProps) => {
+  return <div className={css["body"]}>{children}</div>;
+};
+
+/*
+ * Narrative
+ */
+
+interface NarrativeProps {
+  children?: React.ReactNode;
+}
+
+export const Narrative = ({ children }: NarrativeProps) => {
+  return <div className={css["narrative"]}>{children}</div>;
+};
+
+/*
+ * Footer
+ */
+
+interface FooterProps {}
+
+export const Footer = (props: FooterProps) => {
+  return <div className={css["footer"]}></div>;
+};
