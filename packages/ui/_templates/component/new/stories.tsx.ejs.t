@@ -1,5 +1,5 @@
 ---
-to: src/<%= type %>s/<%= name %>/<%= name %>.stories.tsx
+to: <%= dir %>/<%= name %>/<%= name %>.stories.tsx
 ---
 import type { Meta, StoryObj } from "@storybook/react";
 import <%= name %> from "./<%= name %>";

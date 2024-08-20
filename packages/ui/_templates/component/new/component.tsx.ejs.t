@@ -1,5 +1,5 @@
 ---
-to: src/<%= type %>s/<%= name %>/<%= name %>.tsx
+to: <%= dir %>/<%= name %>/<%= name %>.tsx
 ---
 import React from "react";
 import css from "./<%= name %>.module.css"

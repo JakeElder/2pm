@@ -1,5 +1,5 @@
 ---
-to: src/<%= type %>s/<%= name %>/package.json
+to: <%= dir %>/<%= name %>/package.json
 ---
 {
   "main": "./<%= name %>"
