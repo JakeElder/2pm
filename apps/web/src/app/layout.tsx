@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import "reset-css";
 import "@2pm/ui/globals.css";
 
 export const metadata: Metadata = {
