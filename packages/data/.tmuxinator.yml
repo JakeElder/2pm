@@ -1,0 +1,8 @@
+name: "Data"
+tmux_options: -L 2pm
+attach: false
+
+windows:
+  - Vim: vim
+  - Terminal:
+  - Studio: bun prisma studio --port 3002 --browser none

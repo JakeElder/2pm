@@ -1,6 +1,6 @@
 {
   "name": "@2pm/ui",
-  "version": "0.1.0",
+  "type": "module",
   "private": true,
   "scripts": {
     "dev": "storybook dev -p 3001 --no-open",
@@ -13,6 +13,7 @@
     "./images/*": "./public/images/*"
   },
   "dependencies": {
+    "@2pm/data": "workspace:*",
     "hygen": "^6.2.11",
     "next": "14.2.5",
     "react": "^18",

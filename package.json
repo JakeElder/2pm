@@ -1,6 +1,5 @@
 {
-  "name": "2pm",
-  "private": true,
+  "name": "@2pm/workspace",
   "workspaces": [
     "apps/*",
     "packages/*"

@@ -1,7 +1,5 @@
 {
-  "name": "2pm",
-  "version": "0.1.0",
-  "private": true,
+  "name": "@2pm/web",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -10,6 +8,7 @@
   },
   "dependencies": {
     "@2pm/ui": "workspace:*",
+    "@2pm/data": "workspace:*",
     "next": "14.2.5",
     "react": "^18",
     "react-dom": "^18",
