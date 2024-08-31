@@ -43,7 +43,7 @@ export const Default: Story = {
           <Terminal.Body>
             <Terminal.Narrative></Terminal.Narrative>
           </Terminal.Body>
-          <Terminal.Footer />
+          <Terminal.Footer>{null}</Terminal.Footer>
         </Terminal.Main>
       </Terminal.Root>
     );

@@ -107,8 +107,10 @@ export const Narrative = ({ children }: NarrativeProps) => {
  * Footer
  */
 
-interface FooterProps {}
+interface FooterProps {
+  children: React.ReactNode;
+}
 
-export const Footer = (props: FooterProps) => {
-  return <div className={css["footer"]}></div>;
+export const Footer = ({ children }: FooterProps) => {
+  return <div className={css["footer"]}>{children}</div>;
 };
