@@ -1,0 +1,23 @@
+.root {
+  --narrow-side-pad: 14px;
+  --wide-side-pad: 40px;
+  height: 100%;
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.plot-point {
+  margin-bottom: 10px;
+}
+
+.first-person-message {
+  padding-left: var(--narrow-side-pad);
+  padding-right: var(--wide-side-pad);
+}
+
+.third-person-message {
+  padding-right: var(--narrow-side-pad);
+  padding-left: var(--wide-side-pad);
+  display: flex;
+  justify-content: flex-end;
+}
