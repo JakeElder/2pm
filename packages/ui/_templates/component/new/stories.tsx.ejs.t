@@ -6,13 +6,13 @@ import <%= name %> from "./<%= name %>";
 
 const meta: Meta<typeof <%= name %>> = {
   title: "<%= type %>s/<%= name %>",
-  component: <%= name %>
+  component: <%= name %>,
 };
 
 type Story = StoryObj<typeof <%= name %>>;
 
 export const Default: Story = {
-  args: {}
+  args: {},
 };
 
 export default meta;
