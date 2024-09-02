@@ -68,13 +68,13 @@ export const Avatar = ({ src, width, height, alt }: AvatarProps) => {
  */
 
 interface HeaderProps {
-  name: string;
+  handle: string;
 }
 
-export const Header = ({ name }: HeaderProps) => {
+export const Header = ({ handle }: HeaderProps) => {
   return (
     <header className={css["header"]}>
-      <span className={css["name"]}>{name}</span>
+      <span className={css["handle"]}>@{handle}</span>
     </header>
   );
 };

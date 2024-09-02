@@ -41,13 +41,12 @@
   border-top: var(--border-0);
 }
 
-.name {
+.handle {
   font-family: var(--font-family-0);
   font-size: 14px;
   color: #fff;
   letter-spacing: -1.2px;
   text-shadow: var(--text-shadow-0);
-  text-transform: uppercase;
   margin-left: calc(var(--avatar-size) + var(--avatar-margin));
 }
 

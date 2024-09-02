@@ -32,17 +32,17 @@ const meta: Meta<typeof Terminal.Root> = {
 
 type Story = StoryObj<typeof Terminal.Root>;
 
+const handle = "ivan";
+
 export const Default: Story = {
   render() {
-    const name = "Ivan";
-
     return (
       <Terminal.Root>
         <Terminal.Foreground>
-          <Terminal.Avatar {...ivan} alt={name} />
+          <Terminal.Avatar {...ivan} alt={handle} />
         </Terminal.Foreground>
         <Terminal.Main>
-          <Terminal.Header name={name} />
+          <Terminal.Header handle={handle} />
           <Terminal.Body>
             <Terminal.Narrative></Terminal.Narrative>
           </Terminal.Body>
@@ -55,15 +55,13 @@ export const Default: Story = {
 
 export const Conversation: Story = {
   render() {
-    const name = "Ivan";
-
     return (
       <Terminal.Root>
         <Terminal.Foreground>
-          <Terminal.Avatar {...ivan} alt={name} />
+          <Terminal.Avatar {...ivan} alt={handle} />
         </Terminal.Foreground>
         <Terminal.Main>
-          <Terminal.Header name={name} />
+          <Terminal.Header handle={handle} />
           <Terminal.Body>
             <Terminal.Narrative>
               <Narrative.Root>
