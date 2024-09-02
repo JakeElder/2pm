@@ -1,6 +1,5 @@
 {
   "name": "@2pm/ui",
-  "type": "module",
   "private": true,
   "scripts": {
     "dev": "storybook dev -p 3001 --no-open",
@@ -14,10 +13,13 @@
   },
   "dependencies": {
     "@2pm/data": "workspace:*",
+    "classnames": "^2.5.1",
+    "email-regex": "^5.0.0",
     "hygen": "^6.2.11",
     "next": "14.2.5",
     "react": "^18",
     "react-dom": "^18",
+    "react-markdown": "^9.0.1",
     "reset-css": "^5.0.2"
   },
   "devDependencies": {
