@@ -1,6 +1,6 @@
 import React from "react";
-import css from "./PromptSubmitButton.module.css";
 import $css from "../../Shared.module.css";
+import css from "./PromptSubmitButton.module.css";
 import classNames from "classnames";
 
 interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {}

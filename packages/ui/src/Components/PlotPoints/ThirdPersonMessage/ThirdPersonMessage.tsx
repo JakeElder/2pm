@@ -1,15 +1,15 @@
 import React from "react";
-import css from "./FirstPersonMessage.module.css";
-import $css from "../../Shared.module.css";
+import css from "./ThirdPersonMessage.module.css";
+import $css from "../../../Shared.module.css";
+import { processMessageBody } from "../../../utils";
+import Markdown from "../../Markdown";
 import classNames from "classnames";
-import { processMessageBody } from "@/utils";
-import Markdown from "../Markdown";
 
 interface Props {
   children: string;
 }
 
-const FirstPersonMessage = ({ children }: Props) => {
+const ThirdPersonMessage = ({ children }: Props) => {
   const processed = processMessageBody(children);
   return (
     <div className={css["root"]}>
@@ -20,4 +20,4 @@ const FirstPersonMessage = ({ children }: Props) => {
   );
 };
 
-export default FirstPersonMessage;
+export default ThirdPersonMessage;
