@@ -1,0 +1,11 @@
+.root {
+  height: 100%;
+}
+
+.button {
+  height: 100%;
+  padding: 0 10px;
+  border: var(--border-0);
+  border-radius: var(--border-radius-1);
+  color: #fff;
+}

@@ -4,6 +4,8 @@ import * as Narrative from "../Narrative";
 import { Background } from "../Background";
 import FirstPersonMessage from "../FirstPersonMessage";
 import ThirdPersonMessage from "../ThirdPersonMessage";
+import PromptSubmitButton from "../PromptSubmitButton";
+import PromptInput from "../PromptInput";
 import ivan from "../../../public/images/ivan.png";
 import universe from "../../../public/images/universe.png";
 
@@ -78,7 +80,16 @@ export const Conversation: Story = {
               </Narrative.Root>
             </Terminal.Narrative>
           </Terminal.Body>
-          <Terminal.Footer>{null}</Terminal.Footer>
+          <Terminal.Footer>
+            <Terminal.Prompt>
+              <Terminal.Input>
+                <PromptInput />
+              </Terminal.Input>
+              <Terminal.SubmitButton>
+                <PromptSubmitButton />
+              </Terminal.SubmitButton>
+            </Terminal.Prompt>
+          </Terminal.Footer>
         </Terminal.Main>
       </Terminal.Root>
     );

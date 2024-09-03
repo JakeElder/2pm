@@ -64,3 +64,15 @@
   align-items: center;
   justify-content: center;
 }
+
+.prompt {
+  box-sizing: border-box;
+  height: 100%;
+  display: flex;
+  padding: 12px;
+}
+
+.input {
+  flex: 1;
+  padding-right: 12px;
+}

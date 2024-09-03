@@ -108,9 +108,45 @@ export const Narrative = ({ children }: NarrativeProps) => {
  */
 
 interface FooterProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 export const Footer = ({ children }: FooterProps) => {
   return <div className={css["footer"]}>{children}</div>;
+};
+
+/*
+ * Prompt
+ */
+
+interface PromptProps {
+  children: React.ReactNode;
+}
+
+export const Prompt = ({ children }: PromptProps) => {
+  return <div className={css["prompt"]}>{children}</div>;
+};
+
+/*
+ * Input
+ */
+
+interface InputProps {
+  children: React.ReactNode;
+}
+
+export const Input = ({ children }: InputProps) => {
+  return <div className={css["input"]}>{children}</div>;
+};
+
+/*
+ * SubmitButton
+ */
+
+interface SubmitButtonProps {
+  children: React.ReactNode;
+}
+
+export const SubmitButton = ({ children }: SubmitButtonProps) => {
+  return <div className={css["submit-button"]}>{children}</div>;
 };
