@@ -1,7 +1,14 @@
 {
   "name": "@2pm/workspace",
+  "scripts": {
+    "gen": "hygen module new"
+  },
   "workspaces": [
     "apps/*",
     "packages/*"
-  ]
+  ],
+  "devDependencies": {
+    "hygen": "^6.2.11",
+    "slug": "^9.1.0"
+  }
 }
