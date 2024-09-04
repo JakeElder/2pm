@@ -1,18 +1,11 @@
 import css from "./page.module.css";
 import ivan from "@2pm/ui/images/ivan.png";
 import universe from "@2pm/ui/images/universe.png";
-import {
-  Background,
-  Terminal,
-  Narrative,
-  PromptInput,
-  PromptSubmitButton,
-} from "@2pm/ui";
+import { Background, Terminal, Narrative } from "@2pm/ui";
 import { FirstPersonMessage, ThirdPersonMessage } from "@2pm/ui/plot-points";
-import prisma from "@/db";
+import TerminalPromptContainer from "@/components/server/TerminalPromptContainer";
 
 export default async function Home() {
-  const channels = await prisma.channel.findMany();
   const handle = "ivan";
 
   return (
@@ -42,14 +35,7 @@ export default async function Home() {
                 </Terminal.Narrative>
               </Terminal.Body>
               <Terminal.Footer>
-                <Terminal.Prompt>
-                  <Terminal.Input>
-                    <PromptInput />
-                  </Terminal.Input>
-                  <Terminal.SubmitButton>
-                    <PromptSubmitButton />
-                  </Terminal.SubmitButton>
-                </Terminal.Prompt>
+                <TerminalPromptContainer />
               </Terminal.Footer>
             </Terminal.Main>
           </Terminal.Root>
