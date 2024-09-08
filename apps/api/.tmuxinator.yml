@@ -5,3 +5,5 @@ attach: false
 windows:
   - Vim: vim
   - Terminal:
+  - Server: bun serve
+  - Watch: bun watch:all

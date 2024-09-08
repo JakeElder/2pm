@@ -5,4 +5,4 @@ attach: false
 windows:
   - Vim: vim
   - Terminal:
-  - Studio: bun prisma studio --port 3002 --browser none
+  - Studio: bun studio

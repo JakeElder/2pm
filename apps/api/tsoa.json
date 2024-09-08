@@ -1,0 +1,15 @@
+{
+  "entryFile": "src/server.ts",
+  "noImplicitAdditionalProperties": "throw-on-extras",
+  "controllerPathGlobs": ["src/controllers/*.ts"],
+  "spec": {
+    "outputDirectory": "dist",
+    "specVersion": 3,
+    "basePath": "/",
+    "specFileBaseName": "openai"
+  },
+  "routes": {
+    "routesDir": "src/routes",
+    "middleware": "koa"
+  }
+}

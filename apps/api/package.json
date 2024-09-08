@@ -1,8 +1,31 @@
 {
   "name": "@2pm/api",
   "main": "src/index.ts",
+  "version": "1.0.0",
+  "exports": {
+    ".": "./src/client"
+  },
+  "scripts": {
+    "generate:spec": "tsoa spec",
+    "generate:routes": "tsoa routes",
+    "generate:spec-and-routes": "concurrently \"bun generate:spec\" \"bun generate:routes\"",
+    "watch:controllers": "nodemon --watch src/controllers --ext ts --exec bun generate:spec-and-routes",
+    "watch:all": "bun watch:controllers"
+  },
+  "dependencies": {
+    "@2pm/data": "workspace:*",
+    "@koa/router": "^13.0.0",
+    "ejs": "^3.1.10",
+    "koa": "^2.15.3"
+  },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "@types/ejs": "^3.1.5",
+    "@types/koa": "^2.15.0",
+    "@types/koa__router": "^12.0.4",
+    "concurrently": "^8.2.2",
+    "nodemon": "^3.1.4",
+    "tsoa": "^6.4.0"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"

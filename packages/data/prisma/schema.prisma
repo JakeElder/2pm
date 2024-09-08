@@ -13,6 +13,24 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum ActorType {
+  HUMAN
+  AI
+}
+
+model Actor {
+  id   Int       @id @default(autoincrement())
+  tag  String    @unique
+  type ActorType
+
+  @@map("actors")
+}
+
+model Message {
+  id      Int    @id @default(autoincrement())
+  content String
+}
+
 model Channel {
   id          Int    @id @default(autoincrement())
   name        String

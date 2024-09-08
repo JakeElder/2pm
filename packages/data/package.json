@@ -2,14 +2,20 @@
   "name": "@2pm/data",
   "module": "index.ts",
   "type": "module",
+  "scripts": {
+    "studio": "prisma studio --port 3002 --browser none",
+    "diff": "prisma migrate diff --from-url $DATABASE_URL --to-schema-datamodel prisma/schema.prisma",
+    "migrate": "prisma migrate dev",
+    "gen": "prisma generate"
+  },
   "devDependencies": {
+    "@prisma/client": "^5.19.1",
     "@types/bun": "latest"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "@prisma/client": "^5.19.0",
-    "prisma": "^5.19.0"
+    "prisma": "^5.19.1"
   }
 }
