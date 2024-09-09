@@ -1,8 +1,8 @@
-name: 'API'
+name: "API Docs"
 tmux_options: -L 2pm
 attach: false
 
 windows:
   - Vim: vim
   - Terminal:
-  - Server: bun start:dev
+  - Server: bun serve

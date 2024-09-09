@@ -1,0 +1,29 @@
+{
+  "name": "@2pm/api",
+  "main": "src/index.ts",
+  "version": "1.0.0",
+  "exports": {
+    ".": "./src/client"
+  },
+  "scripts": {
+    "start:dev": "bun --hot src/server.ts"
+  },
+  "dependencies": {
+    "@2pm/data": "workspace:*",
+    "@koa/router": "^13.0.0",
+    "ejs": "^3.1.10",
+    "koa": "^2.15.3"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/ejs": "^3.1.5",
+    "@types/koa": "^2.15.0",
+    "@types/koa__router": "^12.0.4",
+    "concurrently": "^8.2.2",
+    "nodemon": "^3.1.4",
+    "tsoa": "^6.4.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
