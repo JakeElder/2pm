@@ -7,18 +7,14 @@ const app = new Koa();
 const router = new Router();
 
 router.get("/(.*)", async (ctx) => {
-  const params = {
-    apiDescriptionUrl: "http://localhost:3003/openapi.json",
-    basePath: "/",
-    hideSchemas: true,
-  };
+  const req = await fetch("http://localhost:3003/openapi.json");
+  const apiDescriptionDocument = await req.text();
 
   const body = await ejs.renderFile(
     path.join(__dirname, "views/docs.html.ejs"),
-    params,
+    { apiDescriptionDocument },
   );
 
-  ctx.type = "html";
   ctx.body = body;
 });
 

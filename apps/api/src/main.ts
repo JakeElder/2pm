@@ -6,8 +6,6 @@ import { Logger } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
-  app.enableCors();
   const specPath = resolve(__dirname, '../../generated/openapi.json');
 
   app.getHttpAdapter().get('/openapi.json', async (_, res) => {
