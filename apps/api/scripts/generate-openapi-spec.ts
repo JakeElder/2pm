@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { mkdir } from 'node:fs/promises';
 import { AppModule } from '../src/app.module';
+import { Logger } from '@nestjs/common';
 
 async function generateOpenApiSpec() {
   const app = await NestFactory.create(AppModule);
@@ -9,21 +9,19 @@ async function generateOpenApiSpec() {
   const config = new DocumentBuilder()
     .setTitle('2PM API')
     .setDescription('2PM API Documentation')
+    .addServer('http://localhost:3003')
     .setVersion('1.0.0')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
 
-  const dir = Bun.resolveSync(__dirname, '../generated');
-  const file = `${dir}/openapi.json`;
-
-  await mkdir(dir, { recursive: true });
+  const file = `./generated/openapi.json`;
   await Bun.write(file, JSON.stringify(document, null, 2));
 
-  console.log('OpenAPI spec generated');
+  Logger.log('✅ OpenAPI spec generated');
   await app.close();
 }
 
-generateOpenApiSpec().catch((err) =>
-  console.error('Error generating OpenAPI spec:', err),
-);
+generateOpenApiSpec().catch((err) => {
+  Logger.error('Error generating OpenAPI spec', err.stack);
+});
