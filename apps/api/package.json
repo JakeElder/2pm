@@ -22,7 +22,8 @@
     "generate:openapi-spec": "bun scripts/generate-openapi-spec.ts"
   },
   "dependencies": {
-    "@2pm/data": "workspace:*",
+    "@2pm/schemas": "workspace:*",
+    "@knaadh/nestjs-drizzle-postgres": "^1.0.0",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.2.3",
     "@nestjs/core": "^10.0.0",

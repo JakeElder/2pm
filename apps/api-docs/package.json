@@ -9,7 +9,7 @@
     "start:dev": "bun --hot src/server.ts"
   },
   "dependencies": {
-    "@2pm/data": "workspace:*",
+    "@2pm/schemas": "workspace:*",
     "@koa/router": "^13.0.0",
     "ejs": "^3.1.10",
     "koa": "^2.15.3"

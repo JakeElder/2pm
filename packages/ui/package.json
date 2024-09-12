@@ -13,7 +13,7 @@
     "./images/*": "./public/images/*"
   },
   "dependencies": {
-    "@2pm/data": "workspace:*",
+    "@2pm/schemas": "workspace:*",
     "classnames": "^2.5.1",
     "email-regex": "^5.0.0",
     "next": "14.2.5",

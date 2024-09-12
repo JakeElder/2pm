@@ -5,4 +5,4 @@ attach: false
 windows:
   - Vim: vim
   - Terminal:
-  - Server: bun serve
+  - Server: bun start:dev
