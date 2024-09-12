@@ -14,8 +14,8 @@ import { DrizzlePostgresModule } from '@knaadh/nestjs-drizzle-postgres';
     ConfigModule.forRoot(),
     DrizzlePostgresModule.register({
       tag: 'DB',
-      postgres: { url: process.env.DATABASE_URL },
-      config: { schema: { ...schema } },
+      postgres: { url: process.env.DATABASE_URL! },
+      config: { schema },
     }),
   ],
   controllers: [AppController, SpecController],

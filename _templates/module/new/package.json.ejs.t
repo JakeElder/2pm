@@ -9,6 +9,6 @@ sh: cd <%= dir %>/<%= id %> && bun install
     "@types/bun": "latest"
   },
   "peerDependencies": {
-    "typescript": "^5.0.0"
+    "typescript": "^5.1.3"
   },
 }
