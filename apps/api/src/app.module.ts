@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import * as schema from '@2pm/schemas/drizzle';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ActorsModule } from './actors/actors.module';
+import { ActorsModule } from './users/users.module';
 import { ConfigModule } from '@nestjs/config';
 import { SpecController } from './spec/spec.controller';
 import { SpecService } from './spec/spec.service';

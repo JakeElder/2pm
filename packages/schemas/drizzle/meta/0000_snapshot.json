@@ -1,11 +1,189 @@
 {
-  "id": "b0e8e87f-5006-4491-b520-2744f87f7e86",
+  "id": "3c032325-48ea-4f4a-8399-9f98498e687e",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "public.actors": {
-      "name": "actors",
+    "public.messages": {
+      "name": "messages",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "content": {
+          "name": "content",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.plot_point_messages": {
+      "name": "plot_point_messages",
+      "schema": "",
+      "columns": {
+        "plot_point_id": {
+          "name": "plot_point_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "message_id": {
+          "name": "message_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "plot_point_messages_plot_point_id_plot_points_id_fk": {
+          "name": "plot_point_messages_plot_point_id_plot_points_id_fk",
+          "tableFrom": "plot_point_messages",
+          "tableTo": "plot_points",
+          "columnsFrom": [
+            "plot_point_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "plot_point_messages_message_id_messages_id_fk": {
+          "name": "plot_point_messages_message_id_messages_id_fk",
+          "tableFrom": "plot_point_messages",
+          "tableTo": "messages",
+          "columnsFrom": [
+            "message_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.plot_points": {
+      "name": "plot_points",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "PlotPointType",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.rooms": {
+      "name": "rooms",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "RoomType",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "targetId": {
+          "name": "targetId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.user_plot_points": {
+      "name": "user_plot_points",
+      "schema": "",
+      "columns": {
+        "user_id": {
+          "name": "user_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "plot_point_id": {
+          "name": "plot_point_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "user_plot_points_user_id_users_id_fk": {
+          "name": "user_plot_points_user_id_users_id_fk",
+          "tableFrom": "user_plot_points",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "user_plot_points_plot_point_id_plot_points_id_fk": {
+          "name": "user_plot_points_plot_point_id_plot_points_id_fk",
+          "tableFrom": "user_plot_points",
+          "tableTo": "plot_points",
+          "columnsFrom": [
+            "plot_point_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.users": {
+      "name": "users",
       "schema": "",
       "columns": {
         "id": {
@@ -22,7 +200,7 @@
         },
         "type": {
           "name": "type",
-          "type": "ActorType",
+          "type": "UserType",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true
@@ -35,8 +213,23 @@
     }
   },
   "enums": {
-    "public.ActorType": {
-      "name": "ActorType",
+    "public.PlotPointType": {
+      "name": "PlotPointType",
+      "schema": "public",
+      "values": [
+        "MESSAGE"
+      ]
+    },
+    "public.RoomType": {
+      "name": "RoomType",
+      "schema": "public",
+      "values": [
+        "WORLD",
+        "DM"
+      ]
+    },
+    "public.UserType": {
+      "name": "UserType",
       "schema": "public",
       "values": [
         "HUMAN",
