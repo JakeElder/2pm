@@ -3,7 +3,7 @@
   "exports": {
     ".": "./index.ts",
     "./drizzle": "./src/drizzle.ts",
-    "./zod": "./zod/index.ts"
+    "./zod": "./src/zod/index.ts"
   },
   "scripts": {
     "studio": "drizzle-kit studio --port 3002",
@@ -20,6 +20,7 @@
   "dependencies": {
     "@nestjs/swagger": "^7.4.0",
     "drizzle-orm": "^0.33.0",
+    "drizzle-zod": "^0.5.1",
     "postgres": "^3.4.4"
   }
 }

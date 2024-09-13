@@ -1,6 +1,13 @@
-import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  NotFoundException,
+  Param,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { ActorsService } from './actors.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ActorDto } from './actors.dto';
 // import { Actor } from '@2pm/schema/models';
 
 @ApiTags('Actors')
@@ -10,15 +17,20 @@ export class ActorsController {
 
   @Get()
   @ApiOperation({ summary: 'Get Actors' })
-  // @ApiResponse({ status: 200, type: [Actor] })
+  @ApiResponse({ status: 200, type: [ActorDto] })
   findAll() {
     return this.actorsService.findAll();
   }
 
   @Get(':id')
   @ApiOperation({ summary: 'Get Actor' })
-  // @ApiResponse({ status: 200, type: Actor })
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.actorsService.findOne(id);
+  @ApiResponse({ status: 200, type: ActorDto })
+  @ApiResponse({ status: 404, type: NotFoundException })
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    const actor = await this.actorsService.findOne(id);
+    if (!actor) {
+      throw new NotFoundException(`Actor with ID ${id} not found`);
+    }
+    return actor;
   }
 }

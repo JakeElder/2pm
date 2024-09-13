@@ -1,30 +1,19 @@
 import { Inject, Injectable } from '@nestjs/common';
 import type { DB } from '@2pm/schemas';
-import { CreateActorDto } from './dto/create-actor.dto';
-import { UpdateActorDto } from './dto/update-actor.dto';
+import { actors } from '@2pm/schemas/drizzle';
+import { eq } from 'drizzle-orm';
 
 @Injectable()
 export class ActorsService {
   constructor(@Inject('DB') private db: DB) {}
 
-  create(createActorDto: CreateActorDto) {
-    return 'This action adds a new actor';
-  }
-
   async findAll() {
-    const actors = await this.db.query.actors.findMany();
-    return actors;
+    return this.db.query.actors.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} actor`;
-  }
-
-  update(id: number, updateActorDto: UpdateActorDto) {
-    return `This action updates a #${id} actor`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} actor`;
+  async findOne(id: number) {
+    return this.db.query.actors.findFirst({
+      where: eq(actors.id, id),
+    });
   }
 }

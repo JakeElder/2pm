@@ -23,12 +23,14 @@
   },
   "dependencies": {
     "@2pm/schemas": "workspace:*",
+    "@anatine/zod-nestjs": "^2.0.9",
     "@knaadh/nestjs-drizzle-postgres": "^1.0.0",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.2.3",
     "@nestjs/core": "^10.0.0",
     "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "^10.0.0",
+    "drizzle-orm": "^0.33.0",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1"
   },
