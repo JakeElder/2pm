@@ -1,4 +1,4 @@
 import { createSelectSchema } from "drizzle-zod";
-import { users } from "../drizzle.ts";
+import { users } from "../drizzle/schema";
 
 export const UserSchema = createSelectSchema(users);

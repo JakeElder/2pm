@@ -4,11 +4,28 @@ export const userTypeEnum = pgEnum("UserType", ["HUMAN", "AI"]);
 export const plotPointTypeEnum = pgEnum("PlotPointType", ["MESSAGE"]);
 export const roomTypeEnum = pgEnum("RoomType", ["WORLD"]);
 export const worldRoomCodeEnum = pgEnum("WorldRoomCodeEnum", ["UNIVERSE"]);
+export const aiUserCodeEnum = pgEnum("AiUserCodeEnum", ["G"]);
 
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   tag: text("tag").notNull(),
   type: userTypeEnum("type").notNull(),
+});
+
+export const humanUsers = pgTable("human_users", {
+  userId: integer("user_id")
+    .primaryKey()
+    .references(() => users.id, { onDelete: "restrict" }),
+  locationRoomId: integer("location_room_id").references(() => rooms.id, {
+    onDelete: "restrict",
+  }),
+});
+
+export const aiUsers = pgTable("ai_users", {
+  userId: integer("user_id")
+    .primaryKey()
+    .references(() => users.id, { onDelete: "restrict" }),
+  code: aiUserCodeEnum("code").notNull(),
 });
 
 export const plotPoints = pgTable("plot_points", {
@@ -62,4 +79,22 @@ export const roomWorldRooms = pgTable("room_world_rooms", {
   worldRoomId: integer("world_room_id")
     .notNull()
     .references(() => worldRooms.id, { onDelete: "restrict" }),
+});
+
+export const userRoomPresence = pgTable("user_room_presence", {
+  userId: integer("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "restrict" }),
+  roomId: integer("room_id")
+    .notNull()
+    .references(() => rooms.id, { onDelete: "restrict" }),
+});
+
+export const aiUserRoomPresence = pgTable("ai_user_room_presence", {
+  userId: integer("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "restrict" }),
+  roomId: integer("room_id")
+    .notNull()
+    .references(() => rooms.id, { onDelete: "restrict" }),
 });

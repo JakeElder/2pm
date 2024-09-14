@@ -7,8 +7,8 @@ import { eq } from 'drizzle-orm';
 export class UsersService {
   constructor(@Inject('DB') private db: DB) {}
 
-  async findAll() {
-    return this.db.select().from(users);
+  findAll() {
+    return this.db.select().from(users).execute();
   }
 
   async findOne(id: number) {
