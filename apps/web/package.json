@@ -1,7 +1,7 @@
 {
   "name": "@2pm/web",
   "scripts": {
-    "dev": "next dev",
+    "start:dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -13,6 +13,7 @@
     "next": "14.2.5",
     "react": "^18",
     "react-dom": "^18",
+    "react-hook-form": "^7.53.0",
     "reset-css": "^5.0.2"
   },
   "devDependencies": {

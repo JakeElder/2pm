@@ -3,9 +3,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-image: url("/universe.png");
-  background-size: cover;
-  background-position: center;
 }
 
 .module {

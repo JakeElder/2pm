@@ -11,7 +11,7 @@ export class SpecService {
       const specPath = resolve(__dirname, '../../generated/openapi.json');
       const content = await readFile(specPath, 'utf-8');
       return JSON.parse(content);
-    } catch (error) {
+    } catch (error: any) {
       Logger.error('Error reading OpenAPI spec:', error.stack);
       throw error;
     }

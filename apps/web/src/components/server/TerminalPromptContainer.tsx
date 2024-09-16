@@ -8,11 +8,7 @@ const TerminalPromptContainer = ({}: Props) => {
     console.log(Object.fromEntries(data.entries()));
   };
 
-  return (
-    <form action={submitMessage}>
-      <TerminalPromptViewContainer />
-    </form>
-  );
+  return <TerminalPromptViewContainer />;
 };
 
 export default TerminalPromptContainer;
