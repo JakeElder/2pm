@@ -1,14 +1,33 @@
 {
   "name": "@2pm/workspace",
   "scripts": {
-    "gen": "hygen module new"
+    "gen": "hygen module new",
+    "watch:controllers": "nodemon --watch \"apps/api/src/**/*.controller.ts\" --ext ts --exec \"bun generate:openapi-spec\"",
+    "generate:openapi-spec": "bun scripts/generate-openapi-spec.ts"
   },
   "workspaces": [
     "apps/*",
     "packages/*"
   ],
+  "dependencies": {
+    "@nestjs/common": "^10.0.0",
+    "@nestjs/core": "^10.0.0",
+    "@nestjs/swagger": "^7.4.0",
+    "drizzle-orm": "^0.33.0",
+    "nodemon": "^3.1.4",
+    "postgres": "^3.4.4",
+    "reset-css": "^5.0.2",
+    "next": "14.2.5",
+    "react": "^18",
+    "react-dom": "^18"
+  },
   "devDependencies": {
+    "@types/bun": "latest",
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
     "hygen": "^6.2.11",
-    "slug": "^9.1.0"
+    "slug": "^9.1.0",
+    "typescript": "^5.1.3"
   }
 }
