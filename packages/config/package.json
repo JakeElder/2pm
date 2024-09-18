@@ -1,6 +1,0 @@
-{
-  "name": "@2pm/config",
-  "exports": {
-    "./tsconfig.base.json": "./src/tsconfig/tsconfig.base.json"
-  }
-}

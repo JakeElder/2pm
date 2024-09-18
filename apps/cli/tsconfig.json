@@ -1,9 +1,7 @@
----
-to: <%= dir %>/<%= id %>/tsconfig.json
----
 {
   "compilerOptions": {
+    "strict": true,
     "moduleResolution": "bundler",
-    "strict": true
+    "esModuleInterop": true,
   }
 }

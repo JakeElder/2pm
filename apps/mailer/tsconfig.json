@@ -1,0 +1,6 @@
+{
+  "compilerOptions": {
+    "moduleResolution": "bunder",
+    "strict": true
+  }
+}
