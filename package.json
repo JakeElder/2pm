@@ -2,7 +2,8 @@
   "name": "@2pm/workspace",
   "scripts": {
     "generate:module": "hygen module new",
-    "watch:controllers": "nodemon --watch \"apps/api/src/**/*.controller.ts\" --ext ts --exec \"bun ivan generate client --out ./packages/src/generated/client.ts\""
+    "generate:api-client": "bun ivan generate client --out ./apps/api/src/generated/client.ts",
+    "watch:controllers": "nodemon --watch \"apps/api/src/**/*.controller.ts\" --ext ts --exec \"bun generate:api-client\""
   },
   "workspaces": [
     "apps/*",
@@ -10,7 +11,6 @@
   ],
   "dependencies": {
     "drizzle-orm": "^0.33.0",
-    "nodemon": "^3.1.4",
     "postgres": "^3.4.4",
     "reset-css": "^5.0.2",
     "next": "14.2.5",
@@ -23,6 +23,7 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "hygen": "^6.2.11",
+    "nodemon": "^3.1.4",
     "slug": "^9.1.0",
     "typescript": "^5.1.3"
   }

@@ -5,3 +5,4 @@ tmux_options: -L 2pm
 windows:
   - Vim: vim
   - Terminal:
+  - Watch: bun watch:controllers

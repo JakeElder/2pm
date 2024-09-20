@@ -1,13 +1,9 @@
 {
   "name": "@2pm/api",
-  "version": "0.0.1",
   "exports": {
-    "./utils": "./src/utils/index.ts"
+    "./utils": "./src/utils/index.ts",
+    "./client": "./src/generated/client.ts"
   },
-  "description": "",
-  "author": "",
-  "private": true,
-  "license": "UNLICENSED",
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",

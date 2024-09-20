@@ -15,14 +15,14 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
-  @ApiOperation({ summary: 'Get Users' })
+  @ApiOperation({ summary: 'Get Users', operationId: 'getUsers' })
   @ApiResponse({ status: 200, type: [UserDto] })
   findAll() {
     return this.usersService.findAll();
   }
 
   @Get(':id')
-  @ApiOperation({ summary: 'Get User' })
+  @ApiOperation({ summary: 'Get User', operationId: 'getUserById' })
   @ApiResponse({ status: 200, type: UserDto })
   @ApiResponse({ status: 404, type: NotFoundException })
   async findOne(@Param('id', ParseIntPipe) id: number) {
