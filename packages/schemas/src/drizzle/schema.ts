@@ -16,9 +16,11 @@ export const humanUsers = pgTable("human_users", {
   userId: integer("user_id")
     .primaryKey()
     .references(() => users.id, { onDelete: "restrict" }),
-  locationRoomId: integer("location_room_id").references(() => rooms.id, {
-    onDelete: "restrict",
-  }),
+  locationRoomId: integer("location_room_id")
+    .notNull()
+    .references(() => rooms.id, {
+      onDelete: "restrict",
+    }),
 });
 
 export const aiUsers = pgTable("ai_users", {
@@ -36,12 +38,16 @@ export const plotPoints = pgTable("plot_points", {
 export const messages = pgTable("messages", {
   id: serial("id").primaryKey(),
   content: text("content").notNull(),
-  userId: integer("user_id").references(() => users.id, {
-    onDelete: "restrict",
-  }),
-  roomId: integer("room_id").references(() => rooms.id, {
-    onDelete: "restrict",
-  }),
+  userId: integer("user_id")
+    .notNull()
+    .references(() => users.id, {
+      onDelete: "restrict",
+    }),
+  roomId: integer("room_id")
+    .notNull()
+    .references(() => rooms.id, {
+      onDelete: "restrict",
+    }),
 });
 
 export const userPlotPoints = pgTable("user_plot_points", {

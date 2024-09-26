@@ -1,0 +1,7 @@
+{
+  "name": "@2pm/db",
+  "main": "src/index.ts",
+  "dependencies": {
+    "@2pm/schemas": "workspace:*"
+  }
+}

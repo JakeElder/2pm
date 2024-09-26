@@ -7,9 +7,28 @@ import { generateApi } from "swagger-typescript-api";
 import ivanAscii from "./ivan";
 import path from "path";
 import { generateSpecDocument } from "@2pm/api/utils";
+import DBService from "@2pm/db";
 
 const ivan = new Command("ivan").description(ivanAscii);
 const generate = new Command("generate");
+const db = new Command("db");
+
+db.command("seed")
+  .description("Seed DB")
+  .action(async () => {
+    const spinner = ora("Seeding database").start();
+
+    try {
+      const db = new DBService(process.env.DATABASE_URL!);
+      await db.utils.seed();
+      await db.end();
+      spinner.succeed(`Seeded database`);
+    } catch (e) {
+      spinner.fail("Error seeding database");
+      console.error(e);
+      process.exit(1);
+    }
+  });
 
 generate
   .command("api-spec")
@@ -23,10 +42,10 @@ generate
       const document = await generateSpecDocument(options.server);
       const output = JSON.stringify(document, null, 2);
       await writeFile(options.out, output, "utf8");
-      spinner.succeed(`✅ OpenAPI specification generated successfully`);
-    } catch (err) {
-      spinner.fail("❌ Error generating OpenAPI specification.");
-      console.error(err);
+      spinner.succeed(`OpenAPI specification generated successfully`);
+    } catch (e) {
+      spinner.fail("Error generating OpenAPI specification.");
+      console.error(e);
       process.exit(1);
     }
   });
@@ -37,12 +56,12 @@ generate
   .requiredOption("--out <file>", "Output file")
   .action(async (options) => {
     const spinner = ora("Generating TypeScript fetch client").start();
-    const document = await generateSpecDocument();
-
-    const dir = path.dirname(options.out);
-    const name = path.basename(options.out);
 
     try {
+      const document = await generateSpecDocument();
+      const dir = path.dirname(options.out);
+      const name = path.basename(options.out);
+
       await generateApi({
         spec: document as any,
         output: path.resolve(process.cwd(), dir),
@@ -50,13 +69,13 @@ generate
         silent: true,
       });
 
-      spinner.succeed(`✅ TypeScript fetch client generated at ${options.out}`);
-    } catch (err) {
-      spinner.fail("❌ Error generating TypeScript fetch client.");
-      console.error(err);
+      spinner.succeed(`TypeScript fetch client generated at ${options.out}`);
+    } catch (e) {
+      spinner.fail("Error generating TypeScript fetch client.");
       process.exit(1);
     }
   });
 
 ivan.addCommand(generate);
+ivan.addCommand(db);
 ivan.parse(process.argv);

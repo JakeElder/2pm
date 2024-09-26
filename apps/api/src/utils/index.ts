@@ -3,7 +3,9 @@ import { SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from '../app.module';
 
 export async function generateSpecDocument(server?: string) {
-  const app = await NestFactory.create(AppModule, { logger: false });
+  const app = await NestFactory.create(AppModule, {
+    logger: ['error'],
+  });
 
   const document = SwaggerModule.createDocument(app, {
     openapi: '3.0.0',

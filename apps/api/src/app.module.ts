@@ -1,21 +1,13 @@
 import { Module } from '@nestjs/common';
-import * as schema from '@2pm/schemas/drizzle';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ActorsModule } from './users/users.module';
+import { UsersModule } from './users/users.module';
 import { ConfigModule } from '@nestjs/config';
-import { DrizzlePostgresModule } from '@knaadh/nestjs-drizzle-postgres';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
-    ActorsModule,
-    ConfigModule.forRoot(),
-    DrizzlePostgresModule.register({
-      tag: 'DB',
-      postgres: { url: process.env.DATABASE_URL! },
-      config: { schema },
-    }),
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

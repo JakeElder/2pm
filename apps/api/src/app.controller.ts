@@ -1,4 +1,4 @@
-import { Controller, Get, Render } from '@nestjs/common';
+import { Controller, Get, Inject, Render } from '@nestjs/common';
 import { ApiExcludeEndpoint } from '@nestjs/swagger';
 import { AppService } from './app.service';
 
@@ -10,7 +10,6 @@ export class AppController {
   @ApiExcludeEndpoint()
   @Render('docs.html.ejs')
   async renderHtml() {
-    console.log(await this.appService.getDocsParams());
     return this.appService.getDocsParams();
   }
 }

@@ -1,7 +1,7 @@
 {
   "name": "@2pm/schemas",
   "exports": {
-    ".": "./index.ts",
+    ".": "./src/index.ts",
     "./drizzle": "./src/drizzle/schema.ts",
     "./zod": "./src/zod/index.ts"
   },
@@ -14,6 +14,7 @@
     "drizzle-kit": "^0.24.2"
   },
   "dependencies": {
-    "drizzle-zod": "^0.5.1"
+    "drizzle-zod": "^0.5.1",
+    "zod": "^3.23.8"
   }
 }
