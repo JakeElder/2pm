@@ -87,7 +87,7 @@ export const roomWorldRooms = pgTable("room_world_rooms", {
     .references(() => worldRooms.id, { onDelete: "restrict" }),
 });
 
-export const userRoomPresence = pgTable("user_room_presence", {
+export const userRoomPresences = pgTable("user_room_presences", {
   userId: integer("user_id")
     .notNull()
     .references(() => users.id, { onDelete: "restrict" }),
@@ -96,7 +96,7 @@ export const userRoomPresence = pgTable("user_room_presence", {
     .references(() => rooms.id, { onDelete: "restrict" }),
 });
 
-export const aiUserRoomPresence = pgTable("ai_user_room_presence", {
+export const aiUserRoomPresences = pgTable("ai_user_room_presences", {
   userId: integer("user_id")
     .notNull()
     .references(() => users.id, { onDelete: "restrict" }),

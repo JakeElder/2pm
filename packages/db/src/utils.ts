@@ -1,5 +1,9 @@
 import {
   Drizzle,
+  InsertAiUserDto,
+  InsertAiUserResponseDto,
+  InsertAiUserRoomPresenceDto,
+  InsertAiUserRoomPresenceResponseDto,
   InsertHumanUserDto,
   InsertHumanUserResponseDto,
   InsertMessageDto,
@@ -16,10 +20,10 @@ import {
   userPlotPoints,
   plotPointMessages,
   messages,
-  userRoomPresence,
+  userRoomPresences,
   humanUsers,
   aiUsers,
-  aiUserRoomPresence,
+  aiUserRoomPresences,
 } from "@2pm/schemas/drizzle";
 
 export default class Utils {
@@ -27,7 +31,6 @@ export default class Utils {
 
   constructor(drizzle: Drizzle) {
     this.drizzle = drizzle;
-
     this.drizzle.delete = this.drizzle.delete.bind(this.drizzle);
     this.drizzle.transaction = this.drizzle.transaction.bind(this.drizzle);
   }
@@ -35,21 +38,23 @@ export default class Utils {
   public async nuke() {
     const { delete: rm } = this.drizzle;
 
-    // Clear relations
-    await rm(roomWorldRooms);
-    await rm(userPlotPoints);
-    await rm(plotPointMessages);
-    await rm(userRoomPresence);
-    await rm(aiUserRoomPresence);
-    await rm(aiUsers);
-    await rm(humanUsers);
+    await Promise.all([
+      rm(roomWorldRooms),
+      rm(userPlotPoints),
+      rm(plotPointMessages),
+      rm(userRoomPresences),
+      rm(aiUserRoomPresences),
+      rm(aiUsers),
+      rm(humanUsers),
+    ]);
 
-    // Clear entities
-    await rm(messages);
-    await rm(users);
-    await rm(plotPoints);
-    await rm(rooms);
-    await rm(worldRooms);
+    await Promise.all([
+      rm(messages),
+      rm(users),
+      rm(plotPoints),
+      rm(rooms),
+      rm(worldRooms),
+    ]);
   }
 
   public async insertWorldRoom(
@@ -90,10 +95,33 @@ export default class Utils {
 
       const [humanUser] = await tx
         .insert(humanUsers)
-        .values({ userId: user.id, locationRoomId: values.location.id })
+        .values({
+          userId: user.id,
+          locationRoomId: values.location.id,
+        })
         .returning();
 
       return { user, humanUser };
+    });
+  }
+
+  public async insertAiUser(
+    values: InsertAiUserDto,
+  ): Promise<InsertAiUserResponseDto> {
+    const { transaction } = this.drizzle;
+
+    return transaction(async (tx) => {
+      const [user] = await tx
+        .insert(users)
+        .values({ ...values.user, type: "AI" })
+        .returning();
+
+      const [aiUser] = await tx
+        .insert(aiUsers)
+        .values({ code: values.aiUser.code, userId: user.id })
+        .returning();
+
+      return { user, aiUser };
     });
   }
 
@@ -127,54 +155,47 @@ export default class Utils {
     });
   }
 
-  public async seed() {
-    const { transaction } = this.drizzle;
+  public async insertAiUserRoomPresence(
+    values: InsertAiUserRoomPresenceDto,
+  ): Promise<InsertAiUserRoomPresenceResponseDto> {
+    const [aiUserRoomPresence] = await this.drizzle
+      .insert(aiUserRoomPresences)
+      .values({ userId: values.user.id, roomId: values.room.id })
+      .returning();
+    return { aiUserRoomPresence };
+  }
 
-    // Clear DB
+  public async seed() {
     await this.nuke();
 
-    // Insert UNIVERSE
-    const { room: universe } = await this.insertWorldRoom({
+    const universe = await this.insertWorldRoom({
       room: { id: 1 },
       worldRoom: { id: 1, code: "UNIVERSE" },
     });
 
-    // Users
-    const [g, jake] = await transaction(async (tx) => {
-      const [g, jake] = await tx
-        .insert(users)
-        .values([
-          { id: 1, tag: "g", type: "AI" },
-          { id: 2, tag: "jake", type: "HUMAN" },
-        ])
-        .returning();
-
-      await tx.insert(humanUsers).values({
-        userId: jake.id,
-        locationRoomId: universe.id,
-      });
-
-      await tx.insert(aiUsers).values({
-        code: "G",
-        userId: g.id,
-      });
-
-      await tx
-        .insert(aiUserRoomPresence)
-        .values([{ userId: g.id, roomId: universe.id }]);
-
-      return [g, jake];
+    const g = await this.insertAiUser({
+      user: { id: 1, tag: "g" },
+      aiUser: { code: "G" },
     });
 
-    // Insert message
+    await this.insertHumanUser({
+      user: { id: 2, tag: "jake" },
+      location: { id: universe.room.id },
+    });
+
+    await this.insertAiUserRoomPresence({
+      user: g.user,
+      room: universe.room,
+    });
+
     await this.insertMessage({
       plotPoint: { id: 1 },
-      user: g,
+      user: g.user,
       message: {
         id: 1,
         content: "Standby for G stuff",
-        userId: g.id,
-        roomId: universe.id,
+        userId: g.user.id,
+        roomId: universe.room.id,
       },
     });
   }

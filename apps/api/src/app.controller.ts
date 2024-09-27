@@ -1,4 +1,4 @@
-import { Controller, Get, Inject, Render } from '@nestjs/common';
+import { Controller, Get, Render } from '@nestjs/common';
 import { ApiExcludeEndpoint } from '@nestjs/swagger';
 import { AppService } from './app.service';
 

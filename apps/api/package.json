@@ -21,6 +21,7 @@
   "dependencies": {
     "@2pm/db": "workspace:*",
     "@2pm/schemas": "workspace:*",
+    "@asteasolutions/zod-to-openapi": "^7.1.2",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.2.3",
     "@nestjs/core": "^10.0.0",
