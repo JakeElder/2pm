@@ -19,14 +19,13 @@ const TerminalPromptViewContainer = ({}: Props) => {
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     await submitMessage(data.message);
-    console.log(data.message);
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Terminal.Prompt>
         <Terminal.Input>
-          <PromptInput {...register("message")} />
+          <PromptInput {...register("message")} autoComplete="off" />
         </Terminal.Input>
         <Terminal.SubmitButton>
           <PromptSubmitButton disabled={isSubmitting} />

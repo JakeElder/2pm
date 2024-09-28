@@ -1,6 +1,8 @@
 import React from "react";
 import Image from "next/image";
 import css from "./Terminal.module.css";
+import ivan from "../../../public/images/ivan.png";
+import { AiUserCode } from "@2pm/schemas";
 
 /*
  * Root
@@ -47,9 +49,10 @@ interface AvatarProps {
   width: number;
   height: number;
   alt: string;
+  style?: React.CSSProperties;
 }
 
-export const Avatar = ({ src, width, height, alt }: AvatarProps) => {
+export const Avatar = ({ src, width, height, alt, style }: AvatarProps) => {
   return (
     <div className={css["avatar"]}>
       <Image
@@ -57,10 +60,38 @@ export const Avatar = ({ src, width, height, alt }: AvatarProps) => {
         width={width}
         height={height}
         alt={alt}
-        style={{ width: 64, height: 64 }}
+        style={{ width: 64, height: 64, ...style }}
       />
     </div>
   );
+};
+
+/*
+ * AiAvatar
+ */
+
+interface AiAvatarProps {
+  code: AiUserCode;
+}
+
+export const AiAvatar = ({ code }: AiAvatarProps) => {
+  if (code === "IVAN") {
+    return (
+      <Avatar
+        {...ivan}
+        alt="Ivan"
+        style={{
+          width: 54,
+          height: 54,
+          position: "relative",
+          left: -1,
+          top: 1,
+        }}
+      />
+    );
+  }
+
+  return null;
 };
 
 /*

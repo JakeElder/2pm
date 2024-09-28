@@ -4,7 +4,7 @@ export const userTypeEnum = pgEnum("UserType", ["HUMAN", "AI"]);
 export const plotPointTypeEnum = pgEnum("PlotPointType", ["MESSAGE"]);
 export const roomTypeEnum = pgEnum("RoomType", ["WORLD"]);
 export const worldRoomCodeEnum = pgEnum("WorldRoomCodeEnum", ["UNIVERSE"]);
-export const aiUserCodeEnum = pgEnum("AiUserCodeEnum", ["G"]);
+export const aiUserCodeEnum = pgEnum("AiUserCodeEnum", AI_USER_CODES);
 
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),

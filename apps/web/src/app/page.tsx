@@ -1,5 +1,4 @@
 import css from "./page.module.css";
-import ivan from "@2pm/ui/images/ivan.png";
 import universe from "@2pm/ui/images/universe.png";
 import { Background, Terminal, Narrative } from "@2pm/ui";
 import { FirstPersonMessage, ThirdPersonMessage } from "@2pm/ui/plot-points";
@@ -14,7 +13,7 @@ export default async function Home() {
         <div className={css["module"]}>
           <Terminal.Root>
             <Terminal.Foreground>
-              <Terminal.Avatar {...ivan} alt={handle} />
+              <Terminal.AiAvatar code="IVAN" />
             </Terminal.Foreground>
             <Terminal.Main>
               <Terminal.Header handle={handle} />
