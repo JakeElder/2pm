@@ -1,4 +1,5 @@
 import { integer, pgEnum, pgTable, serial, text } from "drizzle-orm/pg-core";
+import { AI_USER_CODES } from "../constants";
 
 export const userTypeEnum = pgEnum("UserType", ["HUMAN", "AI"]);
 export const plotPointTypeEnum = pgEnum("PlotPointType", ["MESSAGE"]);

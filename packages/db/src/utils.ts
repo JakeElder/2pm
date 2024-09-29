@@ -178,8 +178,13 @@ export default class Utils {
       aiUser: { code: "G" },
     });
 
+    const ivan = await this.insertAiUser({
+      user: { id: 2, tag: "ivan" },
+      aiUser: { code: "G" },
+    });
+
     await this.insertHumanUser({
-      user: { id: 2, tag: "jake" },
+      user: { id: 3, tag: "jake" },
       location: { id: universe.room.id },
     });
 
