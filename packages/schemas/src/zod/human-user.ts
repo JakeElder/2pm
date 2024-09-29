@@ -1,11 +1,11 @@
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
-import { humanUsers, rooms, users } from "../drizzle/schema";
+import { humanUsers, environments, users } from "../drizzle/schema";
 import type { Z } from "..";
 
 const InsertHumanUserDtoSchema = z.object({
   user: createInsertSchema(users).pick({ id: true, tag: true }),
-  location: createSelectSchema(rooms).pick({ id: true }),
+  location: createSelectSchema(environments).pick({ id: true }),
 });
 
 const InsertHumanUserResponseDtoSchema = z.object({

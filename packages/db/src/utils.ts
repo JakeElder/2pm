@@ -2,28 +2,31 @@ import {
   Drizzle,
   InsertAiUserDto,
   InsertAiUserResponseDto,
-  InsertAiUserRoomPresenceDto,
-  InsertAiUserRoomPresenceResponseDto,
+  InsertUserEnvironmentPresenceDto,
+  InsertUserEnvironmentPresenceResponseDto,
   InsertHumanUserDto,
   InsertHumanUserResponseDto,
   InsertMessageDto,
   InsertMessageResponseDto,
   InsertWorldRoomDto,
   InsertWorldRoomResponseDto,
+  InsertCompanionOneToOneDto,
+  InsertCompanionOneToOneResponseDto,
 } from "@2pm/schemas";
 import {
   users,
   plotPoints,
-  rooms,
+  environments,
   worldRooms,
-  roomWorldRooms,
+  environmentWorldRooms,
   userPlotPoints,
   plotPointMessages,
   messages,
-  userRoomPresences,
   humanUsers,
   aiUsers,
-  aiUserRoomPresences,
+  userEnvironmentPresences,
+  companionOneToOnes,
+  environmentCompanionOneToOnes,
 } from "@2pm/schemas/drizzle";
 
 export default class Utils {
@@ -39,11 +42,11 @@ export default class Utils {
     const { delete: rm } = this.drizzle;
 
     await Promise.all([
-      rm(roomWorldRooms),
+      rm(environmentWorldRooms),
       rm(userPlotPoints),
       rm(plotPointMessages),
-      rm(userRoomPresences),
-      rm(aiUserRoomPresences),
+      rm(userEnvironmentPresences),
+      rm(environmentCompanionOneToOnes),
       rm(aiUsers),
       rm(humanUsers),
     ]);
@@ -52,9 +55,38 @@ export default class Utils {
       rm(messages),
       rm(users),
       rm(plotPoints),
-      rm(rooms),
+      rm(environments),
       rm(worldRooms),
+      rm(companionOneToOnes),
     ]);
+  }
+
+  public async insertCompanionOneToOne(
+    values: InsertCompanionOneToOneDto,
+  ): Promise<InsertCompanionOneToOneResponseDto> {
+    const { transaction } = this.drizzle;
+
+    return transaction(async (tx) => {
+      const [environment] = await tx
+        .insert(environments)
+        .values({ ...values.environment, type: "COMPANION_ONE_TO_ONE" })
+        .returning();
+
+      const [companionOneToOne] = await tx
+        .insert(companionOneToOnes)
+        .values(values.companionOneToOne)
+        .returning();
+
+      const [environmentCompanionOneToOne] = await tx
+        .insert(environmentCompanionOneToOnes)
+        .values({
+          environmentId: environment.id,
+          companionOneToOneId: companionOneToOne.id,
+        })
+        .returning();
+
+      return { environment, companionOneToOne, environmentCompanionOneToOne };
+    });
   }
 
   public async insertWorldRoom(
@@ -63,9 +95,9 @@ export default class Utils {
     const { transaction } = this.drizzle;
 
     return transaction(async (tx) => {
-      const [room] = await tx
-        .insert(rooms)
-        .values({ ...values.room, type: "WORLD" })
+      const [environment] = await tx
+        .insert(environments)
+        .values({ ...values.environment, type: "WORLD_ROOM" })
         .returning();
 
       const [worldRoom] = await tx
@@ -73,12 +105,12 @@ export default class Utils {
         .values(values.worldRoom)
         .returning();
 
-      const [roomWorldRoom] = await tx
-        .insert(roomWorldRooms)
-        .values({ roomId: room.id, worldRoomId: worldRoom.id })
+      const [environmentWorldRoom] = await tx
+        .insert(environmentWorldRooms)
+        .values({ environmentId: environment.id, worldRoomId: worldRoom.id })
         .returning();
 
-      return { room, worldRoom, roomWorldRoom };
+      return { environment, worldRoom, environmentWorldRoom };
     });
   }
 
@@ -97,7 +129,7 @@ export default class Utils {
         .insert(humanUsers)
         .values({
           userId: user.id,
-          locationRoomId: values.location.id,
+          locationEnvironmentId: values.location.id,
         })
         .returning();
 
@@ -155,52 +187,64 @@ export default class Utils {
     });
   }
 
-  public async insertAiUserRoomPresence(
-    values: InsertAiUserRoomPresenceDto,
-  ): Promise<InsertAiUserRoomPresenceResponseDto> {
-    const [aiUserRoomPresence] = await this.drizzle
-      .insert(aiUserRoomPresences)
-      .values({ userId: values.user.id, roomId: values.room.id })
+  public async insertUserEnvironmentPresence(
+    values: InsertUserEnvironmentPresenceDto,
+  ): Promise<InsertUserEnvironmentPresenceResponseDto> {
+    const [userEnvironmentPresence] = await this.drizzle
+      .insert(userEnvironmentPresences)
+      .values({ userId: values.user.id, environmentId: values.environment.id })
       .returning();
-    return { aiUserRoomPresence };
+    return { userEnvironmentPresence };
   }
 
   public async seed() {
     await this.nuke();
 
     const universe = await this.insertWorldRoom({
-      room: { id: 1 },
-      worldRoom: { id: 1, code: "UNIVERSE" },
+      worldRoom: { code: "UNIVERSE" },
     });
 
-    const g = await this.insertAiUser({
-      user: { id: 1, tag: "g" },
-      aiUser: { code: "G" },
+    const [g, ivan, jake] = await Promise.all([
+      this.insertAiUser({
+        user: { tag: "g" },
+        aiUser: { code: "G" },
+      }),
+      this.insertAiUser({
+        user: { tag: "ivan" },
+        aiUser: { code: "IVAN" },
+      }),
+      this.insertHumanUser({
+        user: { tag: "jake" },
+        location: { ...universe.environment },
+      }),
+    ]);
+
+    const o2o = await this.insertCompanionOneToOne({
+      companionOneToOne: {},
     });
 
-    const ivan = await this.insertAiUser({
-      user: { id: 2, tag: "ivan" },
-      aiUser: { code: "G" },
-    });
+    await this.insertUserEnvironmentPresence({ ...g, ...universe });
 
-    await this.insertHumanUser({
-      user: { id: 3, tag: "jake" },
-      location: { id: universe.room.id },
-    });
+    await Promise.all([
+      this.insertUserEnvironmentPresence({ ...ivan, ...o2o }),
+      this.insertUserEnvironmentPresence({ ...jake, ...o2o }),
+    ]);
 
-    await this.insertAiUserRoomPresence({
-      user: g.user,
-      room: universe.room,
+    await this.insertMessage({
+      ...g,
+      message: {
+        content: "Standby for G stuff",
+        userId: g.user.id,
+        environmentId: universe.environment.id,
+      },
     });
 
     await this.insertMessage({
-      plotPoint: { id: 1 },
-      user: g.user,
+      ...ivan,
       message: {
-        id: 1,
-        content: "Standby for G stuff",
-        userId: g.user.id,
-        roomId: universe.room.id,
+        content: "Welcome back friend. Let's get you authenticated",
+        userId: ivan.user.id,
+        environmentId: o2o.environment.id,
       },
     });
   }
