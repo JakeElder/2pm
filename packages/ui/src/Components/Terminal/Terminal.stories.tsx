@@ -60,7 +60,7 @@ export const Conversation: Story = {
     return (
       <Terminal.Root>
         <Terminal.Foreground>
-          <Terminal.Avatar {...ivan} alt={handle} />
+          <Terminal.AiAvatar code="IVAN" />
         </Terminal.Foreground>
         <Terminal.Main>
           <Terminal.Header handle={handle} />

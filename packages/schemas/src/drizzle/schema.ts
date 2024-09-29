@@ -13,13 +13,21 @@ import {
 } from "../constants";
 
 export const userTypeEnum = pgEnum("UserType", ["HUMAN", "AI"]);
-export const plotPointTypeEnum = pgEnum("PlotPointType", ["MESSAGE"]);
+export const messageTypeEnum = pgEnum("MessageType", ["HUMAN", "AI"]);
+export const plotPointTypeEnum = pgEnum("PlotPointType", [
+  "HUMAN_MESSAGE",
+  "AI_MESSAGE",
+]);
 export const environmentTypeEnum = pgEnum(
   "EnvironmentType",
   ENVIRONMENT_TYPE_CODES,
 );
 export const worldRoomCodeEnum = pgEnum("WorldRoomCodeEnum", WORLD_ROOM_CODES);
 export const aiUserCodeEnum = pgEnum("AiUserCodeEnum", AI_USER_CODES);
+export const aiMessageStateEnum = pgEnum("AiMessageStateEnum", [
+  "OUTPUTTING",
+  "COMPLETE",
+]);
 
 /*
  * Users
@@ -64,6 +72,15 @@ export const messages = pgTable("messages", {
   environmentId: integer("environment_id")
     .notNull()
     .references(() => environments.id, { onDelete: "restrict" }),
+});
+
+export const humanMessages = pgTable("human_messages", {
+  id: serial("id").primaryKey(),
+});
+
+export const aiMessages = pgTable("ai_messages", {
+  id: serial("id").primaryKey(),
+  state: aiMessageStateEnum("state").notNull().default("OUTPUTTING"),
 });
 
 /**
