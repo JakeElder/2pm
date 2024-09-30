@@ -7,25 +7,25 @@ import {
 import { z } from "zod";
 import type { Z } from "..";
 
-const InsertUserEnvironmentPresenceDtoSchema = z.object({
+const InsertUserEnvironmentPresenceSchema = z.object({
   user: createSelectSchema(users).pick({ id: true }),
   environment: createSelectSchema(environments).pick({ id: true }),
 });
 
-const InsertUserEnvironmentPresenceResponseDtoSchema = z.object({
+const InsertUserEnvironmentPresenceResponseSchema = z.object({
   userEnvironmentPresence: createSelectSchema(userEnvironmentPresences),
 });
 
-type InsertUserEnvironmentPresenceDto = Z<
-  typeof InsertUserEnvironmentPresenceDtoSchema
+type InsertUserEnvironmentPresenceValues = Z<
+  typeof InsertUserEnvironmentPresenceSchema
 >;
-type InsertUserEnvironmentPresenceResponseDto = Z<
-  typeof InsertUserEnvironmentPresenceResponseDtoSchema
+type InsertUserEnvironmentPresenceResponse = Z<
+  typeof InsertUserEnvironmentPresenceResponseSchema
 >;
 
 export {
-  InsertUserEnvironmentPresenceDtoSchema,
-  InsertUserEnvironmentPresenceResponseDtoSchema,
-  type InsertUserEnvironmentPresenceDto,
-  type InsertUserEnvironmentPresenceResponseDto,
+  InsertUserEnvironmentPresenceSchema,
+  InsertUserEnvironmentPresenceResponseSchema,
+  type InsertUserEnvironmentPresenceValues,
+  type InsertUserEnvironmentPresenceResponse,
 };

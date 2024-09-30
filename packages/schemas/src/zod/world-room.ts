@@ -7,23 +7,23 @@ import {
 } from "../drizzle/schema";
 import type { Z } from "..";
 
-const InsertWorldRoomDtoSchema = z.object({
+const InsertWorldRoomSchema = z.object({
   environment: createInsertSchema(environments).pick({ id: true }).optional(),
   worldRoom: createInsertSchema(worldRooms),
 });
 
-const InsertWorldRoomResponseDtoSchema = z.object({
+const InsertWorldRoomResponseSchema = z.object({
   environment: createSelectSchema(environments),
   worldRoom: createSelectSchema(worldRooms),
   environmentWorldRoom: createSelectSchema(environmentWorldRooms),
 });
 
-type InsertWorldRoomDto = Z<typeof InsertWorldRoomDtoSchema>;
-type InsertWorldRoomResponseDto = Z<typeof InsertWorldRoomResponseDtoSchema>;
+type InsertWorldRoomValues = Z<typeof InsertWorldRoomSchema>;
+type InsertWorldRoomResponse = Z<typeof InsertWorldRoomResponseSchema>;
 
 export {
-  InsertWorldRoomDtoSchema,
-  InsertWorldRoomResponseDtoSchema,
-  type InsertWorldRoomDto,
-  type InsertWorldRoomResponseDto,
+  InsertWorldRoomSchema,
+  InsertWorldRoomResponseSchema,
+  type InsertWorldRoomValues,
+  type InsertWorldRoomResponse,
 };

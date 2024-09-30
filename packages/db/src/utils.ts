@@ -1,17 +1,17 @@
 import {
   Drizzle,
-  InsertAiUserDto,
-  InsertAiUserResponseDto,
-  InsertUserEnvironmentPresenceDto,
-  InsertUserEnvironmentPresenceResponseDto,
-  InsertHumanUserDto,
-  InsertHumanUserResponseDto,
-  InsertMessageDto,
-  InsertMessageResponseDto,
-  InsertWorldRoomDto,
-  InsertWorldRoomResponseDto,
-  InsertCompanionOneToOneDto,
-  InsertCompanionOneToOneResponseDto,
+  InsertAiUserValues,
+  InsertAiUserResponse,
+  InsertUserEnvironmentPresenceValues,
+  InsertUserEnvironmentPresenceResponse,
+  InsertHumanUserValues,
+  InsertHumanUserResponse,
+  InsertMessageValues,
+  InsertMessageResponse,
+  InsertWorldRoomValues,
+  InsertWorldRoomResponse,
+  InsertCompanionOneToOneValues,
+  InsertCompanionOneToOneResponse,
 } from "@2pm/schemas";
 import {
   users,
@@ -62,8 +62,8 @@ export default class Utils {
   }
 
   public async insertCompanionOneToOne(
-    values: InsertCompanionOneToOneDto,
-  ): Promise<InsertCompanionOneToOneResponseDto> {
+    values: InsertCompanionOneToOneValues,
+  ): Promise<InsertCompanionOneToOneResponse> {
     const { transaction } = this.drizzle;
 
     return transaction(async (tx) => {
@@ -90,8 +90,8 @@ export default class Utils {
   }
 
   public async insertWorldRoom(
-    values: InsertWorldRoomDto,
-  ): Promise<InsertWorldRoomResponseDto> {
+    values: InsertWorldRoomValues,
+  ): Promise<InsertWorldRoomResponse> {
     const { transaction } = this.drizzle;
 
     return transaction(async (tx) => {
@@ -115,8 +115,8 @@ export default class Utils {
   }
 
   public async insertHumanUser(
-    values: InsertHumanUserDto,
-  ): Promise<InsertHumanUserResponseDto> {
+    values: InsertHumanUserValues,
+  ): Promise<InsertHumanUserResponse> {
     const { transaction } = this.drizzle;
 
     return transaction(async (tx) => {
@@ -138,8 +138,8 @@ export default class Utils {
   }
 
   public async insertAiUser(
-    values: InsertAiUserDto,
-  ): Promise<InsertAiUserResponseDto> {
+    values: InsertAiUserValues,
+  ): Promise<InsertAiUserResponse> {
     const { transaction } = this.drizzle;
 
     return transaction(async (tx) => {
@@ -158,14 +158,14 @@ export default class Utils {
   }
 
   public async insertMessage(
-    values: InsertMessageDto,
-  ): Promise<InsertMessageResponseDto> {
+    values: InsertMessageValues,
+  ): Promise<InsertMessageResponse> {
     const { transaction } = this.drizzle;
 
     return transaction(async (tx) => {
       const [plotPoint] = await tx
         .insert(plotPoints)
-        .values({ ...values.plotPoint, type: "MESSAGE" })
+        .values({ ...values.plotPoint, type: "AI_MESSAGE" })
         .returning();
 
       const [message] = await tx
@@ -188,8 +188,8 @@ export default class Utils {
   }
 
   public async insertUserEnvironmentPresence(
-    values: InsertUserEnvironmentPresenceDto,
-  ): Promise<InsertUserEnvironmentPresenceResponseDto> {
+    values: InsertUserEnvironmentPresenceValues,
+  ): Promise<InsertUserEnvironmentPresenceResponse> {
     const [userEnvironmentPresence] = await this.drizzle
       .insert(userEnvironmentPresences)
       .values({ userId: values.user.id, environmentId: values.environment.id })
@@ -232,6 +232,7 @@ export default class Utils {
 
     await this.insertMessage({
       ...g,
+      plotPoint: { type: "AI_MESSAGE" },
       message: {
         content: "Standby for G stuff",
         userId: g.user.id,
@@ -241,6 +242,7 @@ export default class Utils {
 
     await this.insertMessage({
       ...ivan,
+      plotPoint: { type: "HUMAN_MESSAGE" },
       message: {
         content: "Welcome back friend. Let's get you authenticated",
         userId: ivan.user.id,

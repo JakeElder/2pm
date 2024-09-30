@@ -3,22 +3,22 @@ import { z } from "zod";
 import { humanUsers, environments, users } from "../drizzle/schema";
 import type { Z } from "..";
 
-const InsertHumanUserDtoSchema = z.object({
+const InsertHumanUserSchema = z.object({
   user: createInsertSchema(users).pick({ id: true, tag: true }),
   location: createSelectSchema(environments).pick({ id: true }),
 });
 
-const InsertHumanUserResponseDtoSchema = z.object({
+const InsertHumanUserResponseSchema = z.object({
   user: createSelectSchema(users),
   humanUser: createSelectSchema(humanUsers),
 });
 
-type InsertHumanUserDto = Z<typeof InsertHumanUserDtoSchema>;
-type InsertHumanUserResponseDto = Z<typeof InsertHumanUserResponseDtoSchema>;
+type InsertHumanUserValues = Z<typeof InsertHumanUserSchema>;
+type InsertHumanUserResponse = Z<typeof InsertHumanUserResponseSchema>;
 
 export {
-  InsertHumanUserDtoSchema,
-  InsertHumanUserResponseDtoSchema,
-  type InsertHumanUserDto,
-  type InsertHumanUserResponseDto,
+  InsertHumanUserSchema,
+  InsertHumanUserResponseSchema,
+  type InsertHumanUserValues,
+  type InsertHumanUserResponse,
 };

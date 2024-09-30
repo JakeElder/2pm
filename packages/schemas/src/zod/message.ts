@@ -9,25 +9,25 @@ import {
 } from "../drizzle/schema";
 import type { Z } from "..";
 
-const InsertMessageDtoSchema = z.object({
-  plotPoint: createInsertSchema(plotPoints).pick({ id: true }).optional(),
+const InsertMessageSchema = z.object({
+  plotPoint: createInsertSchema(plotPoints),
   message: createInsertSchema(messages),
   user: createSelectSchema(users).pick({ id: true }),
 });
 
-type InsertMessageDto = Z<typeof InsertMessageDtoSchema>;
-type InsertMessageResponseDto = Z<typeof InsertMessageResponseDtoSchema>;
-
-const InsertMessageResponseDtoSchema = z.object({
+const InsertMessageResponseSchema = z.object({
   plotPoint: createSelectSchema(plotPoints),
   message: createSelectSchema(messages),
   userPlotPoint: createSelectSchema(userPlotPoints),
   plotPointMessage: createSelectSchema(plotPointMessages),
 });
 
+type InsertMessageValues = Z<typeof InsertMessageSchema>;
+type InsertMessageResponse = Z<typeof InsertMessageResponseSchema>;
+
 export {
-  InsertMessageDtoSchema,
-  InsertMessageResponseDtoSchema,
-  type InsertMessageDto,
-  type InsertMessageResponseDto,
+  InsertMessageSchema,
+  InsertMessageResponseSchema,
+  type InsertMessageValues,
+  type InsertMessageResponse,
 };

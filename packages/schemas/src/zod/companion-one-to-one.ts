@@ -7,12 +7,12 @@ import {
 } from "../drizzle/schema";
 import type { Z } from "..";
 
-const InsertCompanionOneToOneDtoSchema = z.object({
+const InsertCompanionOneToOneSchema = z.object({
   environment: createInsertSchema(environments).pick({ id: true }).optional(),
   companionOneToOne: createInsertSchema(companionOneToOnes),
 });
 
-const InsertCompanionOneToOneResponseDtoSchema = z.object({
+const InsertCompanionOneToOneResponseSchema = z.object({
   environment: createSelectSchema(environments),
   companionOneToOne: createSelectSchema(companionOneToOnes),
   environmentCompanionOneToOne: createSelectSchema(
@@ -20,14 +20,14 @@ const InsertCompanionOneToOneResponseDtoSchema = z.object({
   ),
 });
 
-type InsertCompanionOneToOneDto = Z<typeof InsertCompanionOneToOneDtoSchema>;
-type InsertCompanionOneToOneResponseDto = Z<
-  typeof InsertCompanionOneToOneResponseDtoSchema
+type InsertCompanionOneToOneValues = Z<typeof InsertCompanionOneToOneSchema>;
+type InsertCompanionOneToOneResponse = Z<
+  typeof InsertCompanionOneToOneResponseSchema
 >;
 
 export {
-  InsertCompanionOneToOneDtoSchema,
-  InsertCompanionOneToOneResponseDtoSchema,
-  type InsertCompanionOneToOneDto,
-  type InsertCompanionOneToOneResponseDto,
+  InsertCompanionOneToOneSchema,
+  InsertCompanionOneToOneResponseSchema,
+  type InsertCompanionOneToOneValues,
+  type InsertCompanionOneToOneResponse,
 };

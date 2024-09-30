@@ -3,22 +3,22 @@ import { z } from "zod";
 import { users, aiUsers } from "../drizzle/schema";
 import type { Z } from "..";
 
-const InsertAiUserDtoSchema = z.object({
+const InsertAiUserSchema = z.object({
   user: createInsertSchema(users).pick({ id: true, tag: true }),
   aiUser: createInsertSchema(aiUsers).pick({ code: true }),
 });
 
-const InsertAiUserResponseDtoSchema = z.object({
+const InsertAiUserResponseSchema = z.object({
   user: createSelectSchema(users),
   aiUser: createSelectSchema(aiUsers),
 });
 
-type InsertAiUserDto = Z<typeof InsertAiUserDtoSchema>;
-type InsertAiUserResponseDto = Z<typeof InsertAiUserResponseDtoSchema>;
+type InsertAiUserValues = Z<typeof InsertAiUserSchema>;
+type InsertAiUserResponse = Z<typeof InsertAiUserResponseSchema>;
 
 export {
-  InsertAiUserDtoSchema,
-  InsertAiUserResponseDtoSchema,
-  type InsertAiUserDto,
-  type InsertAiUserResponseDto,
+  InsertAiUserSchema,
+  InsertAiUserResponseSchema,
+  type InsertAiUserValues,
+  type InsertAiUserResponse,
 };
