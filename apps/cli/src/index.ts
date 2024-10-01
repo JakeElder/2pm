@@ -30,6 +30,23 @@ db.command("seed")
     }
   });
 
+db.command("clear")
+  .description("Clears all tables")
+  .action(async () => {
+    const spinner = ora("Clearing DB").start();
+
+    try {
+      const db = new DBService(process.env.DATABASE_URL!);
+      await db.utils.clear();
+      await db.end();
+      spinner.succeed(`Cleared DB`);
+    } catch (e) {
+      spinner.fail("Error clearing DB");
+      console.error(e);
+      process.exit(1);
+    }
+  });
+
 generate
   .command("api-spec")
   .description("Generate OpenAPI specification")

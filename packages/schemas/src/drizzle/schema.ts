@@ -5,18 +5,21 @@ import {
   pgTable,
   serial,
   text,
+  timestamp,
 } from "drizzle-orm/pg-core";
 import {
   AI_USER_CODES,
   ENVIRONMENT_TYPE_CODES,
   WORLD_ROOM_CODES,
 } from "../constants";
+import { sql } from "drizzle-orm";
 
 export const userTypeEnum = pgEnum("UserType", ["HUMAN", "AI"]);
 export const messageTypeEnum = pgEnum("MessageType", ["HUMAN", "AI"]);
 export const plotPointTypeEnum = pgEnum("PlotPointType", [
-  "HUMAN_MESSAGE",
-  "AI_MESSAGE",
+  "MESSAGE_SENT",
+  "ENVIRONMENT_ENTERED",
+  "ENVIRONMENT_LEFT",
 ]);
 export const environmentTypeEnum = pgEnum(
   "EnvironmentType",
@@ -32,6 +35,7 @@ export const aiMessageStateEnum = pgEnum("AiMessageStateEnum", [
 /*
  * Users
  */
+
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   tag: text("tag").notNull(),
@@ -41,16 +45,16 @@ export const users = pgTable("users", {
 export const humanUsers = pgTable("human_users", {
   userId: integer("user_id")
     .primaryKey()
-    .references(() => users.id, { onDelete: "restrict" }),
+    .references(() => users.id),
   locationEnvironmentId: integer("location_environment_id")
     .notNull()
-    .references(() => environments.id, { onDelete: "restrict" }),
+    .references(() => environments.id),
 });
 
 export const aiUsers = pgTable("ai_users", {
   userId: integer("user_id")
     .primaryKey()
-    .references(() => users.id, { onDelete: "restrict" }),
+    .references(() => users.id),
   code: aiUserCodeEnum("code").notNull().unique(),
 });
 
@@ -60,26 +64,43 @@ export const aiUsers = pgTable("ai_users", {
 
 export const plotPoints = pgTable("plot_points", {
   id: serial("id").primaryKey(),
+  userId: integer("user_id")
+    .notNull()
+    .references(() => users.id),
+  environmentId: integer("environment_id")
+    .notNull()
+    .references(() => environments.id),
   type: plotPointTypeEnum("type").notNull(),
 });
 
+/**
+ * Messages
+ */
+
 export const messages = pgTable("messages", {
   id: serial("id").primaryKey(),
+  type: messageTypeEnum("type").notNull(),
   content: text("content").notNull(),
   userId: integer("user_id")
     .notNull()
-    .references(() => users.id, { onDelete: "restrict" }),
+    .references(() => users.id),
   environmentId: integer("environment_id")
     .notNull()
-    .references(() => environments.id, { onDelete: "restrict" }),
+    .references(() => environments.id),
 });
 
 export const humanMessages = pgTable("human_messages", {
   id: serial("id").primaryKey(),
+  messageId: integer("message_id")
+    .notNull()
+    .references(() => messages.id),
 });
 
 export const aiMessages = pgTable("ai_messages", {
   id: serial("id").primaryKey(),
+  messageId: integer("message_id")
+    .notNull()
+    .references(() => messages.id),
   state: aiMessageStateEnum("state").notNull().default("OUTPUTTING"),
 });
 
@@ -105,40 +126,59 @@ export const companionOneToOnes = pgTable("companion_one_to_ones", {
  * Join Tables
  */
 
-export const userPlotPoints = pgTable("user_plot_points", {
+export const userEnvironmentPresences = pgTable("user_environment_presences", {
+  id: serial("id").primaryKey(),
   userId: integer("user_id")
     .notNull()
-    .references(() => users.id, { onDelete: "restrict" }),
-  plotPointId: integer("plot_point_id")
+    .references(() => users.id),
+  environmentId: integer("environment_id")
     .notNull()
-    .references(() => plotPoints.id, { onDelete: "restrict" }),
+    .references(() => environments.id),
+  expired: timestamp("deleted_at")
+    .default(sql`null`)
+    .$type<Date | null>(),
 });
 
 export const plotPointMessages = pgTable("plot_point_messages", {
   plotPointId: integer("plot_point_id")
     .notNull()
-    .references(() => plotPoints.id, { onDelete: "restrict" }),
+    .references(() => plotPoints.id),
   messageId: integer("message_id")
     .notNull()
-    .references(() => messages.id, { onDelete: "restrict" }),
+    .references(() => messages.id),
 });
 
-export const userEnvironmentPresences = pgTable("user_environment_presences", {
-  userId: integer("user_id")
-    .notNull()
-    .references(() => users.id, { onDelete: "restrict" }),
-  environmentId: integer("environment_id")
-    .notNull()
-    .references(() => environments.id, { onDelete: "restrict" }),
-});
+export const plotPointEnvironmentPresences = pgTable(
+  "plot_point_environment_presences",
+  {
+    plotPointId: integer("plot_point_id").notNull(),
+    userEnvironmentPresenceId: integer(
+      "user_environment_presence_id",
+    ).notNull(),
+  },
+  (table) => {
+    return {
+      fk_plot_env_pres_plot: foreignKey({
+        columns: [table.plotPointId],
+        foreignColumns: [plotPoints.id],
+        name: "fk_plot_env_pres_plot",
+      }),
+      fk_plot_env_pres_user_env: foreignKey({
+        columns: [table.userEnvironmentPresenceId],
+        foreignColumns: [userEnvironmentPresences.id],
+        name: "fk_plot_env_pres_user_env",
+      }),
+    };
+  },
+);
 
 export const environmentWorldRooms = pgTable("environment_world_rooms", {
   environmentId: integer("environment_id")
     .notNull()
-    .references(() => environments.id, { onDelete: "restrict" }),
+    .references(() => environments.id),
   worldRoomId: integer("world_room_id")
     .notNull()
-    .references(() => worldRooms.id, { onDelete: "restrict" }),
+    .references(() => worldRooms.id),
 });
 
 export const environmentCompanionOneToOnes = pgTable(
