@@ -1,13 +1,17 @@
 import api from "@/api";
 import { Narrative } from "@2pm/ui";
 import PlotPointSwitch from "./PlotPointSwitch";
+import { Environment } from "@2pm/schemas";
 
-interface Props {}
+interface Props {
+  environment: Pick<Environment, "id">;
+}
 
-const NarrativeContainer = async ({}: Props) => {
-  const res = await api.environments.getPlotPointsByEnvironment(10);
-  const plotPoints = res.data;
-
+const NarrativeContainer = async ({ environment }: Props) => {
+  const res = await api.environments.getPlotPointsByEnvironmentId(
+    environment.id,
+  );
+  const plotPoints = res.data.reverse();
   return (
     <Narrative.Root>
       {plotPoints.map((plotPoint) => (

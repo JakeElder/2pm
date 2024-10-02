@@ -5,6 +5,7 @@ import { UsersModule } from './users/users.module';
 import { ConfigModule } from '@nestjs/config';
 import { PlotPointsModule } from './plot-points/plot-points.module';
 import { AiMessagesModule } from './ai-messages/ai-messages.module';
+import { HumanMessagesModule } from './human-messages/human-messages.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { AiMessagesModule } from './ai-messages/ai-messages.module';
     UsersModule,
     PlotPointsModule,
     AiMessagesModule,
+    HumanMessagesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

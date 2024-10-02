@@ -8,6 +8,7 @@ import {
 import type { Z } from "..";
 
 const InsertWorldRoomValuesSchema = z.object({
+  environment: createInsertSchema(environments).pick({ id: true }).optional(),
   worldRoom: createInsertSchema(worldRooms).pick({ code: true }),
 });
 

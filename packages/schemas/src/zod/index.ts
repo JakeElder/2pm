@@ -4,6 +4,7 @@ export * from "./companion-one-to-one";
 export * from "./environment";
 export * from "./user";
 export * from "./user-environment-presence";
+export * from "./human-message";
 export * from "./human-user";
 export * from "./plot-point";
 export * from "./world-room";

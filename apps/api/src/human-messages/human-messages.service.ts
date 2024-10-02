@@ -1,8 +1,8 @@
 import DBService from '@2pm/db';
-import { AiMessage } from '@2pm/schemas';
+import { HumanMessage } from '@2pm/schemas';
 import {
-  aiMessages,
-  aiUsers,
+  humanMessages,
+  humanUsers,
   environments,
   messages,
   plotPointMessages,
@@ -13,17 +13,19 @@ import { Inject, Injectable } from '@nestjs/common';
 import { eq } from 'drizzle-orm';
 
 @Injectable()
-export class AiMessagesService {
+export class HumanMessagesService {
   constructor(@Inject('DB') private readonly db: DBService) {}
 
-  async getAiMessageByPlotPointId(plotPointId: number): Promise<AiMessage> {
+  async getHumanMessageByPlotPointId(
+    plotPointId: number,
+  ): Promise<HumanMessage> {
     const result = await this.db.drizzle
       .select({
         plotPoint: plotPoints,
         message: messages,
-        aiMessage: aiMessages,
+        humanMessage: humanMessages,
         user: users,
-        aiUser: aiUsers,
+        humanUser: humanUsers,
         environment: environments,
       })
       .from(plotPoints)
@@ -32,9 +34,9 @@ export class AiMessagesService {
         eq(plotPoints.id, plotPointMessages.plotPointId),
       )
       .innerJoin(messages, eq(plotPointMessages.messageId, messages.id))
-      .innerJoin(aiMessages, eq(messages.id, aiMessages.messageId))
+      .innerJoin(humanMessages, eq(messages.id, humanMessages.messageId))
       .innerJoin(users, eq(messages.userId, users.id))
-      .innerJoin(aiUsers, eq(users.id, aiUsers.userId))
+      .innerJoin(humanUsers, eq(users.id, humanUsers.userId))
       .innerJoin(environments, eq(messages.environmentId, environments.id))
       .where(eq(plotPoints.id, plotPointId))
       .limit(1);

@@ -1,12 +1,10 @@
 import css from "./page.module.css";
 import universe from "@2pm/ui/images/universe.png";
-import { Background, Terminal, Narrative } from "@2pm/ui";
+import { Background, Terminal } from "@2pm/ui";
 import TerminalPromptContainer from "@/components/server/TerminalPromptContainer";
 import NarrativeContainer from "@/components/server/NarrativeContainer";
 
 export default async function Home() {
-  const handle = "ivan";
-
   return (
     <Background src={universe.src}>
       <main className={css["main"]}>
@@ -16,10 +14,10 @@ export default async function Home() {
               <Terminal.AiAvatar code="IVAN" />
             </Terminal.Foreground>
             <Terminal.Main>
-              <Terminal.Header handle={handle} />
+              <Terminal.Header handle="ivan" />
               <Terminal.Body>
                 <Terminal.Narrative>
-                  <NarrativeContainer />
+                  <NarrativeContainer environment={{ id: 2 }} />
                 </Terminal.Narrative>
               </Terminal.Body>
               <Terminal.Footer>

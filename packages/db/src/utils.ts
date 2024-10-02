@@ -12,6 +12,8 @@ import {
   InsertCompanionOneToOneResponse,
   InsertAiMessageValues,
   InsertAiMessageResponse,
+  InsertHumanMessageValues,
+  InsertHumanMessageResponse,
 } from "@2pm/schemas";
 import {
   users,
@@ -68,14 +70,17 @@ export default class Utils {
   }
 
   public async insertCompanionOneToOne(
-    _?: InsertCompanionOneToOneValues,
+    values?: InsertCompanionOneToOneValues,
   ): Promise<InsertCompanionOneToOneResponse> {
     const { transaction } = this.drizzle;
 
     return transaction(async (tx) => {
       const [environment] = await tx
         .insert(environments)
-        .values({ type: "COMPANION_ONE_TO_ONE" })
+        .values({
+          id: values?.environment?.id,
+          type: "COMPANION_ONE_TO_ONE",
+        })
         .returning();
 
       const [companionOneToOne] = await tx
@@ -107,7 +112,10 @@ export default class Utils {
     return transaction(async (tx) => {
       const [environment] = await tx
         .insert(environments)
-        .values({ type: "WORLD_ROOM" })
+        .values({
+          id: values.environment?.id,
+          type: "WORLD_ROOM",
+        })
         .returning();
 
       const [worldRoom] = await tx
@@ -140,6 +148,7 @@ export default class Utils {
       const [user] = await tx
         .insert(users)
         .values({
+          id: values.user.id,
           type: "HUMAN",
           tag: values.user.tag,
         })
@@ -166,6 +175,7 @@ export default class Utils {
       const [user] = await tx
         .insert(users)
         .values({
+          id: values.user.id,
           type: "AI",
           tag: values.user.tag,
         })
@@ -183,6 +193,51 @@ export default class Utils {
     });
   }
 
+  public async insertHumanMessage(
+    values: InsertHumanMessageValues,
+  ): Promise<InsertHumanMessageResponse> {
+    return this.drizzle.transaction(async (tx) => {
+      const [plotPoint] = await tx
+        .insert(plotPoints)
+        .values({
+          type: "HUMAN_MESSAGE",
+          userId: values.user.id,
+          environmentId: values.environment.id,
+        })
+        .returning();
+
+      const [message] = await tx
+        .insert(messages)
+        .values({
+          type: "HUMAN",
+          content: values.message.content,
+          userId: values.user.id,
+          environmentId: values.environment.id,
+        })
+        .returning();
+
+      const [humanMessage] = await tx
+        .insert(humanMessages)
+        .values({ messageId: message.id })
+        .returning();
+
+      const [plotPointMessage] = await tx
+        .insert(plotPointMessages)
+        .values({
+          plotPointId: plotPoint.id,
+          messageId: message.id,
+        })
+        .returning();
+
+      return {
+        plotPoint,
+        plotPointMessage,
+        message,
+        humanMessage,
+      };
+    });
+  }
+
   public async insertAiMessage(
     values: InsertAiMessageValues,
   ): Promise<InsertAiMessageResponse> {
@@ -190,7 +245,7 @@ export default class Utils {
       const [plotPoint] = await tx
         .insert(plotPoints)
         .values({
-          type: "MESSAGE_SENT",
+          type: "AI_MESSAGE",
           userId: values.user.id,
           environmentId: values.environment.id,
         })
@@ -269,25 +324,28 @@ export default class Utils {
     await this.clear();
 
     const universe = await this.insertWorldRoom({
+      environment: { id: 1 },
       worldRoom: { code: "UNIVERSE" },
     });
 
     const [g, ivan, jake] = await Promise.all([
       this.insertAiUser({
-        user: { tag: "g" },
+        user: { id: 1, tag: "g" },
         aiUser: { code: "G" },
       }),
       this.insertAiUser({
-        user: { tag: "ivan" },
+        user: { id: 2, tag: "ivan" },
         aiUser: { code: "IVAN" },
       }),
       this.insertHumanUser({
-        user: { tag: "jake" },
+        user: { id: 3, tag: "jake" },
         location: universe.environment,
       }),
     ]);
 
-    const o2o = await this.insertCompanionOneToOne();
+    const o2o = await this.insertCompanionOneToOne({
+      environment: { id: 2 },
+    });
 
     await Promise.all([
       this.insertUserEnvironmentPresence({
@@ -317,6 +375,14 @@ export default class Utils {
       environment: o2o.environment,
       message: {
         content: "Welcome back friend. Let's get you authenticated",
+      },
+    });
+
+    await this.insertHumanMessage({
+      user: jake.user,
+      environment: o2o.environment,
+      message: {
+        content: "Ok.",
       },
     });
   }

@@ -1,4 +1,10 @@
-import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  NotFoundException,
+  Param,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { AiMessagesService } from './ai-messages.service';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AiMessageDto } from './ai-message.dto';
@@ -21,7 +27,16 @@ export class AiMessagesController {
     status: 200,
     type: AiMessageDto,
   })
-  getAiMessageByPlotPointId(@Param('id', ParseIntPipe) id: number) {
-    return this.aiMessagesService.getAiMessageByPlotPointId(id);
+  async getAiMessageByPlotPointId(@Param('id', ParseIntPipe) id: number) {
+    const aiMessage =
+      await this.aiMessagesService.getAiMessageByPlotPointId(id);
+
+    if (!aiMessage) {
+      throw new NotFoundException(
+        `Ai Message not found for plot point Id: ${id}`,
+      );
+    }
+
+    return aiMessage;
   }
 }

@@ -10,17 +10,14 @@ import {
 import {
   AI_USER_CODES,
   ENVIRONMENT_TYPE_CODES,
+  PLOT_POINT_TYPES,
   WORLD_ROOM_CODES,
 } from "../constants";
 import { sql } from "drizzle-orm";
 
 export const userTypeEnum = pgEnum("UserType", ["HUMAN", "AI"]);
 export const messageTypeEnum = pgEnum("MessageType", ["HUMAN", "AI"]);
-export const plotPointTypeEnum = pgEnum("PlotPointType", [
-  "MESSAGE_SENT",
-  "ENVIRONMENT_ENTERED",
-  "ENVIRONMENT_LEFT",
-]);
+export const plotPointTypeEnum = pgEnum("PlotPointType", PLOT_POINT_TYPES);
 export const environmentTypeEnum = pgEnum(
   "EnvironmentType",
   ENVIRONMENT_TYPE_CODES,

@@ -11,7 +11,7 @@ export class PlotPointsController {
   @Get('environments/:id/plot-points')
   @ApiOperation({
     summary: 'Get By Environment',
-    operationId: 'getPlotPointsByEnvironment',
+    operationId: 'getPlotPointsByEnvironmentId',
   })
   @ApiParam({
     name: 'id',

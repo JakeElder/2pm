@@ -1,4 +1,4 @@
-import { createSelectSchema } from "drizzle-zod";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
 import {
   companionOneToOnes,
@@ -7,7 +7,9 @@ import {
 } from "../drizzle/schema";
 import type { Z } from "..";
 
-const InsertCompanionOneToOneValuesSchema = z.undefined();
+const InsertCompanionOneToOneValuesSchema = z.object({
+  environment: createInsertSchema(environments).pick({ id: true }).optional(),
+});
 
 const InsertCompanionOneToOneResponseSchema = z.object({
   environment: createSelectSchema(environments),
