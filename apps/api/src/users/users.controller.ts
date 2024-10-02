@@ -7,9 +7,7 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-
-// TODO
-class UserDto {}
+import { UserDto } from './user.dto';
 
 @ApiTags('Users')
 @Controller('users')
@@ -18,7 +16,7 @@ export class UsersController {
 
   @Get()
   @ApiOperation({ summary: 'Get Users', operationId: 'getUsers' })
-  @ApiResponse({ status: 200 })
+  @ApiResponse({ status: 200, type: [UserDto] })
   findAll() {
     return this.usersService.findAll();
   }

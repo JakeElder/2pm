@@ -3,6 +3,7 @@ import universe from "@2pm/ui/images/universe.png";
 import { Background, Terminal, Narrative } from "@2pm/ui";
 import { FirstPersonMessage, ThirdPersonMessage } from "@2pm/ui/plot-points";
 import TerminalPromptContainer from "@/components/server/TerminalPromptContainer";
+import PlotPointsContainer from "@/components/server/PlotPointsContainer";
 
 export default async function Home() {
   const handle = "ivan";
@@ -20,6 +21,7 @@ export default async function Home() {
               <Terminal.Body>
                 <Terminal.Narrative>
                   <Narrative.Root>
+                    <PlotPointsContainer />
                     <Narrative.FirstPersonMessage>
                       <FirstPersonMessage>
                         My email address is jake@2pm.io

@@ -21,7 +21,8 @@
   "dependencies": {
     "@2pm/db": "workspace:*",
     "@2pm/schemas": "workspace:*",
-    "@asteasolutions/zod-to-openapi": "^7.1.2",
+    "@anatine/zod-nestjs": "^2.0.9",
+    "@anatine/zod-openapi": "^2.2.6",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.2.3",
     "@nestjs/core": "^10.0.0",
@@ -29,6 +30,7 @@
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/swagger": "^7.4.0",
     "ejs": "^3.1.10",
+    "openapi3-ts": "^4.4.0",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1"
   },
