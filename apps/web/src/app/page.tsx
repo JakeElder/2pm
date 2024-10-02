@@ -1,9 +1,8 @@
 import css from "./page.module.css";
 import universe from "@2pm/ui/images/universe.png";
 import { Background, Terminal, Narrative } from "@2pm/ui";
-import { FirstPersonMessage, ThirdPersonMessage } from "@2pm/ui/plot-points";
 import TerminalPromptContainer from "@/components/server/TerminalPromptContainer";
-import PlotPointsContainer from "@/components/server/PlotPointsContainer";
+import NarrativeContainer from "@/components/server/NarrativeContainer";
 
 export default async function Home() {
   const handle = "ivan";
@@ -20,19 +19,7 @@ export default async function Home() {
               <Terminal.Header handle={handle} />
               <Terminal.Body>
                 <Terminal.Narrative>
-                  <Narrative.Root>
-                    <PlotPointsContainer />
-                    <Narrative.FirstPersonMessage>
-                      <FirstPersonMessage>
-                        My email address is jake@2pm.io
-                      </FirstPersonMessage>
-                    </Narrative.FirstPersonMessage>
-                    <Narrative.ThirdPersonMessage>
-                      <ThirdPersonMessage>
-                        Sure, I’ve added the e-mail address to our wait list.
-                      </ThirdPersonMessage>
-                    </Narrative.ThirdPersonMessage>
-                  </Narrative.Root>
+                  <NarrativeContainer />
                 </Terminal.Narrative>
               </Terminal.Body>
               <Terminal.Footer>

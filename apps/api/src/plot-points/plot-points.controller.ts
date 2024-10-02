@@ -1,12 +1,6 @@
 import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
 import { PlotPointsService } from './plot-points.service';
-import {
-  ApiOkResponse,
-  ApiOperation,
-  ApiParam,
-  ApiTags,
-} from '@nestjs/swagger';
-import { type Environment } from '@2pm/schemas';
+import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { PlotPointDto } from './plot-point.dto';
 
 @ApiTags('Plot Points')
@@ -24,13 +18,12 @@ export class PlotPointsController {
     description: 'The ID of the environment',
     type: Number,
   })
-  @ApiOkResponse({
+  @ApiResponse({
+    status: 200,
     description: 'A list of plot points for the specified environment',
     type: [PlotPointDto],
   })
-  findPlotPointsByEnvironment(
-    @Param('id', ParseIntPipe) environmentId: Environment['id'],
-  ) {
-    return this.plotPointsService.findAllByEnvironment(environmentId);
+  findPlotPointsByEnvironment(@Param('id', ParseIntPipe) id: number) {
+    return this.plotPointsService.findAllByEnvironmentId(id);
   }
 }

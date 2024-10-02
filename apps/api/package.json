@@ -22,7 +22,6 @@
     "@2pm/db": "workspace:*",
     "@2pm/schemas": "workspace:*",
     "@anatine/zod-nestjs": "^2.0.9",
-    "@anatine/zod-openapi": "^2.2.6",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.2.3",
     "@nestjs/core": "^10.0.0",
