@@ -1,2 +1,1 @@
-export { default as FirstPersonMessage } from "./FirstPersonMessage";
-export { default as ThirdPersonMessage } from "./ThirdPersonMessage";
+export { default as Message } from "./Message";
