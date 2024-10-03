@@ -1,7 +1,7 @@
 import css from "./page.module.css";
 import universe from "@2pm/ui/images/universe.png";
 import { Background, Terminal } from "@2pm/ui";
-import TerminalPromptContainer from "@/components/server/TerminalPromptContainer";
+import TerminalPromptViewContainer from "@/components/client/TerminalPromptViewContainer";
 import NarrativeContainer from "@/components/server/NarrativeContainer";
 
 export default async function Home() {
@@ -17,11 +17,11 @@ export default async function Home() {
               <Terminal.Header handle="ivan" />
               <Terminal.Body>
                 <Terminal.Narrative>
-                  <NarrativeContainer environment={{ id: 2 }} />
+                  <NarrativeContainer environmentId={2} />
                 </Terminal.Narrative>
               </Terminal.Body>
               <Terminal.Footer>
-                <TerminalPromptContainer />
+                <TerminalPromptViewContainer environmentId={2} userId={3} />
               </Terminal.Footer>
             </Terminal.Main>
           </Terminal.Root>

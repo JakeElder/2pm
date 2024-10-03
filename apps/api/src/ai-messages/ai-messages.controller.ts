@@ -16,7 +16,7 @@ export class AiMessagesController {
 
   @Get('plot-points/:id/ai-message')
   @ApiOperation({
-    summary: 'Get by Plot Point',
+    summary: 'Get By Plot Point',
     operationId: 'getAiMessageByPlotPointId',
   })
   @ApiParam({

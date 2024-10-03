@@ -1,42 +1,48 @@
 import {
+  Body,
   Controller,
   Get,
   NotFoundException,
   Param,
   ParseIntPipe,
+  Post,
+  UsePipes,
 } from '@nestjs/common';
 import { HumanMessagesService } from './human-messages.service';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { HumanMessageDto } from './human-message.dto';
+import { CreateHumanMessageDto, HumanMessageDto } from './human-message.dto';
+import { ZodValidationPipe } from '@anatine/zod-nestjs';
 
 @ApiTags('Human Messages')
 @Controller()
 export class HumanMessagesController {
-  constructor(private readonly humanMessagesService: HumanMessagesService) {}
+  constructor(private readonly service: HumanMessagesService) {}
 
   @Get('plot-points/:id/human-message')
   @ApiOperation({
-    summary: 'Get by Plot Point',
+    summary: 'Get By Plot Point',
     operationId: 'getHumanMessageByPlotPointId',
   })
-  @ApiParam({
-    name: 'id',
-    type: Number,
-  })
-  @ApiResponse({
-    status: 200,
-    type: HumanMessageDto,
-  })
-  async getHumanMessageByPlotPointId(@Param('id', ParseIntPipe) id: number) {
-    const humanMessage =
-      await this.humanMessagesService.getHumanMessageByPlotPointId(id);
+  @ApiParam({ name: 'id', type: Number })
+  @ApiResponse({ status: 200, type: HumanMessageDto })
+  async getByPlotPointId(@Param('id', ParseIntPipe) id: number) {
+    const message = await this.service.getByPlotPointId(id);
 
-    if (!humanMessage) {
+    if (!message) {
       throw new NotFoundException(
-        `Human Message not found for plot point ID: ${id}`,
+        `Human Message not found for plot point Id: ${id}`,
       );
     }
 
-    return humanMessage;
+    return message;
+  }
+
+  @UsePipes(ZodValidationPipe)
+  @Post('human-message')
+  @ApiOperation({ summary: 'Create', operationId: 'createHumanMessage' })
+  @ApiResponse({ status: 201, type: HumanMessageDto })
+  async create(@Body() createHumanMessageDto: CreateHumanMessageDto) {
+    const res = await this.service.create(createHumanMessageDto);
+    return res;
   }
 }
