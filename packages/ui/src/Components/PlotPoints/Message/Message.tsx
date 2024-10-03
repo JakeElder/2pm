@@ -3,19 +3,18 @@ import css from "./Message.module.css";
 import { processMessageBody } from "../../../utils";
 import Markdown from "../../Markdown";
 import classNames from "classnames";
+import { PlotPointPerspective } from "@2pm/schemas";
 
 /*
  * Message
  */
 
-type Perspective = "FIRST_PERSON" | "THIRD_PERSON";
-
 type Props = {
-  perspective: Perspective;
+  perspective: PlotPointPerspective;
   children: string;
 };
 
-const perspectiveClassName = (perspective: Perspective) =>
+const perspectiveClassName = (perspective: PlotPointPerspective) =>
   perspective === "FIRST_PERSON" ? "first-person-body" : "third-person-body";
 
 export const Message = ({ perspective, children }: Props) => {

@@ -4,8 +4,8 @@ import * as Narrative from "../Narrative";
 import { Background } from "../Background";
 import PromptSubmitButton from "../PromptSubmitButton";
 import PromptInput from "../PromptInput";
-import ivan from "../../../public/images/ivan.png";
 import universe from "../../../public/images/universe.png";
+import { Message } from "../PlotPoints";
 
 const meta: Meta<typeof Terminal.Root> = {
   title: "Components/Terminal",
@@ -39,7 +39,7 @@ export const Default: Story = {
     return (
       <Terminal.Root>
         <Terminal.Foreground>
-          <Terminal.Avatar {...ivan} alt={handle} />
+          <Terminal.AiAvatar code="IVAN" />
         </Terminal.Foreground>
         <Terminal.Main>
           <Terminal.Header handle={handle} />
@@ -55,6 +55,19 @@ export const Default: Story = {
 
 export const Conversation: Story = {
   render() {
+    const ConversationNarrative = () => (
+      <Terminal.Narrative>
+        <Narrative.Root>
+          <Narrative.PlotPoint type="AI_MESSAGE" perspective="THIRD_PERSON">
+            <Message perspective="THIRD_PERSON">Hi</Message>
+          </Narrative.PlotPoint>
+          <Narrative.PlotPoint type="HUMAN_MESSAGE" perspective="FIRST_PERSON">
+            <Message perspective="FIRST_PERSON">Hi</Message>
+          </Narrative.PlotPoint>
+        </Narrative.Root>
+      </Terminal.Narrative>
+    );
+
     return (
       <Terminal.Root>
         <Terminal.Foreground>
@@ -63,9 +76,7 @@ export const Conversation: Story = {
         <Terminal.Main>
           <Terminal.Header handle={handle} />
           <Terminal.Body>
-            <Terminal.Narrative>
-              <Narrative.Root>{null}</Narrative.Root>
-            </Terminal.Narrative>
+            <ConversationNarrative />
           </Terminal.Body>
           <Terminal.Footer>
             <Terminal.Prompt>

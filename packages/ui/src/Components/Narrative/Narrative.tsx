@@ -1,46 +1,52 @@
 import React from "react";
 import css from "./Narrative.module.css";
 import classNames from "classnames";
+import { PlotPoint as PlotPointType, PlotPointPerspective } from "@2pm/schemas";
 
 /**
  * Root
  */
 
 interface RootProps {
-  children: React.ReactNode;
+  children: React.ReactNode[];
 }
 
 export const Root = ({ children }: RootProps) => {
-  return <div className={css["root"]}>{children}</div>;
+  return <div className={css["root"]}>{[...children].reverse()}</div>;
 };
 
 /*
- * FirstPersonMessage
+ * PlotPoint
  */
 
-interface FirstPersonMessageProps {
+interface PlotPointProps {
+  type: PlotPointType["type"];
+  perspective: PlotPointPerspective;
   children: React.ReactNode;
 }
 
-export const FirstPersonMessage = ({ children }: FirstPersonMessageProps) => {
-  return (
-    <div className={classNames(css["plot-point"], css["first-person-message"])}>
-      {children}
-    </div>
-  );
+export const PlotPoint = ({ type, perspective, children }: PlotPointProps) => {
+  if (type === "AI_MESSAGE" || type === "HUMAN_MESSAGE") {
+    return <Message perspective={perspective}>{children}</Message>;
+  }
 };
 
 /*
- * ThirdPersonMessage
+ * Message
  */
 
-interface ThirdPersonMessageProps {
+interface MessageProps {
+  perspective: PlotPointPerspective;
   children: React.ReactNode;
 }
 
-export const ThirdPersonMessage = ({ children }: ThirdPersonMessageProps) => {
+const Message = ({ children, perspective }: MessageProps) => {
+  const className =
+    perspective === "FIRST_PERSON"
+      ? "first-person-message"
+      : "third-person-message";
   return (
-    <div className={classNames(css["plot-point"], css["third-person-message"])}>
+    <div className={classNames(css["plot-point"], css[className])}>
       {children}
     </div>
   );
