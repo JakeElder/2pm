@@ -1,51 +1,42 @@
 import { PlotPoint, PlotPointPerspective } from "@2pm/schemas";
-import api from "@/api";
+import {
+  getAiMessageByPlotPointId,
+  getHumanMessageByPlotPointId,
+} from "@/api/plot-points";
 import { Message } from "@2pm/ui/plot-points";
 
-const getPerspective = async ({
-  userId,
-}: PlotPoint): Promise<PlotPointPerspective> => {
-  return userId === 3 ? "FIRST_PERSON" : "THIRD_PERSON";
-};
+interface Props extends PlotPoint {}
 
-/*
+interface MessageProps {
+  id: PlotPoint["id"];
+  perspective: PlotPointPerspective;
+}
+
+/**
  * AiMessage
  */
 
-interface AiMessageProps extends PlotPoint {}
-
-export const AiMessage = async (plotPoint: AiMessageProps) => {
-  const perspective = await getPerspective(plotPoint);
-  const res = await api.plotPoints.getAiMessageByPlotPointId(plotPoint.id);
-  return (
-    <Message perspective={perspective}>{res.data.message.content}</Message>
-  );
+export const AiMessage = async ({ id, perspective }: MessageProps) => {
+  const { data } = await getAiMessageByPlotPointId(id);
+  return <Message perspective={perspective}>{data.message.content}</Message>;
 };
 
-/*
+/**
  * HumanMessage
  */
 
-interface HumanMessageProps extends PlotPoint {}
-
-export const HumanMessage = async (plotPoint: HumanMessageProps) => {
-  const perspective = await getPerspective(plotPoint);
-  const res = await api.plotPoints.getHumanMessageByPlotPointId(plotPoint.id);
-  return (
-    <Message perspective={perspective}>{res.data.message.content}</Message>
-  );
+export const HumanMessage = async ({ id, perspective }: MessageProps) => {
+  const { data } = await getHumanMessageByPlotPointId(id);
+  return <Message perspective={perspective}>{data.message.content}</Message>;
 };
 
 /**
  * MessageContainer
  */
 
-interface Props extends PlotPoint {}
-
-export const MessageContainer = async (plotPoint: Props) => {
-  return plotPoint.type === "AI_MESSAGE" ? (
-    <AiMessage {...plotPoint} />
-  ) : (
-    <HumanMessage {...plotPoint} />
-  );
+export const MessageContainer = async ({ id, userId, type }: Props) => {
+  const perspective = userId === 3 ? "FIRST_PERSON" : "THIRD_PERSON";
+  const Component = type === "AI_MESSAGE" ? AiMessage : HumanMessage;
+  const props: MessageProps = { id, perspective };
+  return <Component {...props} />;
 };

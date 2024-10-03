@@ -41,8 +41,8 @@ export class HumanMessagesController {
   @Post('human-message')
   @ApiOperation({ summary: 'Create', operationId: 'createHumanMessage' })
   @ApiResponse({ status: 201, type: HumanMessageDto })
-  async create(@Body() createHumanMessageDto: CreateHumanMessageDto) {
-    const res = await this.service.create(createHumanMessageDto);
+  async create(@Body() dto: CreateHumanMessageDto) {
+    const res = await this.service.create(dto);
     return res;
   }
 }

@@ -11,7 +11,8 @@ export class PlotPointsService {
     const res = await this.db.drizzle
       .select()
       .from(plotPoints)
-      .where(eq(plotPoints.environmentId, id));
+      .where(eq(plotPoints.environmentId, id))
+      .orderBy(plotPoints.id);
 
     return res;
   }

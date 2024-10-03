@@ -6,7 +6,7 @@
     "./zod": "./src/zod/index.ts"
   },
   "scripts": {
-    "studio": "drizzle-kit studio --port 3002",
+    "studio": "drizzle-kit studio",
     "generate": "drizzle-kit generate",
     "migrate": "drizzle-kit migrate"
   },
