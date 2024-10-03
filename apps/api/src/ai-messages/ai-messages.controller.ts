@@ -28,8 +28,7 @@ export class AiMessagesController {
     type: AiMessageDto,
   })
   async getAiMessageByPlotPointId(@Param('id', ParseIntPipe) id: number) {
-    const aiMessage =
-      await this.aiMessagesService.getAiMessageByPlotPointId(id);
+    const aiMessage = await this.aiMessagesService.getByPlotPointId(id);
 
     if (!aiMessage) {
       throw new NotFoundException(

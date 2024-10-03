@@ -16,7 +16,7 @@ import { eq } from 'drizzle-orm';
 export class AiMessagesService {
   constructor(@Inject('DB') private readonly db: DBService) {}
 
-  async getAiMessageByPlotPointId(plotPointId: number): Promise<AiMessage> {
+  async getByPlotPointId(plotPointId: number): Promise<AiMessage> {
     const result = await this.db.drizzle
       .select({
         plotPoint: plotPoints,

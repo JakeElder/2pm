@@ -3,6 +3,7 @@
     "strict": true, 
     "module": "commonjs",
     "moduleResolution": "bundler",
+    "strictPropertyInitialization": false,
     "declaration": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,
