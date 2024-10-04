@@ -1,7 +1,8 @@
 import React from "react";
 import css from "./Narrative.module.css";
 import classNames from "classnames";
-import { PlotPoint as PlotPointType, PlotPointPerspective } from "@2pm/schemas";
+import { PlotPointPerspective } from "@2pm/schemas";
+import { PlotPointDto } from "@2pm/schemas/dto";
 
 /**
  * Root
@@ -20,7 +21,7 @@ export const Root = ({ children }: RootProps) => {
  */
 
 interface PlotPointProps {
-  type: PlotPointType["type"];
+  type: PlotPointDto["type"];
   perspective: PlotPointPerspective;
   children: React.ReactNode;
 }

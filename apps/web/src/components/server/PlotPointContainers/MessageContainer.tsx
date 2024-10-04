@@ -1,14 +1,15 @@
-import { PlotPoint, PlotPointPerspective } from "@2pm/schemas";
 import {
   getAiMessageByPlotPointId,
   getHumanMessageByPlotPointId,
 } from "@/api/plot-points";
+import { PlotPointPerspective } from "@2pm/schemas";
+import { PlotPointDto } from "@2pm/schemas/dto";
 import { Message } from "@2pm/ui/plot-points";
 
-interface Props extends PlotPoint {}
+interface Props extends PlotPointDto {}
 
 interface MessageProps {
-  id: PlotPoint["id"];
+  id: number;
   perspective: PlotPointPerspective;
 }
 

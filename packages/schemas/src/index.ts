@@ -7,8 +7,6 @@ import type {
   PLOT_POINT_TYPES,
 } from "./constants";
 
-export * from "./zod";
-
 export type Z<T extends ZodType> = z.infer<T>;
 export type Drizzle = PostgresJsDatabase<typeof schema>;
 

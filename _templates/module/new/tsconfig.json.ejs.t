@@ -4,6 +4,10 @@ to: <%= dir %>/<%= id %>/tsconfig.json
 {
   "compilerOptions": {
     "moduleResolution": "bundler",
-    "strict": true
+    "module": "esnext",
+    "strict": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
   }
 }

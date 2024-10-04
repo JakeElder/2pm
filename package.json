@@ -10,13 +10,14 @@
     "packages/*"
   ],
   "dependencies": {
+    "@anatine/zod-nestjs": "^2.0.9",
     "drizzle-orm": "^0.33.0",
-    "postgres": "^3.4.4",
-    "reset-css": "^5.0.2",
+    "drizzle-zod": "^0.5.1",
     "next": "14.2.5",
+    "postgres": "^3.4.4",
     "react": "^18",
     "react-dom": "^18",
-    "drizzle-zod": "^0.5.1",
+    "reset-css": "^5.0.2",
     "zod": "^3.23.8"
   },
   "devDependencies": {

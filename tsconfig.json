@@ -1,8 +1,10 @@
 {
   "compilerOptions": {
     "strict": true,
+    "module": "esnext",
     "moduleResolution": "bundler",
     "esModuleInterop": true,
+    "experimentalDecorators": true,
     "emitDecoratorMetadata": true
   }
 }

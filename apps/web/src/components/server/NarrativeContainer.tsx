@@ -1,13 +1,13 @@
+import { PlotPointDto } from "@2pm/schemas/dto";
 import { getPlotPointsByEnvironmentId } from "@/api/environments";
 import { Narrative } from "@2pm/ui";
 import PlotPointContainer from "./PlotPointContainer";
-import { Environment, PlotPoint } from "@2pm/schemas";
 
 interface Props {
-  environmentId: Environment["id"];
+  environmentId: number;
 }
 
-interface ItemProps extends PlotPoint {}
+interface ItemProps extends PlotPointDto {}
 
 /*
  * Item
@@ -15,7 +15,7 @@ interface ItemProps extends PlotPoint {}
 
 export const Item = ({ id, userId, type, ...rest }: ItemProps) => {
   const perspective = userId === 3 ? "FIRST_PERSON" : "THIRD_PERSON";
-  const props: PlotPoint = { id, userId, type, ...rest };
+  const props: PlotPointDto = { id, userId, type, ...rest };
   return (
     <Narrative.PlotPoint perspective={perspective} type={type}>
       <PlotPointContainer {...props} />

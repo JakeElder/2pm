@@ -1,5 +1,5 @@
 import DBService from '@2pm/db';
-import { HumanMessage } from '@2pm/schemas';
+import { CreateHumanMessageDto, HumanMessageDto } from '@2pm/schemas/dto';
 import {
   humanMessages,
   humanUsers,
@@ -11,13 +11,12 @@ import {
 } from '@2pm/schemas/drizzle';
 import { Inject, Injectable } from '@nestjs/common';
 import { eq } from 'drizzle-orm';
-import { CreateHumanMessageDto } from './human-message.dto';
 
 @Injectable()
 export class HumanMessagesService {
   constructor(@Inject('DB') private readonly db: DBService) {}
 
-  async getByPlotPointId(plotPointId: number): Promise<HumanMessage> {
+  async getByPlotPointId(plotPointId: number): Promise<HumanMessageDto> {
     const result = await this.db.drizzle
       .select({
         plotPoint: plotPoints,
@@ -47,11 +46,11 @@ export class HumanMessagesService {
     return result[0];
   }
 
-  async create(message: CreateHumanMessageDto) {
-    const res = await this.db.utils.insertHumanMessage({
-      user: { id: message.userId },
-      environment: { id: message.environmentId },
-      message: { content: message.content },
+  async create({ userId, environmentId, content }: CreateHumanMessageDto) {
+    const res = await this.db.humanMessages.insert({
+      userId,
+      environmentId,
+      content,
     });
     return res;
   }

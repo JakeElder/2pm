@@ -3,7 +3,7 @@
   "exports": {
     ".": "./src/index.ts",
     "./drizzle": "./src/drizzle/schema.ts",
-    "./zod": "./src/zod/index.ts"
+    "./dto": "./src/dto/index.ts"
   },
   "scripts": {
     "studio": "drizzle-kit studio",

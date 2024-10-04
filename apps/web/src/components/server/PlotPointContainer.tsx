@@ -1,7 +1,7 @@
-import { PlotPoint } from "@2pm/schemas";
+import { PlotPointDto } from "@2pm/schemas/dto";
 import { MessageContainer } from "./PlotPointContainers/MessageContainer";
 
-interface Props extends PlotPoint {}
+interface Props extends PlotPointDto {}
 
 const PlotPointContainer = (plotPoint: Props) => {
   const { type } = plotPoint;

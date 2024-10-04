@@ -1,7 +1,7 @@
 import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
-import { PlotPointsService } from './plot-points.service';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { PlotPointDto } from './plot-point.dto';
+import { PlotPointDto } from '@2pm/schemas/dto';
+import { PlotPointsService } from './plot-points.service';
 
 @ApiTags('Plot Points')
 @Controller()

@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "strict": true, 
-    "module": "commonjs",
+    "module": "esnext",
     "moduleResolution": "bundler",
     "strictPropertyInitialization": false,
     "declaration": true,

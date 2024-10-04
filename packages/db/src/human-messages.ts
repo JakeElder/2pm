@@ -1,0 +1,86 @@
+import { CreateHumanMessageDto, HumanMessageDto } from "@2pm/schemas/dto";
+import {
+  environments,
+  humanMessages,
+  humanUsers,
+  messages,
+  plotPointMessages,
+  plotPoints,
+  users,
+} from "@2pm/schemas/drizzle";
+import { eq } from "drizzle-orm";
+import { DbModule } from "./db-module";
+
+export default class HumanMessages extends DbModule {
+  public async insert({
+    userId,
+    environmentId,
+    content,
+  }: CreateHumanMessageDto): Promise<HumanMessageDto> {
+    const [[environment], [{ user, humanUser }]] = await Promise.all([
+      this.drizzle
+        .select()
+        .from(environments)
+        .where(eq(environments.id, environmentId))
+        .limit(1),
+      this.drizzle
+        .select({ user: users, humanUser: humanUsers })
+        .from(users)
+        .innerJoin(humanUsers, eq(users.id, userId))
+        .where(eq(users.id, userId))
+        .limit(1),
+    ]);
+
+    if (!environment || !user || !humanUser) {
+      throw new Error();
+    }
+
+    const resources = await this.drizzle.transaction(async (tx) => {
+      const [plotPoint] = await tx
+        .insert(plotPoints)
+        .values({
+          type: "HUMAN_MESSAGE",
+          userId,
+          environmentId,
+        })
+        .returning();
+
+      const [message] = await tx
+        .insert(messages)
+        .values({
+          type: "HUMAN",
+          content,
+          userId,
+          environmentId,
+        })
+        .returning();
+
+      const [humanMessage] = await tx
+        .insert(humanMessages)
+        .values({ messageId: message.id })
+        .returning();
+
+      const [plotPointMessage] = await tx
+        .insert(plotPointMessages)
+        .values({
+          plotPointId: plotPoint.id,
+          messageId: message.id,
+        })
+        .returning();
+
+      return {
+        plotPoint,
+        plotPointMessage,
+        message,
+        humanMessage,
+      };
+    });
+
+    return {
+      user,
+      humanUser,
+      environment,
+      ...resources,
+    };
+  }
+}

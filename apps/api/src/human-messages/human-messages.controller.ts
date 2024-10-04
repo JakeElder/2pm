@@ -1,3 +1,6 @@
+import { CreateHumanMessageDto, HumanMessageDto } from '@2pm/schemas/dto';
+import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ZodValidationPipe } from '@anatine/zod-nestjs';
 import {
   Body,
   Controller,
@@ -9,9 +12,6 @@ import {
   UsePipes,
 } from '@nestjs/common';
 import { HumanMessagesService } from './human-messages.service';
-import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { CreateHumanMessageDto, HumanMessageDto } from './human-message.dto';
-import { ZodValidationPipe } from '@anatine/zod-nestjs';
 import { EnvironmentsGateway } from '../environments/environments.gateway';
 
 @ApiTags('Human Messages')
