@@ -1,7 +1,7 @@
 import DBService from '@2pm/db';
 import { plotPoints } from '@2pm/schemas/drizzle';
 import { Inject, Injectable } from '@nestjs/common';
-import { eq } from 'drizzle-orm';
+import { desc, eq } from 'drizzle-orm';
 
 @Injectable()
 export class PlotPointsService {
@@ -12,7 +12,7 @@ export class PlotPointsService {
       .select()
       .from(plotPoints)
       .where(eq(plotPoints.environmentId, id))
-      .orderBy(plotPoints.id);
+      .orderBy(desc(plotPoints.id));
 
     return res;
   }

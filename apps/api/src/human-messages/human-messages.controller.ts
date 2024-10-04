@@ -19,7 +19,7 @@ import { EnvironmentsGateway } from '../environments/environments.gateway';
 export class HumanMessagesController {
   constructor(
     private readonly service: HumanMessagesService,
-    private readonly gateway: EnvironmentsGateway,
+    private readonly environmentGateway: EnvironmentsGateway,
   ) {}
 
   @Get('plot-points/:id/human-message')
@@ -47,7 +47,10 @@ export class HumanMessagesController {
   @ApiResponse({ status: 201, type: HumanMessageDto })
   async create(@Body() dto: CreateHumanMessageDto) {
     const res = await this.service.create(dto);
-    this.gateway.sendPlotPointUpdate(dto.environmentId, res.plotPoint);
+    this.environmentGateway.sendPlotPointUpdate(
+      res.environment.id,
+      res.plotPoint,
+    );
     return res;
   }
 }

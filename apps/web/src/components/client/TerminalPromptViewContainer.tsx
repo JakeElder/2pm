@@ -21,7 +21,7 @@ const TerminalPromptViewContainer = (props: Props) => {
   } = useForm<Inputs>();
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    const res = await submitMessage({ ...props, content: data.message });
+    await submitMessage({ ...props, content: data.message });
     reset();
   };
 

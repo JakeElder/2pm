@@ -6,7 +6,7 @@ import { PlotPointsService } from './plot-points.service';
 @ApiTags('Plot Points')
 @Controller()
 export class PlotPointsController {
-  constructor(private readonly plotPointsService: PlotPointsService) {}
+  constructor(private readonly service: PlotPointsService) {}
 
   @Get('environments/:id/plot-points')
   @ApiOperation({
@@ -24,6 +24,6 @@ export class PlotPointsController {
     type: [PlotPointDto],
   })
   findPlotPointsByEnvironment(@Param('id', ParseIntPipe) id: number) {
-    return this.plotPointsService.findAllByEnvironmentId(id);
+    return this.service.findAllByEnvironmentId(id);
   }
 }

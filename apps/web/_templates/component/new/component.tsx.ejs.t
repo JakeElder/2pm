@@ -4,7 +4,7 @@ to: src/components/<%= type %>/<%= name %>.tsx
 <% if (type === 'client') { -%>
 'use client';
 <% } -%>
-interface Props {}
+type Props = {};
 
 const <%= name %> = ({}: Props) => {
   return <><%= name %></>;

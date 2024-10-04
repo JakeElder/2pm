@@ -1,40 +1,23 @@
-import { PlotPointDto } from "@2pm/schemas/dto";
+"use server";
+
 import { getPlotPointsByEnvironmentId } from "@/api/environments";
 import { Narrative } from "@2pm/ui";
-import PlotPointContainer from "./PlotPointContainer";
+import PlotPointListener from "@/components/client/PlotPointListener";
+import NarrativePlotPointContainer from "./NarrativePlotPointContainer";
 
-interface Props {
+type Props = {
   environmentId: number;
-}
-
-interface ItemProps extends PlotPointDto {}
-
-/*
- * Item
- */
-
-export const Item = ({ id, userId, type, ...rest }: ItemProps) => {
-  const perspective = userId === 3 ? "FIRST_PERSON" : "THIRD_PERSON";
-  const props: PlotPointDto = { id, userId, type, ...rest };
-  return (
-    <Narrative.PlotPoint perspective={perspective} type={type}>
-      <PlotPointContainer {...props} />
-    </Narrative.PlotPoint>
-  );
 };
-
-/**
- * NarrativeContainer
- */
 
 const NarrativeContainer = async ({ environmentId }: Props) => {
   const { data } = await getPlotPointsByEnvironmentId(environmentId);
 
   return (
     <Narrative.Root>
-      {data.map((plotPoint) => (
-        <Item key={plotPoint.id} {...plotPoint} />
+      {data.map((props) => (
+        <NarrativePlotPointContainer key={props.id} {...props} />
       ))}
+      <PlotPointListener environmentId={environmentId} />
     </Narrative.Root>
   );
 };

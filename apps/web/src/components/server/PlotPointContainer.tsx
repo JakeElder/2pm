@@ -1,3 +1,5 @@
+"use server";
+
 import { PlotPointDto } from "@2pm/schemas/dto";
 import { MessageContainer } from "./PlotPointContainers/MessageContainer";
 
