@@ -13,7 +13,7 @@ interface RootProps {
 }
 
 export const Root = ({ children }: RootProps) => {
-  return <div className={css["root"]}>{[...children].reverse()}</div>;
+  return <div className={css["root"]}>{children}</div>;
 };
 
 /*

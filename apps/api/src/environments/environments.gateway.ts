@@ -22,7 +22,6 @@ export class EnvironmentsGateway {
     @ConnectedSocket() client: Socket,
   ) {
     client.join(roomId);
-    console.log(`Client joined room: ${roomId}`);
   }
 
   sendPlotPointUpdate(environmentId: number, plotPoint: PlotPointDto) {

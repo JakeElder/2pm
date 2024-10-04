@@ -1,9 +1,8 @@
 "use server";
 
 import { getPlotPointsByEnvironmentId } from "@/api/environments";
-import { Narrative } from "@2pm/ui";
-import PlotPointListener from "@/components/client/PlotPointListener";
-import NarrativePlotPointContainer from "./NarrativePlotPointContainer";
+import { hydratePlotPoint } from "@/actions";
+import NarrativeViewContainer from "../client/NarrativeViewContainer";
 
 type Props = {
   environmentId: number;
@@ -11,14 +10,13 @@ type Props = {
 
 const NarrativeContainer = async ({ environmentId }: Props) => {
   const { data } = await getPlotPointsByEnvironmentId(environmentId);
+  const hydrated = await Promise.all(data.map(hydratePlotPoint));
 
   return (
-    <Narrative.Root>
-      {data.map((props) => (
-        <NarrativePlotPointContainer key={props.id} {...props} />
-      ))}
-      <PlotPointListener environmentId={environmentId} />
-    </Narrative.Root>
+    <NarrativeViewContainer
+      environmentId={environmentId}
+      plotPoints={hydrated}
+    />
   );
 };
 
