@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { AiMessagesService } from './ai-messages.service';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { AiMessageDto } from '@2pm/schemas/dto';
+import { AiMessageDto } from '@2pm/data/dtos';
 
 @ApiTags('Ai Messages')
 @Controller()

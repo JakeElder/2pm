@@ -1,5 +1,5 @@
 import DBService from '@2pm/db';
-import { AiMessageDto } from '@2pm/schemas/dto';
+import { AiMessageDto } from '@2pm/data/dtos';
 import {
   aiMessages,
   aiUsers,
@@ -8,7 +8,7 @@ import {
   plotPointMessages,
   plotPoints,
   users,
-} from '@2pm/schemas/drizzle';
+} from '@2pm/data/schema';
 import { Inject, Injectable } from '@nestjs/common';
 import { eq } from 'drizzle-orm';
 

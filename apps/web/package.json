@@ -8,7 +8,7 @@
     "gen": "hygen component new"
   },
   "dependencies": {
-    "@2pm/schemas": "workspace:*",
+    "@2pm/data": "workspace:*",
     "@2pm/ui": "workspace:*",
     "react-hook-form": "^7.53.0"
   }

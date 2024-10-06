@@ -1,6 +1,6 @@
-import { users, aiUsers } from "@2pm/schemas/drizzle";
+import { users, aiUsers } from "@2pm/data/schema";
 import { DbModule } from "./db-module";
-import { AiUserDto, CreateAiUserDto } from "@2pm/schemas/dto";
+import { AiUserDto, CreateAiUserDto } from "@2pm/data/dtos";
 
 export default class AiUsers extends DbModule {
   public async insert({ id, tag, code }: CreateAiUserDto): Promise<AiUserDto> {

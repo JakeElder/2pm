@@ -1,5 +1,5 @@
 import DBService from '@2pm/db';
-import { plotPoints } from '@2pm/schemas/drizzle';
+import { plotPoints } from '@2pm/data/schema';
 import { Inject, Injectable } from '@nestjs/common';
 import { desc, eq } from 'drizzle-orm';
 

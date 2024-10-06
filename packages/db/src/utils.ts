@@ -14,7 +14,7 @@ import {
   aiMessages,
   humanMessages,
   plotPointEnvironmentPresences,
-} from "@2pm/schemas/drizzle";
+} from "@2pm/data/schema";
 import { DbModule } from "./db-module";
 import WorldRooms from "./world-rooms";
 import AiUsers from "./ai-users";

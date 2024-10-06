@@ -5,7 +5,7 @@ import {
   plotPoints,
   userEnvironmentPresences,
   users,
-} from "../drizzle/schema";
+} from "../schema";
 import { createZodDto } from "@anatine/zod-nestjs";
 
 const UserEnvironmentPresenceDtoSchema = z.object({

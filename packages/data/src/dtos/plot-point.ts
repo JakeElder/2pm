@@ -1,5 +1,5 @@
 import { createSelectSchema } from "drizzle-zod";
-import { plotPoints } from "../drizzle/schema";
+import { plotPoints } from "../schema";
 import { createZodDto } from "@anatine/zod-nestjs";
 
 const PlotPointDtoSchema = createSelectSchema(plotPoints);

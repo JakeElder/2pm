@@ -1,6 +1,6 @@
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
-import { environments, humanUsers, users } from "../drizzle/schema";
+import { environments, humanUsers, users } from "../schema";
 import { createZodDto } from "@anatine/zod-nestjs";
 
 const HumanUserDtoSchema = z.object({

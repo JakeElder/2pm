@@ -1,5 +1,5 @@
-import { users, humanUsers } from "@2pm/schemas/drizzle";
-import { HumanUserDto, CreateHumanUserDto } from "@2pm/schemas/dto";
+import { users, humanUsers } from "@2pm/data/schema";
+import { HumanUserDto, CreateHumanUserDto } from "@2pm/data/dtos";
 import { DbModule } from "./db-module";
 
 export default class HumanUsers extends DbModule {

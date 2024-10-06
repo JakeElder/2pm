@@ -3,7 +3,7 @@ import css from "./Message.module.css";
 import { processMessageBody } from "../../../utils";
 import Markdown from "../../Markdown";
 import classNames from "classnames";
-import { PlotPointPerspective } from "@2pm/schemas";
+import { PlotPointPerspective } from "@2pm/data";
 
 /*
  * Message

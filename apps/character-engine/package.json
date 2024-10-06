@@ -1,0 +1,9 @@
+{
+  "name": "@2pm/character-engine",
+  "main": "src/index.ts",
+  "dependencies": {
+    "@2pm/utils": "workspace:*",
+    "ollama": "^0.5.9",
+    "openai": "^4.67.1"
+  }
+}

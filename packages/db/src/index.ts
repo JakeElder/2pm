@@ -1,6 +1,6 @@
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres, { Sql } from "postgres";
-import { Drizzle } from "@2pm/schemas";
+import { Drizzle } from "@2pm/data";
 import Utils from "./utils";
 import WorldRooms from "./world-rooms";
 import AiUsers from "./ai-users";

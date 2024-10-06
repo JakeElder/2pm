@@ -19,8 +19,9 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@2pm/character-engine": "workspace:*",
     "@2pm/db": "workspace:*",
-    "@2pm/schemas": "workspace:*",
+    "@2pm/data": "workspace:*",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.2.3",
     "@nestjs/core": "^10.0.0",

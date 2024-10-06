@@ -7,7 +7,7 @@ import {
   messages,
   plotPoints,
   users,
-} from "../drizzle/schema";
+} from "../schema";
 import { createZodDto } from "@anatine/zod-nestjs";
 
 const HumanMessageDtoSchema = z.object({

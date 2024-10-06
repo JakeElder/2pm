@@ -2,7 +2,7 @@ import React from "react";
 import Image from "next/image";
 import css from "./Terminal.module.css";
 import ivan from "../../../public/images/ivan.png";
-import { AiUserCode } from "@2pm/schemas";
+import { AiUserCode } from "@2pm/data";
 
 /*
  * Root

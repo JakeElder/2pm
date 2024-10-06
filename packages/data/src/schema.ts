@@ -12,7 +12,7 @@ import {
   ENVIRONMENT_TYPE_CODES,
   PLOT_POINT_TYPES,
   WORLD_ROOM_CODES,
-} from "../constants";
+} from "./constants";
 import { sql } from "drizzle-orm";
 
 export const userTypeEnum = pgEnum("UserType", ["HUMAN", "AI"]);

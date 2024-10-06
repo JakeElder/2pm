@@ -1,10 +1,10 @@
 "use client";
 
-import { PlotPointPerspective } from "@2pm/schemas";
+import { PlotPointPerspective } from "@2pm/data";
 import {
   AiMessageHydratedPlotPoint,
   HumanMessageHydratedPlotPoint,
-} from "@2pm/schemas/comps";
+} from "@2pm/data/comps";
 import { Message } from "@2pm/ui/plot-points";
 
 type Perspective = {

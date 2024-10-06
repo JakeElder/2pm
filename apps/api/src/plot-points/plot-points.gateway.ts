@@ -1,4 +1,4 @@
-import { PlotPointDto } from '@2pm/schemas/dto';
+import { PlotPointDto } from '@2pm/data/dtos';
 import {
   ConnectedSocket,
   MessageBody,
@@ -9,10 +9,10 @@ import {
 import { Server, Socket } from 'socket.io';
 
 @WebSocketGateway({
-  namespace: '/environments',
+  namespace: '/environments/:id/plot-points',
   cors: { origin: '*' },
 })
-export class EnvironmentsGateway {
+export class PlotPointsGateway {
   @WebSocketServer()
   server: Server;
 
@@ -25,8 +25,6 @@ export class EnvironmentsGateway {
   }
 
   sendPlotPointUpdate(environmentId: number, plotPoint: PlotPointDto) {
-    this.server
-      .to(`${environmentId}/plot-points`)
-      .emit('plot-point-added', plotPoint);
+    this.server.to(`${environmentId}`).emit('create', plotPoint);
   }
 }

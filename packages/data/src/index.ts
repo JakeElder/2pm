@@ -1,6 +1,6 @@
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import { z, ZodType } from "zod";
-import * as schema from "./drizzle/schema";
+import * as schema from "./schema";
 import type {
   AI_USER_CODES,
   ENVIRONMENT_TYPE_CODES,

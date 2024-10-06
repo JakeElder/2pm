@@ -1,12 +1,12 @@
 import {
   CompanionOneToOneDto,
   CreateCompanionOneToOneDto,
-} from "@2pm/schemas/dto";
+} from "@2pm/data/dtos";
 import {
   companionOneToOnes,
   environmentCompanionOneToOnes,
   environments,
-} from "@2pm/schemas/drizzle";
+} from "@2pm/data/schema";
 import { DbModule } from "./db-module";
 
 export default class CompanionOneToOnes extends DbModule {

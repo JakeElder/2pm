@@ -2,8 +2,8 @@
 
 import api from "@/api";
 import { CreateHumanMessageDto } from "@2pm/api/client";
-import { HydratedPlotPoint } from "@2pm/schemas/comps";
-import { PlotPointDto } from "@2pm/schemas/dto";
+import { HydratedPlotPoint } from "@2pm/data/comps";
+import { PlotPointDto } from "@2pm/data/dtos";
 import {
   getAiMessageByPlotPointId,
   getHumanMessageByPlotPointId,

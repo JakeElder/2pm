@@ -5,6 +5,7 @@ import { ConfigService } from '@nestjs/config';
 @Module({
   providers: [
     {
+      inject: [ConfigService],
       provide: 'DB',
       useFactory: (configService: ConfigService) => {
         const dbUrl = configService.get<string>('DATABASE_URL');
@@ -13,7 +14,6 @@ import { ConfigService } from '@nestjs/config';
         }
         return new DBService(dbUrl);
       },
-      inject: [ConfigService],
     },
   ],
   exports: ['DB'],

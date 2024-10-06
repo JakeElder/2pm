@@ -1,11 +1,12 @@
 "use client";
 
-import { PlotPointDto } from "@2pm/schemas/dto";
+import { PlotPointDto } from "@2pm/data/dtos";
 import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import NarrativePlotPointViewContainer from "./NarrativePlotPointViewContainer";
-import { HydratedPlotPoint } from "@2pm/schemas/comps";
+import { HydratedPlotPoint } from "@2pm/data/comps";
 import { Narrative } from "@2pm/ui";
+import { hydratePlotPoint } from "@/actions";
 
 type Props = {
   environmentId: number;
@@ -16,11 +17,11 @@ const NarrativeViewContainer = ({ environmentId, plotPoints }: Props) => {
   const [data, setPlotPoints] = useState<HydratedPlotPoint[]>(plotPoints);
 
   useEffect(() => {
-    const socket = io("http://localhost:3002/environments")
-      .emit("join", `${environmentId}/plot-points`)
-      .on("plot-point-added", (plotPoint: PlotPointDto) => {
-        console.log(plotPoint);
-        // setPlotPoints([...data, plotPoint]);
+    const socket = io("http://localhost:3002/environments/:id/plot-points")
+      .emit("join", `${environmentId}`)
+      .on("create", async (plotPoint: PlotPointDto) => {
+        const hydrated = await hydratePlotPoint(plotPoint);
+        setPlotPoints((data) => [hydrated, ...data]);
       });
 
     return () => {

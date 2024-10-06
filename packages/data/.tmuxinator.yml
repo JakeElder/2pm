@@ -1,4 +1,4 @@
-name: "Schemas"
+name: "Data"
 tmux_options: -L 2pm
 attach: false
 

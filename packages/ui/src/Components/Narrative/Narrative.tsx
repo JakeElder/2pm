@@ -1,8 +1,8 @@
 import React from "react";
 import css from "./Narrative.module.css";
 import classNames from "classnames";
-import { PlotPointPerspective } from "@2pm/schemas";
-import { PlotPointDto } from "@2pm/schemas/dto";
+import { PlotPointPerspective } from "@2pm/data";
+import { PlotPointDto } from "@2pm/data/dtos";
 
 /**
  * Root
@@ -28,7 +28,11 @@ interface PlotPointProps {
 
 export const PlotPoint = ({ type, perspective, children }: PlotPointProps) => {
   if (type === "AI_MESSAGE" || type === "HUMAN_MESSAGE") {
-    return <Message perspective={perspective}>{children}</Message>;
+    return (
+      <div className={css["plot-point"]}>
+        <Message perspective={perspective}>{children}</Message>
+      </div>
+    );
   }
 };
 
@@ -46,9 +50,5 @@ const Message = ({ children, perspective }: MessageProps) => {
     perspective === "FIRST_PERSON"
       ? "first-person-message"
       : "third-person-message";
-  return (
-    <div className={classNames(css["plot-point"], css[className])}>
-      {children}
-    </div>
-  );
+  return <div className={css[className]}>{children}</div>;
 };

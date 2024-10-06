@@ -1,6 +1,6 @@
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
-import { companionOneToOnes, environments } from "../drizzle/schema";
+import { companionOneToOnes, environments } from "../schema";
 import { createZodDto } from "@anatine/zod-nestjs";
 
 const CompanionOneToOneDtoSchema = z.object({

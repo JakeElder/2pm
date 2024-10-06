@@ -1,9 +1,9 @@
-import { WorldRoomDto, CreateWorldRoomDto } from "@2pm/schemas/dto";
+import { WorldRoomDto, CreateWorldRoomDto } from "@2pm/data/dtos";
 import {
   worldRooms,
   environmentWorldRooms,
   environments,
-} from "@2pm/schemas/drizzle";
+} from "@2pm/data/schema";
 import { DbModule } from "./db-module";
 
 export default class WorldRooms extends DbModule {

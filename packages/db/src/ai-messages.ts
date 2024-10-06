@@ -1,4 +1,4 @@
-import { CreateAiMessageDto, AiMessageDto } from "@2pm/schemas/dto";
+import { CreateAiMessageDto, AiMessageDto } from "@2pm/data/dtos";
 import {
   environments,
   aiMessages,
@@ -7,7 +7,7 @@ import {
   plotPointMessages,
   plotPoints,
   users,
-} from "@2pm/schemas/drizzle";
+} from "@2pm/data/schema";
 import { eq } from "drizzle-orm";
 import { DbModule } from "./db-module";
 

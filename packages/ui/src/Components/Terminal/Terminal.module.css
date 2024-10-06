@@ -22,6 +22,7 @@
 
 .header {
   display: flex;
+  flex-shrink: 0;
   align-items: center;
   height: var(--header-footer-height);
   border-bottom: var(--border-0);
@@ -29,6 +30,7 @@
 
 .body {
   flex: 1;
+  overflow: hidden;
 }
 
 .narrative {
@@ -37,6 +39,7 @@
 }
 
 .footer {
+  flex-shrink: 0;
   height: var(--header-footer-height);
   border-top: var(--border-0);
 }

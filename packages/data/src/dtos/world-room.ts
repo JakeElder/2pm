@@ -1,6 +1,6 @@
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
-import { worldRooms, environments } from "../drizzle/schema";
+import { worldRooms, environments } from "../schema";
 import { createZodDto } from "@anatine/zod-nestjs";
 
 const WorldRoomDtoSchema = z.object({

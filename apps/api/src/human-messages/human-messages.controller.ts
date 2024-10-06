@@ -1,4 +1,4 @@
-import { CreateHumanMessageDto, HumanMessageDto } from '@2pm/schemas/dto';
+import { CreateHumanMessageDto, HumanMessageDto } from '@2pm/data/dtos';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ZodValidationPipe } from '@anatine/zod-nestjs';
 import {
@@ -12,15 +12,11 @@ import {
   UsePipes,
 } from '@nestjs/common';
 import { HumanMessagesService } from './human-messages.service';
-import { EnvironmentsGateway } from '../environments/environments.gateway';
 
 @ApiTags('Human Messages')
 @Controller()
 export class HumanMessagesController {
-  constructor(
-    private readonly service: HumanMessagesService,
-    private readonly environmentGateway: EnvironmentsGateway,
-  ) {}
+  constructor(private readonly service: HumanMessagesService) {}
 
   @Get('plot-points/:id/human-message')
   @ApiOperation({
@@ -46,11 +42,6 @@ export class HumanMessagesController {
   @ApiOperation({ summary: 'Create', operationId: 'createHumanMessage' })
   @ApiResponse({ status: 201, type: HumanMessageDto })
   async create(@Body() dto: CreateHumanMessageDto) {
-    const res = await this.service.create(dto);
-    this.environmentGateway.sendPlotPointUpdate(
-      res.environment.id,
-      res.plotPoint,
-    );
-    return res;
+    return this.service.create(dto);
   }
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { HydratedPlotPoint } from "@2pm/schemas/comps";
+import { HydratedPlotPoint } from "@2pm/data/comps";
 import { Narrative } from "@2pm/ui";
 import PlotPointViewContainer from "./PlotPointViewContainer";
 

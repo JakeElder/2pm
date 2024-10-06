@@ -1,10 +1,7 @@
 {
-  "name": "@2pm/schemas",
+  "name": "@2pm/data",
   "exports": {
-    ".": "./src/index.ts",
-    "./drizzle": "./src/drizzle/schema.ts",
-    "./dto": "./src/dto/index.ts",
-    "./comps": "./src/comps/index.ts"
+    "./*": "./src/*"
   },
   "scripts": {
     "studio": "drizzle-kit studio",
