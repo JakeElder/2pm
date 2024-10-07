@@ -1,16 +1,7 @@
 import { CreateHumanMessageDto, HumanMessageDto } from '@2pm/data/dtos';
-import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ZodValidationPipe } from '@anatine/zod-nestjs';
-import {
-  Body,
-  Controller,
-  Get,
-  NotFoundException,
-  Param,
-  ParseIntPipe,
-  Post,
-  UsePipes,
-} from '@nestjs/common';
+import { Body, Controller, Post, UsePipes } from '@nestjs/common';
 import { HumanMessagesService } from './human-messages.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 
@@ -21,25 +12,6 @@ export class HumanMessagesController {
     private readonly service: HumanMessagesService,
     private events: EventEmitter2,
   ) {}
-
-  @Get('plot-points/:id/human-message')
-  @ApiOperation({
-    summary: 'Get By Plot Point',
-    operationId: 'getHumanMessageByPlotPointId',
-  })
-  @ApiParam({ name: 'id', type: Number })
-  @ApiResponse({ status: 200, type: HumanMessageDto })
-  async getByPlotPointId(@Param('id', ParseIntPipe) id: number) {
-    const message = await this.service.getByPlotPointId(id);
-
-    if (!message) {
-      throw new NotFoundException(
-        `Human Message not found for plot point Id: ${id}`,
-      );
-    }
-
-    return message;
-  }
 
   @UsePipes(ZodValidationPipe)
   @Post('human-message')

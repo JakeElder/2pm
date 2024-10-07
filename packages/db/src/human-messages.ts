@@ -38,11 +38,7 @@ export default class HumanMessages extends DbModule {
     const resources = await this.drizzle.transaction(async (tx) => {
       const [plotPoint] = await tx
         .insert(plotPoints)
-        .values({
-          type: "HUMAN_MESSAGE",
-          userId,
-          environmentId,
-        })
+        .values({ type: "HUMAN_MESSAGE", environmentId })
         .returning();
 
       const [message] = await tx

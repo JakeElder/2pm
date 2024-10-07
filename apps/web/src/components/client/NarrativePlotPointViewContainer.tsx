@@ -1,14 +1,21 @@
 "use client";
 
-import { HydratedPlotPoint } from "@2pm/data/comps";
 import { Narrative } from "@2pm/ui";
 import PlotPointViewContainer from "./PlotPointViewContainer";
+import { HydratedPlotPoint, PlotPointPerspective } from "@2pm/data";
 
 type Props = HydratedPlotPoint;
 
+const getPerspective = (plotPoint: HydratedPlotPoint): PlotPointPerspective => {
+  if (plotPoint.type === "HUMAN_MESSAGE" || plotPoint.type === "AI_MESSAGE") {
+    return plotPoint.data.user.id === 3 ? "FIRST_PERSON" : "THIRD_PERSON";
+  }
+  return "NEUTRAL";
+};
+
 const NarrativePlotPointViewContainer = (plotPoint: Props) => {
-  const { userId, type } = plotPoint;
-  const perspective = userId === 3 ? "FIRST_PERSON" : "THIRD_PERSON";
+  const perspective = getPerspective(plotPoint);
+  const { type } = plotPoint;
   return (
     <Narrative.PlotPoint perspective={perspective} type={type}>
       <PlotPointViewContainer {...plotPoint} />

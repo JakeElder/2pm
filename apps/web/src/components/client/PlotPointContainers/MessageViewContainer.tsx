@@ -2,9 +2,9 @@
 
 import { PlotPointPerspective } from "@2pm/data";
 import {
-  AiMessageHydratedPlotPoint,
-  HumanMessageHydratedPlotPoint,
-} from "@2pm/data/comps";
+  AiMessageHydratedPlotPointDto,
+  HumanMessageHydratedPlotPointDto,
+} from "@2pm/data/dtos";
 import { Message } from "@2pm/ui/plot-points";
 
 type Perspective = {
@@ -16,7 +16,7 @@ type Perspective = {
  */
 
 type AiMessageProps = Perspective & {
-  plotPoint: AiMessageHydratedPlotPoint;
+  plotPoint: AiMessageHydratedPlotPointDto;
 };
 
 export const AiMessage = (props: AiMessageProps) => {
@@ -33,7 +33,7 @@ export const AiMessage = (props: AiMessageProps) => {
  */
 
 type HumanMessageProps = Perspective & {
-  plotPoint: HumanMessageHydratedPlotPoint;
+  plotPoint: HumanMessageHydratedPlotPointDto;
 };
 
 export const HumanMessage = (props: HumanMessageProps) => {
@@ -49,11 +49,11 @@ export const HumanMessage = (props: HumanMessageProps) => {
  * MessageContainer
  */
 
-type Props = AiMessageHydratedPlotPoint | HumanMessageHydratedPlotPoint;
+type Props = AiMessageHydratedPlotPointDto | HumanMessageHydratedPlotPointDto;
 
 const MessageViewContainer = (plotPoint: Props) => {
-  const { userId } = plotPoint;
-  const perspective = userId === 3 ? "FIRST_PERSON" : "THIRD_PERSON";
+  const { user } = plotPoint.data;
+  const perspective = user.id === 3 ? "FIRST_PERSON" : "THIRD_PERSON";
 
   if (plotPoint.type === "AI_MESSAGE") {
     return <AiMessage perspective={perspective} plotPoint={plotPoint} />;

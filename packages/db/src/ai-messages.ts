@@ -39,11 +39,7 @@ export default class AiMessages extends DbModule {
       async (tx) => {
         const [plotPoint] = await tx
           .insert(plotPoints)
-          .values({
-            type: "AI_MESSAGE",
-            userId,
-            environmentId,
-          })
+          .values({ type: "AI_MESSAGE", environmentId })
           .returning();
 
         const [message] = await tx

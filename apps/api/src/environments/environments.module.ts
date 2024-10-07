@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { CharacterEngineModule } from '../character-engine/character-engine.module';
-import { EnvironmentService } from './environment.service';
+import { EnvironmentService } from './environments.service';
 import { PlotPointsGateway } from '../plot-points/plot-points.gateway';
-import { EnvironmentController } from './environment.controller';
+import { EnvironmentController } from './environments.controller';
 
 @Module({
   imports: [CharacterEngineModule],

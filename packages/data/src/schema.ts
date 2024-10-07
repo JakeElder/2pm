@@ -61,9 +61,6 @@ export const aiUsers = pgTable("ai_users", {
 
 export const plotPoints = pgTable("plot_points", {
   id: serial("id").primaryKey(),
-  userId: integer("user_id")
-    .notNull()
-    .references(() => users.id),
   environmentId: integer("environment_id")
     .notNull()
     .references(() => environments.id),

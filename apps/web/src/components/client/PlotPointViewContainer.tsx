@@ -1,7 +1,7 @@
 "use client";
 
+import { HydratedPlotPoint } from "@2pm/data";
 import MessageViewContainer from "./PlotPointContainers/MessageViewContainer";
-import { HydratedPlotPoint } from "@2pm/data/comps";
 
 type Props = HydratedPlotPoint;
 

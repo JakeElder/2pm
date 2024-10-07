@@ -6,6 +6,7 @@ import type {
   ENVIRONMENT_TYPE_CODES,
   PLOT_POINT_TYPES,
 } from "./constants";
+import type { HydratedPlotPointDtoSchema } from "./dtos";
 
 export type Z<T extends ZodType> = z.infer<T>;
 export type Drizzle = PostgresJsDatabase<typeof schema>;
@@ -14,4 +15,6 @@ export type AiUserCode = (typeof AI_USER_CODES)[number];
 export type EnvironmentTypeCode = (typeof ENVIRONMENT_TYPE_CODES)[number];
 export type PlotPointType = (typeof PLOT_POINT_TYPES)[number];
 
-export type PlotPointPerspective = "FIRST_PERSON" | "THIRD_PERSON";
+export type PlotPointPerspective = "FIRST_PERSON" | "THIRD_PERSON" | "NEUTRAL";
+
+export type HydratedPlotPoint = Z<typeof HydratedPlotPointDtoSchema>;
