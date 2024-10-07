@@ -8,7 +8,7 @@ import { AiMessagesModule } from './ai-messages/ai-messages.module';
 import { HumanMessagesModule } from './human-messages/human-messages.module';
 import { CharacterEngineModule } from './character-engine/character-engine.module';
 import { EnvironmentModule } from './environments/environments.module';
-import { PlotPointsGateway } from './plot-points/plot-points.gateway';
+import { EnvironmentsGateway } from './environments/environments.gateway';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { HydratedPlotPointsModule } from './hydrated-plot-points/hydrated-plot-points.module';
 
@@ -25,6 +25,6 @@ import { HydratedPlotPointsModule } from './hydrated-plot-points/hydrated-plot-p
     HydratedPlotPointsModule,
   ],
   controllers: [AppController],
-  providers: [AppService, PlotPointsGateway],
+  providers: [AppService, EnvironmentsGateway],
 })
 export class AppModule {}

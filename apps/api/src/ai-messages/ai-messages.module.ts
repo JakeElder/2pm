@@ -7,5 +7,6 @@ import { DatabaseModule } from '../database/database.module';
   imports: [DatabaseModule],
   controllers: [AiMessagesController],
   providers: [AiMessagesService],
+  exports: [AiMessagesService],
 })
 export class AiMessagesModule {}

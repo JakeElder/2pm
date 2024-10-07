@@ -1,6 +1,6 @@
 {
   "name": "@2pm/character-engine",
-  "main": "src/index.ts",
+  "main": "src/index.tsx",
   "dependencies": {
     "@2pm/utils": "workspace:*",
     "ollama": "^0.5.9",

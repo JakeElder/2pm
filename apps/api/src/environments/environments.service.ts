@@ -1,13 +1,13 @@
 import CharacterEngine from '@2pm/character-engine';
-import { HydratedPlotPointDto, PlotPointDto } from '@2pm/data/dtos';
+import { HydratedPlotPointDto } from '@2pm/data/dtos';
 import { Inject, Injectable } from '@nestjs/common';
-import { PlotPointsGateway } from '../plot-points/plot-points.gateway';
+import { EnvironmentsGateway } from './environments.gateway';
 
 @Injectable()
 export class EnvironmentService {
   constructor(
     @Inject('CE') private readonly ce: CharacterEngine,
-    private readonly plotPointsGateway: PlotPointsGateway,
+    private readonly environmentsGateway: EnvironmentsGateway,
   ) {}
 
   respondCompanionOneToOne(environmentId: number) {
@@ -16,7 +16,7 @@ export class EnvironmentService {
   }
 
   sendPlotPointCreated(plotPoint: HydratedPlotPointDto) {
-    this.plotPointsGateway.sendPlotPointCreated(plotPoint);
+    this.environmentsGateway.sendPlotPointCreated(plotPoint);
   }
 
   // handleHumanMessageCreated(dto: HumanMessageDto) {

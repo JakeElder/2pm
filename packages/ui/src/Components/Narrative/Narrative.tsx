@@ -1,6 +1,5 @@
 import React from "react";
 import css from "./Narrative.module.css";
-import classNames from "classnames";
 import { PlotPointPerspective } from "@2pm/data";
 import { PlotPointDto } from "@2pm/data/dtos";
 

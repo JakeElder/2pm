@@ -99,17 +99,5 @@ export default class Utils extends DbModule {
       environmentId: universe.environment.id,
       content: "Standby for G stuff",
     });
-
-    await db.aiMessages.insert({
-      userId: ivan.user.id,
-      environmentId: o2o.environment.id,
-      content: "Welcome back friend. Let's get you authenticated",
-    });
-
-    await db.humanMessages.insert({
-      userId: jake.user.id,
-      environmentId: o2o.environment.id,
-      content: "Ok.",
-    });
   }
 }
