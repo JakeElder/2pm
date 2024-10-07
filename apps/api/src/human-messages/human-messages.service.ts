@@ -11,14 +11,10 @@ import {
 } from '@2pm/data/schema';
 import { Inject, Injectable } from '@nestjs/common';
 import { eq } from 'drizzle-orm';
-import { NarrativeService } from '../narrative/narrative.service';
 
 @Injectable()
 export class HumanMessagesService {
-  constructor(
-    @Inject('DB') private readonly db: DBService,
-    private readonly narrativeService: NarrativeService,
-  ) {}
+  constructor(@Inject('DB') private readonly db: DBService) {}
 
   async getByPlotPointId(plotPointId: number): Promise<HumanMessageDto> {
     const result = await this.db.drizzle
@@ -56,7 +52,6 @@ export class HumanMessagesService {
       environmentId,
       content,
     });
-    this.narrativeService.handleHumanMessageCreated(res);
     return res;
   }
 }

@@ -24,7 +24,9 @@ export class PlotPointsGateway {
     client.join(roomId);
   }
 
-  sendPlotPointUpdate(environmentId: number, plotPoint: PlotPointDto) {
-    this.server.to(`${environmentId}`).emit('create', plotPoint);
+  sendPlotPointCreated({ environmentId, ...rest }: PlotPointDto) {
+    this.server
+      .to(`${environmentId}`)
+      .emit('created', { environmentId, ...rest });
   }
 }

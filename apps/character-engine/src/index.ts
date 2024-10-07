@@ -16,11 +16,13 @@ class CharacterEngine {
   async chat(content: string) {
     const messages: OllamaMessage[] = [{ role: "user", content }];
 
-    return this.ollama.chat({
+    const res = this.ollama.chat({
       model: "llama3.1:8b",
       messages,
       stream: true,
     });
+
+    return res;
   }
 
   async evaluate(messages: Message[]) {
@@ -64,6 +66,8 @@ class CharacterEngine {
       ],
       tool_choice: "required",
     });
+
+    return res;
   }
 }
 

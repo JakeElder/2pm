@@ -19,7 +19,7 @@ const NarrativeViewContainer = ({ environmentId, plotPoints }: Props) => {
   useEffect(() => {
     const socket = io("http://localhost:3002/environments/:id/plot-points")
       .emit("join", `${environmentId}`)
-      .on("create", async (plotPoint: PlotPointDto) => {
+      .on("created", async (plotPoint: PlotPointDto) => {
         const hydrated = await hydratePlotPoint(plotPoint);
         setPlotPoints((data) => [hydrated, ...data]);
       });
