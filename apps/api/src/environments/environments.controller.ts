@@ -1,10 +1,10 @@
 import { Controller, Inject, OnModuleInit } from '@nestjs/common';
 import CharacterEngine from '@2pm/character-engine';
 import {
-  AiMessageCreatedEvent,
-  EnvironmentRoomJoinedEvent,
-  HumanMessageCreatedEvent,
-} from '@2pm/data/api-events';
+  AiMessageCreatedEventDto,
+  EnvironmentRoomJoinedEventDto,
+  HumanMessageCreatedEventDto,
+} from '@2pm/data';
 import { EnvironmentService } from './environments.service';
 import DBService from '@2pm/db';
 import { AiMessagesService } from '../ai-messages/ai-messages.service';
@@ -35,7 +35,7 @@ export class EnvironmentController implements OnModuleInit {
   async handleEnvironmentRoomJoined({
     user,
     environment,
-  }: EnvironmentRoomJoinedEvent) {
+  }: EnvironmentRoomJoinedEventDto) {
     // const [{ count: messageCount }] = await this.db.drizzle
     //   .select({ count: count() })
     //   .from(plotPoints)
@@ -58,7 +58,7 @@ export class EnvironmentController implements OnModuleInit {
     // }
   }
 
-  handleHumanMessageCreatedEvent(e: HumanMessageCreatedEvent) {
+  handleHumanMessageCreatedEvent(e: HumanMessageCreatedEventDto) {
     this.service.sendPlotPointCreated(e);
 
     if (e.data.environment.type === 'COMPANION_ONE_TO_ONE') {
@@ -66,7 +66,7 @@ export class EnvironmentController implements OnModuleInit {
     }
   }
 
-  handleAiMessageCreatedEvent(e: AiMessageCreatedEvent) {
+  handleAiMessageCreatedEvent(e: AiMessageCreatedEventDto) {
     this.service.sendPlotPointCreated(e);
   }
 }

@@ -13,7 +13,7 @@ import {
   EnvironmentEnteredHydratedPlotPointDto,
   EnvironmentLeftHydratedPlotPointDto,
   HumanMessageHydratedPlotPointDto,
-} from '@2pm/data/dtos';
+} from '@2pm/data';
 
 @ApiExtraModels(HumanMessageHydratedPlotPointDto)
 @ApiExtraModels(AiMessageHydratedPlotPointDto)

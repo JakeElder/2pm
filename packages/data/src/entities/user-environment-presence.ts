@@ -8,27 +8,21 @@ import {
 } from "../schema";
 import { createZodDto } from "@anatine/zod-nestjs";
 
-const UserEnvironmentPresenceDtoSchema = z.object({
+export const UserEnvironmentPresenceDtoSchema = z.object({
   plotPoint: createSelectSchema(plotPoints),
   environment: createSelectSchema(environments),
   userEnvironmentPresence: createSelectSchema(userEnvironmentPresences),
 });
 
-const CreateUserEnvironmentPresenceDtoSchema = z.object({
+export const CreateUserEnvironmentPresenceDtoSchema = z.object({
   userId: createSelectSchema(users).shape.id,
   environmentId: createSelectSchema(environments).shape.id,
 });
 
-class UserEnvironmentPresenceDto extends createZodDto(
+export class UserEnvironmentPresenceDto extends createZodDto(
   UserEnvironmentPresenceDtoSchema,
-) {}
-class CreateUserEnvironmentPresenceDto extends createZodDto(
-  CreateUserEnvironmentPresenceDtoSchema,
 ) {}
 
-export {
-  UserEnvironmentPresenceDtoSchema,
-  UserEnvironmentPresenceDto,
-  CreateUserEnvironmentPresenceDto,
+export class CreateUserEnvironmentPresenceDto extends createZodDto(
   CreateUserEnvironmentPresenceDtoSchema,
-};
+) {}

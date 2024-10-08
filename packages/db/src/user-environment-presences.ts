@@ -9,7 +9,7 @@ import { DbModule } from "./db-module";
 import {
   CreateUserEnvironmentPresenceDto,
   UserEnvironmentPresenceDto,
-} from "@2pm/data/dtos";
+} from "@2pm/data";
 
 export default class UserEnvironmentPresences extends DbModule {
   public async insert({

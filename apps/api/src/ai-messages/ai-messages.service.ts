@@ -1,8 +1,5 @@
 import DBService from '@2pm/db';
-import {
-  AiMessageHydratedPlotPointDto,
-  CreateAiMessageDto,
-} from '@2pm/data/dtos';
+import { AiMessageHydratedPlotPointDto, CreateAiMessageDto } from '@2pm/data';
 import { Inject, Injectable } from '@nestjs/common';
 
 @Injectable()
@@ -20,17 +17,6 @@ export class AiMessagesService {
       content,
     });
 
-    return {
-      type: 'AI_MESSAGE',
-      id: res.plotPoint.id,
-      environmentId: res.plotPoint.environmentId,
-      data: {
-        message: res.message,
-        user: res.user,
-        aiUser: res.aiUser,
-        environment: res.environment,
-        aiMessage: res.aiMessage,
-      },
-    };
+    return res;
   }
 }

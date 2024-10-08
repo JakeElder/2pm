@@ -1,7 +1,4 @@
-import {
-  HydratedPlotPointDto,
-  HydratedPlotPointDtoSchema,
-} from '@2pm/data/dtos';
+import { HydratedPlotPoint, HydratedPlotPointDtoSchema } from '@2pm/data';
 import {
   aiMessages,
   aiUsers,
@@ -48,7 +45,7 @@ export class HydratedPlotPointsService {
       .where(eq(plotPoints.environmentId, id))
       .orderBy(desc(plotPoints.id));
 
-    const data: HydratedPlotPointDto[] = res.map(({ plotPoint, ...data }) => {
+    const data: HydratedPlotPoint[] = res.map(({ plotPoint, ...data }) => {
       return HydratedPlotPointDtoSchema.parse({ ...plotPoint, data });
     });
 

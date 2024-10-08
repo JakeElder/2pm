@@ -1,4 +1,7 @@
-import { CreateHumanMessageDto, HumanMessageDto } from "@2pm/data/dtos";
+import {
+  CreateHumanMessageDto,
+  HumanMessageHydratedPlotPointDto,
+} from "@2pm/data";
 import {
   environments,
   humanMessages,
@@ -16,7 +19,7 @@ export default class HumanMessages extends DbModule {
     userId,
     environmentId,
     content,
-  }: CreateHumanMessageDto): Promise<HumanMessageDto> {
+  }: CreateHumanMessageDto): Promise<HumanMessageHydratedPlotPointDto> {
     const [[environment], [{ user, humanUser }]] = await Promise.all([
       this.drizzle
         .select()
@@ -35,48 +38,59 @@ export default class HumanMessages extends DbModule {
       throw new Error();
     }
 
-    const resources = await this.drizzle.transaction(async (tx) => {
-      const [plotPoint] = await tx
-        .insert(plotPoints)
-        .values({ type: "HUMAN_MESSAGE", environmentId })
-        .returning();
+    if (user.type === "AI") {
+      throw new Error("Must be Human user");
+    }
 
-      const [message] = await tx
-        .insert(messages)
-        .values({
-          type: "HUMAN",
-          content,
-          userId,
-          environmentId,
-        })
-        .returning();
+    const { plotPoint, message, humanMessage } = await this.drizzle.transaction(
+      async (tx) => {
+        const [plotPoint] = await tx
+          .insert(plotPoints)
+          .values({ type: "HUMAN_MESSAGE", environmentId })
+          .returning();
 
-      const [humanMessage] = await tx
-        .insert(humanMessages)
-        .values({ messageId: message.id })
-        .returning();
+        const [message] = await tx
+          .insert(messages)
+          .values({
+            type: "HUMAN",
+            content,
+            userId,
+            environmentId,
+          })
+          .returning();
 
-      const [plotPointMessage] = await tx
-        .insert(plotPointMessages)
-        .values({
-          plotPointId: plotPoint.id,
-          messageId: message.id,
-        })
-        .returning();
+        const [humanMessage] = await tx
+          .insert(humanMessages)
+          .values({ messageId: message.id })
+          .returning();
 
-      return {
-        plotPoint,
-        plotPointMessage,
-        message,
-        humanMessage,
-      };
-    });
+        const [plotPointMessage] = await tx
+          .insert(plotPointMessages)
+          .values({
+            plotPointId: plotPoint.id,
+            messageId: message.id,
+          })
+          .returning();
+
+        return {
+          plotPoint,
+          plotPointMessage,
+          message,
+          humanMessage,
+        };
+      },
+    );
 
     return {
-      user,
-      humanUser,
-      environment,
-      ...resources,
+      ...plotPoint,
+      type: "HUMAN_MESSAGE",
+      data: {
+        user,
+        humanUser,
+        environment,
+        humanMessage,
+        message,
+      },
     };
   }
 }

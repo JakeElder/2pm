@@ -1,4 +1,4 @@
-import { WorldRoomDto, CreateWorldRoomDto } from "@2pm/data/dtos";
+import { WorldRoomDto, CreateWorldRoomDto } from "@2pm/data";
 import {
   worldRooms,
   environmentWorldRooms,

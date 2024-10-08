@@ -5,7 +5,7 @@ import { io } from "socket.io-client";
 import { Narrative } from "@2pm/ui";
 import { HydratedPlotPoint } from "@2pm/data";
 import NarrativePlotPointViewContainer from "./NarrativePlotPointViewContainer";
-import { EnvironmentRoomJoinedEvent } from "@2pm/data/api-events";
+import { EnvironmentRoomJoinedEventDto } from "@2pm/data";
 
 type Props = {
   environmentId: number;
@@ -16,7 +16,7 @@ const NarrativeViewContainer = ({ environmentId, plotPoints }: Props) => {
   const [data, setPlotPoints] = useState<HydratedPlotPoint[]>(plotPoints);
 
   useEffect(() => {
-    const e: EnvironmentRoomJoinedEvent = {
+    const e: EnvironmentRoomJoinedEventDto = {
       user: {
         id: 3,
         type: "HUMAN",

@@ -1,7 +1,4 @@
-import {
-  CompanionOneToOneDto,
-  CreateCompanionOneToOneDto,
-} from "@2pm/data/dtos";
+import { CompanionOneToOneDto, CreateCompanionOneToOneDto } from "@2pm/data";
 import {
   companionOneToOnes,
   environmentCompanionOneToOnes,

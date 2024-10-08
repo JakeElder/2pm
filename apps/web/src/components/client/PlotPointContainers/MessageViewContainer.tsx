@@ -4,7 +4,7 @@ import { PlotPointPerspective } from "@2pm/data";
 import {
   AiMessageHydratedPlotPointDto,
   HumanMessageHydratedPlotPointDto,
-} from "@2pm/data/dtos";
+} from "@2pm/data";
 import { Message } from "@2pm/ui/plot-points";
 
 type Perspective = {

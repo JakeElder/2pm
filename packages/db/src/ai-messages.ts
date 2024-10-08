@@ -1,4 +1,4 @@
-import { CreateAiMessageDto, AiMessageDto } from "@2pm/data/dtos";
+import { CreateAiMessageDto, AiMessageHydratedPlotPointDto } from "@2pm/data";
 import {
   environments,
   aiMessages,
@@ -16,7 +16,7 @@ export default class AiMessages extends DbModule {
     userId,
     environmentId,
     content,
-  }: CreateAiMessageDto): Promise<AiMessageDto> {
+  }: CreateAiMessageDto): Promise<AiMessageHydratedPlotPointDto> {
     const [[environment], [{ user, aiUser }]] = await Promise.all([
       this.drizzle
         .select()
@@ -33,6 +33,10 @@ export default class AiMessages extends DbModule {
 
     if (!environment || !user || !aiUser) {
       throw new Error();
+    }
+
+    if (user.type === "HUMAN") {
+      throw new Error("Must be Ai user");
     }
 
     const { plotPoint, message, aiMessage } = await this.drizzle.transaction(
@@ -75,12 +79,15 @@ export default class AiMessages extends DbModule {
     );
 
     return {
-      user,
-      aiUser,
-      environment,
-      plotPoint,
-      aiMessage,
-      message,
+      ...plotPoint,
+      type: "AI_MESSAGE",
+      data: {
+        user,
+        aiUser,
+        environment,
+        aiMessage,
+        message,
+      },
     };
   }
 }

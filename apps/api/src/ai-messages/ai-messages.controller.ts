@@ -1,4 +1,4 @@
-import { CreateAiMessageDto, AiMessageDto } from '@2pm/data/dtos';
+import { CreateAiMessageDto, AiMessageHydratedPlotPointDto } from '@2pm/data';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ZodValidationPipe } from '@anatine/zod-nestjs';
 import { Body, Controller, Inject, Post, UsePipes } from '@nestjs/common';
@@ -16,7 +16,7 @@ export class AiMessagesController {
   @UsePipes(ZodValidationPipe)
   @Post('ai-message')
   @ApiOperation({ summary: 'Create', operationId: 'createAiMessage' })
-  @ApiResponse({ status: 201, type: AiMessageDto })
+  @ApiResponse({ status: 201, type: AiMessageHydratedPlotPointDto })
   async create(@Body() createDto: CreateAiMessageDto) {
     const dto = await this.service.create(createDto);
     this.events.emit('ai-message.created', dto);

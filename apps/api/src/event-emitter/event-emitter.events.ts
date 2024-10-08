@@ -1,16 +1,16 @@
-import type {
-  HumanMessageCreatedEvent,
-  EnvironmentRoomJoinedEvent,
-  AiMessageCreatedEvent,
-} from '@2pm/data/api-events';
+import {
+  AiMessageCreatedEventDto,
+  EnvironmentRoomJoinedEventDto,
+  HumanMessageCreatedEventDto,
+} from '@2pm/data';
 
 export type AppEvents = {
   /* Human Messages */
-  'human-message.created': (body: HumanMessageCreatedEvent) => void;
+  'human-message.created': (body: HumanMessageCreatedEventDto) => void;
 
   /* Ai Messages */
-  'ai-message.created': (body: AiMessageCreatedEvent) => void;
+  'ai-message.created': (body: AiMessageCreatedEventDto) => void;
 
   /* Environments */
-  'environment.joined': (body: EnvironmentRoomJoinedEvent) => void;
+  'environment.joined': (body: EnvironmentRoomJoinedEventDto) => void;
 };

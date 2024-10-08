@@ -3,23 +3,19 @@ import { z } from "zod";
 import { environments, humanUsers, users } from "../schema";
 import { createZodDto } from "@anatine/zod-nestjs";
 
-const HumanUserDtoSchema = z.object({
+export const HumanUserDtoSchema = z.object({
   user: createSelectSchema(users),
   humanUser: createSelectSchema(humanUsers),
 });
 
-const CreateHumanUserDtoSchema = z.object({
+export const CreateHumanUserDtoSchema = z.object({
   id: createInsertSchema(users).shape.id,
   tag: createInsertSchema(users).shape.tag,
   locationEnvironmentId: createSelectSchema(environments).shape.id,
 });
 
-class HumanUserDto extends createZodDto(HumanUserDtoSchema) {}
-class CreateHumanUserDto extends createZodDto(CreateHumanUserDtoSchema) {}
+export class HumanUserDto extends createZodDto(HumanUserDtoSchema) {}
 
-export {
-  HumanUserDtoSchema,
-  HumanUserDto,
-  CreateHumanUserDto,
+export class CreateHumanUserDto extends createZodDto(
   CreateHumanUserDtoSchema,
-};
+) {}

@@ -1,4 +1,4 @@
-import { PlotPointDto } from '@2pm/data/dtos';
+import { HydratedPlotPoint } from '@2pm/data';
 import {
   ConnectedSocket,
   MessageBody,
@@ -6,9 +6,9 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
+import { Inject } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
 import { AppEventEmitter } from '../event-emitter';
-import { Inject } from '@nestjs/common';
 
 @WebSocketGateway({
   namespace: '/environments',
@@ -29,9 +29,7 @@ export class EnvironmentsGateway {
     this.events.emit('environment.joined', { environment, user });
   }
 
-  sendPlotPointCreated({ environmentId, ...rest }: PlotPointDto) {
-    this.server
-      .to(`${environmentId}`)
-      .emit('plot-point.created', { environmentId, ...rest });
+  sendPlotPointCreated(dto: HydratedPlotPoint) {
+    this.server.to(`${dto.environmentId}`).emit('plot-point.created', dto);
   }
 }
