@@ -1,6 +1,4 @@
 import { PlotPointDto } from '@2pm/data/dtos';
-import { EnvironmentRoomJoinedEvent } from '@2pm/data/events';
-import { EventEmitter2 } from '@nestjs/event-emitter';
 import {
   ConnectedSocket,
   MessageBody,
@@ -9,20 +7,22 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
+import { AppEventEmitter } from '../event-emitter';
+import { Inject } from '@nestjs/common';
 
 @WebSocketGateway({
   namespace: '/environments',
   cors: { origin: '*' },
 })
 export class EnvironmentsGateway {
-  constructor(private events: EventEmitter2) {}
+  constructor(@Inject('E') private events: AppEventEmitter) {}
 
   @WebSocketServer()
   server: Server;
 
   @SubscribeMessage('join')
   handleJoinRoom(
-    @MessageBody() { environment, user }: EnvironmentRoomJoinedEvent,
+    @MessageBody() { environment, user }: any,
     @ConnectedSocket() client: Socket,
   ) {
     client.join(`${environment.id}`);
@@ -32,6 +32,6 @@ export class EnvironmentsGateway {
   sendPlotPointCreated({ environmentId, ...rest }: PlotPointDto) {
     this.server
       .to(`${environmentId}`)
-      .emit('plot-point-created', { environmentId, ...rest });
+      .emit('plot-point.created', { environmentId, ...rest });
   }
 }

@@ -3,7 +3,7 @@
   "exports": {
     "./schema": "./src/schema.ts",
     "./dtos": "./src/dtos/index.ts",
-    "./events": "./src/events/index.ts",
+    "./api-events": "./src/api-events/index.ts",
     ".": "./src/index.ts"
   },
   "scripts": {

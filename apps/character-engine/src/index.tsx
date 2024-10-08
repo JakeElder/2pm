@@ -96,15 +96,4 @@ class CharacterEngine {
 
 // "Write a paragraph about how UX has not caught up with LLMs. Format in markdown",
 
-const run = async () => {
-  const ce = new CharacterEngine();
-  const res = await ce.greet();
-
-  for await (const chunk of res) {
-    process.stdout.write(chunk.choices[0]?.delta?.content || "");
-  }
-};
-
-run();
-
 export default CharacterEngine;

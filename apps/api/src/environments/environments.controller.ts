@@ -1,54 +1,63 @@
-import { Controller, Inject } from '@nestjs/common';
-import { OnEvent } from '@nestjs/event-emitter';
+import { Controller, Inject, OnModuleInit } from '@nestjs/common';
 import CharacterEngine from '@2pm/character-engine';
 import {
   AiMessageCreatedEvent,
   EnvironmentRoomJoinedEvent,
   HumanMessageCreatedEvent,
-} from '@2pm/data/events';
+} from '@2pm/data/api-events';
 import { EnvironmentService } from './environments.service';
 import DBService from '@2pm/db';
-import { plotPoints } from '@2pm/data/schema';
-import { eq, and, inArray, count } from 'drizzle-orm';
-import { AiMessagesService } from 'src/ai-messages/ai-messages.service';
+import { AiMessagesService } from '../ai-messages/ai-messages.service';
+import { AppEventEmitter } from '../event-emitter';
 
 @Controller()
-export class EnvironmentController {
+export class EnvironmentController implements OnModuleInit {
   constructor(
     @Inject('CE') private readonly ce: CharacterEngine,
     @Inject('DB') private readonly db: DBService,
+    @Inject('E') private readonly e: AppEventEmitter,
     private readonly aiMessageService: AiMessagesService,
     private readonly service: EnvironmentService,
   ) {}
 
-  @OnEvent('environment.joined')
-  async handleEnvironmentJoined({
+  onModuleInit() {
+    this.e.on('environment.joined', (...args) =>
+      this.handleEnvironmentRoomJoined(...args),
+    );
+    this.e.on('human-message.created', (...args) =>
+      this.handleHumanMessageCreatedEvent(...args),
+    );
+    this.e.on('ai-message.created', (...args) =>
+      this.handleAiMessageCreatedEvent(...args),
+    );
+  }
+
+  async handleEnvironmentRoomJoined({
     user,
     environment,
   }: EnvironmentRoomJoinedEvent) {
-    const [{ count: messageCount }] = await this.db.drizzle
-      .select({ count: count() })
-      .from(plotPoints)
-      .where(
-        and(
-          eq(plotPoints.environmentId, environment.id),
-          inArray(plotPoints.type, ['AI_MESSAGE', 'HUMAN_MESSAGE']),
-        ),
-      );
-    if (messageCount === 0) {
-      const message = await this.aiMessageService.create({
-        content: '',
-        environmentId: environment.id,
-        userId: user.id,
-      });
-      const res = await this.ce.greet();
-      for await (const chunk of res) {
-        process.stdout.write(chunk.choices[0]?.delta?.content || '');
-      }
-    }
+    // const [{ count: messageCount }] = await this.db.drizzle
+    //   .select({ count: count() })
+    //   .from(plotPoints)
+    //   .where(
+    //     and(
+    //       eq(plotPoints.environmentId, environment.id),
+    //       inArray(plotPoints.type, ['AI_MESSAGE', 'HUMAN_MESSAGE']),
+    //     ),
+    //   );
+    // if (messageCount === 0) {
+    //   const message = await this.aiMessageService.create({
+    //     content: '',
+    //     environmentId: environment.id,
+    //     userId: user.id,
+    //   });
+    //   const res = await this.ce.greet();
+    //   for await (const chunk of res) {
+    //     process.stdout.write(chunk.choices[0]?.delta?.content || '');
+    //   }
+    // }
   }
 
-  @OnEvent('human-message.created')
   handleHumanMessageCreatedEvent(e: HumanMessageCreatedEvent) {
     this.service.sendPlotPointCreated(e);
 
@@ -57,7 +66,6 @@ export class EnvironmentController {
     }
   }
 
-  @OnEvent('ai-message.created')
   handleAiMessageCreatedEvent(e: AiMessageCreatedEvent) {
     this.service.sendPlotPointCreated(e);
   }

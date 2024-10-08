@@ -1,16 +1,16 @@
 import { CreateHumanMessageDto, HumanMessageDto } from '@2pm/data/dtos';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ZodValidationPipe } from '@anatine/zod-nestjs';
-import { Body, Controller, Post, UsePipes } from '@nestjs/common';
+import { Body, Controller, Inject, Post, UsePipes } from '@nestjs/common';
 import { HumanMessagesService } from './human-messages.service';
-import { EventEmitter2 } from '@nestjs/event-emitter';
+import { AppEventEmitter } from '../event-emitter';
 
 @ApiTags('Human Messages')
 @Controller()
 export class HumanMessagesController {
   constructor(
     private readonly service: HumanMessagesService,
-    private events: EventEmitter2,
+    @Inject('E') private events: AppEventEmitter,
   ) {}
 
   @UsePipes(ZodValidationPipe)

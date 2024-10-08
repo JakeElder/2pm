@@ -5,7 +5,7 @@ import { io } from "socket.io-client";
 import { Narrative } from "@2pm/ui";
 import { HydratedPlotPoint } from "@2pm/data";
 import NarrativePlotPointViewContainer from "./NarrativePlotPointViewContainer";
-import { EnvironmentRoomJoinedEvent } from "@2pm/data/events";
+import { EnvironmentRoomJoinedEvent } from "@2pm/data/api-events";
 
 type Props = {
   environmentId: number;
@@ -30,7 +30,7 @@ const NarrativeViewContainer = ({ environmentId, plotPoints }: Props) => {
 
     const socket = io("http://localhost:3002/environments")
       .emit("join", e)
-      .on("plot-point-created", async (plotPoint: HydratedPlotPoint) => {
+      .on("plot-point.created", async (plotPoint: HydratedPlotPoint) => {
         setPlotPoints((data) => [plotPoint, ...data]);
       });
 

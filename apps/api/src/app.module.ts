@@ -9,13 +9,12 @@ import { HumanMessagesModule } from './human-messages/human-messages.module';
 import { CharacterEngineModule } from './character-engine/character-engine.module';
 import { EnvironmentModule } from './environments/environments.module';
 import { EnvironmentsGateway } from './environments/environments.gateway';
-import { EventEmitterModule } from '@nestjs/event-emitter';
 import { HydratedPlotPointsModule } from './hydrated-plot-points/hydrated-plot-points.module';
+import { EventEmitterModule } from './event-emitter/event-emitter.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
-    EventEmitterModule.forRoot(),
     UsersModule,
     PlotPointsModule,
     AiMessagesModule,
@@ -23,6 +22,7 @@ import { HydratedPlotPointsModule } from './hydrated-plot-points/hydrated-plot-p
     CharacterEngineModule,
     EnvironmentModule,
     HydratedPlotPointsModule,
+    EventEmitterModule,
   ],
   controllers: [AppController],
   providers: [AppService, EnvironmentsGateway],
