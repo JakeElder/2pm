@@ -74,7 +74,6 @@ export const plotPoints = pgTable("plot_points", {
 export const messages = pgTable("messages", {
   id: serial("id").primaryKey(),
   type: messageTypeEnum("type").notNull(),
-  content: text("content").notNull(),
   userId: integer("user_id")
     .notNull()
     .references(() => users.id),
@@ -85,6 +84,7 @@ export const messages = pgTable("messages", {
 
 export const humanMessages = pgTable("human_messages", {
   id: serial("id").primaryKey(),
+  content: text("content").notNull(),
   messageId: integer("message_id")
     .notNull()
     .references(() => messages.id),
@@ -92,6 +92,7 @@ export const humanMessages = pgTable("human_messages", {
 
 export const aiMessages = pgTable("ai_messages", {
   id: serial("id").primaryKey(),
+  content: text("content").notNull(),
   messageId: integer("message_id")
     .notNull()
     .references(() => messages.id),

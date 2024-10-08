@@ -2,6 +2,7 @@ import type {
   EnvironmentsServerSocket,
   EnvironmentsServer,
   HydratedPlotPoint,
+  EnvironmentsRoomJoinedEventDto,
 } from '@2pm/data';
 import {
   ConnectedSocket,
@@ -25,7 +26,7 @@ export class EnvironmentsGateway {
 
   @SubscribeMessage('join')
   handleJoinRoom(
-    @MessageBody() { environment, user }: any,
+    @MessageBody() { environment, user }: EnvironmentsRoomJoinedEventDto,
     @ConnectedSocket() socket: EnvironmentsServerSocket,
   ) {
     socket.join(`${environment.id}`);

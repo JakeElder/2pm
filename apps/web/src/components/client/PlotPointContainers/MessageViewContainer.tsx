@@ -1,11 +1,18 @@
 "use client";
 
-import { PlotPointPerspective } from "@2pm/data";
+import {
+  AiMessageDto,
+  AiMessagesClientSocket,
+  AiMessagesRoomJoinedEventDto,
+  PlotPointPerspective,
+} from "@2pm/data";
 import {
   AiMessageHydratedPlotPointDto,
   HumanMessageHydratedPlotPointDto,
 } from "@2pm/data";
 import { Message } from "@2pm/ui/plot-points";
+import { useEffect, useState } from "react";
+import { io } from "socket.io-client";
 
 type Perspective = {
   perspective: PlotPointPerspective;
@@ -20,12 +27,31 @@ type AiMessageProps = Perspective & {
 };
 
 export const AiMessage = (props: AiMessageProps) => {
-  const { perspective } = props;
-  return (
-    <Message perspective={perspective}>
-      {props.plotPoint.data.message.content}
-    </Message>
+  const [content, setContent] = useState(
+    props.plotPoint.data.aiMessage.content,
   );
+
+  useEffect(() => {
+    const e: AiMessagesRoomJoinedEventDto = {
+      aiMessageId: props.plotPoint.data.aiMessage.id,
+    };
+
+    const socket: AiMessagesClientSocket = io(
+      "http://localhost:3002/ai-messages",
+    );
+
+    socket
+      .emit("join", e)
+      .on("ai-messages.updated", async ({ content }: AiMessageDto) => {
+        setContent(content);
+      });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
+  return <Message perspective={props.perspective}>{content}</Message>;
 };
 
 /**
@@ -40,7 +66,7 @@ export const HumanMessage = (props: HumanMessageProps) => {
   const { perspective } = props;
   return (
     <Message perspective={perspective}>
-      {props.plotPoint.data.message.content}
+      {props.plotPoint.data.humanMessage.content}
     </Message>
   );
 };

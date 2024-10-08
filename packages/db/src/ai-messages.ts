@@ -1,4 +1,9 @@
-import { CreateAiMessageDto, AiMessageHydratedPlotPointDto } from "@2pm/data";
+import {
+  CreateAiMessageDto,
+  AiMessageHydratedPlotPointDto,
+  UpdateAiMessageDto,
+  AiMessageDto,
+} from "@2pm/data";
 import {
   environments,
   aiMessages,
@@ -50,7 +55,6 @@ export default class AiMessages extends DbModule {
           .insert(messages)
           .values({
             type: "AI",
-            content,
             userId,
             environmentId,
           })
@@ -58,7 +62,10 @@ export default class AiMessages extends DbModule {
 
         const [aiMessage] = await tx
           .insert(aiMessages)
-          .values({ messageId: message.id })
+          .values({
+            messageId: message.id,
+            content,
+          })
           .returning();
 
         const [plotPointMessage] = await tx
@@ -89,5 +96,18 @@ export default class AiMessages extends DbModule {
         message,
       },
     };
+  }
+
+  public async update({
+    aiMessageId,
+    content,
+  }: UpdateAiMessageDto): Promise<AiMessageDto | null> {
+    const [aiMessage] = await this.drizzle
+      .update(aiMessages)
+      .set({ content })
+      .where(eq(aiMessages.id, aiMessageId))
+      .returning();
+
+    return aiMessage;
   }
 }

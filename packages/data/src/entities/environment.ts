@@ -6,20 +6,20 @@ import type { Server, Socket } from "socket.io";
 import type { Socket as ClientSocket } from "socket.io-client";
 import type { HydratedPlotPoint } from "../types";
 
-export const EnvironmentRoomJoinedEventSchema = z.object({
+export const EnvironmentsRoomJoinedEventSchema = z.object({
   user: createSelectSchema(users),
   environment: createSelectSchema(environments),
 });
 
-export class EnvironmentRoomJoinedEventDto extends createZodDto(
-  EnvironmentRoomJoinedEventSchema,
+export class EnvironmentsRoomJoinedEventDto extends createZodDto(
+  EnvironmentsRoomJoinedEventSchema,
 ) {}
 
-export interface EnvironmentsClientToServerEvents {
-  join: (body: EnvironmentRoomJoinedEventDto) => void;
+interface EnvironmentsClientToServerEvents {
+  join: (body: EnvironmentsRoomJoinedEventDto) => void;
 }
 
-export interface EnvironmentsServerToClientEvents {
+interface EnvironmentsServerToClientEvents {
   "plot-point.created": (body: HydratedPlotPoint) => void;
 }
 

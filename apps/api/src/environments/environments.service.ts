@@ -15,14 +15,7 @@ export class EnvironmentService {
     // this.ce.evaluate(environment);
   }
 
-  sendPlotPointCreated(plotPoint: HydratedPlotPoint) {
+  sendPlotPointCreatedEvent(plotPoint: HydratedPlotPoint) {
     this.environmentsGateway.sendPlotPointCreated(plotPoint);
   }
-
-  // handleHumanMessageCreated(dto: HumanMessageDto) {
-  //   this.plotPointsGateway.sendPlotPointUpdate(
-  //     dto.environment.id,
-  //     dto.plotPoint,
-  //   );
-  // }
 }

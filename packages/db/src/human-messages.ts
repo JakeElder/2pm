@@ -53,7 +53,6 @@ export default class HumanMessages extends DbModule {
           .insert(messages)
           .values({
             type: "HUMAN",
-            content,
             userId,
             environmentId,
           })
@@ -61,7 +60,10 @@ export default class HumanMessages extends DbModule {
 
         const [humanMessage] = await tx
           .insert(humanMessages)
-          .values({ messageId: message.id })
+          .values({
+            messageId: message.id,
+            content,
+          })
           .returning();
 
         const [plotPointMessage] = await tx

@@ -1,6 +1,7 @@
 import {
   AiMessageCreatedEventDto,
-  EnvironmentRoomJoinedEventDto,
+  AiMessageUpdatedEventDto,
+  EnvironmentsRoomJoinedEventDto,
   HumanMessageCreatedEventDto,
 } from '@2pm/data';
 
@@ -10,7 +11,8 @@ export type AppEvents = {
 
   /* Ai Messages */
   'ai-message.created': (body: AiMessageCreatedEventDto) => void;
+  'ai-message.updated': (body: AiMessageUpdatedEventDto) => void;
 
   /* Environments */
-  'environment.joined': (body: EnvironmentRoomJoinedEventDto) => void;
+  'environment.joined': (body: EnvironmentsRoomJoinedEventDto) => void;
 };

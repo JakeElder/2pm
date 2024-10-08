@@ -6,7 +6,7 @@ import * as schema from "../schema";
 export const CreateHumanMessageDtoSchema = z.object({
   userId: createSelectSchema(schema.users).shape.id,
   environmentId: createSelectSchema(schema.environments).shape.id,
-  content: createSelectSchema(schema.messages).shape.content,
+  content: createSelectSchema(schema.humanMessages).shape.content,
 });
 
 export const HumanMessageHydratedPlotPointDtoSchema = createSelectSchema(
