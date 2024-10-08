@@ -9,7 +9,7 @@ import { HumanMessagesService } from './human-messages.service';
 import { AppEventEmitter } from '../event-emitter';
 
 @ApiTags('Human Messages')
-@Controller()
+@Controller('human-messages')
 export class HumanMessagesController {
   constructor(
     private readonly service: HumanMessagesService,
@@ -17,7 +17,7 @@ export class HumanMessagesController {
   ) {}
 
   @UsePipes(ZodValidationPipe)
-  @Post('human-message')
+  @Post()
   @ApiOperation({ summary: 'Create', operationId: 'createHumanMessage' })
   @ApiResponse({ status: 201, type: HumanMessageHydratedPlotPointDto })
   async create(@Body() createDto: CreateHumanMessageDto) {

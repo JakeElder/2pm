@@ -1,3 +1,3 @@
 import api from ".";
 
-export const { createHumanMessage } = api.humanMessage;
+export const { createHumanMessage } = api.humanMessages;

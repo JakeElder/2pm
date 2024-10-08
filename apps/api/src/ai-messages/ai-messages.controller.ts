@@ -6,7 +6,7 @@ import { AiMessagesService } from './ai-messages.service';
 import { AppEventEmitter } from '../event-emitter';
 
 @ApiTags('Ai Messages')
-@Controller()
+@Controller('ai-messages')
 export class AiMessagesController {
   constructor(
     private readonly service: AiMessagesService,
@@ -14,7 +14,7 @@ export class AiMessagesController {
   ) {}
 
   @UsePipes(ZodValidationPipe)
-  @Post('ai-message')
+  @Post()
   @ApiOperation({ summary: 'Create', operationId: 'createAiMessage' })
   @ApiResponse({ status: 201, type: AiMessageHydratedPlotPointDto })
   async create(@Body() createDto: CreateAiMessageDto) {

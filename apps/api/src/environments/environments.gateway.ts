@@ -1,4 +1,8 @@
-import { HydratedPlotPoint } from '@2pm/data';
+import type {
+  EnvironmentsServerSocket,
+  EnvironmentsServer,
+  HydratedPlotPoint,
+} from '@2pm/data';
 import {
   ConnectedSocket,
   MessageBody,
@@ -7,7 +11,6 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Inject } from '@nestjs/common';
-import { Server, Socket } from 'socket.io';
 import { AppEventEmitter } from '../event-emitter';
 
 @WebSocketGateway({
@@ -18,14 +21,14 @@ export class EnvironmentsGateway {
   constructor(@Inject('E') private events: AppEventEmitter) {}
 
   @WebSocketServer()
-  server: Server;
+  server: EnvironmentsServer;
 
   @SubscribeMessage('join')
   handleJoinRoom(
     @MessageBody() { environment, user }: any,
-    @ConnectedSocket() client: Socket,
+    @ConnectedSocket() socket: EnvironmentsServerSocket,
   ) {
-    client.join(`${environment.id}`);
+    socket.join(`${environment.id}`);
     this.events.emit('environment.joined', { environment, user });
   }
 
