@@ -11,11 +11,12 @@ import {
   AI_USER_CODES,
   ENVIRONMENT_TYPE_CODES,
   PLOT_POINT_TYPES,
+  USER_TYPES,
   WORLD_ROOM_CODES,
 } from "./constants";
 import { sql } from "drizzle-orm";
 
-export const userTypeEnum = pgEnum("UserType", ["HUMAN", "AI"]);
+export const userTypeEnum = pgEnum("UserType", USER_TYPES);
 export const messageTypeEnum = pgEnum("MessageType", ["HUMAN", "AI"]);
 export const plotPointTypeEnum = pgEnum("PlotPointType", PLOT_POINT_TYPES);
 export const environmentTypeEnum = pgEnum(
@@ -37,6 +38,15 @@ export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   tag: text("tag").notNull(),
   type: userTypeEnum("type").notNull(),
+});
+
+export const anonymousUsers = pgTable("anonymous_users", {
+  userId: integer("user_id")
+    .primaryKey()
+    .references(() => users.id),
+  locationEnvironmentId: integer("location_environment_id")
+    .notNull()
+    .references(() => environments.id),
 });
 
 export const humanUsers = pgTable("human_users", {

@@ -1,3 +1,5 @@
+export const USER_TYPES = ["ANONYMOUS", "HUMAN", "AI"] as const;
+
 export const PLOT_POINT_TYPES = [
   "HUMAN_MESSAGE",
   "AI_MESSAGE",

@@ -9,6 +9,7 @@ import { EnvironmentModule } from './environments/environments.module';
 import { EnvironmentsGateway } from './environments/environments.gateway';
 import { HydratedPlotPointsModule } from './hydrated-plot-points/hydrated-plot-points.module';
 import { EventEmitterModule } from './event-emitter/event-emitter.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { EventEmitterModule } from './event-emitter/event-emitter.module';
     EnvironmentModule,
     HydratedPlotPointsModule,
     EventEmitterModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService, EnvironmentsGateway],

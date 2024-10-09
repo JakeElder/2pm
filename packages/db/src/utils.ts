@@ -17,12 +17,11 @@ import {
 } from "@2pm/data/schema";
 import { DbModule } from "./db-module";
 import WorldRooms from "./world-rooms";
-import AiUsers from "./ai-users";
-import HumanUsers from "./human-users";
 import CompanionOneToOnes from "./companion-one-to-ones";
 import UserEnvironmentPresences from "./user-environment-presences";
 import AiMessages from "./ai-messages";
 import HumanMessages from "./human-messages";
+import Users from "./users";
 
 export default class Utils extends DbModule {
   public async clear() {
@@ -57,8 +56,7 @@ export default class Utils extends DbModule {
 
     const db = {
       worldRooms: new WorldRooms(this.pg),
-      aiUsers: new AiUsers(this.pg),
-      humanUsers: new HumanUsers(this.pg),
+      users: new Users(this.pg),
       companionOneToOnes: new CompanionOneToOnes(this.pg),
       userEnvironmentPresences: new UserEnvironmentPresences(this.pg),
       aiMessages: new AiMessages(this.pg),
@@ -68,9 +66,10 @@ export default class Utils extends DbModule {
     const universe = await db.worldRooms.insert({ id: 1, code: "UNIVERSE" });
 
     const [g, ivan, jake] = await Promise.all([
-      db.aiUsers.insert({ id: 1, tag: "g", code: "G" }),
-      db.aiUsers.insert({ id: 2, tag: "ivan", code: "IVAN" }),
-      db.humanUsers.insert({
+      db.users.insert({ type: "AI", id: 1, tag: "g", code: "G" }),
+      db.users.insert({ type: "AI", id: 2, tag: "ivan", code: "IVAN" }),
+      db.users.insert({
+        type: "HUMAN",
         id: 3,
         tag: "jake",
         locationEnvironmentId: universe.environment.id,
@@ -82,20 +81,20 @@ export default class Utils extends DbModule {
     await Promise.all([
       db.userEnvironmentPresences.insert({
         environmentId: universe.environment.id,
-        userId: g.user.id,
+        userId: g.id,
       }),
       db.userEnvironmentPresences.insert({
         environmentId: o2o.environment.id,
-        userId: ivan.user.id,
+        userId: ivan.id,
       }),
       db.userEnvironmentPresences.insert({
-        userId: jake.user.id,
+        userId: jake.id,
         environmentId: o2o.environment.id,
       }),
     ]);
 
     await db.aiMessages.insert({
-      userId: g.user.id,
+      userId: g.id,
       environmentId: universe.environment.id,
       content: "Standby for G stuff",
     });
