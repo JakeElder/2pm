@@ -101,12 +101,16 @@ export default class AiMessages extends DbModule {
   public async update({
     aiMessageId,
     content,
-  }: UpdateAiMessageDto): Promise<AiMessageDto | null> {
+  }: UpdateAiMessageDto): Promise<AiMessageDto> {
     const [aiMessage] = await this.drizzle
       .update(aiMessages)
       .set({ content })
       .where(eq(aiMessages.id, aiMessageId))
       .returning();
+
+    if (!aiMessage) {
+      throw new Error();
+    }
 
     return aiMessage;
   }

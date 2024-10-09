@@ -3,7 +3,6 @@ import {
   AiMessageHydratedPlotPointDto,
   UpdateAiMessageDto,
   AiMessageDto,
-  AiMessageUpdatedEventDto,
 } from '@2pm/data';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ZodValidationPipe } from '@anatine/zod-nestjs';
@@ -29,8 +28,8 @@ export class AiMessagesController implements OnModuleInit {
   ) {}
 
   onModuleInit() {
-    this.events.on('ai-message.updated', (...args) =>
-      this.handleAiMessageUpdated(...args),
+    this.events.on('ai-message.updated', (e) =>
+      this.service.sendAiMessageUpdatedEvent(e),
     );
   }
 
@@ -59,9 +58,5 @@ export class AiMessagesController implements OnModuleInit {
 
     this.events.emit('ai-message.updated', res);
     return res;
-  }
-
-  handleAiMessageUpdated(e: AiMessageUpdatedEventDto) {
-    this.service.sendAiMessageUpdatedEvent(e);
   }
 }

@@ -21,7 +21,7 @@ export class AiMessagesService {
     return this.db.aiMessages.insert(dto);
   }
 
-  async update(dto: UpdateAiMessageDto): Promise<AiMessageDto | null> {
+  async update(dto: UpdateAiMessageDto): Promise<AiMessageDto> {
     return this.db.aiMessages.update(dto);
   }
 

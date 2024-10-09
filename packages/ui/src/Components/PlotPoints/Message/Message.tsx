@@ -19,6 +19,7 @@ const perspectiveClassName = (perspective: PlotPointPerspective) =>
 
 export const Message = ({ perspective, children }: Props) => {
   const processed = processMessageBody(children);
+  const body = processed ? <Markdown>{processed}</Markdown> : <>&nbsp;</>;
   return (
     <div className={css["root"]}>
       <div
@@ -27,7 +28,7 @@ export const Message = ({ perspective, children }: Props) => {
           css[perspectiveClassName(perspective)],
         )}
       >
-        <Markdown>{processed}</Markdown>
+        {body}
       </div>
     </div>
   );
