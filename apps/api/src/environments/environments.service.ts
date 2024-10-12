@@ -1,7 +1,7 @@
 import CharacterEngine from '@2pm/character-engine';
 import { HydratedPlotPointDto } from '@2pm/data';
 import { Inject, Injectable } from '@nestjs/common';
-import { EnvironmentsGateway } from './environments.gateway';
+import { EnvironmentGateway } from './environments.gateway';
 import DBService from '@2pm/db';
 import { and, count, eq, inArray } from 'drizzle-orm';
 import { plotPoints } from '@2pm/data/schema';
@@ -11,7 +11,7 @@ export class EnvironmentService {
   constructor(
     @Inject('CE') private readonly ce: CharacterEngine,
     @Inject('DB') private readonly db: DBService,
-    private readonly environmentsGateway: EnvironmentsGateway,
+    private readonly environmentsGateway: EnvironmentGateway,
   ) {}
 
   respondCompanionOneToOne(environmentId: number) {

@@ -4,7 +4,7 @@ import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { CharacterEngineModule } from './character-engine/character-engine.module';
 import { EnvironmentModule } from './environments/environments.module';
-import { EnvironmentsGateway } from './environments/environments.gateway';
+import { EnvironmentGateway } from './environments/environments.gateway';
 import { HydratedPlotPointsModule } from './hydrated-plot-points/hydrated-plot-points.module';
 import { EventEmitterModule } from './event-emitter/event-emitter.module';
 import { UsersModule } from './users/users.module';
@@ -27,6 +27,6 @@ import { ExpressAdapter } from '@bull-board/express';
     }),
   ],
   controllers: [AppController],
-  providers: [AppService, EnvironmentsGateway],
+  providers: [AppService, EnvironmentGateway],
 })
 export class AppModule {}

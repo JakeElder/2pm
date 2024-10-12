@@ -18,7 +18,7 @@ import { AppEventEmitter } from '../event-emitter';
   namespace: '/environments',
   cors: { origin: '*' },
 })
-export class EnvironmentsGateway {
+export class EnvironmentGateway {
   constructor(@Inject('E') private events: AppEventEmitter) {}
 
   @WebSocketServer()

@@ -1,7 +1,5 @@
-// export * from "./entities/ai-message";
 export * from "./entities/companion-one-to-one";
 export * from "./entities/environment";
-// export * from "./entities/human-message";
 export * from "./entities/hydrated-plot-point";
 export * from "./entities/message";
 export * from "./entities/user";
