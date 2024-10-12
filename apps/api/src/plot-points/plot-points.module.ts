@@ -13,5 +13,6 @@ import { AiMessagePlotPointsController } from './ai-message-plot-points.controll
     AiMessagePlotPointsController,
   ],
   providers: [PlotPointsService],
+  exports: [PlotPointsService],
 })
 export class PlotPointsModule {}

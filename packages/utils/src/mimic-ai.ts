@@ -1,7 +1,7 @@
 async function* mimicAi(
   input: string,
-  minInterval: number = 40,
-  maxInterval: number = 200,
+  minInterval: number = 3000,
+  maxInterval: number = 8000,
 ): AsyncIterableIterator<string> {
   const tokens = input.split("");
   let chunk = "";
