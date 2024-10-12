@@ -1,9 +1,8 @@
 "use client";
 
 import {
-  AiMessageDto,
-  AiMessagesClientSocket,
-  AiMessagesRoomJoinedEventDto,
+  MessagesClientSocket,
+  MessagesRoomJoinedEventDto,
   PlotPointPerspective,
 } from "@2pm/data";
 import {
@@ -32,19 +31,15 @@ export const AiMessage = (props: AiMessageProps) => {
   );
 
   useEffect(() => {
-    const e: AiMessagesRoomJoinedEventDto = {
-      aiMessageId: props.plotPoint.data.aiMessage.id,
+    const e: MessagesRoomJoinedEventDto = {
+      messageId: props.plotPoint.data.message.id,
     };
 
-    const socket: AiMessagesClientSocket = io(
-      "http://localhost:3002/ai-messages",
-    );
+    const socket: MessagesClientSocket = io("http://localhost:3002/messages");
 
-    socket
-      .emit("join", e)
-      .on("ai-messages.updated", async ({ content }: AiMessageDto) => {
-        setContent(content);
-      });
+    socket.emit("join", e).on("messages.ai.updated", async ({ aiMessage }) => {
+      setContent(aiMessage.content);
+    });
 
     return () => {
       socket.disconnect();

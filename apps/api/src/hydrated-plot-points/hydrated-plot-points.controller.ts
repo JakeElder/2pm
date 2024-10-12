@@ -10,15 +10,11 @@ import {
 } from '@nestjs/swagger';
 import {
   AiMessageHydratedPlotPointDto,
-  EnvironmentEnteredHydratedPlotPointDto,
-  EnvironmentLeftHydratedPlotPointDto,
   HumanMessageHydratedPlotPointDto,
 } from '@2pm/data';
 
 @ApiExtraModels(HumanMessageHydratedPlotPointDto)
 @ApiExtraModels(AiMessageHydratedPlotPointDto)
-@ApiExtraModels(EnvironmentEnteredHydratedPlotPointDto)
-@ApiExtraModels(EnvironmentLeftHydratedPlotPointDto)
 @ApiTags('Hydrated Plot Points')
 @Controller()
 export class HydratedPlotPointsController {
@@ -42,8 +38,6 @@ export class HydratedPlotPointsController {
         oneOf: [
           { $ref: getSchemaPath(HumanMessageHydratedPlotPointDto) },
           { $ref: getSchemaPath(AiMessageHydratedPlotPointDto) },
-          { $ref: getSchemaPath(EnvironmentEnteredHydratedPlotPointDto) },
-          { $ref: getSchemaPath(EnvironmentLeftHydratedPlotPointDto) },
         ],
       },
     },

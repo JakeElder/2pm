@@ -5,15 +5,21 @@ import { EnvironmentService } from './environments.service';
 import { EnvironmentsGateway } from './environments.gateway';
 import { EnvironmentController } from './environments.controller';
 import { DatabaseModule } from '../database/database.module';
-import { AiMessagesModule } from '../ai-messages/ai-messages.module';
 import { EnvironmentConsumer } from './environments.consumer';
+import { MessagesModule } from '../messages/messages.module';
+import { BullBoardModule } from '@bull-board/nestjs';
+import { BullAdapter } from '@bull-board/api/bullAdapter';
 
 @Module({
   imports: [
     DatabaseModule,
     CharacterEngineModule,
-    AiMessagesModule,
+    MessagesModule,
     BullModule.registerQueue({ name: 'environment' }),
+    BullBoardModule.forFeature({
+      name: 'environment',
+      adapter: BullAdapter,
+    }),
   ],
   providers: [EnvironmentService, EnvironmentsGateway, EnvironmentConsumer],
   exports: [EnvironmentService],

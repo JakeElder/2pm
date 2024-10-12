@@ -5,9 +5,8 @@ import Utils from "./utils";
 import WorldRooms from "./world-rooms";
 import CompanionOneToOnes from "./companion-one-to-ones";
 import UserEnvironmentPresences from "./user-environment-presences";
-import AiMessages from "./ai-messages";
-import HumanMessages from "./human-messages";
 import Users from "./users";
+import Messages from "./messages";
 
 export default class DBService {
   private pg: Sql;
@@ -18,8 +17,7 @@ export default class DBService {
   public users: Users;
   public companionOneToOnes: CompanionOneToOnes;
   public userEnvironmentPresences: UserEnvironmentPresences;
-  public aiMessages: AiMessages;
-  public humanMessages: HumanMessages;
+  public messages: Messages;
 
   constructor(dbUrl: string) {
     this.pg = postgres(dbUrl);
@@ -29,8 +27,7 @@ export default class DBService {
     this.users = new Users(this.pg);
     this.companionOneToOnes = new CompanionOneToOnes(this.pg);
     this.userEnvironmentPresences = new UserEnvironmentPresences(this.pg);
-    this.aiMessages = new AiMessages(this.pg);
-    this.humanMessages = new HumanMessages(this.pg);
+    this.messages = new Messages(this.pg);
   }
 
   end() {

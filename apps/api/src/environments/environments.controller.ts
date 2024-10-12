@@ -1,9 +1,11 @@
 import { Controller, Inject, OnModuleInit } from '@nestjs/common';
 import { EnvironmentsRoomJoinedEventDto } from '@2pm/data';
-import { EnvironmentService } from './environments.service';
-import { AppEventEmitter } from '../event-emitter';
+import { messageDtoToHydratedPlotPointDto } from '@2pm/utils/adapters';
 import { InjectQueue } from '@nestjs/bull';
 import { type Queue } from 'bull';
+import { EnvironmentService } from './environments.service';
+import { AppEventEmitter } from '../event-emitter';
+import { type BullBoardInstance, InjectBullBoard } from '@bull-board/nestjs';
 
 @Controller()
 export class EnvironmentController implements OnModuleInit {
@@ -12,17 +14,17 @@ export class EnvironmentController implements OnModuleInit {
     @InjectQueue('environment')
     private readonly queue: Queue<EnvironmentsRoomJoinedEventDto>,
     private readonly service: EnvironmentService,
+    @InjectBullBoard() private readonly boardInstance: BullBoardInstance,
   ) {}
 
   onModuleInit() {
-    this.events.on('environment.joined', (e) => {
+    this.events.on('environments.joined', (e) => {
       this.queue.add('processJoined', e);
     });
-    this.events.on('human-message.created', (e) => {
-      this.service.sendPlotPointCreatedEvent(e);
+    this.events.on('messages.created', (e) => {
+      this.service.sendPlotPointCreatedEvent(
+        messageDtoToHydratedPlotPointDto(e),
+      );
     });
-    this.events.on('ai-message.created', (e) =>
-      this.service.sendPlotPointCreatedEvent(e),
-    );
   }
 }

@@ -1,7 +1,7 @@
 import React from "react";
 import css from "./Narrative.module.css";
 import { PlotPointPerspective } from "@2pm/data";
-import { HydratedPlotPoint } from "@2pm/data";
+import { HydratedPlotPointDto } from "@2pm/data";
 
 /**
  * Root
@@ -20,7 +20,7 @@ export const Root = ({ children }: RootProps) => {
  */
 
 interface PlotPointProps {
-  type: HydratedPlotPoint["type"];
+  type: HydratedPlotPointDto["type"];
   perspective: PlotPointPerspective;
   children: React.ReactNode;
 }

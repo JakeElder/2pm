@@ -1,4 +1,8 @@
-import { HydratedPlotPoint, HydratedPlotPointDtoSchema } from '@2pm/data';
+import {
+  AiMessageHydratedPlotPointDto,
+  HumanMessageHydratedPlotPointDto,
+  HydratedPlotPointDto,
+} from '@2pm/data';
 import {
   aiMessages,
   aiUsers,
@@ -12,7 +16,7 @@ import {
 } from '@2pm/data/schema';
 import DBService from '@2pm/db';
 import { Inject, Injectable } from '@nestjs/common';
-import { desc, eq } from 'drizzle-orm';
+import { desc, eq, and, inArray } from 'drizzle-orm';
 
 @Injectable()
 export class HydratedPlotPointsService {
@@ -42,11 +46,60 @@ export class HydratedPlotPointsService {
       .leftJoin(aiUsers, eq(users.id, aiUsers.userId))
       .leftJoin(humanUsers, eq(users.id, humanUsers.userId))
       .innerJoin(environments, eq(plotPoints.environmentId, environments.id))
-      .where(eq(plotPoints.environmentId, id))
+      .where(
+        and(
+          eq(plotPoints.environmentId, id),
+          inArray(plotPoints.type, ['AI_MESSAGE', 'HUMAN_MESSAGE']),
+        ),
+      )
       .orderBy(desc(plotPoints.id));
 
-    const data: HydratedPlotPoint[] = res.map(({ plotPoint, ...data }) => {
-      return HydratedPlotPointDtoSchema.parse({ ...plotPoint, data });
+    const data: HydratedPlotPointDto[] = res.map((row) => {
+      if (row.plotPoint.type === 'HUMAN_MESSAGE') {
+        const { user, humanUser, humanMessage, message, ...rest } = row;
+
+        if (!user || !humanUser || !humanMessage || !message) {
+          throw new Error();
+        }
+
+        const res: HumanMessageHydratedPlotPointDto = {
+          type: 'HUMAN_MESSAGE',
+          data: {
+            type: 'HUMAN',
+            ...rest,
+            user,
+            humanUser,
+            message,
+            humanMessage,
+          },
+        };
+
+        return res;
+      }
+
+      if (row.plotPoint.type === 'AI_MESSAGE') {
+        const { user, aiUser, aiMessage, message, ...rest } = row;
+
+        if (!user || !aiUser || !aiMessage || !message) {
+          throw new Error();
+        }
+
+        const res: AiMessageHydratedPlotPointDto = {
+          type: 'AI_MESSAGE',
+          data: {
+            type: 'AI',
+            ...rest,
+            user,
+            aiUser,
+            message,
+            aiMessage,
+          },
+        };
+
+        return res;
+      }
+
+      throw new Error();
     });
 
     return data;

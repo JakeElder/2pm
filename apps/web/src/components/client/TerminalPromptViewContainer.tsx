@@ -9,10 +9,10 @@ interface Props
   extends Pick<CreateHumanMessageDto, "userId" | "environmentId"> {}
 
 type Inputs = {
-  message: string;
+  content: string;
 };
 
-const TerminalPromptViewContainer = (props: Props) => {
+const TerminalPromptViewContainer = ({ userId, environmentId }: Props) => {
   const {
     register,
     handleSubmit,
@@ -20,8 +20,13 @@ const TerminalPromptViewContainer = (props: Props) => {
     reset,
   } = useForm<Inputs>();
 
-  const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    await submitMessage({ ...props, content: data.message });
+  const onSubmit: SubmitHandler<Inputs> = async ({ content }) => {
+    await submitMessage({
+      type: "HUMAN",
+      environmentId,
+      userId,
+      content,
+    });
     reset();
   };
 
@@ -29,7 +34,7 @@ const TerminalPromptViewContainer = (props: Props) => {
     <form onSubmit={handleSubmit(onSubmit)}>
       <Terminal.Prompt>
         <Terminal.Input>
-          <PromptInput {...register("message")} autoComplete="off" />
+          <PromptInput {...register("content")} autoComplete="off" />
         </Terminal.Input>
         <Terminal.SubmitButton>
           <PromptSubmitButton disabled={isSubmitting} />

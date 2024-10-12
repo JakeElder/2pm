@@ -1,35 +1,27 @@
-import { createSelectSchema } from "drizzle-zod";
-import { plotPoints } from "../schema";
 import { z } from "zod";
-import { HumanMessageHydratedPlotPointDtoSchema } from "./human-message";
-import { AiMessageHydratedPlotPointDtoSchema } from "./ai-message";
+import { AiMessageDtoSchema, HumanMessageDtoSchema } from "./message";
 import { createZodDto } from "@anatine/zod-nestjs";
 
-export const EnvironmentEnteredHydratedPlotPointDtoSchema = createSelectSchema(
-  plotPoints,
-).extend({
-  type: z.literal("ENVIRONMENT_ENTERED"),
-  data: z.object({}),
+export const AiMessageHydratedPlotPointDtoSchema = z.object({
+  type: z.literal("AI_MESSAGE"),
+  data: AiMessageDtoSchema,
 });
 
-export const EnvironmentLeftHydratedPlotPointDtoSchema = createSelectSchema(
-  plotPoints,
-).extend({
-  type: z.literal("ENVIRONMENT_LEFT"),
-  data: z.object({}),
+export const HumanMessageHydratedPlotPointDtoSchema = z.object({
+  type: z.literal("HUMAN_MESSAGE"),
+  data: HumanMessageDtoSchema,
 });
-
-export class EnvironmentEnteredHydratedPlotPointDto extends createZodDto(
-  EnvironmentEnteredHydratedPlotPointDtoSchema,
-) {}
-
-export class EnvironmentLeftHydratedPlotPointDto extends createZodDto(
-  EnvironmentLeftHydratedPlotPointDtoSchema,
-) {}
 
 export const HydratedPlotPointDtoSchema = z.discriminatedUnion("type", [
   HumanMessageHydratedPlotPointDtoSchema,
   AiMessageHydratedPlotPointDtoSchema,
-  EnvironmentEnteredHydratedPlotPointDtoSchema,
-  EnvironmentLeftHydratedPlotPointDtoSchema,
 ]);
+
+export class HumanMessageHydratedPlotPointDto extends createZodDto(
+  HumanMessageHydratedPlotPointDtoSchema,
+) {}
+export class AiMessageHydratedPlotPointDto extends createZodDto(
+  AiMessageHydratedPlotPointDtoSchema,
+) {}
+
+export type HydratedPlotPointDto = z.infer<typeof HydratedPlotPointDtoSchema>;

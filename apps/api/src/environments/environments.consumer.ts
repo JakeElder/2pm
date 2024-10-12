@@ -3,9 +3,9 @@ import { Processor, Process, OnQueueFailed } from '@nestjs/bull';
 import { Job } from 'bull';
 import { Inject, Logger } from '@nestjs/common';
 import CharacterEngine from '@2pm/character-engine';
-import { AiMessagesService } from '../ai-messages/ai-messages.service';
 import { EnvironmentService } from './environments.service';
 import { AppEventEmitter } from '../event-emitter';
+import { MessagesService } from '../messages/messages.service';
 
 @Processor('environment')
 export class EnvironmentConsumer {
@@ -14,7 +14,7 @@ export class EnvironmentConsumer {
   constructor(
     @Inject('E') private readonly events: AppEventEmitter,
     @Inject('CE') private readonly ce: CharacterEngine,
-    private readonly aiMessageService: AiMessagesService,
+    private readonly messageService: MessagesService,
     private readonly service: EnvironmentService,
   ) {}
 
@@ -28,39 +28,51 @@ export class EnvironmentConsumer {
 
   @Process('processJoined')
   async processJoined(job: Job<EnvironmentsRoomJoinedEventDto>) {
-    const { environment } = job.data;
+    try {
+      const { environment } = job.data;
 
-    if (environment.type !== 'COMPANION_ONE_TO_ONE') {
-      await job.moveToCompleted();
-      return;
-    }
+      if (environment.type !== 'COMPANION_ONE_TO_ONE') {
+        await job.moveToCompleted('No action needed');
+        return;
+      }
 
-    const count = await this.service.getEnvironmentMessageCount(environment.id);
+      const count = await this.service.getEnvironmentMessageCount(
+        environment.id,
+      );
 
-    if (count !== 0) {
-      await job.moveToCompleted();
-      return;
-    }
+      if (count !== 0) {
+        await job.moveToCompleted('Done already');
+        return;
+      }
 
-    let content = '';
+      let content = '';
 
-    const message = await this.aiMessageService.create({
-      content,
-      environmentId: environment.id,
-      userId: 2,
-    });
-    this.events.emit('ai-message.created', message);
-
-    const res = this.ce.greet();
-
-    for await (const chunk of res) {
-      content += chunk;
-
-      const updated = await this.aiMessageService.update({
-        aiMessageId: message.data.aiMessage.id,
+      const dto = await this.messageService.create({
+        type: 'AI',
         content,
+        environmentId: environment.id,
+        userId: 2,
       });
-      this.events.emit('ai-message.updated', updated);
+      this.events.emit('messages.created', dto);
+
+      const res = this.ce.greet();
+
+      for await (const chunk of res) {
+        content += chunk;
+
+        const updated = await this.messageService.update({
+          type: 'AI',
+          id: dto.message.id,
+          content,
+        });
+        this.events.emit('messages.updated', updated);
+      }
+
+      await job.moveToCompleted('Done');
+      return true;
+    } catch (e: any) {
+      this.logger.error(`Failed processing job ${job.id}`, e.stack);
+      await job.moveToFailed({ message: 'Error' });
     }
   }
 }

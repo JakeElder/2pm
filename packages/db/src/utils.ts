@@ -19,9 +19,8 @@ import { DbModule } from "./db-module";
 import WorldRooms from "./world-rooms";
 import CompanionOneToOnes from "./companion-one-to-ones";
 import UserEnvironmentPresences from "./user-environment-presences";
-import AiMessages from "./ai-messages";
-import HumanMessages from "./human-messages";
 import Users from "./users";
+import Messages from "./messages";
 
 export default class Utils extends DbModule {
   public async clear() {
@@ -59,8 +58,7 @@ export default class Utils extends DbModule {
       users: new Users(this.pg),
       companionOneToOnes: new CompanionOneToOnes(this.pg),
       userEnvironmentPresences: new UserEnvironmentPresences(this.pg),
-      aiMessages: new AiMessages(this.pg),
-      humanMessages: new HumanMessages(this.pg),
+      messages: new Messages(this.pg),
     };
 
     const universe = await db.worldRooms.insert({ id: 1, code: "UNIVERSE" });
@@ -93,10 +91,12 @@ export default class Utils extends DbModule {
       }),
     ]);
 
-    await db.aiMessages.insert({
+    await db.messages.insert({
+      type: "AI",
       userId: g.id,
       environmentId: universe.environment.id,
       content: "Standby for G stuff",
+      state: "COMPLETE",
     });
   }
 }

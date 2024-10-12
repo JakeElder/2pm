@@ -33,21 +33,27 @@ export class UsersService {
       }
 
       if (row.user.type === 'HUMAN') {
+        if (!row.humanUser) {
+          throw new Error();
+        }
         const res: HumanUserDto = {
           id: row.user.id,
           type: 'HUMAN',
           tag: row.user.tag,
-          locationEnvironmentId: row.humanUser!.locationEnvironmentId,
+          locationEnvironmentId: row.humanUser.locationEnvironmentId,
         };
         return res;
       }
 
       if (row.user.type === 'AI') {
+        if (!row.aiUser) {
+          throw new Error();
+        }
         const res: AiUserDto = {
           id: row.user.id,
           type: 'AI',
           tag: row.user.tag,
-          code: row.aiUser!.code,
+          code: row.aiUser.code,
         };
         return res;
       }

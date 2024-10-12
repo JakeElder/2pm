@@ -24,6 +24,12 @@ export const CreateAiUserDtoSchema = z.object({
   code: createInsertSchema(aiUsers).shape.code,
 });
 
+export const CreateUserDtoSchema = z.discriminatedUnion("type", [
+  CreateAnonymousUserDtoSchema,
+  CreateHumanUserDtoSchema,
+  CreateAiUserDtoSchema,
+]);
+
 export const AnonymousUserDtoSchema = z.object({
   type: z.literal("ANONYMOUS"),
   id: createSelectSchema(users).shape.id,
@@ -45,12 +51,6 @@ export const AiUserDtoSchema = z.object({
   code: createSelectSchema(aiUsers).shape.code,
 });
 
-export const CreateUserDtoSchema = z.discriminatedUnion("type", [
-  CreateAnonymousUserDtoSchema,
-  CreateHumanUserDtoSchema,
-  CreateAiUserDtoSchema,
-]);
-
 export const UserDtoSchema = z.discriminatedUnion("type", [
   AnonymousUserDtoSchema,
   HumanUserDtoSchema,
@@ -60,3 +60,6 @@ export const UserDtoSchema = z.discriminatedUnion("type", [
 export class AnonymousUserDto extends createZodDto(AnonymousUserDtoSchema) {}
 export class HumanUserDto extends createZodDto(HumanUserDtoSchema) {}
 export class AiUserDto extends createZodDto(AiUserDtoSchema) {}
+
+export type CreateUserDto = z.infer<typeof CreateUserDtoSchema>;
+export type UserDto = z.infer<typeof UserDtoSchema>;

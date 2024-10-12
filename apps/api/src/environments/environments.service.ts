@@ -1,5 +1,5 @@
 import CharacterEngine from '@2pm/character-engine';
-import { HydratedPlotPoint } from '@2pm/data';
+import { HydratedPlotPointDto } from '@2pm/data';
 import { Inject, Injectable } from '@nestjs/common';
 import { EnvironmentsGateway } from './environments.gateway';
 import DBService from '@2pm/db';
@@ -19,7 +19,7 @@ export class EnvironmentService {
     // this.ce.evaluate(environment);
   }
 
-  sendPlotPointCreatedEvent(plotPoint: HydratedPlotPoint) {
+  sendPlotPointCreatedEvent(plotPoint: HydratedPlotPointDto) {
     this.environmentsGateway.sendPlotPointCreated(plotPoint);
   }
 

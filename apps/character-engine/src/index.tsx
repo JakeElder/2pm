@@ -1,6 +1,6 @@
 import { Message as OllamaMessage, Ollama } from "ollama";
 import OpenAI from "openai";
-import { mimicAi, txt } from "@2pm/utils";
+import { mimicAi } from "@2pm/utils";
 
 type OpenAiMessage = OpenAI.Chat.Completions.ChatCompletionMessageParam;
 type OpenAiTool = OpenAI.Chat.Completions.ChatCompletionTool;
