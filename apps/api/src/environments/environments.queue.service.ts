@@ -9,50 +9,61 @@ import { InferSelectModel } from 'drizzle-orm';
 import { PlotPointDto } from '@2pm/data';
 
 type Environment = InferSelectModel<typeof environments>;
-type JobData = {
-  trigger: PlotPointDto;
-};
+type JobData = PlotPointDto;
+
+type EnvironmentQueue = BullBoardQueue<JobData>;
 
 @Injectable()
 export class EnvironmentQueueService {
-  private queues: Map<string, BullBoardQueue> = new Map();
+  private queues: Map<string, EnvironmentQueue> = new Map();
 
   constructor(
     @InjectBullBoard() private readonly board: BullBoardInstance,
     @Inject('DB') private readonly db: DBService,
   ) {}
 
-  queueFor(environmentId: Environment['id']): BullBoardQueue<Environment> {
-    const queue = new Queue(`environment-${environmentId}`, {
-      redis: { host: 'localhost', port: 6379 },
-    });
-
-    queue.process(1, this.process);
-
-    this.queues.set(`${environmentId}`, queue);
-    this.board.addQueue(new BullAdapter(queue));
-
-    return queue;
-  }
-
-  async process(job: Queue.Job<{ environment: Environment }>) {
-    console.log(
-      `Processing job for room: ${job.data.environment.id} with data:`,
-      job.data,
-    );
-    job.log('doing stuff');
-    await new Promise((resolve) => setTimeout(resolve, 5000));
-    job.moveToCompleted();
-  }
-
-  async createQueues() {
+  async init() {
     const res = await this.db.drizzle
-      .select()
+      .select({ id: environments.id })
       .from(environments)
       .where(eq(environments.type, 'COMPANION_ONE_TO_ONE'));
 
-    for (const row of res) {
-      this.queueFor(row.id);
+    for (const { id } of res) {
+      this.add(id);
     }
+  }
+
+  async add(environmentId: Environment['id']) {
+    const queue = new Queue<JobData>(`env-${environmentId}`, {
+      redis: { host: 'localhost', port: 6379 },
+    });
+
+    queue.process(1, this.process.bind(this));
+
+    this.board.addQueue(new BullAdapter(queue));
+    this.queues.set(`env-${environmentId}`, queue);
+  }
+
+  get(environmentId: Environment['id']) {
+    const queue = this.queues.get(`env-${environmentId}`);
+    if (!queue) {
+      throw new Error();
+    }
+    return queue;
+  }
+
+  async handlePlotPointCreated(plotPoint: PlotPointDto) {
+    const queue = this.get(plotPoint.data.environment.id);
+    await queue.add(plotPoint);
+  }
+
+  async process(job: Queue.Job<JobData>) {
+    if (job.data.type === 'HUMAN_MESSAGE') {
+      console.log(
+        `Processing job ${job.id} ${job.data.data.humanMessage.content}`,
+      );
+    }
+    await new Promise((resolve) => setTimeout(resolve, 4000));
+    console.log(`Job ${job.id} completed`);
   }
 }
