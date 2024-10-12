@@ -21,6 +21,7 @@ import CompanionOneToOnes from "./companion-one-to-ones";
 import UserEnvironmentPresences from "./user-environment-presences";
 import Users from "./users";
 import Messages from "./messages";
+import PlotPoints from "./plot-points";
 
 export default class Utils extends DbModule {
   public async clear() {
@@ -58,6 +59,7 @@ export default class Utils extends DbModule {
       users: new Users(this.pg),
       companionOneToOnes: new CompanionOneToOnes(this.pg),
       userEnvironmentPresences: new UserEnvironmentPresences(this.pg),
+      plotPoints: new PlotPoints(this.pg),
       messages: new Messages(this.pg),
     };
 
@@ -91,8 +93,8 @@ export default class Utils extends DbModule {
       }),
     ]);
 
-    await db.messages.insert({
-      type: "AI",
+    await db.plotPoints.insert({
+      type: "AI_MESSAGE",
       userId: g.id,
       environmentId: universe.environment.id,
       content: "Standby for G stuff",

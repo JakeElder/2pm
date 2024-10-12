@@ -2,18 +2,18 @@
 
 import { useEffect, useState } from "react";
 import { Narrative } from "@2pm/ui";
-import { EnvironmentsClientSocket, HydratedPlotPointDto } from "@2pm/data";
+import { EnvironmentsClientSocket, PlotPointDto } from "@2pm/data";
 import { EnvironmentsRoomJoinedEventDto } from "@2pm/data";
 import NarrativePlotPointViewContainer from "./NarrativePlotPointViewContainer";
 import { io } from "socket.io-client";
 
 type Props = {
   environmentId: number;
-  plotPoints: HydratedPlotPointDto[];
+  plotPoints: PlotPointDto[];
 };
 
 const NarrativeViewContainer = ({ environmentId, plotPoints }: Props) => {
-  const [data, setPlotPoints] = useState<HydratedPlotPointDto[]>(plotPoints);
+  const [data, setPlotPoints] = useState<PlotPointDto[]>(plotPoints);
 
   useEffect(() => {
     const e: EnvironmentsRoomJoinedEventDto = {
@@ -27,7 +27,7 @@ const NarrativeViewContainer = ({ environmentId, plotPoints }: Props) => {
 
     socket
       .emit("join", e)
-      .on("plot-points.created", async (plotPoint: HydratedPlotPointDto) => {
+      .on("plot-points.created", async (plotPoint: PlotPointDto) => {
         setPlotPoints((data) => [plotPoint, ...data]);
       });
 

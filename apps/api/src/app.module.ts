@@ -5,7 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { CharacterEngineModule } from './character-engine/character-engine.module';
 import { EnvironmentModule } from './environments/environments.module';
 import { EnvironmentGateway } from './environments/environments.gateway';
-import { HydratedPlotPointsModule } from './hydrated-plot-points/hydrated-plot-points.module';
+import { PlotPointsModule } from './plot-points/plot-points.module';
 import { EventEmitterModule } from './event-emitter/event-emitter.module';
 import { UsersModule } from './users/users.module';
 import { MessagesModule } from './messages/messages.module';
@@ -17,7 +17,7 @@ import { ExpressAdapter } from '@bull-board/express';
     ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
     CharacterEngineModule,
     EnvironmentModule,
-    HydratedPlotPointsModule,
+    PlotPointsModule,
     EventEmitterModule,
     UsersModule,
     MessagesModule,

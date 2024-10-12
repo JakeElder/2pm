@@ -28,51 +28,51 @@ export class EnvironmentConsumer {
 
   @Process('processJoined')
   async processJoined(job: Job<EnvironmentsRoomJoinedEventDto>) {
-    try {
-      const { environment } = job.data;
-
-      if (environment.type !== 'COMPANION_ONE_TO_ONE') {
-        await job.moveToCompleted('No action needed');
-        return;
-      }
-
-      const count = await this.service.getEnvironmentMessageCount(
-        environment.id,
-      );
-
-      if (count !== 0) {
-        await job.moveToCompleted('Done already');
-        return;
-      }
-
-      let content = '';
-
-      const dto = await this.messageService.create({
-        type: 'AI',
-        content,
-        environmentId: environment.id,
-        userId: 2,
-      });
-      this.events.emit('messages.created', dto);
-
-      const res = this.ce.greet();
-
-      for await (const chunk of res) {
-        content += chunk;
-
-        const updated = await this.messageService.update({
-          type: 'AI',
-          id: dto.message.id,
-          content,
-        });
-        this.events.emit('messages.updated', updated);
-      }
-
-      await job.moveToCompleted('Done');
-      return true;
-    } catch (e: any) {
-      this.logger.error(`Failed processing job ${job.id}`, e.stack);
-      await job.moveToFailed({ message: 'Error' });
-    }
+    // try {
+    //   const { environment } = job.data;
+    //
+    //   if (environment.type !== 'COMPANION_ONE_TO_ONE') {
+    //     await job.moveToCompleted('No action needed');
+    //     return;
+    //   }
+    //
+    //   const count = await this.service.getEnvironmentMessageCount(
+    //     environment.id,
+    //   );
+    //
+    //   if (count !== 0) {
+    //     await job.moveToCompleted('Done already');
+    //     return;
+    //   }
+    //
+    //   let content = '';
+    //
+    //   const dto = await this.messageService.create({
+    //     type: 'AI',
+    //     content,
+    //     environmentId: environment.id,
+    //     userId: 2,
+    //   });
+    //   this.events.emit('messages.created', dto);
+    //
+    //   const res = this.ce.greet();
+    //
+    //   for await (const chunk of res) {
+    //     content += chunk;
+    //
+    //     const updated = await this.messageService.update({
+    //       type: 'AI',
+    //       id: dto.message.id,
+    //       content,
+    //     });
+    //     this.events.emit('messages.updated', updated);
+    //   }
+    //
+    //   await job.moveToCompleted('Done');
+    //   return true;
+    // } catch (e: any) {
+    //   this.logger.error(`Failed processing job ${job.id}`, e.stack);
+    //   await job.moveToFailed({ message: 'Error' });
+    // }
   }
 }

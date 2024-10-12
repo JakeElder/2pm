@@ -7,6 +7,7 @@ import CompanionOneToOnes from "./companion-one-to-ones";
 import UserEnvironmentPresences from "./user-environment-presences";
 import Users from "./users";
 import Messages from "./messages";
+import PlotPoints from "./plot-points";
 
 export default class DBService {
   private pg: Sql;
@@ -17,6 +18,7 @@ export default class DBService {
   public users: Users;
   public companionOneToOnes: CompanionOneToOnes;
   public userEnvironmentPresences: UserEnvironmentPresences;
+  public plotPoints: PlotPoints;
   public messages: Messages;
 
   constructor(dbUrl: string) {
@@ -27,6 +29,7 @@ export default class DBService {
     this.users = new Users(this.pg);
     this.companionOneToOnes = new CompanionOneToOnes(this.pg);
     this.userEnvironmentPresences = new UserEnvironmentPresences(this.pg);
+    this.plotPoints = new PlotPoints(this.pg);
     this.messages = new Messages(this.pg);
   }
 

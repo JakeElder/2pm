@@ -1,9 +1,9 @@
 "use server";
 
-import { createHumanMessage } from "@/api/human-message";
-import { CreateHumanMessageDto } from "@2pm/api/client";
+import { createHumanMessagePlotPoint } from "@/api/plot-points";
+import { CreateHumanMessagePlotPointDto } from "@2pm/api/client";
 
-export const submitMessage = async (dto: CreateHumanMessageDto) => {
-  const res = await createHumanMessage(dto);
+export const submitMessage = async (dto: CreateHumanMessagePlotPointDto) => {
+  const res = await createHumanMessagePlotPoint(dto);
   return res.data;
 };

@@ -1,7 +1,6 @@
 {
   "name": "@2pm/utils",
   "exports": {
-    "./adapters": "./src/adapters/index.ts",
     ".": "./src/index.ts"
   },
   "dependencies": {

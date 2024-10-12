@@ -1,7 +1,7 @@
 import type {
   EnvironmentsServerSocket,
   EnvironmentsServer,
-  HydratedPlotPointDto,
+  PlotPointDto,
   EnvironmentsRoomJoinedEventDto,
 } from '@2pm/data';
 import {
@@ -33,7 +33,7 @@ export class EnvironmentGateway {
     this.events.emit('environments.joined', { environment, user });
   }
 
-  sendPlotPointCreated(dto: HydratedPlotPointDto) {
+  sendPlotPointCreatedEvent(dto: PlotPointDto) {
     this.server
       .to(`${dto.data.environment.id}`)
       .emit('plot-points.created', dto);

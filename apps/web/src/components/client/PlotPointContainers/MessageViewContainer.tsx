@@ -1,14 +1,12 @@
 "use client";
 
 import {
+  HumanMessagePlotPointDto,
   MessagesClientSocket,
   MessagesRoomJoinedEventDto,
   PlotPointPerspective,
 } from "@2pm/data";
-import {
-  AiMessageHydratedPlotPointDto,
-  HumanMessageHydratedPlotPointDto,
-} from "@2pm/data";
+import { AiMessagePlotPointDto } from "@2pm/data";
 import { Message } from "@2pm/ui/plot-points";
 import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
@@ -22,7 +20,7 @@ type Perspective = {
  */
 
 type AiMessageProps = Perspective & {
-  plotPoint: AiMessageHydratedPlotPointDto;
+  plotPoint: AiMessagePlotPointDto;
 };
 
 export const AiMessage = (props: AiMessageProps) => {
@@ -54,7 +52,7 @@ export const AiMessage = (props: AiMessageProps) => {
  */
 
 type HumanMessageProps = Perspective & {
-  plotPoint: HumanMessageHydratedPlotPointDto;
+  plotPoint: HumanMessagePlotPointDto;
 };
 
 export const HumanMessage = (props: HumanMessageProps) => {
@@ -70,7 +68,7 @@ export const HumanMessage = (props: HumanMessageProps) => {
  * MessageContainer
  */
 
-type Props = AiMessageHydratedPlotPointDto | HumanMessageHydratedPlotPointDto;
+type Props = AiMessagePlotPointDto | HumanMessagePlotPointDto;
 
 const MessageViewContainer = (plotPoint: Props) => {
   const { user } = plotPoint.data;

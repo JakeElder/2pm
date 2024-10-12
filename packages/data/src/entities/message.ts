@@ -6,26 +6,9 @@ import type { Socket as ClientSocket } from "socket.io-client";
 import * as schema from "../schema";
 import type { USER_TYPES } from "../constants";
 
-export const CreateHumanMessageDtoSchema = z.object({
-  type: z.literal("HUMAN"),
-  userId: createSelectSchema(schema.users).shape.id,
-  environmentId: createSelectSchema(schema.environments).shape.id,
-  content: createInsertSchema(schema.humanMessages).shape.content,
-});
-
-export const CreateAiMessageDtoSchema = z.object({
-  type: z.literal("AI"),
-  userId: createSelectSchema(schema.users).shape.id,
-  environmentId: createSelectSchema(schema.environments).shape.id,
-  content: createInsertSchema(schema.aiMessages).shape.content,
-  state: createInsertSchema(schema.aiMessages).shape.state,
-});
-
-export const CreateMessageDtoSchema = z.discriminatedUnion("type", [
-  CreateHumanMessageDtoSchema,
-  CreateAiMessageDtoSchema,
-]);
-
+/**
+ * Human Message
+ */
 export const HumanMessageDtoSchema = z.object({
   type: z.literal("HUMAN"),
   plotPoint: createSelectSchema(schema.plotPoints),
@@ -36,6 +19,15 @@ export const HumanMessageDtoSchema = z.object({
   humanUser: createSelectSchema(schema.humanUsers),
 });
 
+export const UpdateHumanMessageDtoSchema = z.object({
+  type: z.literal("HUMAN"),
+  id: createSelectSchema(schema.messages).shape.id,
+  content: createInsertSchema(schema.humanMessages).shape.content,
+});
+
+/**
+ * Ai Message
+ */
 export const AiMessageDtoSchema = z.object({
   type: z.literal("AI"),
   plotPoint: createSelectSchema(schema.plotPoints),
@@ -46,17 +38,6 @@ export const AiMessageDtoSchema = z.object({
   aiUser: createSelectSchema(schema.aiUsers),
 });
 
-export const MessageDtoSchema = z.discriminatedUnion("type", [
-  HumanMessageDtoSchema,
-  AiMessageDtoSchema,
-]);
-
-export const UpdateHumanMessageDtoSchema = z.object({
-  type: z.literal("HUMAN"),
-  id: createSelectSchema(schema.messages).shape.id,
-  content: createInsertSchema(schema.humanMessages).shape.content,
-});
-
 export const UpdateAiMessageDtoSchema = z.object({
   type: z.literal("AI"),
   id: createSelectSchema(schema.messages).shape.id,
@@ -64,20 +45,24 @@ export const UpdateAiMessageDtoSchema = z.object({
   state: createInsertSchema(schema.aiMessages).shape.state,
 });
 
+/**
+ * Unions
+ */
+export const MessageDtoSchema = z.discriminatedUnion("type", [
+  HumanMessageDtoSchema,
+  AiMessageDtoSchema,
+]);
+
 export const UpdateMessageDtoSchema = z.discriminatedUnion("type", [
   UpdateHumanMessageDtoSchema,
   UpdateAiMessageDtoSchema,
 ]);
 
+/**
+ * Dtos
+ */
 export class HumanMessageDto extends createZodDto(HumanMessageDtoSchema) {}
 export class AiMessageDto extends createZodDto(AiMessageDtoSchema) {}
-
-export class CreateHumanMessageDto extends createZodDto(
-  CreateHumanMessageDtoSchema,
-) {}
-export class CreateAiMessageDto extends createZodDto(
-  CreateAiMessageDtoSchema,
-) {}
 
 export class UpdateHumanMessageDto extends createZodDto(
   UpdateHumanMessageDtoSchema,
@@ -89,7 +74,6 @@ export class UpdateAiMessageDto extends createZodDto(
 /**
  * Types
  */
-export type CreateMessageDto = z.infer<typeof CreateMessageDtoSchema>;
 export type UpdateMessageDto = z.infer<typeof UpdateMessageDtoSchema>;
 export type MessageDto = z.infer<typeof MessageDtoSchema>;
 

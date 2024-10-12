@@ -1,7 +1,4 @@
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
-import { z } from "zod";
-import { HydratedPlotPointDtoSchema } from "./entities/hydrated-plot-point";
-import { CreateUserDtoSchema, UserDtoSchema } from "./entities/user";
 import * as schema from "./schema";
 import {
   AI_USER_CODES,

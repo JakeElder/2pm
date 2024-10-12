@@ -1,3 +1,3 @@
 import api from ".";
 
-export const { getHydratedPlotPointsByEnvironmentId } = api.environments;
+export const { getPlotPointsByEnvironmentId } = api.environments;

@@ -1,12 +1,12 @@
 "use client";
 
 import { submitMessage } from "@/actions";
-import { CreateHumanMessageDto } from "@2pm/api/client";
+import { CreateHumanMessagePlotPointDto } from "@2pm/api/client";
 import { PromptInput, PromptSubmitButton, Terminal } from "@2pm/ui";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 interface Props
-  extends Pick<CreateHumanMessageDto, "userId" | "environmentId"> {}
+  extends Pick<CreateHumanMessagePlotPointDto, "userId" | "environmentId"> {}
 
 type Inputs = {
   content: string;
@@ -22,7 +22,7 @@ const TerminalPromptViewContainer = ({ userId, environmentId }: Props) => {
 
   const onSubmit: SubmitHandler<Inputs> = async ({ content }) => {
     await submitMessage({
-      type: "HUMAN",
+      type: "HUMAN_MESSAGE",
       environmentId,
       userId,
       content,

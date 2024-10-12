@@ -4,7 +4,7 @@ import { environments, users } from "../schema";
 import { createZodDto } from "@anatine/zod-nestjs";
 import type { Server, Socket } from "socket.io";
 import type { Socket as ClientSocket } from "socket.io-client";
-import type { HydratedPlotPointDto } from "./hydrated-plot-point";
+import type { PlotPointDto } from "./plot-point";
 
 export const EnvironmentsRoomJoinedEventSchema = z.object({
   user: createSelectSchema(users),
@@ -20,7 +20,7 @@ interface EnvironmentsClientToServerEvents {
 }
 
 interface EnvironmentsServerToClientEvents {
-  "plot-points.created": (body: HydratedPlotPointDto) => void;
+  "plot-points.created": (body: PlotPointDto) => void;
 }
 
 export type EnvironmentsClientSocket = ClientSocket<

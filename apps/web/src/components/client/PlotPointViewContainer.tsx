@@ -1,9 +1,9 @@
 "use client";
 
-import { HydratedPlotPointDto } from "@2pm/data";
+import { PlotPointDto } from "@2pm/data";
 import MessageViewContainer from "./PlotPointContainers/MessageViewContainer";
 
-type Props = HydratedPlotPointDto;
+type Props = PlotPointDto;
 
 const PlotPointViewContainer = (plotPoint: Props) => {
   const { type } = plotPoint;

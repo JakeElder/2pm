@@ -6,11 +6,11 @@ import { environments } from '@2pm/data/schema';
 import { eq } from 'drizzle-orm';
 import DBService from '@2pm/db';
 import { InferSelectModel } from 'drizzle-orm';
-import { HydratedPlotPointDto } from '@2pm/data';
+import { PlotPointDto } from '@2pm/data';
 
 type Environment = InferSelectModel<typeof environments>;
 type JobData = {
-  trigger: HydratedPlotPointDto;
+  trigger: PlotPointDto;
 };
 
 @Injectable()
@@ -52,7 +52,7 @@ export class EnvironmentQueueService {
       .where(eq(environments.type, 'COMPANION_ONE_TO_ONE'));
 
     for (const row of res) {
-      this.queueFor(row);
+      this.queueFor(row.id);
     }
   }
 }

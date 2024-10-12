@@ -1,6 +1,5 @@
 import {
   AiMessageDto,
-  CreateMessageDto,
   HumanMessageDto,
   InferMessageDto,
   MessageDto,
@@ -29,12 +28,6 @@ export class MessagesService {
     @Inject('DB') private readonly db: DBService,
     private readonly gateway: MessagesGateway,
   ) {}
-
-  public async create<T extends CreateMessageDto>(
-    dto: T,
-  ): Promise<InferMessageDto<T>> {
-    return this.db.messages.insert(dto);
-  }
 
   public async update<T extends UpdateMessageDto>(
     dto: T,

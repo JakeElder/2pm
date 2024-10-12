@@ -1,141 +1,185 @@
 import {
-  AiPlotPointDto,
+  AiMessagePlotPointDto,
   CreatePlotPointDto,
-  HumanPlotPointDto,
+  HumanMessagePlotPointDto,
   InferPlotPointDto,
   PlotPointDto,
-  PlotPointDtoSchema,
-  UpdatePlotPointDto,
 } from '@2pm/data';
 import {
-  aiPlotPoints,
+  aiMessages,
   aiUsers,
   environments,
-  humanPlotPoints,
+  humanMessages,
   humanUsers,
-  plot-points,
-  plotPointPlotPoints,
+  messages,
+  plotPointMessages,
   plotPoints,
   users,
 } from '@2pm/data/schema';
 import DBService from '@2pm/db';
 import { Inject, Injectable } from '@nestjs/common';
-import { eq, desc } from 'drizzle-orm';
-import { PlotPointsGateway } from './plot-points.gateway';
+import { desc, eq, and, inArray } from 'drizzle-orm';
 
 @Injectable()
 export class PlotPointsService {
-  constructor(
-    @Inject('DB') private readonly db: DBService,
-    private readonly gateway: PlotPointsGateway,
-  ) {}
+  constructor(@Inject('DB') private readonly db: DBService) {}
 
   public async create<T extends CreatePlotPointDto>(
     dto: T,
   ): Promise<InferPlotPointDto<T>> {
-    return this.db.plot-points.insert(dto);
+    return this.db.plotPoints.insert(dto);
   }
 
-  public async update<T extends UpdatePlotPointDto>(
-    dto: T,
-  ): Promise<InferPlotPointDto<T>> {
-    return this.db.plot-points.update(dto);
-  }
-
-  async findAll(): Promise<PlotPointDto[]> {
+  async findAllByEnvironmentId(id: number) {
     const res = await this.db.drizzle
       .select({
         plotPoint: plotPoints,
-        plot-point: plot-points,
-        aiPlotPoint: aiPlotPoints,
-        humanPlotPoint: humanPlotPoints,
+        message: messages,
+        aiMessage: aiMessages,
+        humanMessage: humanMessages,
         user: users,
         aiUser: aiUsers,
         humanUser: humanUsers,
         environment: environments,
       })
-      .from(plot-points)
-      .innerJoin(
-        plotPointPlotPoints,
-        eq(plot-points.id, plotPointPlotPoints.plot-pointId),
+      .from(plotPoints)
+      .leftJoin(
+        plotPointMessages,
+        eq(plotPoints.id, plotPointMessages.plotPointId),
       )
-      .innerJoin(plotPoints, eq(plotPointPlotPoints.plotPointId, plotPoints.id))
-      .leftJoin(aiPlotPoints, eq(plot-points.id, aiPlotPoints.plot-pointId))
-      .leftJoin(humanPlotPoints, eq(plot-points.id, humanPlotPoints.plot-pointId))
-      .innerJoin(users, eq(plot-points.userId, users.id))
-      .innerJoin(environments, eq(plot-points.environmentId, environments.id))
+      .leftJoin(messages, eq(plotPointMessages.messageId, messages.id))
+      .leftJoin(aiMessages, eq(messages.id, aiMessages.messageId))
+      .leftJoin(humanMessages, eq(messages.id, humanMessages.messageId))
+      .leftJoin(users, eq(messages.userId, users.id))
       .leftJoin(aiUsers, eq(users.id, aiUsers.userId))
       .leftJoin(humanUsers, eq(users.id, humanUsers.userId))
-      .orderBy(desc(plot-points.id));
+      .innerJoin(environments, eq(plotPoints.environmentId, environments.id))
+      .where(
+        and(
+          eq(plotPoints.environmentId, id),
+          inArray(plotPoints.type, ['AI_MESSAGE', 'HUMAN_MESSAGE']),
+        ),
+      )
+      .orderBy(desc(plotPoints.id));
 
     const data: PlotPointDto[] = res.map((row) => {
-      return PlotPointDtoSchema.parse({ type: row.plot-point.type, ...row });
+      if (row.plotPoint.type === 'HUMAN_MESSAGE') {
+        const { user, humanUser, humanMessage, message, ...rest } = row;
+
+        if (!user || !humanUser || !humanMessage || !message) {
+          throw new Error();
+        }
+
+        const res: HumanMessagePlotPointDto = {
+          type: 'HUMAN_MESSAGE',
+          data: {
+            type: 'HUMAN',
+            ...rest,
+            user,
+            humanUser,
+            message,
+            humanMessage,
+          },
+        };
+
+        return res;
+      }
+
+      if (row.plotPoint.type === 'AI_MESSAGE') {
+        const { user, aiUser, aiMessage, message, ...rest } = row;
+
+        if (!user || !aiUser || !aiMessage || !message) {
+          throw new Error();
+        }
+
+        const res: AiMessagePlotPointDto = {
+          type: 'AI_MESSAGE',
+          data: {
+            type: 'AI',
+            ...rest,
+            user,
+            aiUser,
+            message,
+            aiMessage,
+          },
+        };
+
+        return res;
+      }
+
+      throw new Error();
     });
 
     return data;
   }
 
-  async findHuman(): Promise<HumanPlotPointDto[]> {
+  async findHumanMessages() {
     const res = await this.db.drizzle
       .select({
         plotPoint: plotPoints,
-        plot-point: plot-points,
-        humanPlotPoint: humanPlotPoints,
+        message: messages,
+        humanMessage: humanMessages,
         user: users,
         humanUser: humanUsers,
         environment: environments,
       })
-      .from(plot-points)
+      .from(plotPoints)
       .innerJoin(
-        plotPointPlotPoints,
-        eq(plot-points.id, plotPointPlotPoints.plot-pointId),
+        plotPointMessages,
+        eq(plotPoints.id, plotPointMessages.plotPointId),
       )
-      .innerJoin(plotPoints, eq(plotPointPlotPoints.plotPointId, plotPoints.id))
-      .innerJoin(humanPlotPoints, eq(plot-points.id, humanPlotPoints.plot-pointId))
-      .innerJoin(users, eq(plot-points.userId, users.id))
-      .innerJoin(environments, eq(plot-points.environmentId, environments.id))
+      .innerJoin(messages, eq(plotPointMessages.messageId, messages.id))
+      .innerJoin(humanMessages, eq(messages.id, humanMessages.messageId))
+      .innerJoin(users, eq(messages.userId, users.id))
       .innerJoin(humanUsers, eq(users.id, humanUsers.userId))
-      .where(eq(plot-points.type, 'HUMAN'))
-      .orderBy(desc(plot-points.id));
+      .innerJoin(environments, eq(plotPoints.environmentId, environments.id))
+      .where(eq(plotPoints.type, 'HUMAN_MESSAGE'))
+      .orderBy(desc(plotPoints.id));
 
-    const data: HumanPlotPointDto[] = res.map((row) => {
-      return { type: 'HUMAN', ...row };
+    const data: HumanMessagePlotPointDto[] = res.map((row) => {
+      const res: HumanMessagePlotPointDto = {
+        type: 'HUMAN_MESSAGE',
+        data: { type: 'HUMAN', ...row },
+      };
+
+      return res;
     });
 
     return data;
   }
 
-  async findAi(): Promise<AiPlotPointDto[]> {
+  async findAiMessages() {
     const res = await this.db.drizzle
       .select({
         plotPoint: plotPoints,
-        plot-point: plot-points,
-        aiPlotPoint: aiPlotPoints,
+        message: messages,
+        aiMessage: aiMessages,
         user: users,
         aiUser: aiUsers,
         environment: environments,
       })
-      .from(plot-points)
+      .from(plotPoints)
       .innerJoin(
-        plotPointPlotPoints,
-        eq(plot-points.id, plotPointPlotPoints.plot-pointId),
+        plotPointMessages,
+        eq(plotPoints.id, plotPointMessages.plotPointId),
       )
-      .innerJoin(plotPoints, eq(plotPointPlotPoints.plotPointId, plotPoints.id))
-      .innerJoin(aiPlotPoints, eq(plot-points.id, aiPlotPoints.plot-pointId))
-      .innerJoin(users, eq(plot-points.userId, users.id))
-      .innerJoin(environments, eq(plot-points.environmentId, environments.id))
+      .innerJoin(messages, eq(plotPointMessages.messageId, messages.id))
+      .innerJoin(aiMessages, eq(messages.id, aiMessages.messageId))
+      .innerJoin(users, eq(messages.userId, users.id))
       .innerJoin(aiUsers, eq(users.id, aiUsers.userId))
-      .where(eq(plot-points.type, 'AI'))
-      .orderBy(desc(plot-points.id));
+      .innerJoin(environments, eq(plotPoints.environmentId, environments.id))
+      .where(eq(plotPoints.type, 'AI_MESSAGE'))
+      .orderBy(desc(plotPoints.id));
 
-    const data: AiPlotPointDto[] = res.map((row) => {
-      return { type: 'AI', ...row };
+    const data: AiMessagePlotPointDto[] = res.map((row) => {
+      const res: AiMessagePlotPointDto = {
+        type: 'AI_MESSAGE',
+        data: { type: 'AI', ...row },
+      };
+
+      return res;
     });
 
     return data;
-  }
-
-  async sendPlotPointUpdatedEvent(dto: PlotPointDto) {
-    return this.gateway.sendPlotPointUpdated(dto);
   }
 }

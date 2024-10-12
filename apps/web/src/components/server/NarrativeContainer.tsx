@@ -1,6 +1,6 @@
 "use server";
 
-import { getHydratedPlotPointsByEnvironmentId } from "@/api/environments";
+import { getPlotPointsByEnvironmentId } from "@/api/environments";
 import NarrativeViewContainer from "../client/NarrativeViewContainer";
 
 type Props = {
@@ -8,7 +8,7 @@ type Props = {
 };
 
 const NarrativeContainer = async ({ environmentId }: Props) => {
-  const { data } = await getHydratedPlotPointsByEnvironmentId(environmentId);
+  const { data } = await getPlotPointsByEnvironmentId(environmentId);
   return (
     <NarrativeViewContainer environmentId={environmentId} plotPoints={data} />
   );

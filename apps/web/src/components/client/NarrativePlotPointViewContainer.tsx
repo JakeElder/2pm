@@ -2,13 +2,11 @@
 
 import { Narrative } from "@2pm/ui";
 import PlotPointViewContainer from "./PlotPointViewContainer";
-import { HydratedPlotPointDto, PlotPointPerspective } from "@2pm/data";
+import { PlotPointDto, PlotPointPerspective } from "@2pm/data";
 
-type Props = HydratedPlotPointDto;
+type Props = PlotPointDto;
 
-const getPerspective = (
-  plotPoint: HydratedPlotPointDto,
-): PlotPointPerspective => {
+const getPerspective = (plotPoint: PlotPointDto): PlotPointPerspective => {
   if (plotPoint.type === "HUMAN_MESSAGE" || plotPoint.type === "AI_MESSAGE") {
     return plotPoint.data.user.id === 3 ? "FIRST_PERSON" : "THIRD_PERSON";
   }
