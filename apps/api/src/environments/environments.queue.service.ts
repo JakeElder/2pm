@@ -54,8 +54,8 @@ export class EnvironmentQueueService {
 
     if (waiting) {
       this.logger.debug(`updating: ${plotPoint.type}`);
-      await this.redis.set(`job:${active.id}:cancelled`, 'true');
       await waiting.update({ ...waiting.data, trigger: plotPoint });
+      await this.redis.set(`job:${active.id}:cancelled`, 'true');
       return;
     }
 

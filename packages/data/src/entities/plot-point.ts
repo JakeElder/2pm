@@ -13,6 +13,21 @@ export const HumanMessagePlotPointDtoSchema = z.object({
   data: HumanMessageDtoSchema,
 });
 
+export const HumanMessagePlotPointSummaryDtoSchema = z.object({
+  type: z.literal("HUMAN_MESSAGE"),
+  data: z.object({
+    user: z.object({
+      type: z.literal("HUMAN"),
+      id: createSelectSchema(schema.users).shape.id,
+      tag: createSelectSchema(schema.users).shape.tag,
+    }),
+    message: z.object({
+      id: createSelectSchema(schema.messages).shape.id,
+      content: createSelectSchema(schema.humanMessages).shape.content,
+    }),
+  }),
+});
+
 export const CreateHumanMessagePlotPointDtoSchema = z.object({
   type: z.literal("HUMAN_MESSAGE"),
   userId: createSelectSchema(schema.users).shape.id,
@@ -22,6 +37,10 @@ export const CreateHumanMessagePlotPointDtoSchema = z.object({
 
 export class HumanMessagePlotPointDto extends createZodDto(
   HumanMessagePlotPointDtoSchema,
+) {}
+
+export class HumanMessagePlotPointSummaryDto extends createZodDto(
+  HumanMessagePlotPointSummaryDtoSchema,
 ) {}
 
 export class CreateHumanMessagePlotPointDto extends createZodDto(
@@ -36,6 +55,22 @@ export const AiMessagePlotPointDtoSchema = z.object({
   data: AiMessageDtoSchema,
 });
 
+export const AiMessagePlotPointSummaryDtoSchema = z.object({
+  type: z.literal("AI_MESSAGE"),
+  data: z.object({
+    user: z.object({
+      type: z.literal("AI"),
+      id: createSelectSchema(schema.users).shape.id,
+      tag: createSelectSchema(schema.users).shape.tag,
+    }),
+    message: z.object({
+      id: createSelectSchema(schema.messages).shape.id,
+      state: createSelectSchema(schema.aiMessages).shape.state,
+      content: createSelectSchema(schema.aiMessages).shape.content,
+    }),
+  }),
+});
+
 export const CreateAiMessagePlotPointDtoSchema = z.object({
   type: z.literal("AI_MESSAGE"),
   userId: createSelectSchema(schema.users).shape.id,
@@ -46,6 +81,10 @@ export const CreateAiMessagePlotPointDtoSchema = z.object({
 
 export class AiMessagePlotPointDto extends createZodDto(
   AiMessagePlotPointDtoSchema,
+) {}
+
+export class AiMessagePlotPointSummaryDto extends createZodDto(
+  AiMessagePlotPointSummaryDtoSchema,
 ) {}
 
 export class CreateAiMessagePlotPointDto extends createZodDto(
@@ -60,6 +99,11 @@ export const PlotPointDtoSchema = z.discriminatedUnion("type", [
   AiMessagePlotPointDtoSchema,
 ]);
 
+export const PlotPointSummaryDtoSchema = z.discriminatedUnion("type", [
+  HumanMessagePlotPointSummaryDtoSchema,
+  AiMessagePlotPointSummaryDtoSchema,
+]);
+
 export const CreatePlotPointDtoSchema = z.discriminatedUnion("type", [
   CreateHumanMessagePlotPointDtoSchema,
   CreateAiMessagePlotPointDtoSchema,
@@ -70,6 +114,7 @@ export const CreatePlotPointDtoSchema = z.discriminatedUnion("type", [
  */
 export type CreatePlotPointDto = z.infer<typeof CreatePlotPointDtoSchema>;
 export type PlotPointDto = z.infer<typeof PlotPointDtoSchema>;
+export type PlotPointSummaryDto = z.infer<typeof PlotPointSummaryDtoSchema>;
 
 type PlotPointDtoMap = {
   HUMAN_MESSAGE: HumanMessagePlotPointDto;
