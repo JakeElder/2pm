@@ -3,7 +3,9 @@ import type {
   MessagesServer,
   MessageDto,
   MessagesRoomJoinedEventDto,
+  MessagesRoomLeftEventDto,
 } from '@2pm/data';
+import { Logger } from '@nestjs/common';
 import {
   ConnectedSocket,
   MessageBody,
@@ -18,6 +20,7 @@ import {
 })
 export class MessagesGateway {
   constructor() {}
+  private readonly logger = new Logger(MessagesGateway.name);
 
   @WebSocketServer()
   server: MessagesServer;
@@ -27,7 +30,21 @@ export class MessagesGateway {
     @MessageBody() { messageId }: MessagesRoomJoinedEventDto,
     @ConnectedSocket() socket: MessagesServerSocket,
   ) {
-    socket.join(`${messageId}`);
+    if (!socket.rooms.has(`${messageId}`)) {
+      socket.join(`${messageId}`);
+      this.logger.debug(`joined: ${socket.id}`);
+    }
+  }
+
+  @SubscribeMessage('leave')
+  handleLeaveRoom(
+    @MessageBody() { messageId }: MessagesRoomLeftEventDto,
+    @ConnectedSocket() socket: MessagesServerSocket,
+  ) {
+    if (socket.rooms.has(`${messageId}`)) {
+      socket.leave(`${messageId}`);
+      this.logger.debug(`left: ${socket.id}`);
+    }
   }
 
   sendMessageUpdated(dto: MessageDto) {

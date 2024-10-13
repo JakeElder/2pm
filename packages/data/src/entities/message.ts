@@ -96,12 +96,21 @@ export const MessagesRoomJoinedEventSchema = z.object({
   messageId: createSelectSchema(schema.messages).shape.id,
 });
 
+export const MessagesRoomLeftEventSchema = z.object({
+  messageId: createSelectSchema(schema.messages).shape.id,
+});
+
 export class MessagesRoomJoinedEventDto extends createZodDto(
   MessagesRoomJoinedEventSchema,
 ) {}
 
+export class MessagesRoomLeftEventDto extends createZodDto(
+  MessagesRoomLeftEventSchema,
+) {}
+
 interface MessagesClientToServerEvents {
   join: (body: MessagesRoomJoinedEventDto) => void;
+  leave: (body: MessagesRoomLeftEventDto) => void;
 }
 
 interface MessagesServerToClientEvents {

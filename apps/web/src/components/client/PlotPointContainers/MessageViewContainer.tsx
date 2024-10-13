@@ -1,5 +1,6 @@
 "use client";
 
+import { messagesSocket } from "@/socket";
 import {
   HumanMessagePlotPointDto,
   MessagesClientSocket,
@@ -33,14 +34,17 @@ export const AiMessage = (props: AiMessageProps) => {
       messageId: props.plotPoint.data.message.id,
     };
 
-    const socket: MessagesClientSocket = io("http://localhost:3002/messages");
-
-    socket.emit("join", e).on("messages.ai.updated", async ({ aiMessage }) => {
-      setContent(aiMessage.content);
-    });
+    messagesSocket
+      .emit("join", e)
+      .on("messages.ai.updated", async ({ aiMessage }) => {
+        if (props.plotPoint.data.aiMessage.id === aiMessage.id) {
+          setContent(aiMessage.content);
+        }
+      });
 
     return () => {
-      socket.disconnect();
+      messagesSocket.off("messages.ai.updated");
+      messagesSocket.emit("leave", e);
     };
   }, []);
 

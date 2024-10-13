@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { Narrative } from "@2pm/ui";
-import { EnvironmentsClientSocket, PlotPointDto } from "@2pm/data";
+import { PlotPointDto } from "@2pm/data";
 import { EnvironmentsRoomJoinedEventDto } from "@2pm/data";
+import { environmentsSocket } from "@/socket";
 import NarrativePlotPointViewContainer from "./NarrativePlotPointViewContainer";
-import { io } from "socket.io-client";
 
 type Props = {
   environmentId: number;
@@ -21,18 +21,15 @@ const NarrativeViewContainer = ({ environmentId, plotPoints }: Props) => {
       environment: { id: environmentId, type: "COMPANION_ONE_TO_ONE" },
     };
 
-    const socket: EnvironmentsClientSocket = io(
-      "http://localhost:3002/environments",
-    );
-
-    socket
+    environmentsSocket
       .emit("join", e)
       .on("plot-points.created", async (plotPoint: PlotPointDto) => {
         setPlotPoints((data) => [plotPoint, ...data]);
       });
 
     return () => {
-      socket.disconnect();
+      environmentsSocket.off("plot-points.created");
+      environmentsSocket.emit("leave", e);
     };
   }, []);
 

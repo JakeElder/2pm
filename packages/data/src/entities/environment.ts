@@ -11,12 +11,22 @@ export const EnvironmentsRoomJoinedEventSchema = z.object({
   environment: createSelectSchema(environments),
 });
 
+export const EnvironmentsRoomLeftEventSchema = z.object({
+  user: createSelectSchema(users),
+  environment: createSelectSchema(environments),
+});
+
 export class EnvironmentsRoomJoinedEventDto extends createZodDto(
   EnvironmentsRoomJoinedEventSchema,
 ) {}
 
+export class EnvironmentsRoomLeftEventDto extends createZodDto(
+  EnvironmentsRoomLeftEventSchema,
+) {}
+
 interface EnvironmentsClientToServerEvents {
   join: (body: EnvironmentsRoomJoinedEventDto) => void;
+  leave: (body: EnvironmentsRoomLeftEventDto) => void;
 }
 
 interface EnvironmentsServerToClientEvents {
