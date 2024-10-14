@@ -8,10 +8,57 @@ import ivanAscii from "./ivan";
 import path from "path";
 import { generateSpecDocument } from "@2pm/api/utils";
 import DBService from "@2pm/db";
-
 const ivan = new Command("ivan").description(ivanAscii);
 const generate = new Command("generate");
 const db = new Command("db");
+
+db.command("drop")
+  .description("Drop DB")
+  .action(async () => {
+    const spinner = ora("Dropping database").start();
+
+    try {
+      const url = new URL(process.env.DATABASE_URL!);
+      url.pathname = "/";
+
+      const db = new DBService(url.toString());
+      await db.pg`
+        SELECT pg_terminate_backend(pg_stat_activity.pid)
+        FROM pg_stat_activity
+        WHERE pg_stat_activity.datname = '2pm'
+        AND pid <> pg_backend_pid();
+      `;
+      await db.pg`DROP DATABASE IF EXISTS "2pm"`;
+      await db.end();
+
+      spinner.succeed(`Dropped database`);
+    } catch (e) {
+      spinner.fail("Error dropping database");
+      console.error(e);
+      process.exit(1);
+    }
+  });
+
+db.command("create")
+  .description("Creating DB")
+  .action(async () => {
+    const spinner = ora("Creating database").start();
+
+    try {
+      const url = new URL(process.env.DATABASE_URL!);
+      url.pathname = "/";
+
+      const db = new DBService(url.toString());
+      await db.pg`CREATE DATABASE "2pm"`;
+      await db.end();
+
+      spinner.succeed(`Created database`);
+    } catch (e) {
+      spinner.fail("Error dropping database");
+      console.error(e);
+      process.exit(1);
+    }
+  });
 
 db.command("seed")
   .description("Seed DB")

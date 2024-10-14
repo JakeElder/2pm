@@ -10,7 +10,7 @@ import Messages from "./messages";
 import PlotPoints from "./plot-points";
 
 export default class DBService {
-  private pg: Sql;
+  public pg: Sql;
 
   public drizzle: Drizzle;
   public utils: Utils;

@@ -1,13 +1,16 @@
 {
   "name": "@2pm/cli",
   "version": "1.0.0",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
   "bin": {
     "ivan": "src/index.ts"
   },
   "dependencies": {
     "@2pm/api": "workspace:*",
     "commander": "^12.1.0",
-    "swagger-typescript-api": "^13.0.22",
-    "ora": "^8.1.0"
+    "ora": "^8.1.0",
+    "swagger-typescript-api": "^13.0.22"
   }
 }

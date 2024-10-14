@@ -19,7 +19,7 @@ export const HumanMessagePlotPointSummaryDtoSchema = z.object({
     user: z.object({
       type: z.literal("HUMAN"),
       id: createSelectSchema(schema.users).shape.id,
-      tag: createSelectSchema(schema.users).shape.tag,
+      tag: createSelectSchema(schema.humanUsers).shape.tag,
     }),
     message: z.object({
       id: createSelectSchema(schema.messages).shape.id,
@@ -61,7 +61,7 @@ export const AiMessagePlotPointSummaryDtoSchema = z.object({
     user: z.object({
       type: z.literal("AI"),
       id: createSelectSchema(schema.users).shape.id,
-      tag: createSelectSchema(schema.users).shape.tag,
+      tag: createSelectSchema(schema.aiUsers).shape.tag,
     }),
     message: z.object({
       id: createSelectSchema(schema.messages).shape.id,

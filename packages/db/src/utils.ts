@@ -14,6 +14,7 @@ import {
   aiMessages,
   humanMessages,
   plotPointEnvironmentPresences,
+  sessions,
 } from "@2pm/data/schema";
 import { DbModule } from "./db-module";
 import WorldRooms from "./world-rooms";
@@ -33,6 +34,7 @@ export default class Utils extends DbModule {
     await rm(userEnvironmentPresences);
     await rm(environmentCompanionOneToOnes);
     await rm(environmentWorldRooms);
+    await rm(sessions);
 
     // Truncate tables that depend on users or messages
     await rm(aiMessages);
@@ -63,9 +65,12 @@ export default class Utils extends DbModule {
       messages: new Messages(this.pg),
     };
 
-    const universe = await db.worldRooms.insert({ id: 1, code: "UNIVERSE" });
+    const universe = await db.worldRooms.insert({
+      id: 1,
+      code: "UNIVERSE",
+    });
 
-    const [g, ivan, jake] = await Promise.all([
+    const [g] = await Promise.all([
       db.users.insert({ type: "AI", id: 1, tag: "g", code: "G" }),
       db.users.insert({ type: "AI", id: 2, tag: "ivan", code: "IVAN" }),
       db.users.insert({
@@ -76,20 +81,10 @@ export default class Utils extends DbModule {
       }),
     ]);
 
-    const o2o = await db.companionOneToOnes.insert({ id: 2 });
-
     await Promise.all([
       db.userEnvironmentPresences.insert({
         environmentId: universe.environment.id,
         userId: g.id,
-      }),
-      db.userEnvironmentPresences.insert({
-        environmentId: o2o.environment.id,
-        userId: ivan.id,
-      }),
-      db.userEnvironmentPresences.insert({
-        userId: jake.id,
-        environmentId: o2o.environment.id,
       }),
     ]);
 

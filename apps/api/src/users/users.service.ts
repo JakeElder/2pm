@@ -26,7 +26,6 @@ export class UsersService {
         const res: AnonymousUserDto = {
           id: row.user.id,
           type: 'ANONYMOUS',
-          tag: row.user.tag,
           locationEnvironmentId: row.anonymousUser!.locationEnvironmentId,
         };
         return res;
@@ -39,7 +38,7 @@ export class UsersService {
         const res: HumanUserDto = {
           id: row.user.id,
           type: 'HUMAN',
-          tag: row.user.tag,
+          tag: row.humanUser.tag,
           locationEnvironmentId: row.humanUser.locationEnvironmentId,
         };
         return res;
@@ -52,7 +51,7 @@ export class UsersService {
         const res: AiUserDto = {
           id: row.user.id,
           type: 'AI',
-          tag: row.user.tag,
+          tag: row.aiUser.tag,
           code: row.aiUser.code,
         };
         return res;

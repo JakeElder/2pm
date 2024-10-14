@@ -13,6 +13,7 @@ import { UsersModule } from './users/users.module';
 import { MessagesModule } from './messages/messages.module';
 import { RedisModule } from './redis/redis.module';
 import { DatabaseModule } from './database/database.module';
+import { SessionsModule } from './sessions/sessions.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { DatabaseModule } from './database/database.module';
       route: '/queues',
       adapter: ExpressAdapter,
     }),
+    SessionsModule,
   ],
   controllers: [AppController],
   providers: [AppService, EnvironmentGateway],

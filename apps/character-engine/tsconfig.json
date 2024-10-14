@@ -4,6 +4,7 @@
     "module": "esnext",
     "strict": true,
     "esModuleInterop": true,
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "skipLibCheck": true
   }
 }

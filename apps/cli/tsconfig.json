@@ -1,7 +1,13 @@
 {
   "compilerOptions": {
     "strict": true,
+    "module": "esnext",
     "moduleResolution": "bundler",
     "esModuleInterop": true,
-  }
+    "skipLibCheck": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "strictPropertyInitialization": false,
+    "jsx": "preserve"
+  },
 }

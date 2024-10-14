@@ -1,6 +1,9 @@
 {
   "name": "@2pm/db",
   "main": "src/index.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
   "dependencies": {
     "@2pm/data": "workspace:*"
   }

@@ -23,7 +23,7 @@ export class PlotPointsController {
   })
   @ApiParam({
     name: 'id',
-    description: 'The ID of the environment',
+    description: 'The Id of the environment',
     type: Number,
   })
   @ApiResponse({

@@ -24,13 +24,10 @@ export default class Users extends DbModule {
     dto: T,
   ): Promise<InferUserDto<T>> {
     const { transaction } = this.drizzle;
-    const { id, type, tag } = dto;
+    const { id, type } = dto;
 
     return transaction(async (tx) => {
-      const [user] = await tx
-        .insert(users)
-        .values({ id, type, tag })
-        .returning();
+      const [user] = await tx.insert(users).values({ id, type }).returning();
 
       if (dto.type === "ANONYMOUS") {
         const { locationEnvironmentId } = dto;
@@ -43,7 +40,6 @@ export default class Users extends DbModule {
         const res: AnonymousUserDto = {
           id: user.id,
           type: "ANONYMOUS",
-          tag: user.tag,
           locationEnvironmentId: anonymousUser.locationEnvironmentId,
         };
 
@@ -51,17 +47,17 @@ export default class Users extends DbModule {
       }
 
       if (dto.type === "HUMAN") {
-        const { locationEnvironmentId } = dto;
+        const { locationEnvironmentId, tag } = dto;
 
         const [humanUser] = await tx
           .insert(humanUsers)
-          .values({ userId: user.id, locationEnvironmentId })
+          .values({ userId: user.id, tag, locationEnvironmentId })
           .returning();
 
         const res: HumanUserDto = {
           id: user.id,
           type: "HUMAN",
-          tag: user.tag,
+          tag: humanUser.tag,
           locationEnvironmentId: humanUser.locationEnvironmentId,
         };
 
@@ -69,17 +65,17 @@ export default class Users extends DbModule {
       }
 
       if (dto.type === "AI") {
-        const { code } = dto;
+        const { code, tag } = dto;
 
         const [aiUser] = await tx
           .insert(aiUsers)
-          .values({ userId: user.id, code })
+          .values({ userId: user.id, tag, code })
           .returning();
 
         const res: AiUserDto = {
           id: user.id,
           type: "AI",
-          tag: user.tag,
+          tag: aiUser.tag,
           code: aiUser.code,
         };
 

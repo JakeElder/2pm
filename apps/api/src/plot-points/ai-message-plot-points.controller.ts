@@ -1,17 +1,10 @@
 import { Body, Controller, Get, Inject, Post, UsePipes } from '@nestjs/common';
 import { PlotPointsService } from './plot-points.service';
-import {
-  ApiExtraModels,
-  ApiOperation,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AiMessagePlotPointDto, CreateAiMessagePlotPointDto } from '@2pm/data';
 import { AppEventEmitter } from '../event-emitter';
 import { ZodValidationPipe } from '@anatine/zod-nestjs';
 
-@ApiExtraModels(AiMessagePlotPointDto)
-@ApiExtraModels(AiMessagePlotPointDto)
 @ApiTags('Ai Message Plot Points')
 @Controller('plot-points/ai-message')
 export class AiMessagePlotPointsController {

@@ -5,7 +5,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "gen": "hygen component new"
+    "gen": "hygen component new",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@2pm/data": "workspace:*",

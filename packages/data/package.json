@@ -7,7 +7,8 @@
   "scripts": {
     "studio": "drizzle-kit studio",
     "generate": "drizzle-kit generate",
-    "migrate": "drizzle-kit migrate"
+    "migrate": "drizzle-kit migrate",
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "drizzle-kit": "^0.24.2"

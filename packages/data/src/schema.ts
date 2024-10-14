@@ -6,6 +6,7 @@ import {
   serial,
   text,
   timestamp,
+  uuid,
 } from "drizzle-orm/pg-core";
 import {
   AI_USER_CODES,
@@ -36,7 +37,6 @@ export const aiMessageStateEnum = pgEnum("AiMessageStateEnum", [
 
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
-  tag: text("tag").notNull(),
   type: userTypeEnum("type").notNull(),
 });
 
@@ -50,6 +50,7 @@ export const anonymousUsers = pgTable("anonymous_users", {
 });
 
 export const humanUsers = pgTable("human_users", {
+  tag: text("tag").notNull(),
   userId: integer("user_id")
     .primaryKey()
     .references(() => users.id),
@@ -59,10 +60,22 @@ export const humanUsers = pgTable("human_users", {
 });
 
 export const aiUsers = pgTable("ai_users", {
+  tag: text("tag").notNull(),
   userId: integer("user_id")
     .primaryKey()
     .references(() => users.id),
   code: aiUserCodeEnum("code").notNull().unique(),
+});
+
+/**
+ * Session
+ */
+
+export const sessions = pgTable("sessions", {
+  id: uuid("id").notNull().defaultRandom(),
+  userId: integer("user_id")
+    .primaryKey()
+    .references(() => users.id),
 });
 
 /**

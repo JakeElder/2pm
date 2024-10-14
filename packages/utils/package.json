@@ -1,5 +1,8 @@
 {
   "name": "@2pm/utils",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
   "exports": {
     ".": "./src/index.ts"
   },

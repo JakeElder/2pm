@@ -6,3 +6,25 @@ windows:
   - Vim: vim
   - Terminal:
   - Watch: bun watch:controllers
+  - Packages:
+      layout: tiled
+      panes:
+        - DB:
+            - cd ./packages/db
+        - UI:
+            - cd ./packages/ui
+        - Data:
+            - cd ./packages/data
+        - Utils:
+            - cd ./packages/utils
+  - Apps:
+      layout: tiled
+      panes:
+        - API:
+            - cd ./apps/api
+        - CLI:
+            - cd ./apps/cli
+        - Web:
+            - cd ./apps/web
+        - CE:
+            - cd ./apps/character-engine
