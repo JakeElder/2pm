@@ -3,21 +3,21 @@ import {
   environments,
   users,
   aiUsers,
-  humanUsers,
+  authenticatedUsers,
   messages,
-  humanMessages,
+  authenticatedUserMessages,
   plotPointMessages,
-  aiMessages,
+  aiUserMessages,
 } from "@2pm/data/schema";
 import { DbModule } from "./db-module";
 import {
-  AiMessageDto,
-  AiMessagePlotPointDto,
-  CreateAiMessagePlotPointDto,
-  CreateHumanMessagePlotPointDto,
+  AiUserMessageDto,
+  AiUserMessagePlotPointDto,
+  CreateAiUserMessagePlotPointDto,
+  CreateAuthenticatedUserMessagePlotPointDto,
   CreatePlotPointDto,
-  HumanMessageDto,
-  HumanMessagePlotPointDto,
+  AuthenticatedUserMessageDto,
+  AuthenticatedUserMessagePlotPointDto,
   InferPlotPointDto,
 } from "@2pm/data";
 import { eq } from "drizzle-orm";
@@ -28,77 +28,82 @@ export default class PlotPoints extends DbModule {
   ): Promise<InferPlotPointDto<T>> {
     const { type, userId, environmentId } = dto;
 
-    const [[environment], [{ user, aiUser, humanUser }]] = await Promise.all([
-      this.drizzle
-        .select()
-        .from(environments)
-        .where(eq(environments.id, environmentId))
-        .limit(1),
-      this.drizzle
-        .select({ user: users, humanUser: humanUsers, aiUser: aiUsers })
-        .from(users)
-        .leftJoin(aiUsers, eq(users.id, userId))
-        .leftJoin(humanUsers, eq(users.id, userId))
-        .where(eq(users.id, userId))
-        .limit(1),
-    ]);
+    const [[environment], [{ user, aiUser, authenticatedUser }]] =
+      await Promise.all([
+        this.drizzle
+          .select()
+          .from(environments)
+          .where(eq(environments.id, environmentId))
+          .limit(1),
+        this.drizzle
+          .select({
+            user: users,
+            authenticatedUser: authenticatedUsers,
+            aiUser: aiUsers,
+          })
+          .from(users)
+          .leftJoin(aiUsers, eq(users.id, userId))
+          .leftJoin(authenticatedUsers, eq(users.id, userId))
+          .where(eq(users.id, userId))
+          .limit(1),
+      ]);
 
     if (!environment || !user) {
       throw new Error();
     }
 
-    if (type === "HUMAN_MESSAGE") {
-      if (!humanUser) {
+    if (type === "AUTHENTICATED_USER_MESSAGE") {
+      if (!authenticatedUser) {
         throw new Error();
       }
 
       const { content } = dto;
 
-      const { message, plotPoint, humanMessage } =
-        await this.insertHumanMessagePlotPoint({
+      const { message, plotPoint, authenticatedUserMessage } =
+        await this.insertAuthenticatedUserMessagePlotPoint({
           environmentId,
           userId,
           content,
         });
 
-      const res: HumanMessagePlotPointDto = {
-        type: "HUMAN_MESSAGE",
+      const res: AuthenticatedUserMessagePlotPointDto = {
+        type: "AUTHENTICATED_USER_MESSAGE",
         data: {
-          type: "HUMAN",
+          type: "AUTHENTICATED_USER",
           plotPoint,
           message,
-          humanMessage,
+          authenticatedUserMessage,
           environment,
           user,
-          humanUser,
+          authenticatedUser,
         },
       };
 
       return res as InferPlotPointDto<T>;
     }
 
-    if (type === "AI_MESSAGE") {
+    if (type === "AI_USER_MESSAGE") {
       if (!aiUser) {
         throw new Error();
       }
 
       const { state, content } = dto;
 
-      const { message, plotPoint, aiMessage } =
-        await this.insertAiMessagePlotPoint({
+      const { message, plotPoint, aiUserMessage } =
+        await this.insertAiUserMessagePlotPoint({
           environmentId,
           userId,
           state,
           content,
         });
 
-      const res: AiMessagePlotPointDto = {
-        type: "AI_MESSAGE",
+      const res: AiUserMessagePlotPointDto = {
+        type: "AI_USER_MESSAGE",
         data: {
-          type: "AI",
+          type: "AI_USER",
           plotPoint,
           message,
-          aiMessage,
+          aiUserMessage,
           environment,
           user,
           aiUser,
@@ -111,26 +116,29 @@ export default class PlotPoints extends DbModule {
     throw new Error();
   }
 
-  private async insertHumanMessagePlotPoint({
+  private async insertAuthenticatedUserMessagePlotPoint({
     userId,
     environmentId,
     content,
-  }: Omit<CreateHumanMessagePlotPointDto, "type">): Promise<
-    Pick<HumanMessageDto, "plotPoint" | "message" | "humanMessage">
+  }: Omit<CreateAuthenticatedUserMessagePlotPointDto, "type">): Promise<
+    Pick<
+      AuthenticatedUserMessageDto,
+      "plotPoint" | "message" | "authenticatedUserMessage"
+    >
   > {
     return this.drizzle.transaction(async (tx) => {
       const [plotPoint] = await tx
         .insert(plotPoints)
-        .values({ type: "HUMAN_MESSAGE", environmentId })
+        .values({ type: "AUTHENTICATED_USER_MESSAGE", environmentId })
         .returning();
 
       const [message] = await tx
         .insert(messages)
-        .values({ type: "HUMAN", userId, environmentId })
+        .values({ type: "AUTHENTICATED_USER", userId, environmentId })
         .returning();
 
-      const [humanMessage] = await tx
-        .insert(humanMessages)
+      const [authenticatedUserMessage] = await tx
+        .insert(authenticatedUserMessages)
         .values({ messageId: message.id, content })
         .returning();
 
@@ -143,32 +151,32 @@ export default class PlotPoints extends DbModule {
         plotPoint,
         plotPointMessage,
         message,
-        humanMessage,
+        authenticatedUserMessage,
       };
     });
   }
 
-  private async insertAiMessagePlotPoint({
+  private async insertAiUserMessagePlotPoint({
     userId,
     environmentId,
     content,
     state,
-  }: Omit<CreateAiMessagePlotPointDto, "type">): Promise<
-    Pick<AiMessageDto, "plotPoint" | "message" | "aiMessage">
+  }: Omit<CreateAiUserMessagePlotPointDto, "type">): Promise<
+    Pick<AiUserMessageDto, "plotPoint" | "message" | "aiUserMessage">
   > {
     return this.drizzle.transaction(async (tx) => {
       const [plotPoint] = await tx
         .insert(plotPoints)
-        .values({ type: "AI_MESSAGE", environmentId })
+        .values({ type: "AI_USER_MESSAGE", environmentId })
         .returning();
 
       const [message] = await tx
         .insert(messages)
-        .values({ type: "AI", userId, environmentId })
+        .values({ type: "AI_USER", userId, environmentId })
         .returning();
 
-      const [aiMessage] = await tx
-        .insert(aiMessages)
+      const [aiUserMessage] = await tx
+        .insert(aiUserMessages)
         .values({ messageId: message.id, state, content })
         .returning();
 
@@ -181,7 +189,7 @@ export default class PlotPoints extends DbModule {
         plotPoint,
         plotPointMessage,
         message,
-        aiMessage,
+        aiUserMessage,
       };
     });
   }

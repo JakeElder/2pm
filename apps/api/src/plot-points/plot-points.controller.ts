@@ -8,10 +8,13 @@ import {
   ApiTags,
   getSchemaPath,
 } from '@nestjs/swagger';
-import { AiMessagePlotPointDto, HumanMessagePlotPointDto } from '@2pm/data';
+import {
+  AiUserMessagePlotPointDto,
+  AuthenticatedUserMessagePlotPointDto,
+} from '@2pm/data';
 
-@ApiExtraModels(HumanMessagePlotPointDto)
-@ApiExtraModels(AiMessagePlotPointDto)
+@ApiExtraModels(AuthenticatedUserMessagePlotPointDto)
+@ApiExtraModels(AiUserMessagePlotPointDto)
 @ApiTags('Plot Points')
 @Controller()
 export class PlotPointsController {
@@ -33,8 +36,8 @@ export class PlotPointsController {
       type: 'array',
       items: {
         oneOf: [
-          { $ref: getSchemaPath(HumanMessagePlotPointDto) },
-          { $ref: getSchemaPath(AiMessagePlotPointDto) },
+          { $ref: getSchemaPath(AuthenticatedUserMessagePlotPointDto) },
+          { $ref: getSchemaPath(AiUserMessagePlotPointDto) },
         ],
       },
     },

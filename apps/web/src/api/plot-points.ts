@@ -1,3 +1,3 @@
 import api from ".";
 
-export const { createHumanMessagePlotPoint } = api.plotPoints;
+export const { createAuthenticatedUserMessagePlotPoint } = api.plotPoints;

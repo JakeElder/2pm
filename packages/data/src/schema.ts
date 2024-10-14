@@ -11,6 +11,7 @@ import {
 import {
   AI_USER_CODES,
   ENVIRONMENT_TYPE_CODES,
+  MESSAGE_TYPES,
   PLOT_POINT_TYPES,
   USER_TYPES,
   WORLD_ROOM_CODES,
@@ -18,7 +19,7 @@ import {
 import { sql } from "drizzle-orm";
 
 export const userTypeEnum = pgEnum("UserType", USER_TYPES);
-export const messageTypeEnum = pgEnum("MessageType", ["HUMAN", "AI"]);
+export const messageTypeEnum = pgEnum("MessageType", MESSAGE_TYPES);
 export const plotPointTypeEnum = pgEnum("PlotPointType", PLOT_POINT_TYPES);
 export const environmentTypeEnum = pgEnum(
   "EnvironmentType",
@@ -26,7 +27,7 @@ export const environmentTypeEnum = pgEnum(
 );
 export const worldRoomCodeEnum = pgEnum("WorldRoomCodeEnum", WORLD_ROOM_CODES);
 export const aiUserCodeEnum = pgEnum("AiUserCodeEnum", AI_USER_CODES);
-export const aiMessageStateEnum = pgEnum("AiMessageStateEnum", [
+export const aiUserMessageStateEnum = pgEnum("AiUserMessageStateEnum", [
   "OUTPUTTING",
   "COMPLETE",
 ]);
@@ -49,7 +50,7 @@ export const anonymousUsers = pgTable("anonymous_users", {
     .references(() => environments.id),
 });
 
-export const humanUsers = pgTable("human_users", {
+export const authenticatedUsers = pgTable("authenticated_users", {
   tag: text("tag").notNull(),
   userId: integer("user_id")
     .primaryKey()
@@ -105,21 +106,24 @@ export const messages = pgTable("messages", {
     .references(() => environments.id),
 });
 
-export const humanMessages = pgTable("human_messages", {
-  id: serial("id").primaryKey(),
-  content: text("content").notNull(),
-  messageId: integer("message_id")
-    .notNull()
-    .references(() => messages.id),
-});
+export const authenticatedUserMessages = pgTable(
+  "authenticated_user_messages",
+  {
+    id: serial("id").primaryKey(),
+    content: text("content").notNull(),
+    messageId: integer("message_id")
+      .notNull()
+      .references(() => messages.id),
+  },
+);
 
-export const aiMessages = pgTable("ai_messages", {
+export const aiUserMessages = pgTable("ai_messages", {
   id: serial("id").primaryKey(),
   content: text("content").notNull(),
   messageId: integer("message_id")
     .notNull()
     .references(() => messages.id),
-  state: aiMessageStateEnum("state").notNull().default("OUTPUTTING"),
+  state: aiUserMessageStateEnum("state").notNull().default("OUTPUTTING"),
 });
 
 /**

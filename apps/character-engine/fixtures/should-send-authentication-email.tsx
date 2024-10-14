@@ -1,16 +1,16 @@
 import {
-  AiMessagePlotPointSummaryDto,
-  HumanMessagePlotPointSummaryDto,
+  AiUserMessagePlotPointSummaryDto,
+  AuthenticatedUserMessagePlotPointSummaryDto,
   PlotPointSummaryDto,
 } from "@2pm/data";
 
-const jake: HumanMessagePlotPointSummaryDto["data"]["user"] = {
+const jake: AuthenticatedUserMessagePlotPointSummaryDto["data"]["user"] = {
   id: 2,
-  type: "HUMAN",
+  type: "AUTHENTICATED_USER",
   tag: "jake",
 };
 
-const ivan: AiMessagePlotPointSummaryDto["data"]["user"] = {
+const ivan: AiUserMessagePlotPointSummaryDto["data"]["user"] = {
   id: 2,
   type: "AI",
   tag: "ivan",
@@ -18,44 +18,47 @@ const ivan: AiMessagePlotPointSummaryDto["data"]["user"] = {
 
 let messageId = 1;
 
-const humanMessage = (
-  props: Omit<HumanMessagePlotPointSummaryDto["data"]["message"], "id">,
+const authenticatedUserMessage = (
+  props: Omit<
+    AuthenticatedUserMessagePlotPointSummaryDto["data"]["message"],
+    "id"
+  >,
 ) => {
   return { id: messageId++, ...props };
 };
 
-const aiMessage = (
-  props: Omit<AiMessagePlotPointSummaryDto["data"]["message"], "id">,
+const aiUserMessage = (
+  props: Omit<AiUserMessagePlotPointSummaryDto["data"]["message"], "id">,
 ) => {
   return { id: messageId++, ...props };
 };
 
 const narrative: PlotPointSummaryDto[] = [
   {
-    type: "AI_MESSAGE",
+    type: "AI_USER_MESSAGE",
     data: {
       user: ivan,
-      message: aiMessage({
+      message: aiUserMessage({
         state: "COMPLETE",
         content: "Let's get you authenticated",
       }),
     },
   },
   {
-    type: "AI_MESSAGE",
+    type: "AI_USER_MESSAGE",
     data: {
       user: ivan,
-      message: aiMessage({
+      message: aiUserMessage({
         state: "COMPLETE",
         content: "What's your email address?",
       }),
     },
   },
   {
-    type: "HUMAN_MESSAGE",
+    type: "AUTHENTICATED_USER_MESSAGE",
     data: {
       user: jake,
-      message: humanMessage({
+      message: authenticatedUserMessage({
         content: "my email is jake@2pm.io",
       }),
     },

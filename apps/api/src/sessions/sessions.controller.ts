@@ -73,10 +73,10 @@ export class SessionsController {
   // @UsePipes(ZodValidationPipe)
   // @ApiOperation({
   //   summary: 'Create',
-  //   operationId: 'createHumanMessagePlotPoint',
+  //   operationId: 'createAuthenticatedUserMessagePlotPoint',
   // })
-  // @ApiResponse({ status: 201, type: HumanMessagePlotPointDto })
-  // async create(@Body() createDto: CreateHumanMessagePlotPointDto) {
+  // @ApiResponse({ status: 201, type: AuthenticatedUserMessagePlotPointDto })
+  // async create(@Body() createDto: CreateAuthenticatedUserMessagePlotPointDto) {
   //   const dto = await this.service.create(createDto);
   //   this.events.emit('plot-points.created', dto);
   //   return dto;

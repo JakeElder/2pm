@@ -1,7 +1,7 @@
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { createZodDto } from "@anatine/zod-nestjs";
 import { z } from "zod";
-import { aiUsers, environments, humanUsers, users } from "../schema";
+import { aiUsers, environments, authenticatedUsers, users } from "../schema";
 
 export const CreateAnonymousUserDtoSchema = z.object({
   type: z.literal("ANONYMOUS"),
@@ -9,10 +9,10 @@ export const CreateAnonymousUserDtoSchema = z.object({
   locationEnvironmentId: createSelectSchema(environments).shape.id,
 });
 
-export const CreateHumanUserDtoSchema = z.object({
-  type: z.literal("HUMAN"),
+export const CreateAuthenticatedUserDtoSchema = z.object({
+  type: z.literal("AUTHENTICATED"),
   id: createInsertSchema(users).shape.id,
-  tag: createInsertSchema(humanUsers).shape.tag,
+  tag: createInsertSchema(authenticatedUsers).shape.tag,
   locationEnvironmentId: createSelectSchema(environments).shape.id,
 });
 
@@ -25,7 +25,7 @@ export const CreateAiUserDtoSchema = z.object({
 
 export const CreateUserDtoSchema = z.discriminatedUnion("type", [
   CreateAnonymousUserDtoSchema,
-  CreateHumanUserDtoSchema,
+  CreateAuthenticatedUserDtoSchema,
   CreateAiUserDtoSchema,
 ]);
 
@@ -35,10 +35,10 @@ export const AnonymousUserDtoSchema = z.object({
   locationEnvironmentId: createSelectSchema(environments).shape.id,
 });
 
-export const HumanUserDtoSchema = z.object({
-  type: z.literal("HUMAN"),
+export const AuthenticatedUserDtoSchema = z.object({
+  type: z.literal("AUTHENTICATED"),
   id: createSelectSchema(users).shape.id,
-  tag: createSelectSchema(humanUsers).shape.tag,
+  tag: createSelectSchema(authenticatedUsers).shape.tag,
   locationEnvironmentId: createSelectSchema(environments).shape.id,
 });
 
@@ -51,13 +51,30 @@ export const AiUserDtoSchema = z.object({
 
 export const UserDtoSchema = z.discriminatedUnion("type", [
   AnonymousUserDtoSchema,
-  HumanUserDtoSchema,
+  AuthenticatedUserDtoSchema,
   AiUserDtoSchema,
 ]);
 
 export class AnonymousUserDto extends createZodDto(AnonymousUserDtoSchema) {}
-export class HumanUserDto extends createZodDto(HumanUserDtoSchema) {}
+export class AuthenticatedUserDto extends createZodDto(
+  AuthenticatedUserDtoSchema,
+) {}
 export class AiUserDto extends createZodDto(AiUserDtoSchema) {}
 
 export type CreateUserDto = z.infer<typeof CreateUserDtoSchema>;
 export type UserDto = z.infer<typeof UserDtoSchema>;
+
+/**
+ * Types
+ */
+type UserDtoMap = {
+  ANONYMOUS: AnonymousUserDto;
+  AUTHENTICATED: AuthenticatedUserDto;
+  AI: AiUserDto;
+};
+
+export type InferUserDto<T extends CreateUserDto> = T extends {
+  type: keyof UserDtoMap;
+}
+  ? UserDtoMap[T["type"]]
+  : never;

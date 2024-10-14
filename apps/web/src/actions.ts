@@ -1,12 +1,14 @@
 "use server";
 
-import { createHumanMessagePlotPoint } from "@/api/plot-points";
-import { CreateHumanMessagePlotPointDto } from "@2pm/api/client";
+import { createAuthenticatedUserMessagePlotPoint } from "@/api/plot-points";
+import { CreateAuthenticatedUserMessagePlotPointDto } from "@2pm/api/client";
 import { cookies } from "next/headers";
 import * as api from "@/api/sessions";
 
-export const submitMessage = async (dto: CreateHumanMessagePlotPointDto) => {
-  const res = await createHumanMessagePlotPoint(dto);
+export const submitMessage = async (
+  dto: CreateAuthenticatedUserMessagePlotPointDto,
+) => {
+  const res = await createAuthenticatedUserMessagePlotPoint(dto);
   return res.data;
 };
 

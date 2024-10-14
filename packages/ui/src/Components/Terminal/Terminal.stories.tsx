@@ -58,10 +58,16 @@ export const Conversation: Story = {
     const ConversationNarrative = () => (
       <Terminal.Narrative>
         <Narrative.Root>
-          <Narrative.PlotPoint type="AI_MESSAGE" perspective="THIRD_PERSON">
+          <Narrative.PlotPoint
+            type="AI_USER_MESSAGE"
+            perspective="THIRD_PERSON"
+          >
             <Message perspective="THIRD_PERSON">Hi</Message>
           </Narrative.PlotPoint>
-          <Narrative.PlotPoint type="HUMAN_MESSAGE" perspective="FIRST_PERSON">
+          <Narrative.PlotPoint
+            type="AUTHENTICATED_USER_MESSAGE"
+            perspective="FIRST_PERSON"
+          >
             <Message perspective="FIRST_PERSON">Hi</Message>
           </Narrative.PlotPoint>
         </Narrative.Root>

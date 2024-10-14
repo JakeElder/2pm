@@ -26,7 +26,10 @@ export class EnvironmentService {
       .where(
         and(
           eq(plotPoints.environmentId, environmentId),
-          inArray(plotPoints.type, ['AI_MESSAGE', 'HUMAN_MESSAGE']),
+          inArray(plotPoints.type, [
+            'AI_USER_MESSAGE',
+            'AUTHENTICATED_USER_MESSAGE',
+          ]),
         ),
       );
     return messageCount;

@@ -1,23 +1,17 @@
-import { users, humanUsers, anonymousUsers, aiUsers } from "@2pm/data/schema";
+import {
+  users,
+  authenticatedUsers,
+  anonymousUsers,
+  aiUsers,
+} from "@2pm/data/schema";
 import { DbModule } from "./db-module";
 import {
   AiUserDto,
   AnonymousUserDto,
   CreateUserDto,
-  HumanUserDto,
+  AuthenticatedUserDto,
+  InferUserDto,
 } from "@2pm/data";
-
-type UserDtoMap = {
-  ANONYMOUS: AnonymousUserDto;
-  HUMAN: HumanUserDto;
-  AI: AiUserDto;
-};
-
-type InferUserDto<T extends CreateUserDto> = T extends {
-  type: keyof UserDtoMap;
-}
-  ? UserDtoMap[T["type"]]
-  : never;
 
 export default class Users extends DbModule {
   public async insert<T extends CreateUserDto>(
@@ -46,19 +40,19 @@ export default class Users extends DbModule {
         return res as InferUserDto<T>;
       }
 
-      if (dto.type === "HUMAN") {
+      if (dto.type === "AUTHENTICATED") {
         const { locationEnvironmentId, tag } = dto;
 
-        const [humanUser] = await tx
-          .insert(humanUsers)
+        const [authenticatedUser] = await tx
+          .insert(authenticatedUsers)
           .values({ userId: user.id, tag, locationEnvironmentId })
           .returning();
 
-        const res: HumanUserDto = {
+        const res: AuthenticatedUserDto = {
           id: user.id,
-          type: "HUMAN",
-          tag: humanUser.tag,
-          locationEnvironmentId: humanUser.locationEnvironmentId,
+          type: "AUTHENTICATED",
+          tag: authenticatedUser.tag,
+          locationEnvironmentId: authenticatedUser.locationEnvironmentId,
         };
 
         return res as InferUserDto<T>;

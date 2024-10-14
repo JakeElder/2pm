@@ -4,71 +4,75 @@ import { z } from "zod";
 import type { Server, Socket } from "socket.io";
 import type { Socket as ClientSocket } from "socket.io-client";
 import * as schema from "../schema";
-import type { USER_TYPES } from "../constants";
+import type { MESSAGE_TYPES, USER_TYPES } from "../constants";
 
 /**
- * Human Message
+ * Authenticated User Message
  */
-export const HumanMessageDtoSchema = z.object({
-  type: z.literal("HUMAN"),
+export const AuthenticatedUserMessageDtoSchema = z.object({
+  type: z.literal("AUTHENTICATED_USER"),
   plotPoint: createSelectSchema(schema.plotPoints),
   message: createSelectSchema(schema.messages),
-  humanMessage: createSelectSchema(schema.humanMessages),
+  authenticatedUserMessage: createSelectSchema(
+    schema.authenticatedUserMessages,
+  ),
   environment: createSelectSchema(schema.environments),
   user: createSelectSchema(schema.users),
-  humanUser: createSelectSchema(schema.humanUsers),
+  authenticatedUser: createSelectSchema(schema.authenticatedUsers),
 });
 
-export const UpdateHumanMessageDtoSchema = z.object({
-  type: z.literal("HUMAN"),
+export const UpdateAuthenticatedUserMessageDtoSchema = z.object({
+  type: z.literal("AUTHENTICATED_USER"),
   id: createSelectSchema(schema.messages).shape.id,
-  content: createInsertSchema(schema.humanMessages).shape.content,
+  content: createInsertSchema(schema.authenticatedUserMessages).shape.content,
 });
 
 /**
- * Ai Message
+ * Ai User Message
  */
-export const AiMessageDtoSchema = z.object({
-  type: z.literal("AI"),
+export const AiUserMessageDtoSchema = z.object({
+  type: z.literal("AI_USER"),
   plotPoint: createSelectSchema(schema.plotPoints),
   message: createSelectSchema(schema.messages),
-  aiMessage: createSelectSchema(schema.aiMessages),
+  aiUserMessage: createSelectSchema(schema.aiUserMessages),
   environment: createSelectSchema(schema.environments),
   user: createSelectSchema(schema.users),
   aiUser: createSelectSchema(schema.aiUsers),
 });
 
-export const UpdateAiMessageDtoSchema = z.object({
-  type: z.literal("AI"),
+export const UpdateAiUserMessageDtoSchema = z.object({
+  type: z.literal("AI_USER"),
   id: createSelectSchema(schema.messages).shape.id,
-  content: createInsertSchema(schema.aiMessages).shape.content,
-  state: createInsertSchema(schema.aiMessages).shape.state,
+  content: createInsertSchema(schema.aiUserMessages).shape.content,
+  state: createInsertSchema(schema.aiUserMessages).shape.state,
 });
 
 /**
  * Unions
  */
 export const MessageDtoSchema = z.discriminatedUnion("type", [
-  HumanMessageDtoSchema,
-  AiMessageDtoSchema,
+  AuthenticatedUserMessageDtoSchema,
+  AiUserMessageDtoSchema,
 ]);
 
 export const UpdateMessageDtoSchema = z.discriminatedUnion("type", [
-  UpdateHumanMessageDtoSchema,
-  UpdateAiMessageDtoSchema,
+  UpdateAuthenticatedUserMessageDtoSchema,
+  UpdateAiUserMessageDtoSchema,
 ]);
 
 /**
  * Dtos
  */
-export class HumanMessageDto extends createZodDto(HumanMessageDtoSchema) {}
-export class AiMessageDto extends createZodDto(AiMessageDtoSchema) {}
-
-export class UpdateHumanMessageDto extends createZodDto(
-  UpdateHumanMessageDtoSchema,
+export class AuthenticatedUserMessageDto extends createZodDto(
+  AuthenticatedUserMessageDtoSchema,
 ) {}
-export class UpdateAiMessageDto extends createZodDto(
-  UpdateAiMessageDtoSchema,
+export class AiUserMessageDto extends createZodDto(AiUserMessageDtoSchema) {}
+
+export class UpdateAuthenticatedUserMessageDto extends createZodDto(
+  UpdateAuthenticatedUserMessageDtoSchema,
+) {}
+export class UpdateAiUserMessageDto extends createZodDto(
+  UpdateAiUserMessageDtoSchema,
 ) {}
 
 /**
@@ -78,16 +82,17 @@ export type UpdateMessageDto = z.infer<typeof UpdateMessageDtoSchema>;
 export type MessageDto = z.infer<typeof MessageDtoSchema>;
 
 type MessageDtoMap = {
-  HUMAN: HumanMessageDto;
-  AI: AiMessageDto;
+  AUTHENTICATED_USER: AuthenticatedUserMessageDto;
+  AI_USER: AiUserMessageDto;
 };
 
-export type InferMessageDto<T extends { type: (typeof USER_TYPES)[number] }> =
-  T extends {
-    type: keyof MessageDtoMap;
-  }
-    ? MessageDtoMap[T["type"]]
-    : never;
+export type InferMessageDto<
+  T extends { type: (typeof MESSAGE_TYPES)[number] },
+> = T extends {
+  type: keyof MessageDtoMap;
+}
+  ? MessageDtoMap[T["type"]]
+  : never;
 
 /**
  * Socket Events
@@ -114,7 +119,7 @@ interface MessagesClientToServerEvents {
 }
 
 interface MessagesServerToClientEvents {
-  "messages.ai.updated": (body: AiMessageDto) => void;
+  "messages.ai.updated": (body: AiUserMessageDto) => void;
 }
 
 export type MessagesClientSocket = ClientSocket<

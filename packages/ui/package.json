@@ -5,7 +5,8 @@
     "dev": "storybook dev -p 3001 --no-open",
     "build": "storybook build",
     "gen": "hygen component new",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --write \"**/*.{ts,tsx}\""
   },
   "exports": {
     ".": "./src/Components/index.ts",

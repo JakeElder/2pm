@@ -1,17 +1,17 @@
 import {
-  AiMessageDto,
-  HumanMessageDto,
+  AiUserMessageDto,
+  AuthenticatedUserMessageDto,
   InferMessageDto,
   MessageDto,
   MessageDtoSchema,
   UpdateMessageDto,
 } from '@2pm/data';
 import {
-  aiMessages,
+  aiUserMessages,
   aiUsers,
   environments,
-  humanMessages,
-  humanUsers,
+  authenticatedUserMessages,
+  authenticatedUsers,
   messages,
   plotPointMessages,
   plotPoints,
@@ -40,11 +40,11 @@ export class MessagesService {
       .select({
         plotPoint: plotPoints,
         message: messages,
-        aiMessage: aiMessages,
-        humanMessage: humanMessages,
+        aiUserMessage: aiUserMessages,
+        authenticatedUserMessage: authenticatedUserMessages,
         user: users,
         aiUser: aiUsers,
-        humanUser: humanUsers,
+        authenticatedUser: authenticatedUsers,
         environment: environments,
       })
       .from(messages)
@@ -53,12 +53,15 @@ export class MessagesService {
         eq(messages.id, plotPointMessages.messageId),
       )
       .innerJoin(plotPoints, eq(plotPointMessages.plotPointId, plotPoints.id))
-      .leftJoin(aiMessages, eq(messages.id, aiMessages.messageId))
-      .leftJoin(humanMessages, eq(messages.id, humanMessages.messageId))
+      .leftJoin(aiUserMessages, eq(messages.id, aiUserMessages.messageId))
+      .leftJoin(
+        authenticatedUserMessages,
+        eq(messages.id, authenticatedUserMessages.messageId),
+      )
       .innerJoin(users, eq(messages.userId, users.id))
       .innerJoin(environments, eq(messages.environmentId, environments.id))
       .leftJoin(aiUsers, eq(users.id, aiUsers.userId))
-      .leftJoin(humanUsers, eq(users.id, humanUsers.userId))
+      .leftJoin(authenticatedUsers, eq(users.id, authenticatedUsers.userId))
       .orderBy(desc(messages.id));
 
     const data: MessageDto[] = res.map((row) => {
@@ -68,14 +71,14 @@ export class MessagesService {
     return data;
   }
 
-  async findHuman(): Promise<HumanMessageDto[]> {
+  async findAuthenticatedUser(): Promise<AuthenticatedUserMessageDto[]> {
     const res = await this.db.drizzle
       .select({
         plotPoint: plotPoints,
         message: messages,
-        humanMessage: humanMessages,
+        authenticatedUserMessage: authenticatedUserMessages,
         user: users,
-        humanUser: humanUsers,
+        authenticatedUser: authenticatedUsers,
         environment: environments,
       })
       .from(messages)
@@ -84,26 +87,29 @@ export class MessagesService {
         eq(messages.id, plotPointMessages.messageId),
       )
       .innerJoin(plotPoints, eq(plotPointMessages.plotPointId, plotPoints.id))
-      .innerJoin(humanMessages, eq(messages.id, humanMessages.messageId))
+      .innerJoin(
+        authenticatedUserMessages,
+        eq(messages.id, authenticatedUserMessages.messageId),
+      )
       .innerJoin(users, eq(messages.userId, users.id))
       .innerJoin(environments, eq(messages.environmentId, environments.id))
-      .innerJoin(humanUsers, eq(users.id, humanUsers.userId))
-      .where(eq(messages.type, 'HUMAN'))
+      .innerJoin(authenticatedUsers, eq(users.id, authenticatedUsers.userId))
+      .where(eq(messages.type, 'AUTHENTICATED_USER'))
       .orderBy(desc(messages.id));
 
-    const data: HumanMessageDto[] = res.map((row) => {
-      return { type: 'HUMAN', ...row };
+    const data: AuthenticatedUserMessageDto[] = res.map((row) => {
+      return { type: 'AUTHENTICATED_USER', ...row };
     });
 
     return data;
   }
 
-  async findAi(): Promise<AiMessageDto[]> {
+  async findAiUser(): Promise<AiUserMessageDto[]> {
     const res = await this.db.drizzle
       .select({
         plotPoint: plotPoints,
         message: messages,
-        aiMessage: aiMessages,
+        aiUserMessage: aiUserMessages,
         user: users,
         aiUser: aiUsers,
         environment: environments,
@@ -114,15 +120,16 @@ export class MessagesService {
         eq(messages.id, plotPointMessages.messageId),
       )
       .innerJoin(plotPoints, eq(plotPointMessages.plotPointId, plotPoints.id))
-      .innerJoin(aiMessages, eq(messages.id, aiMessages.messageId))
+      .innerJoin(aiUserMessages, eq(messages.id, aiUserMessages.messageId))
       .innerJoin(users, eq(messages.userId, users.id))
       .innerJoin(environments, eq(messages.environmentId, environments.id))
       .innerJoin(aiUsers, eq(users.id, aiUsers.userId))
-      .where(eq(messages.type, 'AI'))
+      .where(eq(messages.type, 'AI_USER'))
       .orderBy(desc(messages.id));
 
-    const data: AiMessageDto[] = res.map((row) => {
-      return { type: 'AI', ...row };
+    const data: AiUserMessageDto[] = res.map((row) => {
+      const res: AiUserMessageDto = { type: 'AI_USER', ...row };
+      return res;
     });
 
     return data;

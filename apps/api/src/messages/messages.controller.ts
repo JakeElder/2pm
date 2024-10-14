@@ -7,11 +7,11 @@ import {
   ApiTags,
   getSchemaPath,
 } from '@nestjs/swagger';
-import { AiMessageDto, HumanMessageDto } from '@2pm/data';
+import { AiUserMessageDto, AuthenticatedUserMessageDto } from '@2pm/data';
 import { AppEventEmitter } from '../event-emitter';
 
-@ApiExtraModels(HumanMessageDto)
-@ApiExtraModels(AiMessageDto)
+@ApiExtraModels(AuthenticatedUserMessageDto)
+@ApiExtraModels(AiUserMessageDto)
 @Controller('messages')
 export class MessagesController implements OnModuleInit {
   constructor(
@@ -38,8 +38,8 @@ export class MessagesController implements OnModuleInit {
       type: 'array',
       items: {
         oneOf: [
-          { $ref: getSchemaPath(HumanMessageDto) },
-          { $ref: getSchemaPath(AiMessageDto) },
+          { $ref: getSchemaPath(AuthenticatedUserMessageDto) },
+          { $ref: getSchemaPath(AiUserMessageDto) },
         ],
       },
     },

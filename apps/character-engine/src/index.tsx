@@ -57,7 +57,8 @@ class CharacterEngine {
       },
       ...narrative.map((dto) => {
         const res: OpenAiMessage = {
-          role: dto.type === "HUMAN_MESSAGE" ? "user" : "assistant",
+          role:
+            dto.type === "AUTHENTICATED_USER_MESSAGE" ? "user" : "assistant",
           name: dto.data.user.tag,
           content: dto.data.message.content,
         };

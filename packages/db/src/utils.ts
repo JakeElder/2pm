@@ -6,13 +6,13 @@ import {
   environmentWorldRooms,
   plotPointMessages,
   messages,
-  humanUsers,
+  authenticatedUsers,
   aiUsers,
   userEnvironmentPresences,
   companionOneToOnes,
   environmentCompanionOneToOnes,
-  aiMessages,
-  humanMessages,
+  aiUserMessages,
+  authenticatedUserMessages,
   plotPointEnvironmentPresences,
   sessions,
 } from "@2pm/data/schema";
@@ -37,10 +37,10 @@ export default class Utils extends DbModule {
     await rm(sessions);
 
     // Truncate tables that depend on users or messages
-    await rm(aiMessages);
-    await rm(humanMessages);
+    await rm(aiUserMessages);
+    await rm(authenticatedUserMessages);
     await rm(aiUsers);
-    await rm(humanUsers);
+    await rm(authenticatedUsers);
 
     // Truncate parent tables
     await rm(messages);
@@ -74,7 +74,7 @@ export default class Utils extends DbModule {
       db.users.insert({ type: "AI", id: 1, tag: "g", code: "G" }),
       db.users.insert({ type: "AI", id: 2, tag: "ivan", code: "IVAN" }),
       db.users.insert({
-        type: "HUMAN",
+        type: "AUTHENTICATED",
         id: 3,
         tag: "jake",
         locationEnvironmentId: universe.environment.id,
@@ -89,7 +89,7 @@ export default class Utils extends DbModule {
     ]);
 
     await db.plotPoints.insert({
-      type: "AI_MESSAGE",
+      type: "AI_USER_MESSAGE",
       userId: g.id,
       environmentId: universe.environment.id,
       content: "Standby for G stuff",

@@ -1,5 +1,15 @@
-import { AiUserDto, AnonymousUserDto, HumanUserDto, UserDto } from '@2pm/data';
-import { aiUsers, anonymousUsers, humanUsers, users } from '@2pm/data/schema';
+import {
+  AiUserDto,
+  AnonymousUserDto,
+  AuthenticatedUserDto,
+  UserDto,
+} from '@2pm/data';
+import {
+  aiUsers,
+  anonymousUsers,
+  authenticatedUsers,
+  users,
+} from '@2pm/data/schema';
 import DBService from '@2pm/db';
 import { Inject, Injectable } from '@nestjs/common';
 import { eq } from 'drizzle-orm';
@@ -14,11 +24,11 @@ export class UsersService {
         user: users,
         anonymousUser: anonymousUsers,
         aiUser: aiUsers,
-        humanUser: humanUsers,
+        authenticatedUser: authenticatedUsers,
       })
       .from(users)
       .leftJoin(aiUsers, eq(users.id, aiUsers.userId))
-      .leftJoin(humanUsers, eq(users.id, humanUsers.userId))
+      .leftJoin(authenticatedUsers, eq(users.id, authenticatedUsers.userId))
       .leftJoin(anonymousUsers, eq(users.id, anonymousUsers.userId));
 
     const data: UserDto[] = res.map((row) => {
@@ -31,15 +41,15 @@ export class UsersService {
         return res;
       }
 
-      if (row.user.type === 'HUMAN') {
-        if (!row.humanUser) {
+      if (row.user.type === 'AUTHENTICATED') {
+        if (!row.authenticatedUser) {
           throw new Error();
         }
-        const res: HumanUserDto = {
+        const res: AuthenticatedUserDto = {
           id: row.user.id,
-          type: 'HUMAN',
-          tag: row.humanUser.tag,
-          locationEnvironmentId: row.humanUser.locationEnvironmentId,
+          type: 'AUTHENTICATED',
+          tag: row.authenticatedUser.tag,
+          locationEnvironmentId: row.authenticatedUser.locationEnvironmentId,
         };
         return res;
       }

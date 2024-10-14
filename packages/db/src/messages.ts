@@ -1,18 +1,18 @@
 import {
   messages,
-  humanMessages,
-  aiMessages,
+  authenticatedUserMessages,
+  aiUserMessages,
   environments,
   users,
   aiUsers,
-  humanUsers,
+  authenticatedUsers,
   plotPoints,
   plotPointMessages,
 } from "@2pm/data/schema";
 import { DbModule } from "./db-module";
 import {
-  AiMessageDto,
-  HumanMessageDto,
+  AiUserMessageDto,
+  AuthenticatedUserMessageDto,
   InferMessageDto,
   UpdateMessageDto,
 } from "@2pm/data";
@@ -29,21 +29,21 @@ export default class Messages extends DbModule {
         plotPoint,
         aiUser,
         environment,
-        aiMessageId,
+        aiUserMessageId,
         user,
-        humanUser,
-        humanMessageId,
+        authenticatedUser,
+        authenticatedUserMessageId,
         message,
       },
     ] = await this.drizzle
       .select({
         plotPoint: plotPoints,
         message: messages,
-        aiMessageId: aiMessages.id,
-        humanMessageId: humanMessages.id,
+        aiUserMessageId: aiUserMessages.id,
+        authenticatedUserMessageId: authenticatedUserMessages.id,
         user: users,
         aiUser: aiUsers,
-        humanUser: humanUsers,
+        authenticatedUser: authenticatedUsers,
         environment: environments,
       })
       .from(messages)
@@ -54,34 +54,37 @@ export default class Messages extends DbModule {
       .innerJoin(plotPoints, eq(plotPointMessages.plotPointId, plotPoints.id))
       .innerJoin(users, eq(messages.userId, users.id))
       .innerJoin(environments, eq(messages.environmentId, environments.id))
-      .leftJoin(aiMessages, eq(messages.id, aiMessages.messageId))
-      .leftJoin(humanMessages, eq(messages.id, humanMessages.messageId))
+      .leftJoin(aiUserMessages, eq(messages.id, aiUserMessages.messageId))
+      .leftJoin(
+        authenticatedUserMessages,
+        eq(messages.id, authenticatedUserMessages.messageId),
+      )
       .leftJoin(aiUsers, eq(users.id, aiUsers.userId))
-      .leftJoin(humanUsers, eq(users.id, humanUsers.userId))
+      .leftJoin(authenticatedUsers, eq(users.id, authenticatedUsers.userId))
       .where(eq(messages.id, id));
 
     if (!environment || !user) {
       throw new Error();
     }
 
-    if (type === "AI") {
-      if (!aiUser || !aiMessageId) {
+    if (type === "AI_USER") {
+      if (!aiUser || !aiUserMessageId) {
         throw new Error();
       }
 
       const { state, content } = dto;
 
-      const [aiMessage] = await this.drizzle
-        .update(aiMessages)
+      const [aiUserMessage] = await this.drizzle
+        .update(aiUserMessages)
         .set({ state, content })
-        .where(eq(aiMessages.id, aiMessageId))
+        .where(eq(aiUserMessages.id, aiUserMessageId))
         .returning();
 
-      const res: AiMessageDto = {
-        type: "AI",
+      const res: AiUserMessageDto = {
+        type: "AI_USER",
         plotPoint,
         message,
-        aiMessage,
+        aiUserMessage,
         environment,
         user,
         aiUser,
@@ -90,27 +93,27 @@ export default class Messages extends DbModule {
       return res as InferMessageDto<T>;
     }
 
-    if (type === "HUMAN") {
-      if (!humanUser || !humanMessageId) {
+    if (type === "AUTHENTICATED_USER") {
+      if (!authenticatedUser || !authenticatedUserMessageId) {
         throw new Error();
       }
 
       const { content } = dto;
 
-      const [humanMessage] = await this.drizzle
-        .update(humanMessages)
+      const [authenticatedUserMessage] = await this.drizzle
+        .update(authenticatedUserMessages)
         .set({ content })
-        .where(eq(humanMessages.id, humanMessageId))
+        .where(eq(authenticatedUserMessages.id, authenticatedUserMessageId))
         .returning();
 
-      const res: HumanMessageDto = {
-        type: "HUMAN",
+      const res: AuthenticatedUserMessageDto = {
+        type: "AUTHENTICATED_USER",
         plotPoint,
         message,
-        humanMessage,
+        authenticatedUserMessage,
         environment,
         user,
-        humanUser,
+        authenticatedUser,
       };
 
       return res as InferMessageDto<T>;

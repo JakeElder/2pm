@@ -1,13 +1,16 @@
 import { Body, Controller, Get, Inject, Post, UsePipes } from '@nestjs/common';
 import { PlotPointsService } from './plot-points.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { AiMessagePlotPointDto, CreateAiMessagePlotPointDto } from '@2pm/data';
+import {
+  AiUserMessagePlotPointDto,
+  CreateAiUserMessagePlotPointDto,
+} from '@2pm/data';
 import { AppEventEmitter } from '../event-emitter';
 import { ZodValidationPipe } from '@anatine/zod-nestjs';
 
 @ApiTags('Ai Message Plot Points')
 @Controller('plot-points/ai-message')
-export class AiMessagePlotPointsController {
+export class AiUserMessagePlotPointsController {
   constructor(
     private readonly service: PlotPointsService,
     @Inject('E') private readonly events: AppEventEmitter,
@@ -16,25 +19,25 @@ export class AiMessagePlotPointsController {
   @Get()
   @ApiOperation({
     summary: 'Get',
-    operationId: 'getAiMessagePlotPoints',
+    operationId: 'getAiUserMessagePlotPoints',
   })
   @ApiResponse({
     status: 200,
     description: 'A list of Ai Message Plot Points',
-    type: [AiMessagePlotPointDto],
+    type: [AiUserMessagePlotPointDto],
   })
   findPlotPointsByEnvironment() {
-    return this.service.findAiMessages();
+    return this.service.findAiUserMessages();
   }
 
   @Post()
   @UsePipes(ZodValidationPipe)
   @ApiOperation({
     summary: 'Create',
-    operationId: 'createAiMessagePlotPoint',
+    operationId: 'createAiUserMessagePlotPoint',
   })
-  @ApiResponse({ status: 201, type: AiMessagePlotPointDto })
-  async create(@Body() createDto: CreateAiMessagePlotPointDto) {
+  @ApiResponse({ status: 201, type: AiUserMessagePlotPointDto })
+  async create(@Body() createDto: CreateAiUserMessagePlotPointDto) {
     const dto = await this.service.create(createDto);
     // this.events.emit('messages.created', dto);
     return dto;

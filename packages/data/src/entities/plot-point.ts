@@ -2,61 +2,65 @@ import { z } from "zod";
 import * as schema from "../schema";
 import { createZodDto } from "@anatine/zod-nestjs";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import { AiMessageDtoSchema, HumanMessageDtoSchema } from "./message";
+import {
+  AiUserMessageDtoSchema,
+  AuthenticatedUserMessageDtoSchema,
+} from "./message";
 import type { PLOT_POINT_TYPES } from "../constants";
 
 /**
- * Human Message
+ * Authenticated User Message
  */
-export const HumanMessagePlotPointDtoSchema = z.object({
-  type: z.literal("HUMAN_MESSAGE"),
-  data: HumanMessageDtoSchema,
+export const AuthenticatedUserMessagePlotPointDtoSchema = z.object({
+  type: z.literal("AUTHENTICATED_USER_MESSAGE"),
+  data: AuthenticatedUserMessageDtoSchema,
 });
 
-export const HumanMessagePlotPointSummaryDtoSchema = z.object({
-  type: z.literal("HUMAN_MESSAGE"),
+export const AuthenticatedUserMessagePlotPointSummaryDtoSchema = z.object({
+  type: z.literal("AUTHENTICATED_USER_MESSAGE"),
   data: z.object({
     user: z.object({
-      type: z.literal("HUMAN"),
+      type: z.literal("AUTHENTICATED_USER"),
       id: createSelectSchema(schema.users).shape.id,
-      tag: createSelectSchema(schema.humanUsers).shape.tag,
+      tag: createSelectSchema(schema.authenticatedUsers).shape.tag,
     }),
     message: z.object({
       id: createSelectSchema(schema.messages).shape.id,
-      content: createSelectSchema(schema.humanMessages).shape.content,
+      content: createSelectSchema(schema.authenticatedUserMessages).shape
+        .content,
     }),
   }),
 });
 
-export const CreateHumanMessagePlotPointDtoSchema = z.object({
-  type: z.literal("HUMAN_MESSAGE"),
+export const CreateAuthenticatedUserMessagePlotPointDtoSchema = z.object({
+  type: z.literal("AUTHENTICATED_USER_MESSAGE"),
   userId: createSelectSchema(schema.users).shape.id,
   environmentId: createSelectSchema(schema.environments).shape.id,
-  content: createSelectSchema(schema.humanMessages).shape.content,
+  content: createSelectSchema(schema.authenticatedUserMessages).shape.content,
 });
 
-export class HumanMessagePlotPointDto extends createZodDto(
-  HumanMessagePlotPointDtoSchema,
+export class AuthenticatedUserMessagePlotPointDto extends createZodDto(
+  AuthenticatedUserMessagePlotPointDtoSchema,
 ) {}
 
-export class HumanMessagePlotPointSummaryDto extends createZodDto(
-  HumanMessagePlotPointSummaryDtoSchema,
+export class AuthenticatedUserMessagePlotPointSummaryDto extends createZodDto(
+  AuthenticatedUserMessagePlotPointSummaryDtoSchema,
 ) {}
 
-export class CreateHumanMessagePlotPointDto extends createZodDto(
-  CreateHumanMessagePlotPointDtoSchema,
+export class CreateAuthenticatedUserMessagePlotPointDto extends createZodDto(
+  CreateAuthenticatedUserMessagePlotPointDtoSchema,
 ) {}
 
 /**
  * Ai Message
  */
-export const AiMessagePlotPointDtoSchema = z.object({
-  type: z.literal("AI_MESSAGE"),
-  data: AiMessageDtoSchema,
+export const AiUserMessagePlotPointDtoSchema = z.object({
+  type: z.literal("AI_USER_MESSAGE"),
+  data: AiUserMessageDtoSchema,
 });
 
-export const AiMessagePlotPointSummaryDtoSchema = z.object({
-  type: z.literal("AI_MESSAGE"),
+export const AiUserMessagePlotPointSummaryDtoSchema = z.object({
+  type: z.literal("AI_USER_MESSAGE"),
   data: z.object({
     user: z.object({
       type: z.literal("AI"),
@@ -65,48 +69,48 @@ export const AiMessagePlotPointSummaryDtoSchema = z.object({
     }),
     message: z.object({
       id: createSelectSchema(schema.messages).shape.id,
-      state: createSelectSchema(schema.aiMessages).shape.state,
-      content: createSelectSchema(schema.aiMessages).shape.content,
+      state: createSelectSchema(schema.aiUserMessages).shape.state,
+      content: createSelectSchema(schema.aiUserMessages).shape.content,
     }),
   }),
 });
 
-export const CreateAiMessagePlotPointDtoSchema = z.object({
-  type: z.literal("AI_MESSAGE"),
+export const CreateAiUserMessagePlotPointDtoSchema = z.object({
+  type: z.literal("AI_USER_MESSAGE"),
   userId: createSelectSchema(schema.users).shape.id,
   environmentId: createSelectSchema(schema.environments).shape.id,
-  content: createInsertSchema(schema.aiMessages).shape.content,
-  state: createInsertSchema(schema.aiMessages).shape.state,
+  content: createInsertSchema(schema.aiUserMessages).shape.content,
+  state: createInsertSchema(schema.aiUserMessages).shape.state,
 });
 
-export class AiMessagePlotPointDto extends createZodDto(
-  AiMessagePlotPointDtoSchema,
+export class AiUserMessagePlotPointDto extends createZodDto(
+  AiUserMessagePlotPointDtoSchema,
 ) {}
 
-export class AiMessagePlotPointSummaryDto extends createZodDto(
-  AiMessagePlotPointSummaryDtoSchema,
+export class AiUserMessagePlotPointSummaryDto extends createZodDto(
+  AiUserMessagePlotPointSummaryDtoSchema,
 ) {}
 
-export class CreateAiMessagePlotPointDto extends createZodDto(
-  CreateAiMessagePlotPointDtoSchema,
+export class CreateAiUserMessagePlotPointDto extends createZodDto(
+  CreateAiUserMessagePlotPointDtoSchema,
 ) {}
 
 /**
  * Unions
  */
 export const PlotPointDtoSchema = z.discriminatedUnion("type", [
-  HumanMessagePlotPointDtoSchema,
-  AiMessagePlotPointDtoSchema,
+  AuthenticatedUserMessagePlotPointDtoSchema,
+  AiUserMessagePlotPointDtoSchema,
 ]);
 
 export const PlotPointSummaryDtoSchema = z.discriminatedUnion("type", [
-  HumanMessagePlotPointSummaryDtoSchema,
-  AiMessagePlotPointSummaryDtoSchema,
+  AuthenticatedUserMessagePlotPointSummaryDtoSchema,
+  AiUserMessagePlotPointSummaryDtoSchema,
 ]);
 
 export const CreatePlotPointDtoSchema = z.discriminatedUnion("type", [
-  CreateHumanMessagePlotPointDtoSchema,
-  CreateAiMessagePlotPointDtoSchema,
+  CreateAuthenticatedUserMessagePlotPointDtoSchema,
+  CreateAiUserMessagePlotPointDtoSchema,
 ]);
 
 /**
@@ -117,8 +121,8 @@ export type PlotPointDto = z.infer<typeof PlotPointDtoSchema>;
 export type PlotPointSummaryDto = z.infer<typeof PlotPointSummaryDtoSchema>;
 
 type PlotPointDtoMap = {
-  HUMAN_MESSAGE: HumanMessagePlotPointDto;
-  AI_MESSAGE: AiMessagePlotPointDto;
+  AUTHENTICATED_USER_MESSAGE: AuthenticatedUserMessagePlotPointDto;
+  AI_USER_MESSAGE: AiUserMessagePlotPointDto;
 };
 
 export type InferPlotPointDto<

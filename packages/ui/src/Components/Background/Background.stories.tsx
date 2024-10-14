@@ -3,13 +3,13 @@ import Background from "./Background";
 
 const meta: Meta<typeof Background> = {
   title: "Components/Background",
-  component: Background
+  component: Background,
 };
 
 type Story = StoryObj<typeof Background>;
 
 export const Default: Story = {
-  args: {}
+  args: {},
 };
 
 export default meta;

@@ -1,13 +1,13 @@
 import { Body, Controller, Get, Inject, Patch, UsePipes } from '@nestjs/common';
 import { MessagesService } from './messages.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { HumanMessageDto, UpdateHumanMessageDto } from '@2pm/data';
+import { AiUserMessageDto, UpdateAiUserMessageDto } from '@2pm/data';
 import { ZodValidationPipe } from '@anatine/zod-nestjs';
 import { AppEventEmitter } from '../event-emitter';
 
-@ApiTags('Human Messages')
-@Controller('/messages/human')
-export class HumanMessagesController {
+@ApiTags('Ai User Messages')
+@Controller('/messages/ai-user')
+export class AiUserMessagesController {
   constructor(
     private readonly service: MessagesService,
     @Inject('E') private events: AppEventEmitter,
@@ -16,22 +16,22 @@ export class HumanMessagesController {
   @Get()
   @ApiOperation({
     summary: 'Get',
-    operationId: 'getHumanMessages',
+    operationId: 'getAiUserMessages',
   })
   @ApiResponse({
     status: 200,
-    description: 'A list of Human messages',
-    type: [HumanMessageDto],
+    description: 'A list of Ai messages',
+    type: [AiUserMessageDto],
   })
-  findHuman() {
-    return this.service.findHuman();
+  find() {
+    return this.service.findAiUser();
   }
 
   @UsePipes(ZodValidationPipe)
   @Patch()
-  @ApiOperation({ summary: 'Update', operationId: 'updateHumanMessage' })
-  @ApiResponse({ status: 200, type: HumanMessageDto })
-  async updateHuman(@Body() updateDto: UpdateHumanMessageDto) {
+  @ApiOperation({ summary: 'Update', operationId: 'updateAiUserMessage' })
+  @ApiResponse({ status: 200, type: AiUserMessageDto })
+  async update(@Body() updateDto: UpdateAiUserMessageDto) {
     const res = await this.service.update(updateDto);
     this.events.emit('messages.updated', res);
     return res;

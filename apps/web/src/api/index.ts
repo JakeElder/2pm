@@ -1,5 +1,3 @@
-"use server";
-
 import { Api } from "@2pm/api/client";
 
 const api = new Api({

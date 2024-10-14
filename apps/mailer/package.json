@@ -2,7 +2,8 @@
   "name": "@2pm/mailer",
   "main": "src/index.ts",
   "scripts": {
-    "start:dev": "email dev --port 3003"
+    "start:dev": "email dev --port 3003",
+    "format": "prettier --write \"**/*.{ts,tsx}\""
   },
   "dependencies": {
     "@react-email/components": "0.0.25",

@@ -8,7 +8,7 @@ type Props = PlotPointDto;
 const PlotPointViewContainer = (plotPoint: Props) => {
   const { type } = plotPoint;
 
-  if (type === "HUMAN_MESSAGE" || type === "AI_MESSAGE") {
+  if (type === "AUTHENTICATED_USER_MESSAGE" || type === "AI_USER_MESSAGE") {
     return <MessageViewContainer {...plotPoint} />;
   }
 

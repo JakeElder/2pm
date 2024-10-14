@@ -75,11 +75,11 @@ export class EnvironmentQueueService {
 
       const { type, data } = job.data.trigger;
 
-      if (type === 'HUMAN_MESSAGE' || type === 'AI_MESSAGE') {
+      if (type === 'AUTHENTICATED_USER_MESSAGE' || type === 'AI_USER_MESSAGE') {
         message =
-          type === 'HUMAN_MESSAGE'
-            ? data.humanMessage.content
-            : data.aiMessage.content;
+          type === 'AUTHENTICATED_USER_MESSAGE'
+            ? data.authenticatedUserMessage.content
+            : data.aiUserMessage.content;
       }
 
       this.logger.debug(`starting job:${job.id} - ${message}`);
@@ -88,7 +88,7 @@ export class EnvironmentQueueService {
       let cancelled = false;
 
       const dto = await this.plotPointsService.create({
-        type: 'AI_MESSAGE',
+        type: 'AI_USER_MESSAGE',
         environmentId: data.environment.id,
         content,
         userId: 2,
@@ -108,7 +108,7 @@ export class EnvironmentQueueService {
         content += chunk;
 
         const updated = await this.messageService.update({
-          type: 'AI',
+          type: 'AI_USER',
           id: dto.data.message.id,
           content,
         });

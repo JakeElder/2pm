@@ -4,7 +4,12 @@ import {
   FindSessionsQueryDto,
   SessionDto,
 } from '@2pm/data';
-import { anonymousUsers, humanUsers, sessions, users } from '@2pm/data/schema';
+import {
+  anonymousUsers,
+  authenticatedUsers,
+  sessions,
+  users,
+} from '@2pm/data/schema';
 import DBService from '@2pm/db';
 import { Inject, Injectable } from '@nestjs/common';
 import { inArray, SQL, and, eq } from 'drizzle-orm';
@@ -25,12 +30,12 @@ export class SessionsService {
         session: sessions,
         user: users,
         anonymousUser: anonymousUsers,
-        humanUser: humanUsers,
+        authenticatedUser: authenticatedUsers,
       })
       .from(sessions)
       .innerJoin(users, eq(users.id, sessions.userId))
       .leftJoin(anonymousUsers, eq(users.id, anonymousUsers.userId))
-      .leftJoin(humanUsers, eq(users.id, humanUsers.userId))
+      .leftJoin(authenticatedUsers, eq(users.id, authenticatedUsers.userId))
       .where(and(...filters));
 
     const res = await (limit ? builder.limit(limit) : builder);
@@ -53,16 +58,16 @@ export class SessionsService {
         return res;
       }
 
-      if (row.user.type === 'HUMAN') {
-        const { humanUser } = row;
+      if (row.user.type === 'AUTHENTICATED') {
+        const { authenticatedUser } = row;
 
-        if (!humanUser) {
+        if (!authenticatedUser) {
           throw new Error();
         }
 
         const res: AuthenticatedSessionDto = {
           type: 'AUTHENTICATED',
-          data: { user, session, humanUser },
+          data: { user, session, authenticatedUser },
         };
 
         return res;

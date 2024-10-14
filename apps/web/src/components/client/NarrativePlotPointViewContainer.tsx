@@ -7,7 +7,10 @@ import { PlotPointDto, PlotPointPerspective } from "@2pm/data";
 type Props = PlotPointDto;
 
 const getPerspective = (plotPoint: PlotPointDto): PlotPointPerspective => {
-  if (plotPoint.type === "HUMAN_MESSAGE" || plotPoint.type === "AI_MESSAGE") {
+  if (
+    plotPoint.type === "AUTHENTICATED_USER_MESSAGE" ||
+    plotPoint.type === "AI_USER_MESSAGE"
+  ) {
     return plotPoint.data.user.id === 3 ? "FIRST_PERSON" : "THIRD_PERSON";
   }
   return "NEUTRAL";

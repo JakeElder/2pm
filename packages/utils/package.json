@@ -1,7 +1,8 @@
 {
   "name": "@2pm/utils",
   "scripts": {
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --write \"**/*.{ts,tsx}\""
   },
   "exports": {
     ".": "./src/index.ts"

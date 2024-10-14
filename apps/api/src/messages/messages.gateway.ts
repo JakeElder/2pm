@@ -48,7 +48,7 @@ export class MessagesGateway {
   }
 
   sendMessageUpdated(dto: MessageDto) {
-    if (dto.type === 'AI') {
+    if (dto.type === 'AI_USER') {
       this.server.to(`${dto.message.id}`).emit('messages.ai.updated', dto);
     }
   }

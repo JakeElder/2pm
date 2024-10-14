@@ -1,16 +1,16 @@
 import {
-  AiMessagePlotPointDto,
+  AiUserMessagePlotPointDto,
   CreatePlotPointDto,
-  HumanMessagePlotPointDto,
+  AuthenticatedUserMessagePlotPointDto,
   InferPlotPointDto,
   PlotPointDto,
 } from '@2pm/data';
 import {
-  aiMessages,
+  aiUserMessages,
   aiUsers,
   environments,
-  humanMessages,
-  humanUsers,
+  authenticatedUserMessages,
+  authenticatedUsers,
   messages,
   plotPointMessages,
   plotPoints,
@@ -35,11 +35,11 @@ export class PlotPointsService {
       .select({
         plotPoint: plotPoints,
         message: messages,
-        aiMessage: aiMessages,
-        humanMessage: humanMessages,
+        aiUserMessage: aiUserMessages,
+        authenticatedUserMessage: authenticatedUserMessages,
         user: users,
         aiUser: aiUsers,
-        humanUser: humanUsers,
+        authenticatedUser: authenticatedUsers,
         environment: environments,
       })
       .from(plotPoints)
@@ -48,59 +48,76 @@ export class PlotPointsService {
         eq(plotPoints.id, plotPointMessages.plotPointId),
       )
       .leftJoin(messages, eq(plotPointMessages.messageId, messages.id))
-      .leftJoin(aiMessages, eq(messages.id, aiMessages.messageId))
-      .leftJoin(humanMessages, eq(messages.id, humanMessages.messageId))
+      .leftJoin(aiUserMessages, eq(messages.id, aiUserMessages.messageId))
+      .leftJoin(
+        authenticatedUserMessages,
+        eq(messages.id, authenticatedUserMessages.messageId),
+      )
       .leftJoin(users, eq(messages.userId, users.id))
       .leftJoin(aiUsers, eq(users.id, aiUsers.userId))
-      .leftJoin(humanUsers, eq(users.id, humanUsers.userId))
+      .leftJoin(authenticatedUsers, eq(users.id, authenticatedUsers.userId))
       .innerJoin(environments, eq(plotPoints.environmentId, environments.id))
       .where(
         and(
           eq(plotPoints.environmentId, id),
-          inArray(plotPoints.type, ['AI_MESSAGE', 'HUMAN_MESSAGE']),
+          inArray(plotPoints.type, [
+            'AI_USER_MESSAGE',
+            'AUTHENTICATED_USER_MESSAGE',
+          ]),
         ),
       )
       .orderBy(desc(plotPoints.id));
 
     const data: PlotPointDto[] = res.map((row) => {
-      if (row.plotPoint.type === 'HUMAN_MESSAGE') {
-        const { user, humanUser, humanMessage, message, ...rest } = row;
+      if (row.plotPoint.type === 'AUTHENTICATED_USER_MESSAGE') {
+        const {
+          user,
+          authenticatedUser,
+          authenticatedUserMessage,
+          message,
+          ...rest
+        } = row;
 
-        if (!user || !humanUser || !humanMessage || !message) {
+        if (
+          !user ||
+          !authenticatedUser ||
+          !authenticatedUserMessage ||
+          !message
+        ) {
           throw new Error();
         }
 
-        const res: HumanMessagePlotPointDto = {
-          type: 'HUMAN_MESSAGE',
+        const res: AuthenticatedUserMessagePlotPointDto = {
+          type: 'AUTHENTICATED_USER_MESSAGE',
           data: {
-            type: 'HUMAN',
+            type: 'AUTHENTICATED_USER',
             ...rest,
             user,
-            humanUser,
+            authenticatedUser,
             message,
-            humanMessage,
+            authenticatedUserMessage,
           },
         };
 
         return res;
       }
 
-      if (row.plotPoint.type === 'AI_MESSAGE') {
-        const { user, aiUser, aiMessage, message, ...rest } = row;
+      if (row.plotPoint.type === 'AI_USER_MESSAGE') {
+        const { user, aiUser, aiUserMessage, message, ...rest } = row;
 
-        if (!user || !aiUser || !aiMessage || !message) {
+        if (!user || !aiUser || !aiUserMessage || !message) {
           throw new Error();
         }
 
-        const res: AiMessagePlotPointDto = {
-          type: 'AI_MESSAGE',
+        const res: AiUserMessagePlotPointDto = {
+          type: 'AI_USER_MESSAGE',
           data: {
-            type: 'AI',
+            type: 'AI_USER',
             ...rest,
             user,
             aiUser,
             message,
-            aiMessage,
+            aiUserMessage,
           },
         };
 
@@ -113,14 +130,14 @@ export class PlotPointsService {
     return data;
   }
 
-  async findHumanMessages() {
+  async findAuthenticatedUserMessages() {
     const res = await this.db.drizzle
       .select({
         plotPoint: plotPoints,
         message: messages,
-        humanMessage: humanMessages,
+        authenticatedUserMessage: authenticatedUserMessages,
         user: users,
-        humanUser: humanUsers,
+        authenticatedUser: authenticatedUsers,
         environment: environments,
       })
       .from(plotPoints)
@@ -129,17 +146,20 @@ export class PlotPointsService {
         eq(plotPoints.id, plotPointMessages.plotPointId),
       )
       .innerJoin(messages, eq(plotPointMessages.messageId, messages.id))
-      .innerJoin(humanMessages, eq(messages.id, humanMessages.messageId))
+      .innerJoin(
+        authenticatedUserMessages,
+        eq(messages.id, authenticatedUserMessages.messageId),
+      )
       .innerJoin(users, eq(messages.userId, users.id))
-      .innerJoin(humanUsers, eq(users.id, humanUsers.userId))
+      .innerJoin(authenticatedUsers, eq(users.id, authenticatedUsers.userId))
       .innerJoin(environments, eq(plotPoints.environmentId, environments.id))
-      .where(eq(plotPoints.type, 'HUMAN_MESSAGE'))
+      .where(eq(plotPoints.type, 'AUTHENTICATED_USER_MESSAGE'))
       .orderBy(desc(plotPoints.id));
 
-    const data: HumanMessagePlotPointDto[] = res.map((row) => {
-      const res: HumanMessagePlotPointDto = {
-        type: 'HUMAN_MESSAGE',
-        data: { type: 'HUMAN', ...row },
+    const data: AuthenticatedUserMessagePlotPointDto[] = res.map((row) => {
+      const res: AuthenticatedUserMessagePlotPointDto = {
+        type: 'AUTHENTICATED_USER_MESSAGE',
+        data: { type: 'AUTHENTICATED_USER', ...row },
       };
 
       return res;
@@ -148,12 +168,12 @@ export class PlotPointsService {
     return data;
   }
 
-  async findAiMessages() {
+  async findAiUserMessages() {
     const res = await this.db.drizzle
       .select({
         plotPoint: plotPoints,
         message: messages,
-        aiMessage: aiMessages,
+        aiUserMessage: aiUserMessages,
         user: users,
         aiUser: aiUsers,
         environment: environments,
@@ -164,17 +184,17 @@ export class PlotPointsService {
         eq(plotPoints.id, plotPointMessages.plotPointId),
       )
       .innerJoin(messages, eq(plotPointMessages.messageId, messages.id))
-      .innerJoin(aiMessages, eq(messages.id, aiMessages.messageId))
+      .innerJoin(aiUserMessages, eq(messages.id, aiUserMessages.messageId))
       .innerJoin(users, eq(messages.userId, users.id))
       .innerJoin(aiUsers, eq(users.id, aiUsers.userId))
       .innerJoin(environments, eq(plotPoints.environmentId, environments.id))
-      .where(eq(plotPoints.type, 'AI_MESSAGE'))
+      .where(eq(plotPoints.type, 'AI_USER_MESSAGE'))
       .orderBy(desc(plotPoints.id));
 
-    const data: AiMessagePlotPointDto[] = res.map((row) => {
-      const res: AiMessagePlotPointDto = {
-        type: 'AI_MESSAGE',
-        data: { type: 'AI', ...row },
+    const data: AiUserMessagePlotPointDto[] = res.map((row) => {
+      const res: AiUserMessagePlotPointDto = {
+        type: 'AI_USER_MESSAGE',
+        data: { type: 'AI_USER', ...row },
       };
 
       return res;

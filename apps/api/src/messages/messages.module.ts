@@ -4,15 +4,15 @@ import { MessagesService } from './messages.service';
 import { DatabaseModule } from '../database/database.module';
 import { EventEmitterModule } from '../event-emitter/event-emitter.module';
 import { MessagesGateway } from './messages.gateway';
-import { HumanMessagesController } from './human-messages.controller';
-import { AiMessagesController } from './ai-messages.controller';
+import { AuthenticatedUserMessagesController } from './authenticated-user-messages.controller';
+import { AiUserMessagesController } from './ai-user-messages.controller';
 
 @Module({
   imports: [DatabaseModule, EventEmitterModule],
   controllers: [
     MessagesController,
-    HumanMessagesController,
-    AiMessagesController,
+    AuthenticatedUserMessagesController,
+    AiUserMessagesController,
   ],
   providers: [MessagesService, MessagesGateway],
   exports: [MessagesService],

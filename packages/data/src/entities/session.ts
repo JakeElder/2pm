@@ -19,7 +19,7 @@ export const AuthenticatedSessionDtoSchema = z.object({
   data: z.object({
     session: createSelectSchema(sessions),
     user: createSelectSchema(users),
-    humanUser: createSelectSchema(anonymousUsers),
+    authenticatedUser: createSelectSchema(anonymousUsers),
   }),
 });
 

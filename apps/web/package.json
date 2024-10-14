@@ -6,7 +6,8 @@
     "start": "next start",
     "lint": "next lint",
     "gen": "hygen component new",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --write \"**/*.{ts,tsx}\""
   },
   "dependencies": {
     "@2pm/data": "workspace:*",
