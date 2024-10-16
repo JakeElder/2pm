@@ -32,9 +32,11 @@ export default class Users extends DbModule {
           .returning();
 
         const res: AnonymousUserDto = {
-          id: user.id,
           type: "ANONYMOUS",
-          locationEnvironmentId: anonymousUser.locationEnvironmentId,
+          data: {
+            user,
+            anonymousUser,
+          },
         };
 
         return res as InferUserDto<T>;

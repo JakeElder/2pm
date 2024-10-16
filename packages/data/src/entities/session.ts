@@ -44,7 +44,7 @@ export class FindSessionsQueryDto extends createZodDto(
 ) {}
 
 /**
- * Union
+ * Unions
  */
 export const SessionDtoSchema = z.discriminatedUnion("type", [
   AnonymousSessionDtoSchema,

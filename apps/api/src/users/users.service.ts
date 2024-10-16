@@ -2,6 +2,8 @@ import {
   AiUserDto,
   AnonymousUserDto,
   AuthenticatedUserDto,
+  CreateUserDto,
+  InferUserDto,
   UserDto,
 } from '@2pm/data';
 import {
@@ -18,6 +20,34 @@ import { eq } from 'drizzle-orm';
 export class UsersService {
   constructor(@Inject('DB') private readonly db: DBService) {}
 
+  public async create<T extends CreateUserDto>(
+    dto: T,
+  ): Promise<InferUserDto<T>> {
+    return this.db.users.insert(dto);
+  }
+
+  async findAnonymousUsers(): Promise<AnonymousUserDto[]> {
+    const res = await this.db.drizzle
+      .select({
+        user: users,
+        anonymousUser: anonymousUsers,
+      })
+      .from(users)
+      .innerJoin(anonymousUsers, eq(users.id, anonymousUsers.userId));
+
+    return res.map((row) => {
+      const user: AnonymousUserDto = {
+        type: 'ANONYMOUS',
+        data: {
+          user: row.user,
+          anonymousUser: row.anonymousUser,
+        },
+      };
+
+      return user;
+    });
+  }
+
   async findAll(): Promise<UserDto[]> {
     const res = await this.db.drizzle
       .select({
@@ -33,11 +63,20 @@ export class UsersService {
 
     const data: UserDto[] = res.map((row) => {
       if (row.user.type === 'ANONYMOUS') {
+        const { user, anonymousUser } = row;
+
+        if (!anonymousUser) {
+          throw new Error();
+        }
+
         const res: AnonymousUserDto = {
-          id: row.user.id,
           type: 'ANONYMOUS',
-          locationEnvironmentId: row.anonymousUser!.locationEnvironmentId,
+          data: {
+            user,
+            anonymousUser,
+          },
         };
+
         return res;
       }
 
