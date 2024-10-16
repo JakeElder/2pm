@@ -1,9 +1,11 @@
-import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import { createSelectSchema } from "drizzle-zod";
 import { createZodDto } from "@anatine/zod-nestjs";
 import { anonymousUsers, sessions, users } from "../schema";
 import { z } from "zod";
 
-export const CreateSessionDtoSchema = createInsertSchema(sessions);
+/**
+ * Anonymous Session
+ */
 
 export const AnonymousSessionDtoSchema = z.object({
   type: z.literal("ANONYMOUS"),
@@ -14,6 +16,19 @@ export const AnonymousSessionDtoSchema = z.object({
   }),
 });
 
+export const CreateAnonymousSessionDtoSchema = z.object({
+  type: z.literal("ANONYMOUS"),
+  userId: createSelectSchema(users).shape.id,
+});
+
+export class AnonymousSessionDto extends createZodDto(
+  AnonymousSessionDtoSchema,
+) {}
+
+/**
+ * Authenticated Session
+ */
+
 export const AuthenticatedSessionDtoSchema = z.object({
   type: z.literal("AUTHENTICATED"),
   data: z.object({
@@ -23,22 +38,24 @@ export const AuthenticatedSessionDtoSchema = z.object({
   }),
 });
 
+export const CreateAuthenticatedSessionDtoSchema = z.object({
+  type: z.literal("AUTHENTICATED"),
+  userId: createSelectSchema(users).shape.id,
+});
+
+export class AuthenticatedSessionDto extends createZodDto(
+  AuthenticatedSessionDtoSchema,
+) {}
+
+/**
+ * Queries
+ */
+
 export const FindSessionsQueryDtoSchema = z.object({
   ids: z.array(createSelectSchema(sessions).shape.id).optional(),
   limit: z.number().optional(),
 });
 
-/**
- * Dto
- */
-
-export class CreateSessionDto extends createZodDto(CreateSessionDtoSchema) {}
-export class AnonymousSessionDto extends createZodDto(
-  AnonymousSessionDtoSchema,
-) {}
-export class AuthenticatedSessionDto extends createZodDto(
-  AuthenticatedSessionDtoSchema,
-) {}
 export class FindSessionsQueryDto extends createZodDto(
   FindSessionsQueryDtoSchema,
 ) {}
@@ -51,7 +68,24 @@ export const SessionDtoSchema = z.discriminatedUnion("type", [
   AuthenticatedSessionDtoSchema,
 ]);
 
+export const CreateSessionDtoSchema = z.discriminatedUnion("type", [
+  CreateAnonymousSessionDtoSchema,
+  CreateAuthenticatedSessionDtoSchema,
+]);
+
 /**
  * Types
  */
+export type CreateSessionDto = z.infer<typeof CreateSessionDtoSchema>;
 export type SessionDto = z.infer<typeof SessionDtoSchema>;
+
+type SessionDtoMap = {
+  ANONYMOUS: AnonymousSessionDto;
+  AUTHENTICATED: AuthenticatedSessionDto;
+};
+
+export type InferSessionDto<T extends CreateSessionDto> = T extends {
+  type: keyof SessionDtoMap;
+}
+  ? SessionDtoMap[T["type"]]
+  : never;

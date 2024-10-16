@@ -12,6 +12,7 @@ import {
 /**
  * Anonymous User
  */
+
 export const AnonymousUserDtoSchema = z.object({
   type: z.literal("ANONYMOUS"),
   data: z.object({
@@ -76,16 +77,16 @@ export class AiUserDto extends createZodDto(AiUserDtoSchema) {}
  * Unions
  */
 
-export const CreateUserDtoSchema = z.discriminatedUnion("type", [
-  CreateAnonymousUserDtoSchema,
-  CreateAuthenticatedUserDtoSchema,
-  CreateAiUserDtoSchema,
-]);
-
 export const UserDtoSchema = z.discriminatedUnion("type", [
   AnonymousUserDtoSchema,
   AuthenticatedUserDtoSchema,
   AiUserDtoSchema,
+]);
+
+export const CreateUserDtoSchema = z.discriminatedUnion("type", [
+  CreateAnonymousUserDtoSchema,
+  CreateAuthenticatedUserDtoSchema,
+  CreateAiUserDtoSchema,
 ]);
 
 /**
