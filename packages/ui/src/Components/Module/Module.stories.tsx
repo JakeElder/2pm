@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import * as Terminal from "./Terminal";
+import * as Module from "./Module";
 import * as Narrative from "../Narrative";
 import { Background } from "../Background";
 import PromptSubmitButton from "../PromptSubmitButton";
@@ -7,9 +7,9 @@ import PromptInput from "../PromptInput";
 import universe from "../../../public/images/universe.png";
 import { Message } from "../PlotPoints";
 
-const meta: Meta<typeof Terminal.Root> = {
-  title: "Components/Terminal",
-  component: Terminal.Root,
+const meta: Meta<typeof Module.Root> = {
+  title: "Components/Module",
+  component: Module.Root,
   decorators: [
     (Component) => (
       <Background src={universe.src}>
@@ -30,25 +30,25 @@ const meta: Meta<typeof Terminal.Root> = {
   },
 };
 
-type Story = StoryObj<typeof Terminal.Root>;
+type Story = StoryObj<typeof Module.Root>;
 
 const handle = "ivan";
 
 export const Default: Story = {
   render() {
     return (
-      <Terminal.Root>
-        <Terminal.Foreground>
-          <Terminal.AiAvatar code="IVAN" />
-        </Terminal.Foreground>
-        <Terminal.Main>
-          <Terminal.Header handle={handle} />
-          <Terminal.Body>
-            <Terminal.Narrative></Terminal.Narrative>
-          </Terminal.Body>
-          <Terminal.Footer>{null}</Terminal.Footer>
-        </Terminal.Main>
-      </Terminal.Root>
+      <Module.Root>
+        <Module.Foreground>
+          <Module.AiAvatar code="IVAN" />
+        </Module.Foreground>
+        <Module.Main>
+          <Module.Header handle={handle} />
+          <Module.Body>
+            <Module.Narrative></Module.Narrative>
+          </Module.Body>
+          <Module.Footer>{null}</Module.Footer>
+        </Module.Main>
+      </Module.Root>
     );
   },
 };
@@ -56,7 +56,7 @@ export const Default: Story = {
 export const Conversation: Story = {
   render() {
     const ConversationNarrative = () => (
-      <Terminal.Narrative>
+      <Module.Narrative>
         <Narrative.Root>
           <Narrative.PlotPoint
             type="AI_USER_MESSAGE"
@@ -71,31 +71,31 @@ export const Conversation: Story = {
             <Message perspective="FIRST_PERSON">Hi</Message>
           </Narrative.PlotPoint>
         </Narrative.Root>
-      </Terminal.Narrative>
+      </Module.Narrative>
     );
 
     return (
-      <Terminal.Root>
-        <Terminal.Foreground>
-          <Terminal.AiAvatar code="IVAN" />
-        </Terminal.Foreground>
-        <Terminal.Main>
-          <Terminal.Header handle={handle} />
-          <Terminal.Body>
+      <Module.Root>
+        <Module.Foreground>
+          <Module.AiAvatar code="IVAN" />
+        </Module.Foreground>
+        <Module.Main>
+          <Module.Header handle={handle} />
+          <Module.Body>
             <ConversationNarrative />
-          </Terminal.Body>
-          <Terminal.Footer>
-            <Terminal.Prompt>
-              <Terminal.Input>
+          </Module.Body>
+          <Module.Footer>
+            <Module.Prompt>
+              <Module.Input>
                 <PromptInput />
-              </Terminal.Input>
-              <Terminal.SubmitButton>
+              </Module.Input>
+              <Module.SubmitButton>
                 <PromptSubmitButton />
-              </Terminal.SubmitButton>
-            </Terminal.Prompt>
-          </Terminal.Footer>
-        </Terminal.Main>
-      </Terminal.Root>
+              </Module.SubmitButton>
+            </Module.Prompt>
+          </Module.Footer>
+        </Module.Main>
+      </Module.Root>
     );
   },
 };

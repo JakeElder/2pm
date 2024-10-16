@@ -2,7 +2,7 @@
 
 import { submitMessage } from "@/actions";
 import { CreateAuthenticatedUserMessagePlotPointDto } from "@2pm/api/client";
-import { PromptInput, PromptSubmitButton, Terminal } from "@2pm/ui";
+import { PromptInput, PromptSubmitButton, Module } from "@2pm/ui";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 interface Props
@@ -15,7 +15,7 @@ type Inputs = {
   content: string;
 };
 
-const TerminalPromptViewContainer = ({ userId, environmentId }: Props) => {
+const ModulePromptViewContainer = ({ userId, environmentId }: Props) => {
   const {
     register,
     handleSubmit,
@@ -35,16 +35,16 @@ const TerminalPromptViewContainer = ({ userId, environmentId }: Props) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Terminal.Prompt>
-        <Terminal.Input>
+      <Module.Prompt>
+        <Module.Input>
           <PromptInput {...register("content")} autoComplete="off" />
-        </Terminal.Input>
-        <Terminal.SubmitButton>
+        </Module.Input>
+        <Module.SubmitButton>
           <PromptSubmitButton disabled={isSubmitting} />
-        </Terminal.SubmitButton>
-      </Terminal.Prompt>
+        </Module.SubmitButton>
+      </Module.Prompt>
     </form>
   );
 };
 
-export default TerminalPromptViewContainer;
+export default ModulePromptViewContainer;

@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import css from "./Terminal.module.css";
+import css from "./Module.module.css";
 import ivan from "../../../public/images/ivan.png";
 import { AiUserCode } from "@2pm/data";
 
