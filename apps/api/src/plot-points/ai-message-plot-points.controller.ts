@@ -8,7 +8,7 @@ import {
 import { AppEventEmitter } from '../event-emitter';
 import { ZodValidationPipe } from '@anatine/zod-nestjs';
 
-@ApiTags('Ai Message Plot Points')
+@ApiTags('Plot Points')
 @Controller('plot-points/ai-message')
 export class AiUserMessagePlotPointsController {
   constructor(
@@ -18,7 +18,7 @@ export class AiUserMessagePlotPointsController {
 
   @Get()
   @ApiOperation({
-    summary: 'Get',
+    summary: 'Get Ai Message Plot Points',
     operationId: 'getAiUserMessagePlotPoints',
   })
   @ApiResponse({
@@ -33,7 +33,7 @@ export class AiUserMessagePlotPointsController {
   @Post()
   @UsePipes(ZodValidationPipe)
   @ApiOperation({
-    summary: 'Create',
+    summary: 'Create Ai Message Plot Point',
     operationId: 'createAiUserMessagePlotPoint',
   })
   @ApiResponse({ status: 201, type: AiUserMessagePlotPointDto })

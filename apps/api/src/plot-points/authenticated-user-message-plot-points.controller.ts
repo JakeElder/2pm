@@ -8,7 +8,7 @@ import {
 import { AppEventEmitter } from '../event-emitter';
 import { ZodValidationPipe } from '@anatine/zod-nestjs';
 
-@ApiTags('Authenticated User Message Plot Points')
+@ApiTags('Plot Points')
 @Controller('plot-points/authenticated-user-message')
 export class AuthenticatedUserMessagePlotPointsController {
   constructor(
@@ -18,7 +18,7 @@ export class AuthenticatedUserMessagePlotPointsController {
 
   @Get()
   @ApiOperation({
-    summary: 'Get',
+    summary: 'Get Authenticated User Message Plot Points',
     operationId: 'getAuthenticatedUserMessagePlotPoints',
   })
   @ApiResponse({
@@ -33,7 +33,7 @@ export class AuthenticatedUserMessagePlotPointsController {
   @Post()
   @UsePipes(ZodValidationPipe)
   @ApiOperation({
-    summary: 'Create',
+    summary: 'Create Authenticated User Message Plot Point',
     operationId: 'createAuthenticatedUserMessagePlotPoint',
   })
   @ApiResponse({ status: 201, type: AuthenticatedUserMessagePlotPointDto })

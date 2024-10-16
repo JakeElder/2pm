@@ -10,6 +10,7 @@ import {
 import { AiUserMessageDto, AuthenticatedUserMessageDto } from '@2pm/data';
 import { AppEventEmitter } from '../event-emitter';
 
+@ApiTags('Messages')
 @ApiExtraModels(AuthenticatedUserMessageDto)
 @ApiExtraModels(AiUserMessageDto)
 @Controller('messages')
@@ -25,7 +26,6 @@ export class MessagesController implements OnModuleInit {
     );
   }
 
-  @ApiTags('Messages')
   @Get()
   @ApiOperation({
     summary: 'Get',

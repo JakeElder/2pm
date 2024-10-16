@@ -4,14 +4,14 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AnonymousUserDto, CreateAnonymousUserDto } from '@2pm/data';
 import { UsersService } from './users.service';
 
-@ApiTags('Anonymous Users')
+@ApiTags('Users')
 @Controller('users/anonymous')
 export class AnonymousUsersController {
   constructor(private readonly service: UsersService) {}
 
   @Get()
   @ApiOperation({
-    summary: 'Get',
+    summary: 'Get Anonymous Users',
     operationId: 'getAnonymousUsers',
   })
   @ApiResponse({
@@ -26,7 +26,7 @@ export class AnonymousUsersController {
   @Post()
   @UsePipes(ZodValidationPipe)
   @ApiOperation({
-    summary: 'Create',
+    summary: 'Create Anonymous User',
     operationId: 'createAnonymousUser',
   })
   @ApiResponse({ status: 201, type: AnonymousUserDto })

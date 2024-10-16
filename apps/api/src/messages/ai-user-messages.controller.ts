@@ -5,7 +5,7 @@ import { AiUserMessageDto, UpdateAiUserMessageDto } from '@2pm/data';
 import { ZodValidationPipe } from '@anatine/zod-nestjs';
 import { AppEventEmitter } from '../event-emitter';
 
-@ApiTags('Ai User Messages')
+@ApiTags('Messages')
 @Controller('/messages/ai-user')
 export class AiUserMessagesController {
   constructor(
@@ -15,12 +15,12 @@ export class AiUserMessagesController {
 
   @Get()
   @ApiOperation({
-    summary: 'Get',
+    summary: 'Get Ai User Messages',
     operationId: 'getAiUserMessages',
   })
   @ApiResponse({
     status: 200,
-    description: 'A list of Ai messages',
+    description: 'A list of Ai User messages',
     type: [AiUserMessageDto],
   })
   find() {
@@ -29,7 +29,10 @@ export class AiUserMessagesController {
 
   @UsePipes(ZodValidationPipe)
   @Patch()
-  @ApiOperation({ summary: 'Update', operationId: 'updateAiUserMessage' })
+  @ApiOperation({
+    summary: 'Update Ai User Message',
+    operationId: 'updateAiUserMessage',
+  })
   @ApiResponse({ status: 200, type: AiUserMessageDto })
   async update(@Body() updateDto: UpdateAiUserMessageDto) {
     const res = await this.service.update(updateDto);

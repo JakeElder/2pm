@@ -4,7 +4,7 @@ import { SessionsService } from './sessions.service';
 import { AnonymousSessionDto, CreateAnonymousSessionDto } from '@2pm/data';
 import { ZodValidationPipe } from '@anatine/zod-nestjs';
 
-@ApiTags('Anonymous Sessions')
+@ApiTags('Sessions')
 @Controller('sessions/anonymous')
 export class AnonymousSessionsController {
   constructor(private readonly service: SessionsService) {}
@@ -12,7 +12,7 @@ export class AnonymousSessionsController {
   @Post()
   @UsePipes(ZodValidationPipe)
   @ApiOperation({
-    summary: 'Create',
+    summary: 'Create Anonymous Session',
     operationId: 'createAnonymousSession',
   })
   @ApiResponse({ status: 201, type: AnonymousSessionDto })

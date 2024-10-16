@@ -8,7 +8,7 @@ import {
 import { ZodValidationPipe } from '@anatine/zod-nestjs';
 import { AppEventEmitter } from '../event-emitter';
 
-@ApiTags('Authenticated User Messages')
+@ApiTags('Messages')
 @Controller('/messages/authenticated-user')
 export class AuthenticatedUserMessagesController {
   constructor(
@@ -18,7 +18,7 @@ export class AuthenticatedUserMessagesController {
 
   @Get()
   @ApiOperation({
-    summary: 'Get',
+    summary: 'Get Authenticated User Messages',
     operationId: 'getAuthenticatedUserMessages',
   })
   @ApiResponse({
@@ -33,7 +33,7 @@ export class AuthenticatedUserMessagesController {
   @UsePipes(ZodValidationPipe)
   @Patch()
   @ApiOperation({
-    summary: 'Update',
+    summary: 'Update Authenticated User Messages',
     operationId: 'updateAuthenticatedUserMessage',
   })
   @ApiResponse({ status: 200, type: AuthenticatedUserMessageDto })
