@@ -8,6 +8,7 @@ import UserEnvironmentPresences from "./user-environment-presences";
 import Users from "./users";
 import Messages from "./messages";
 import PlotPoints from "./plot-points";
+import Sessions from "./sessions";
 
 export default class DBService {
   public pg: Sql;
@@ -20,6 +21,7 @@ export default class DBService {
   public userEnvironmentPresences: UserEnvironmentPresences;
   public plotPoints: PlotPoints;
   public messages: Messages;
+  public sessions: Sessions;
 
   constructor(dbUrl: string) {
     this.pg = postgres(dbUrl);
@@ -31,6 +33,7 @@ export default class DBService {
     this.userEnvironmentPresences = new UserEnvironmentPresences(this.pg);
     this.plotPoints = new PlotPoints(this.pg);
     this.messages = new Messages(this.pg);
+    this.sessions = new Sessions(this.pg);
   }
 
   end() {

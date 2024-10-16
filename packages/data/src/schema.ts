@@ -42,29 +42,26 @@ export const users = pgTable("users", {
 });
 
 export const anonymousUsers = pgTable("anonymous_users", {
-  userId: integer("user_id")
-    .primaryKey()
-    .references(() => users.id),
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").references(() => users.id),
   locationEnvironmentId: integer("location_environment_id")
     .notNull()
     .references(() => environments.id),
 });
 
 export const authenticatedUsers = pgTable("authenticated_users", {
+  id: serial("id").primaryKey(),
   tag: text("tag").notNull(),
-  userId: integer("user_id")
-    .primaryKey()
-    .references(() => users.id),
+  userId: integer("user_id").references(() => users.id),
   locationEnvironmentId: integer("location_environment_id")
     .notNull()
     .references(() => environments.id),
 });
 
 export const aiUsers = pgTable("ai_users", {
+  id: serial("id").primaryKey(),
   tag: text("tag").notNull(),
-  userId: integer("user_id")
-    .primaryKey()
-    .references(() => users.id),
+  userId: integer("user_id").references(() => users.id),
   code: aiUserCodeEnum("code").notNull().unique(),
 });
 

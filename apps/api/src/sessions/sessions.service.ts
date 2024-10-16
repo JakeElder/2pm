@@ -1,7 +1,9 @@
 import {
   AnonymousSessionDto,
   AuthenticatedSessionDto,
+  CreateSessionDto,
   FindSessionsQueryDto,
+  InferSessionDto,
   SessionDto,
 } from '@2pm/data';
 import {
@@ -17,6 +19,12 @@ import { inArray, SQL, and, eq } from 'drizzle-orm';
 @Injectable()
 export class SessionsService {
   constructor(@Inject('DB') private readonly db: DBService) {}
+
+  public async create<T extends CreateSessionDto>(
+    dto: T,
+  ): Promise<InferSessionDto<T>> {
+    return this.db.sessions.insert(dto);
+  }
 
   async find({ limit, ids }: FindSessionsQueryDto): Promise<SessionDto[]> {
     const filters: SQL[] = [];

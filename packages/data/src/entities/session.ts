@@ -24,6 +24,9 @@ export const CreateAnonymousSessionDtoSchema = z.object({
 export class AnonymousSessionDto extends createZodDto(
   AnonymousSessionDtoSchema,
 ) {}
+export class CreateAnonymousSessionDto extends createZodDto(
+  CreateAnonymousSessionDtoSchema,
+) {}
 
 /**
  * Authenticated Session
