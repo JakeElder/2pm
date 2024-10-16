@@ -18,7 +18,7 @@ export class AiUserMessagePlotPointsController {
 
   @Get()
   @ApiOperation({
-    summary: 'Get Ai Message Plot Points',
+    summary: '[Ai Message] Get',
     operationId: 'getAiUserMessagePlotPoints',
   })
   @ApiResponse({
@@ -33,7 +33,7 @@ export class AiUserMessagePlotPointsController {
   @Post()
   @UsePipes(ZodValidationPipe)
   @ApiOperation({
-    summary: 'Create Ai Message Plot Point',
+    summary: '[Ai Message] Create',
     operationId: 'createAiUserMessagePlotPoint',
   })
   @ApiResponse({ status: 201, type: AiUserMessagePlotPointDto })

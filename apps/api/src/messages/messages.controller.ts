@@ -1,13 +1,19 @@
-import { Controller, Get, Inject, OnModuleInit } from '@nestjs/common';
+import { Controller, Get, Inject, OnModuleInit, Query } from '@nestjs/common';
 import { MessagesService } from './messages.service';
 import {
   ApiExtraModels,
   ApiOperation,
   ApiResponse,
   ApiTags,
+  ApiQuery,
   getSchemaPath,
 } from '@nestjs/swagger';
-import { AiUserMessageDto, AuthenticatedUserMessageDto } from '@2pm/data';
+import {
+  AiUserMessageDto,
+  AuthenticatedUserMessageDto,
+  MESSAGE_TYPES,
+  type MessageType,
+} from '@2pm/data';
 import { AppEventEmitter } from '../event-emitter';
 
 @ApiTags('Messages')
@@ -44,7 +50,12 @@ export class MessagesController implements OnModuleInit {
       },
     },
   })
-  findAll() {
-    return this.service.findAll();
+  @ApiQuery({
+    name: 'type',
+    enum: MESSAGE_TYPES,
+    required: false,
+  })
+  async findAll(@Query('type') type?: MessageType) {
+    return this.service.findAll({ type });
   }
 }

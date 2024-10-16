@@ -11,12 +11,12 @@ export class AnonymousUsersController {
 
   @Get()
   @ApiOperation({
-    summary: 'Get Anonymous Users',
+    summary: '[Anonymous] Get',
     operationId: 'getAnonymousUsers',
   })
   @ApiResponse({
     status: 200,
-    description: 'A list of Ai Message Plot Points',
+    description: 'A list of anonymous users',
     type: [AnonymousUserDto],
   })
   findUsersByEnvironment() {
@@ -26,7 +26,7 @@ export class AnonymousUsersController {
   @Post()
   @UsePipes(ZodValidationPipe)
   @ApiOperation({
-    summary: 'Create Anonymous User',
+    summary: '[Anonymous] Create',
     operationId: 'createAnonymousUser',
   })
   @ApiResponse({ status: 201, type: AnonymousUserDto })

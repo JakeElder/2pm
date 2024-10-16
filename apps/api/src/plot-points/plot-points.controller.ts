@@ -21,7 +21,7 @@ export class PlotPointsController {
   constructor(private readonly service: PlotPointsService) {}
   @Get('environments/:id/plot-points')
   @ApiOperation({
-    summary: 'Get By Environment',
+    summary: 'Get by Environment',
     operationId: 'getPlotPointsByEnvironmentId',
   })
   @ApiParam({

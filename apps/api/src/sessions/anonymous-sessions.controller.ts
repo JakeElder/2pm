@@ -12,7 +12,7 @@ export class AnonymousSessionsController {
   @Post()
   @UsePipes(ZodValidationPipe)
   @ApiOperation({
-    summary: 'Create Anonymous Session',
+    summary: '[Anonymous] Create',
     operationId: 'createAnonymousSession',
   })
   @ApiResponse({ status: 201, type: AnonymousSessionDto })

@@ -15,7 +15,7 @@ export class AiUserMessagesController {
 
   @Get()
   @ApiOperation({
-    summary: 'Get Ai User Messages',
+    summary: '[Ai User] Get',
     operationId: 'getAiUserMessages',
   })
   @ApiResponse({
@@ -30,7 +30,7 @@ export class AiUserMessagesController {
   @UsePipes(ZodValidationPipe)
   @Patch()
   @ApiOperation({
-    summary: 'Update Ai User Message',
+    summary: '[Ai user] Update',
     operationId: 'updateAiUserMessage',
   })
   @ApiResponse({ status: 200, type: AiUserMessageDto })

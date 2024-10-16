@@ -4,7 +4,8 @@ import { z } from "zod";
 import type { Server, Socket } from "socket.io";
 import type { Socket as ClientSocket } from "socket.io-client";
 import * as schema from "../schema";
-import type { MESSAGE_TYPES, USER_TYPES } from "../constants";
+import type { MESSAGE_TYPES } from "../constants";
+import { messages } from "../schema";
 
 /**
  * Authenticated User Message
@@ -46,6 +47,18 @@ export const UpdateAiUserMessageDtoSchema = z.object({
   content: createInsertSchema(schema.aiUserMessages).shape.content,
   state: createInsertSchema(schema.aiUserMessages).shape.state,
 });
+
+/**
+ * Queries
+ */
+
+export const FindMessagesQueryDtoSchema = z.object({
+  type: createSelectSchema(messages).shape.type.optional(),
+});
+
+export class FindMessagesQueryDto extends createZodDto(
+  FindMessagesQueryDtoSchema,
+) {}
 
 /**
  * Unions

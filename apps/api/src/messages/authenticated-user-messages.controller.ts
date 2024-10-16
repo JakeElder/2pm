@@ -18,7 +18,7 @@ export class AuthenticatedUserMessagesController {
 
   @Get()
   @ApiOperation({
-    summary: 'Get Authenticated User Messages',
+    summary: '[Authenticated User] Get',
     operationId: 'getAuthenticatedUserMessages',
   })
   @ApiResponse({
@@ -33,7 +33,7 @@ export class AuthenticatedUserMessagesController {
   @UsePipes(ZodValidationPipe)
   @Patch()
   @ApiOperation({
-    summary: 'Update Authenticated User Messages',
+    summary: '[Authenticated User] Update',
     operationId: 'updateAuthenticatedUserMessage',
   })
   @ApiResponse({ status: 200, type: AuthenticatedUserMessageDto })

@@ -18,7 +18,7 @@ export class AuthenticatedUserMessagePlotPointsController {
 
   @Get()
   @ApiOperation({
-    summary: 'Get Authenticated User Message Plot Points',
+    summary: '[Authenticated Message] Get',
     operationId: 'getAuthenticatedUserMessagePlotPoints',
   })
   @ApiResponse({
@@ -33,7 +33,7 @@ export class AuthenticatedUserMessagePlotPointsController {
   @Post()
   @UsePipes(ZodValidationPipe)
   @ApiOperation({
-    summary: 'Create Authenticated User Message Plot Point',
+    summary: '[Authenticated Message] Create',
     operationId: 'createAuthenticatedUserMessagePlotPoint',
   })
   @ApiResponse({ status: 201, type: AuthenticatedUserMessagePlotPointDto })

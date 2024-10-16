@@ -8,3 +8,4 @@ export * from "./entities/user-environment-presence";
 export * from "./entities/world-room";
 
 export * from "./types";
+export * from "./constants";
