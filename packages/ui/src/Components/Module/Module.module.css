@@ -53,6 +53,21 @@
   margin-left: calc(var(--avatar-size) + var(--avatar-margin));
 }
 
+.world-room-header {
+  padding-left: var(--avatar-margin);
+  display: flex;
+  align-items: center;
+}
+
+.channel {
+  margin-left: 8px;
+  font-family: var(--font-family-0);
+  font-size: 14px;
+  color: #fff;
+  letter-spacing: -1.2px;
+  text-shadow: var(--text-shadow-0);
+}
+
 .avatar {
   position: absolute;
   z-index: 10;

@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import css from "./Module.module.css";
-import ivan from "../../../public/images/ivan.png";
+import ivan from "../../../public/images/avatars/IVAN.png";
 import { AiUserCode } from "@2pm/data";
 
 /*

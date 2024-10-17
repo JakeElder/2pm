@@ -1,12 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import * as Module from "./Module";
 import * as Narrative from "../Narrative";
-import * as Companion from "./CompanionOneToOne";
+import * as CompanionOneToOne from "./CompanionOneToOne";
+import * as WorldRoom from "./WorldRoom";
 import { Background } from "../Background";
 import PromptSubmitButton from "../PromptSubmitButton";
 import PromptInput from "../PromptInput";
-import universe from "../../../public/images/universe.png";
 import { Message } from "../PlotPoints";
+import universe from "../../../public/images/channels/UNIVERSE.png";
 
 const meta: Meta<typeof Module.Root> = {
   title: "Components/Module",
@@ -33,7 +34,7 @@ const meta: Meta<typeof Module.Root> = {
 
 type Story = StoryObj<typeof Module.Root>;
 
-export const CompanionOneToOne: Story = {
+export const CompanionOneToOneModule: Story = {
   render() {
     const Body = () => (
       <Narrative.Root>
@@ -50,25 +51,62 @@ export const CompanionOneToOne: Story = {
     );
 
     return (
-      <Companion.Root>
-        <Companion.Avatar code="IVAN" />
-        <Companion.Main>
-          <Companion.Header>
-            <Companion.Handle>ivan</Companion.Handle>
-          </Companion.Header>
-          <Companion.Body>
+      <CompanionOneToOne.Root>
+        <CompanionOneToOne.Avatar code="IVAN" />
+        <CompanionOneToOne.Main>
+          <CompanionOneToOne.Header>
+            <CompanionOneToOne.Handle>ivan</CompanionOneToOne.Handle>
+          </CompanionOneToOne.Header>
+          <CompanionOneToOne.Body>
             <Body />
-          </Companion.Body>
-          <Companion.Footer>
-            <Companion.Input>
+          </CompanionOneToOne.Body>
+          <CompanionOneToOne.Footer>
+            <CompanionOneToOne.Input>
               <PromptInput />
-            </Companion.Input>
-            <Companion.SubmitButton>
+            </CompanionOneToOne.Input>
+            <CompanionOneToOne.SubmitButton>
               <PromptSubmitButton />
-            </Companion.SubmitButton>
-          </Companion.Footer>
-        </Companion.Main>
-      </Companion.Root>
+            </CompanionOneToOne.SubmitButton>
+          </CompanionOneToOne.Footer>
+        </CompanionOneToOne.Main>
+      </CompanionOneToOne.Root>
+    );
+  },
+};
+
+export const WorldRoomModule: Story = {
+  render() {
+    const Body = () => (
+      <Narrative.Root>
+        <Narrative.PlotPoint type="AI_USER_MESSAGE" perspective="THIRD_PERSON">
+          <Message perspective="THIRD_PERSON">Hi</Message>
+        </Narrative.PlotPoint>
+        <Narrative.PlotPoint
+          type="AUTHENTICATED_USER_MESSAGE"
+          perspective="FIRST_PERSON"
+        >
+          <Message perspective="FIRST_PERSON">Hi</Message>
+        </Narrative.PlotPoint>
+      </Narrative.Root>
+    );
+
+    return (
+      <WorldRoom.Root>
+        <WorldRoom.Main>
+          <WorldRoom.Header code="UNIVERSE" channel="universe" />
+          <WorldRoom.Body>
+            <Body />
+          </WorldRoom.Body>
+          <WorldRoom.Footer>
+            <WorldRoom.Input>
+              <PromptInput />
+            </WorldRoom.Input>
+            <WorldRoom.SubmitButton>
+              <PromptSubmitButton />
+            </WorldRoom.SubmitButton>
+          </WorldRoom.Footer>
+        </WorldRoom.Main>
+      </WorldRoom.Root>
     );
   },
 };
