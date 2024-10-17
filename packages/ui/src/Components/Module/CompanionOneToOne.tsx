@@ -1,5 +1,6 @@
 import css from "./Module.module.css";
 import * as Module from "./Module";
+import Badge from "../Badge/Badge";
 
 /*
  * Root
@@ -41,22 +42,19 @@ export const Main = (props: MainProps) => {
  * Header
  */
 
-type HeaderProps = React.ComponentProps<typeof Module.Header>;
-
-export const Header = (props: HeaderProps) => {
-  return <Module.Header {...props} />;
+type HeaderProps = {
+  handle: string;
 };
 
-/*
- * Handle
- */
-
-type HandleProps = {
-  children: React.ReactNode;
-};
-
-export const Handle = ({ children }: HandleProps) => {
-  return <div className={css["handle"]}>@{children}</div>;
+export const Header = ({ handle }: HeaderProps) => {
+  return (
+    <Module.Header>
+      <div className={css["handle"]}>@{handle}</div>
+      <div className={css["badge"]}>
+        <Badge icon="LOCK">Private</Badge>
+      </div>
+    </Module.Header>
+  );
 };
 
 /*

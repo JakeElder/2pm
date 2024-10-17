@@ -1,13 +1,17 @@
 import css from "./Module.module.css";
 import * as Module from "./Module";
 import { WorldRoomCode } from "@2pm/data";
-import universe from "../../../public/images/medallions/UNIVERSE.png";
-import Image from "next/image";
+import UNIVERSE from "../../../public/images/medallions/UNIVERSE.png";
+import Image, { StaticImageData } from "next/image";
 import Badge from "../Badge/Badge";
 
 /*
  * Root
  */
+
+const medallions: Record<WorldRoomCode, StaticImageData> = {
+  UNIVERSE,
+};
 
 type RootProps = {
   children: React.ReactNode;
@@ -42,9 +46,9 @@ export const Header = ({ code, channel }: HeaderProps) => {
       <div className={css["world-room-header"]}>
         <div className={css["medallion"]}>
           <Image
-            {...universe}
-            alt="universe"
-            style={{ width: 28, height: 28 }}
+            {...medallions[code]}
+            alt={code}
+            style={{ width: 25, height: 25 }}
           />
         </div>
         <div className={css["channel"]}>#{channel}</div>

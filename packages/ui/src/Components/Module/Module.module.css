@@ -7,7 +7,7 @@
 
   --avatar-offset: 10px;
   --avatar-size: 78px;
-  --avatar-margin: 14px;
+  --avatar-margin: 12px;
 }
 
 .main {
@@ -44,12 +44,16 @@
   border-top: var(--border-0);
 }
 
+.channel,
 .handle {
   font-family: var(--font-family-0);
-  font-size: 14px;
+  font-size: 13px;
   color: #fff;
   letter-spacing: -1.2px;
   text-shadow: var(--text-shadow-0);
+}
+
+.handle {
   margin-left: calc(var(--avatar-size) + var(--avatar-margin));
 }
 
@@ -61,11 +65,6 @@
 
 .channel {
   margin-left: 8px;
-  font-family: var(--font-family-0);
-  font-size: 14px;
-  color: #fff;
-  letter-spacing: -1.2px;
-  text-shadow: var(--text-shadow-0);
 }
 
 .badge {

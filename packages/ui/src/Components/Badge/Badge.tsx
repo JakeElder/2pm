@@ -1,12 +1,18 @@
 import React from "react";
 import css from "./Badge.module.css";
 import { IconCode } from "@2pm/data";
+import Image, { StaticImageData } from "next/image";
 import STARS from "../../../public/images/icons/STARS.png";
-import Image from "next/image";
+import LOCK from "../../../public/images/icons/LOCK.png";
 
 type Props = {
   children: React.ReactNode;
   icon: IconCode;
+};
+
+const icons: Record<IconCode, StaticImageData> = {
+  STARS,
+  LOCK,
 };
 
 const Badge = ({ children, icon }: Props) => {
@@ -15,7 +21,7 @@ const Badge = ({ children, icon }: Props) => {
       <div className={css["icon"]}>
         <Image
           alt={icon}
-          {...STARS}
+          {...icons[icon]}
           style={{
             width: 10,
             height: 10,
