@@ -68,6 +68,10 @@
   text-shadow: var(--text-shadow-0);
 }
 
+.badge {
+  margin-left: 10px;
+}
+
 .avatar {
   position: absolute;
   z-index: 10;

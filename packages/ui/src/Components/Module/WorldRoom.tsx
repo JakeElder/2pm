@@ -3,6 +3,7 @@ import * as Module from "./Module";
 import { WorldRoomCode } from "@2pm/data";
 import universe from "../../../public/images/medallions/UNIVERSE.png";
 import Image from "next/image";
+import Badge from "../Badge/Badge";
 
 /*
  * Root
@@ -47,6 +48,9 @@ export const Header = ({ code, channel }: HeaderProps) => {
           />
         </div>
         <div className={css["channel"]}>#{channel}</div>
+        <div className={css["badge"]}>
+          <Badge icon="STARS">Public</Badge>
+        </div>
       </div>
     </Module.Header>
   );

@@ -17,3 +17,5 @@ export const ENVIRONMENT_TYPE_CODES = [
 ] as const;
 
 export const WORLD_ROOM_CODES = ["UNIVERSE"] as const;
+
+export const ICON_CODES = ["STARS"] as const;

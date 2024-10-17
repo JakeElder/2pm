@@ -3,6 +3,7 @@ import * as schema from "./schema";
 import {
   AI_USER_CODES,
   ENVIRONMENT_TYPE_CODES,
+  ICON_CODES,
   MESSAGE_TYPES,
   PLOT_POINT_TYPES,
   USER_TYPES,
@@ -17,5 +18,6 @@ export type EnvironmentTypeCode = (typeof ENVIRONMENT_TYPE_CODES)[number];
 export type PlotPointType = (typeof PLOT_POINT_TYPES)[number];
 export type MessageType = (typeof MESSAGE_TYPES)[number];
 export type WorldRoomCode = (typeof WORLD_ROOM_CODES)[number];
+export type IconCode = (typeof ICON_CODES)[number];
 
 export type PlotPointPerspective = "FIRST_PERSON" | "THIRD_PERSON" | "NEUTRAL";

@@ -7,6 +7,7 @@
 
   /* Borders */
   --border-0: 1px solid rgba(255, 255, 255, 0.7);
+  --border-1: 1px solid rgba(255, 255, 255, 0.4);
 
   /* Border Radius */
   --border-radius-0: 6px;
