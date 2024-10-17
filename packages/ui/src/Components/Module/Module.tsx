@@ -8,9 +8,9 @@ import { AiUserCode } from "@2pm/data";
  * Root
  */
 
-interface RootProps {
+type RootProps = {
   children: React.ReactNode;
-}
+};
 
 export const Root = ({ children }: RootProps) => {
   return <div className={css["root"]}>{children}</div>;
@@ -20,9 +20,9 @@ export const Root = ({ children }: RootProps) => {
  * Foreground
  */
 
-interface ForegroundProps {
+type ForegroundProps = {
   children: React.ReactNode;
-}
+};
 
 export const Foreground = ({ children }: ForegroundProps) => {
   return <div className={css["foreground"]}>{children}</div>;
@@ -32,9 +32,9 @@ export const Foreground = ({ children }: ForegroundProps) => {
  * Main
  */
 
-interface MainProps {
+type MainProps = {
   children: React.ReactNode;
-}
+};
 
 export const Main = ({ children }: MainProps) => {
   return <div className={css["main"]}>{children}</div>;
@@ -44,13 +44,13 @@ export const Main = ({ children }: MainProps) => {
  * Avatar
  */
 
-interface AvatarProps {
+type AvatarProps = {
   src: string;
   width: number;
   height: number;
   alt: string;
   style?: React.CSSProperties;
-}
+};
 
 export const Avatar = ({ src, width, height, alt, style }: AvatarProps) => {
   return (
@@ -70,9 +70,9 @@ export const Avatar = ({ src, width, height, alt, style }: AvatarProps) => {
  * AiAvatar
  */
 
-interface AiAvatarProps {
+type AiAvatarProps = {
   code: AiUserCode;
-}
+};
 
 export const AiAvatar = ({ code }: AiAvatarProps) => {
   if (code === "IVAN") {
@@ -98,25 +98,33 @@ export const AiAvatar = ({ code }: AiAvatarProps) => {
  * Header
  */
 
-interface HeaderProps {
-  handle: string;
-}
+type HeaderProps = {
+  children: React.ReactNode;
+};
 
-export const Header = ({ handle }: HeaderProps) => {
-  return (
-    <header className={css["header"]}>
-      <span className={css["handle"]}>@{handle}</span>
-    </header>
-  );
+export const Header = ({ children }: HeaderProps) => {
+  return <header className={css["header"]}>{children}</header>;
+};
+
+/*
+ * Handle
+ */
+
+type HandleProps = {
+  children: string;
+};
+
+export const Handle = ({ children }: HandleProps) => {
+  return <span className={css["handle"]}>@{children}</span>;
 };
 
 /*
  * Body
  */
 
-interface BodyProps {
+type BodyProps = {
   children: React.ReactNode;
-}
+};
 
 export const Body = ({ children }: BodyProps) => {
   return <div className={css["body"]}>{children}</div>;
@@ -126,9 +134,9 @@ export const Body = ({ children }: BodyProps) => {
  * Narrative
  */
 
-interface NarrativeProps {
+type NarrativeProps = {
   children?: React.ReactNode;
-}
+};
 
 export const Narrative = ({ children }: NarrativeProps) => {
   return <div className={css["narrative"]}>{children}</div>;
@@ -138,9 +146,9 @@ export const Narrative = ({ children }: NarrativeProps) => {
  * Footer
  */
 
-interface FooterProps {
+type FooterProps = {
   children?: React.ReactNode;
-}
+};
 
 export const Footer = ({ children }: FooterProps) => {
   return <div className={css["footer"]}>{children}</div>;
@@ -150,9 +158,9 @@ export const Footer = ({ children }: FooterProps) => {
  * Prompt
  */
 
-interface PromptProps {
+type PromptProps = {
   children: React.ReactNode;
-}
+};
 
 export const Prompt = ({ children }: PromptProps) => {
   return <div className={css["prompt"]}>{children}</div>;
@@ -162,9 +170,9 @@ export const Prompt = ({ children }: PromptProps) => {
  * Input
  */
 
-interface InputProps {
+type InputProps = {
   children: React.ReactNode;
-}
+};
 
 export const Input = ({ children }: InputProps) => {
   return <div className={css["input"]}>{children}</div>;
@@ -174,9 +182,9 @@ export const Input = ({ children }: InputProps) => {
  * SubmitButton
  */
 
-interface SubmitButtonProps {
+type SubmitButtonProps = {
   children: React.ReactNode;
-}
+};
 
 export const SubmitButton = ({ children }: SubmitButtonProps) => {
   return <div className={css["submit-button"]}>{children}</div>;

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import * as Module from "./Module";
 import * as Narrative from "../Narrative";
+import * as Companion from "./CompanionOneToOne";
 import { Background } from "../Background";
 import PromptSubmitButton from "../PromptSubmitButton";
 import PromptInput from "../PromptInput";
@@ -32,70 +33,42 @@ const meta: Meta<typeof Module.Root> = {
 
 type Story = StoryObj<typeof Module.Root>;
 
-const handle = "ivan";
-
-export const Default: Story = {
+export const CompanionOneToOne: Story = {
   render() {
-    return (
-      <Module.Root>
-        <Module.Foreground>
-          <Module.AiAvatar code="IVAN" />
-        </Module.Foreground>
-        <Module.Main>
-          <Module.Header handle={handle} />
-          <Module.Body>
-            <Module.Narrative></Module.Narrative>
-          </Module.Body>
-          <Module.Footer>{null}</Module.Footer>
-        </Module.Main>
-      </Module.Root>
-    );
-  },
-};
-
-export const Conversation: Story = {
-  render() {
-    const ConversationNarrative = () => (
-      <Module.Narrative>
-        <Narrative.Root>
-          <Narrative.PlotPoint
-            type="AI_USER_MESSAGE"
-            perspective="THIRD_PERSON"
-          >
-            <Message perspective="THIRD_PERSON">Hi</Message>
-          </Narrative.PlotPoint>
-          <Narrative.PlotPoint
-            type="AUTHENTICATED_USER_MESSAGE"
-            perspective="FIRST_PERSON"
-          >
-            <Message perspective="FIRST_PERSON">Hi</Message>
-          </Narrative.PlotPoint>
-        </Narrative.Root>
-      </Module.Narrative>
+    const Body = () => (
+      <Narrative.Root>
+        <Narrative.PlotPoint type="AI_USER_MESSAGE" perspective="THIRD_PERSON">
+          <Message perspective="THIRD_PERSON">Hi</Message>
+        </Narrative.PlotPoint>
+        <Narrative.PlotPoint
+          type="AUTHENTICATED_USER_MESSAGE"
+          perspective="FIRST_PERSON"
+        >
+          <Message perspective="FIRST_PERSON">Hi</Message>
+        </Narrative.PlotPoint>
+      </Narrative.Root>
     );
 
     return (
-      <Module.Root>
-        <Module.Foreground>
-          <Module.AiAvatar code="IVAN" />
-        </Module.Foreground>
-        <Module.Main>
-          <Module.Header handle={handle} />
-          <Module.Body>
-            <ConversationNarrative />
-          </Module.Body>
-          <Module.Footer>
-            <Module.Prompt>
-              <Module.Input>
-                <PromptInput />
-              </Module.Input>
-              <Module.SubmitButton>
-                <PromptSubmitButton />
-              </Module.SubmitButton>
-            </Module.Prompt>
-          </Module.Footer>
-        </Module.Main>
-      </Module.Root>
+      <Companion.Root>
+        <Companion.Avatar code="IVAN" />
+        <Companion.Main>
+          <Companion.Header>
+            <Companion.Handle>ivan</Companion.Handle>
+          </Companion.Header>
+          <Companion.Body>
+            <Body />
+          </Companion.Body>
+          <Companion.Footer>
+            <Companion.Input>
+              <PromptInput />
+            </Companion.Input>
+            <Companion.SubmitButton>
+              <PromptSubmitButton />
+            </Companion.SubmitButton>
+          </Companion.Footer>
+        </Companion.Main>
+      </Companion.Root>
     );
   },
 };

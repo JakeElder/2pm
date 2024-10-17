@@ -3,14 +3,12 @@
 import { messagesSocket } from "@/socket";
 import {
   AuthenticatedUserMessagePlotPointDto,
-  MessagesClientSocket,
   MessagesRoomJoinedEventDto,
   PlotPointPerspective,
 } from "@2pm/data";
 import { AiUserMessagePlotPointDto } from "@2pm/data";
 import { Message } from "@2pm/ui/plot-points";
 import { useEffect, useState } from "react";
-import { io } from "socket.io-client";
 
 type Perspective = {
   perspective: PlotPointPerspective;
