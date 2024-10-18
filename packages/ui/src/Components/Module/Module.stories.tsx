@@ -113,12 +113,12 @@ export const User: Story = {
     return (
       <UserModule.Root>
         <UserModule.Header>
-          <UserModule.Tag>{null}</UserModule.Tag>
-          <UserModule.Level>{null}</UserModule.Level>
+          <UserModule.Tag>jake</UserModule.Tag>
+          <UserModule.Level>{1}</UserModule.Level>
         </UserModule.Header>
         <UserModule.Body>
-          <UserModule.Avatar>{null}</UserModule.Avatar>
-          <UserModule.Rep>{null}</UserModule.Rep>
+          <UserModule.Avatar />
+          <UserModule.Rep>{0.000001}</UserModule.Rep>
         </UserModule.Body>
       </UserModule.Root>
     );

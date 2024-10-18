@@ -10,12 +10,12 @@ import { AiUserCode } from "@2pm/data";
 
 type RootProps = {
   children: React.ReactNode;
-  fill: boolean;
+  expand?: boolean;
 };
 
-export const Root = ({ children, fill }: RootProps) => {
+export const Root = ({ children, expand }: RootProps) => {
   return (
-    <div className={css["root"]} style={fill ? { height: "100%" } : {}}>
+    <div className={css["root"]} style={expand ? { height: "100%" } : {}}>
       {children}
     </div>
   );

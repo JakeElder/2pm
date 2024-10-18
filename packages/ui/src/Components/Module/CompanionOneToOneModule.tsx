@@ -11,7 +11,7 @@ type RootProps = {
 };
 
 export const Root = ({ children }: RootProps) => {
-  return <Module.Root fill={true}>{children}</Module.Root>;
+  return <Module.Root expand>{children}</Module.Root>;
 };
 
 /*

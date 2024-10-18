@@ -2,7 +2,11 @@
 
 import { submitMessage } from "@/actions";
 import { CreateAuthenticatedUserMessagePlotPointDto } from "@2pm/api/client";
-import { PromptInput, PromptSubmitButton, Module } from "@2pm/ui";
+import {
+  PromptInput,
+  PromptSubmitButton,
+  CompanionOneToOneModule,
+} from "@2pm/ui";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 interface Props
@@ -15,7 +19,7 @@ type Inputs = {
   content: string;
 };
 
-const ModulePromptViewContainer = ({ userId, environmentId }: Props) => {
+const CompanionOneToOneFooterContainer = ({ userId, environmentId }: Props) => {
   const {
     register,
     handleSubmit,
@@ -35,16 +39,16 @@ const ModulePromptViewContainer = ({ userId, environmentId }: Props) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Module.Prompt>
-        <Module.Input>
+      <CompanionOneToOneModule.Footer>
+        <CompanionOneToOneModule.Input>
           <PromptInput {...register("content")} autoComplete="off" />
-        </Module.Input>
-        <Module.SubmitButton>
+        </CompanionOneToOneModule.Input>
+        <CompanionOneToOneModule.SubmitButton>
           <PromptSubmitButton disabled={isSubmitting} />
-        </Module.SubmitButton>
-      </Module.Prompt>
+        </CompanionOneToOneModule.SubmitButton>
+      </CompanionOneToOneModule.Footer>
     </form>
   );
 };
 
-export default ModulePromptViewContainer;
+export default CompanionOneToOneFooterContainer;

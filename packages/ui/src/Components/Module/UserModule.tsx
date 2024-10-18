@@ -2,8 +2,9 @@ import css from "./Module.module.css";
 import * as Module from "./Module";
 import { WorldRoomCode } from "@2pm/data";
 import UNIVERSE from "../../../public/images/medallions/UNIVERSE.png";
+import tag from "../../../public/images/tag.png";
+import anonymous from "../../../public/images/anonymous.png";
 import Image, { StaticImageData } from "next/image";
-import Badge from "../Badge";
 
 /*
  * Root
@@ -19,7 +20,7 @@ type RootProps = {
 
 export const Root = ({ children }: RootProps) => {
   return (
-    <Module.Root fill={false}>
+    <Module.Root expand>
       <Module.Main>{children}</Module.Main>
     </Module.Root>
   );
@@ -50,7 +51,12 @@ type TagProps = {
 };
 
 export const Tag = ({ children }: TagProps) => {
-  return <div className={css["tag"]}>{children}</div>;
+  return (
+    <div className={css["user-tag"]}>
+      <Image className={css["tag-icon"]} {...tag} alt="tag" />
+      <div>@{children}</div>
+    </div>
+  );
 };
 
 /*
@@ -58,11 +64,16 @@ export const Tag = ({ children }: TagProps) => {
  */
 
 type LevelProps = {
-  children: React.ReactNode;
+  children: number;
 };
 
 export const Level = ({ children }: LevelProps) => {
-  return <div className={css["level"]}>{children}</div>;
+  return (
+    <div className={css["level"]}>
+      <div className={css["label"]}>LVL</div>
+      <div className={css["number"]}>{children}</div>
+    </div>
+  );
 };
 
 /*
@@ -74,19 +85,33 @@ type BodyProps = {
 };
 
 export const Body = ({ children }: BodyProps) => {
-  return <Module.Body>{children}</Module.Body>;
+  return (
+    <Module.Body>
+      <div className={css["user-body"]}>{children}</div>
+    </Module.Body>
+  );
 };
 
 /*
  * Avatar
  */
 
-type AvatarProps = {
-  children: React.ReactNode;
-};
+type AvatarProps = {};
 
-export const Avatar = ({ children }: AvatarProps) => {
-  return <div className={css["user-avatar"]}>{children}</div>;
+export const Avatar = (props: AvatarProps) => {
+  return (
+    <div className={css["user-avatar"]}>
+      <div className={css["outer"]}>
+        <div className={css["inner"]}>
+          <Image
+            className={css["user-avatar-img"]}
+            {...anonymous}
+            alt="anonymous"
+          />
+        </div>
+      </div>
+    </div>
+  );
 };
 
 /*
@@ -98,7 +123,12 @@ type RepProps = {
 };
 
 export const Rep = ({ children }: RepProps) => {
-  return <div className={css["rep"]}>{children}</div>;
+  return (
+    <div className={css["rep"]}>
+      <div className={css["rep-title"]}>REP</div>
+      <div className={css["rep-number"]}>{children}</div>
+    </div>
+  );
 };
 
 /*

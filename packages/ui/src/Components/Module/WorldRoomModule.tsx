@@ -19,7 +19,7 @@ type RootProps = {
 
 export const Root = ({ children }: RootProps) => {
   return (
-    <Module.Root fill={true}>
+    <Module.Root expand>
       <Module.Main>{children}</Module.Main>
     </Module.Root>
   );
