@@ -3,7 +3,7 @@ import * as Module from "./Module";
 import { WorldRoomCode } from "@2pm/data";
 import UNIVERSE from "../../../public/images/medallions/UNIVERSE.png";
 import Image, { StaticImageData } from "next/image";
-import Badge from "../Badge/Badge";
+import Badge from "../Badge";
 
 /*
  * Root
@@ -18,17 +18,11 @@ type RootProps = {
 };
 
 export const Root = ({ children }: RootProps) => {
-  return <Module.Root>{children}</Module.Root>;
-};
-
-/*
- * Main
- */
-
-type MainProps = React.ComponentProps<typeof Module.Main>;
-
-export const Main = (props: MainProps) => {
-  return <Module.Main {...props} />;
+  return (
+    <Module.Root fill={false}>
+      <Module.Main>{children}</Module.Main>
+    </Module.Root>
+  );
 };
 
 /*
@@ -36,28 +30,39 @@ export const Main = (props: MainProps) => {
  */
 
 type HeaderProps = {
-  code: WorldRoomCode;
-  channel: string;
+  children: React.ReactNode;
 };
 
-export const Header = ({ code, channel }: HeaderProps) => {
+export const Header = ({ children }: HeaderProps) => {
   return (
     <Module.Header>
-      <div className={css["world-room-header"]}>
-        <div className={css["medallion"]}>
-          <Image
-            {...medallions[code]}
-            alt={code}
-            style={{ width: 25, height: 25 }}
-          />
-        </div>
-        <div className={css["channel"]}>#{channel}</div>
-        <div className={css["badge"]}>
-          <Badge icon="STARS">Public</Badge>
-        </div>
-      </div>
+      <div className={css["user-header"]}>{children}</div>
     </Module.Header>
   );
+};
+
+/*
+ * Tag
+ */
+
+type TagProps = {
+  children: React.ReactNode;
+};
+
+export const Tag = ({ children }: TagProps) => {
+  return <div className={css["tag"]}>{children}</div>;
+};
+
+/*
+ * Level
+ */
+
+type LevelProps = {
+  children: React.ReactNode;
+};
+
+export const Level = ({ children }: LevelProps) => {
+  return <div className={css["level"]}>{children}</div>;
 };
 
 /*
@@ -69,11 +74,31 @@ type BodyProps = {
 };
 
 export const Body = ({ children }: BodyProps) => {
-  return (
-    <Module.Body>
-      <Module.Narrative>{children}</Module.Narrative>
-    </Module.Body>
-  );
+  return <Module.Body>{children}</Module.Body>;
+};
+
+/*
+ * Avatar
+ */
+
+type AvatarProps = {
+  children: React.ReactNode;
+};
+
+export const Avatar = ({ children }: AvatarProps) => {
+  return <div className={css["user-avatar"]}>{children}</div>;
+};
+
+/*
+ * Rep
+ */
+
+type RepProps = {
+  children: React.ReactNode;
+};
+
+export const Rep = ({ children }: RepProps) => {
+  return <div className={css["rep"]}>{children}</div>;
 };
 
 /*

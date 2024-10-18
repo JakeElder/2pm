@@ -10,10 +10,15 @@ import { AiUserCode } from "@2pm/data";
 
 type RootProps = {
   children: React.ReactNode;
+  fill: boolean;
 };
 
-export const Root = ({ children }: RootProps) => {
-  return <div className={css["root"]}>{children}</div>;
+export const Root = ({ children, fill }: RootProps) => {
+  return (
+    <div className={css["root"]} style={fill ? { height: "100%" } : {}}>
+      {children}
+    </div>
+  );
 };
 
 /*
@@ -54,7 +59,7 @@ type AvatarProps = {
 
 export const Avatar = ({ src, width, height, alt, style }: AvatarProps) => {
   return (
-    <div className={css["avatar"]}>
+    <div className={css["companion-avatar"]}>
       <Image
         src={src}
         width={width}

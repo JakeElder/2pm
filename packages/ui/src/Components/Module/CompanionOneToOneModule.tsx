@@ -1,6 +1,6 @@
 import css from "./Module.module.css";
 import * as Module from "./Module";
-import Badge from "../Badge/Badge";
+import Badge from "../Badge";
 
 /*
  * Root
@@ -11,7 +11,7 @@ type RootProps = {
 };
 
 export const Root = ({ children }: RootProps) => {
-  return <Module.Root>{children}</Module.Root>;
+  return <Module.Root fill={true}>{children}</Module.Root>;
 };
 
 /*

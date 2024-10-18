@@ -1,6 +1,5 @@
 .root {
   position: relative;
-  height: 100%;
   min-width: 290px;
 
   --header-footer-height: 58px;
@@ -57,12 +56,6 @@
   margin-left: calc(var(--avatar-size) + var(--avatar-margin));
 }
 
-.world-room-header {
-  padding-left: var(--avatar-margin);
-  display: flex;
-  align-items: center;
-}
-
 .channel {
   margin-left: 8px;
 }
@@ -71,7 +64,7 @@
   margin-left: 10px;
 }
 
-.avatar {
+.companion-avatar {
   position: absolute;
   z-index: 10;
   left: 0;
@@ -96,4 +89,23 @@
 .input {
   flex: 1;
   padding-right: 12px;
+}
+
+/*
+ * World Room
+ */
+
+.world-room-header {
+  padding-left: var(--avatar-margin);
+  display: flex;
+  align-items: center;
+}
+
+/*
+ * User
+ */
+
+.user-header {
+  display: flex;
+  justify-content: space-between;
 }

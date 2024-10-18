@@ -1,8 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import * as Module from "./Module";
 import * as Narrative from "../Narrative";
-import * as CompanionOneToOne from "./CompanionOneToOne";
-import * as WorldRoom from "./WorldRoom";
+import * as CompanionOneToOneModule from "./CompanionOneToOneModule";
+import * as WorldRoomModule from "./WorldRoomModule";
+import * as UserModule from "./UserModule";
 import { Background } from "../Background";
 import PromptSubmitButton from "../PromptSubmitButton";
 import PromptInput from "../PromptInput";
@@ -34,7 +35,7 @@ const meta: Meta<typeof Module.Root> = {
 
 type Story = StoryObj<typeof Module.Root>;
 
-export const CompanionOneToOneModule: Story = {
+export const CompanionOneToOne: Story = {
   render() {
     const Body = () => (
       <Narrative.Root>
@@ -51,28 +52,28 @@ export const CompanionOneToOneModule: Story = {
     );
 
     return (
-      <CompanionOneToOne.Root>
-        <CompanionOneToOne.Avatar code="IVAN" />
-        <CompanionOneToOne.Main>
-          <CompanionOneToOne.Header handle="ivan" />
-          <CompanionOneToOne.Body>
+      <CompanionOneToOneModule.Root>
+        <CompanionOneToOneModule.Avatar code="IVAN" />
+        <CompanionOneToOneModule.Main>
+          <CompanionOneToOneModule.Header handle="ivan" />
+          <CompanionOneToOneModule.Body>
             <Body />
-          </CompanionOneToOne.Body>
-          <CompanionOneToOne.Footer>
-            <CompanionOneToOne.Input>
+          </CompanionOneToOneModule.Body>
+          <CompanionOneToOneModule.Footer>
+            <CompanionOneToOneModule.Input>
               <PromptInput />
-            </CompanionOneToOne.Input>
-            <CompanionOneToOne.SubmitButton>
+            </CompanionOneToOneModule.Input>
+            <CompanionOneToOneModule.SubmitButton>
               <PromptSubmitButton />
-            </CompanionOneToOne.SubmitButton>
-          </CompanionOneToOne.Footer>
-        </CompanionOneToOne.Main>
-      </CompanionOneToOne.Root>
+            </CompanionOneToOneModule.SubmitButton>
+          </CompanionOneToOneModule.Footer>
+        </CompanionOneToOneModule.Main>
+      </CompanionOneToOneModule.Root>
     );
   },
 };
 
-export const WorldRoomModule: Story = {
+export const WorldRoom: Story = {
   render() {
     const Body = () => (
       <Narrative.Root>
@@ -89,22 +90,37 @@ export const WorldRoomModule: Story = {
     );
 
     return (
-      <WorldRoom.Root>
-        <WorldRoom.Main>
-          <WorldRoom.Header code="UNIVERSE" channel="universe" />
-          <WorldRoom.Body>
-            <Body />
-          </WorldRoom.Body>
-          <WorldRoom.Footer>
-            <WorldRoom.Input>
-              <PromptInput />
-            </WorldRoom.Input>
-            <WorldRoom.SubmitButton>
-              <PromptSubmitButton />
-            </WorldRoom.SubmitButton>
-          </WorldRoom.Footer>
-        </WorldRoom.Main>
-      </WorldRoom.Root>
+      <WorldRoomModule.Root>
+        <WorldRoomModule.Header code="UNIVERSE" channel="universe" />
+        <WorldRoomModule.Body>
+          <Body />
+        </WorldRoomModule.Body>
+        <WorldRoomModule.Footer>
+          <WorldRoomModule.Input>
+            <PromptInput />
+          </WorldRoomModule.Input>
+          <WorldRoomModule.SubmitButton>
+            <PromptSubmitButton />
+          </WorldRoomModule.SubmitButton>
+        </WorldRoomModule.Footer>
+      </WorldRoomModule.Root>
+    );
+  },
+};
+
+export const User: Story = {
+  render() {
+    return (
+      <UserModule.Root>
+        <UserModule.Header>
+          <UserModule.Tag>{null}</UserModule.Tag>
+          <UserModule.Level>{null}</UserModule.Level>
+        </UserModule.Header>
+        <UserModule.Body>
+          <UserModule.Avatar>{null}</UserModule.Avatar>
+          <UserModule.Rep>{null}</UserModule.Rep>
+        </UserModule.Body>
+      </UserModule.Root>
     );
   },
 };
