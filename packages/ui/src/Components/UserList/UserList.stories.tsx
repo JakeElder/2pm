@@ -48,7 +48,13 @@ const meta: Meta<typeof Module.Root> = {
 
 type Story = StoryObj<typeof Module.Root>;
 
-const { AiUserList, AiUser } = UserList;
+const {
+  AiUserList,
+  AiUser,
+  AuthenticatedUserList,
+  AuthenticatedUser,
+  Divider,
+} = UserList;
 
 export const Default: Story = {
   render() {
@@ -59,7 +65,11 @@ export const Default: Story = {
           <AiUser code="IVAN">ivan</AiUser>
           <AiUser code="THE_HOSTESS">the_hostess</AiUser>
         </AiUserList>
-        <UserList.Divider />
+        <Divider />
+        <AuthenticatedUserList>
+          <AuthenticatedUser>jake</AuthenticatedUser>
+          <AuthenticatedUser>danbee</AuthenticatedUser>
+        </AuthenticatedUserList>
       </UserList.Root>
     );
   },

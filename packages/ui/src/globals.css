@@ -14,7 +14,7 @@
   --border-radius-1: 3px;
 
   /* Backgrounds */
-  --background-0: rgba(255, 255, 255, 0.05);
+  --background-0: rgba(30, 30, 46, 0.3);
   --background-1: #eff1f5;
   --background-2: #1e1e2e;
 
@@ -25,7 +25,7 @@
   --color-3: #d9d9db;
 
   /* Text Shadows */
-  --text-shadow-0: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  --text-shadow-0: 1px 1px 1px rgba(0, 0, 0, 0.8);
 }
 
 @font-face {
