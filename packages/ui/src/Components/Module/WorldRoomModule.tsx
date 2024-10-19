@@ -68,16 +68,30 @@ export const Header = ({ code, channel }: HeaderProps) => {
  * Body
  */
 
-type BodyProps = {
-  children: React.ReactNode;
+type BodyProps = React.ComponentProps<typeof Module.Body>;
+
+export const Body = (props: BodyProps) => {
+  return <Module.Body {...props} />;
 };
 
-export const Body = ({ children }: BodyProps) => {
-  return (
-    <Module.Body>
-      <Module.Narrative>{children}</Module.Narrative>
-    </Module.Body>
-  );
+/*
+ * Narrative
+ */
+
+type NarrativeProps = React.ComponentProps<typeof Module.Narrative>;
+
+export const Narrative = (props: NarrativeProps) => {
+  return <Module.Narrative {...props} />;
+};
+
+/*
+ * Partition
+ */
+
+type PartitionProps = React.ComponentProps<typeof Module.Partition>;
+
+export const Partition = (props: PartitionProps) => {
+  return <Module.Partition {...props} />;
 };
 
 /*

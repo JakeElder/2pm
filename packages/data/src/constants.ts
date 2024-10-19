@@ -7,7 +7,7 @@ export const PLOT_POINT_TYPES = [
   "ENVIRONMENT_LEFT",
 ] as const;
 
-export const AI_USER_CODES = ["G", "IVAN"] as const;
+export const AI_USER_CODES = ["G", "IVAN", "THE_HOSTESS"] as const;
 
 export const MESSAGE_TYPES = ["AUTHENTICATED_USER", "AI_USER"] as const;
 

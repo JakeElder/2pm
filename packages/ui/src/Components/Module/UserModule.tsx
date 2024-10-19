@@ -1,18 +1,12 @@
 import css from "./Module.module.css";
 import * as Module from "./Module";
-import { WorldRoomCode } from "@2pm/data";
-import UNIVERSE from "../../../public/images/medallions/UNIVERSE.png";
 import tag from "../../../public/images/tag.png";
 import anonymous from "../../../public/images/anonymous.png";
-import Image, { StaticImageData } from "next/image";
+import Image from "next/image";
 
 /*
  * Root
  */
-
-const medallions: Record<WorldRoomCode, StaticImageData> = {
-  UNIVERSE,
-};
 
 type RootProps = {
   children: React.ReactNode;
@@ -20,7 +14,7 @@ type RootProps = {
 
 export const Root = ({ children }: RootProps) => {
   return (
-    <Module.Root expand>
+    <Module.Root>
       <Module.Main>{children}</Module.Main>
     </Module.Root>
   );

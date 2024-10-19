@@ -32,6 +32,20 @@
   overflow: hidden;
 }
 
+.split {
+  height: 100%;
+  display: flex;
+  align-items: stretch;
+}
+
+.partition {
+  flex: 1;
+}
+
+.partition:not(:last-child) {
+  border-right: 1px solid rgba(255, 255, 255, 0.3);
+}
+
 .narrative {
   min-height: 200px;
   height: 100%;

@@ -129,10 +129,47 @@ export const Handle = ({ children }: HandleProps) => {
 
 type BodyProps = {
   children: React.ReactNode;
+  split?: boolean;
 };
 
-export const Body = ({ children }: BodyProps) => {
+export const Body = ({ children, split }: BodyProps) => {
+  if (split) {
+    return (
+      <div className={css["body"]}>
+        <Split>{children}</Split>
+      </div>
+    );
+  }
   return <div className={css["body"]}>{children}</div>;
+};
+
+/*
+ * Split
+ */
+
+type SplitProps = {
+  children: React.ReactNode;
+};
+
+const Split = ({ children }: SplitProps) => {
+  return <div className={css["split"]}>{children}</div>;
+};
+
+/*
+ * Partition
+ */
+
+type PartitionProps = {
+  children: React.ReactNode;
+  style?: React.CSSProperties;
+};
+
+export const Partition = ({ children, style }: PartitionProps) => {
+  return (
+    <div style={style} className={css["partition"]}>
+      {children}
+    </div>
+  );
 };
 
 /*

@@ -1,0 +1,28 @@
+.root {
+  padding-top: 20px;
+}
+
+.ai-user-list {
+  padding: 0 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.ai-user {
+  display: flex;
+  align-items: center;
+  color: #fff;
+  font-family: var(--font-family-0);
+  font-size: 8px;
+  text-shadow: var(--text-shadow-0);
+}
+
+.ai-avatar {
+  margin-right: 6px;
+}
+
+.ai-avatar-image {
+  width: 24px;
+  height: 24px;
+}
