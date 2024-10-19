@@ -59,6 +59,7 @@ export const Default: Story = {
           <AiUser code="IVAN">ivan</AiUser>
           <AiUser code="THE_HOSTESS">the_hostess</AiUser>
         </AiUserList>
+        <UserList.Divider />
       </UserList.Root>
     );
   },

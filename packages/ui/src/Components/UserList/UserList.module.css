@@ -9,6 +9,10 @@
   gap: 7px;
 }
 
+.ai-user-list + .divider {
+  margin-top: 18px;
+}
+
 .ai-user {
   display: flex;
   align-items: center;
@@ -25,4 +29,11 @@
 .ai-avatar-image {
   width: 24px;
   height: 24px;
+}
+
+.divider {
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.1);
+  margin-left: 12px;
+  margin-right: 12px;
 }

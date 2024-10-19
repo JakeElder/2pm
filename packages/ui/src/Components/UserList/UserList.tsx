@@ -52,3 +52,13 @@ export const AiUser = ({ children, code }: AiUserProps) => {
     </li>
   );
 };
+
+/*
+ * Divider
+ */
+
+type DividerProps = {};
+
+export const Divider = (props: DividerProps) => {
+  return <div className={css["divider"]} />;
+};
