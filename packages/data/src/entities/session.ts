@@ -1,6 +1,6 @@
 import { createSelectSchema } from "drizzle-zod";
 import { createZodDto } from "@anatine/zod-nestjs";
-import { anonymousUsers, sessions, users } from "../schema";
+import { anonymousUsers, authenticatedUsers, sessions, users } from "../schema";
 import { z } from "zod";
 
 /**
@@ -37,7 +37,7 @@ export const AuthenticatedSessionDtoSchema = z.object({
   data: z.object({
     session: createSelectSchema(sessions),
     user: createSelectSchema(users),
-    authenticatedUser: createSelectSchema(anonymousUsers),
+    authenticatedUser: createSelectSchema(authenticatedUsers),
   }),
 });
 

@@ -21,12 +21,14 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       exception instanceof HttpException ? exception.getStatus() : 500;
 
     if (exception instanceof Error) {
-      const [{ fileName, lineNumber }] = ErrorStackParser.parse(exception);
-      const relativePath = path.relative(process.cwd(), fileName || '');
-
       const header = `Uncaught Exception: "${exception.message}"`;
       this.logger.error(chalk.bgBlack(chalk.white(header)));
-      this.logger.error(chalk.white(`${relativePath}:${lineNumber}`));
+      const stack = ErrorStackParser.parse(exception);
+      for (const step of stack) {
+        const { fileName, lineNumber } = step;
+        const relativePath = path.relative(process.cwd(), fileName || '');
+        this.logger.error(chalk.white(`${relativePath}:${lineNumber}`));
+      }
     } else {
       this.logger.error(`Unknown Exception: ${JSON.stringify(exception)}`);
     }

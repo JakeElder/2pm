@@ -16,12 +16,13 @@ const icons: Record<IconCode, StaticImageData> = {
 };
 
 const Badge = ({ children, icon }: Props) => {
+  const { blurWidth, blurHeight, ...imgProps } = icons[icon];
   return (
     <div className={css["root"]}>
       <div className={css["icon"]}>
         <Image
           alt={icon}
-          {...icons[icon]}
+          {...imgProps}
           style={{
             width: 10,
             height: 10,

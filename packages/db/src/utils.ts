@@ -9,8 +9,7 @@ import {
   authenticatedUsers,
   aiUsers,
   userEnvironmentPresences,
-  companionOneToOnes,
-  environmentCompanionOneToOnes,
+  companionOneToOneEnvironments,
   aiUserMessages,
   authenticatedUserMessages,
   plotPointEnvironmentPresences,
@@ -19,7 +18,6 @@ import {
 } from "@2pm/data/schema";
 import { DbModule } from "./db-module";
 import WorldRooms from "./world-rooms";
-import CompanionOneToOnes from "./companion-one-to-ones";
 import UserEnvironmentPresences from "./user-environment-presences";
 import Users from "./users";
 import Messages from "./messages";
@@ -33,9 +31,9 @@ export default class Utils extends DbModule {
     await rm(plotPointEnvironmentPresences);
     await rm(plotPointMessages);
     await rm(userEnvironmentPresences);
-    await rm(environmentCompanionOneToOnes);
     await rm(environmentWorldRooms);
     await rm(sessions);
+    await rm(companionOneToOneEnvironments);
 
     // Truncate tables that depend on users or messages
     await rm(aiUserMessages);
@@ -50,7 +48,6 @@ export default class Utils extends DbModule {
     await rm(users);
 
     // Truncate remaining independent tables
-    await rm(companionOneToOnes);
     await rm(worldRooms);
     await rm(environments);
   }
@@ -61,7 +58,6 @@ export default class Utils extends DbModule {
     const db = {
       worldRooms: new WorldRooms(this.pg),
       users: new Users(this.pg),
-      companionOneToOnes: new CompanionOneToOnes(this.pg),
       userEnvironmentPresences: new UserEnvironmentPresences(this.pg),
       plotPoints: new PlotPoints(this.pg),
       messages: new Messages(this.pg),

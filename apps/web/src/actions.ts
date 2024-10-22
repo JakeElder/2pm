@@ -12,18 +12,25 @@ export const submitMessage = async (
   return res.data;
 };
 
-const createAnonymousSession = async () => {
-  // const user = api.users.createAnonymousUser({
-  //   type: "ANONYMOUS",
-  //   locationEnvironmentId: 1,
-  // });
-  // const session = api.sessions.create();
-  // cookies().set("sid", token, {
-  //   httpOnly: true,
-  //   secure: process.env.NODE_ENV === "production",
-  //   sameSite: "lax",
-  //   path: "/",
-  // });
+export const createAnonymousSession = async () => {
+  const { data: userRes } = await api.users.createAnonymousUser({
+    type: "ANONYMOUS",
+    locationEnvironmentId: 1,
+  });
+
+  const { data: sessionRes } = await api.sessions.createAnonymousSession({
+    type: "ANONYMOUS",
+    userId: userRes.data.user.id,
+  });
+
+  cookies().set("sid", sessionRes.data.session.id, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+  });
+
+  return sessionRes;
 };
 
 export async function getSession() {
@@ -35,8 +42,10 @@ export async function getSession() {
       ids: [sid.value],
     });
 
-    return data[0];
+    if (!data[0]) {
+      throw new Error();
+    }
   }
 
-  return null;
+  throw new Error();
 }

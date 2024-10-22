@@ -6,6 +6,7 @@ import {
   serial,
   text,
   timestamp,
+  unique,
   uuid,
 } from "drizzle-orm/pg-core";
 import {
@@ -42,7 +43,7 @@ export const users = pgTable("users", {
 });
 
 export const anonymousUsers = pgTable("anonymous_users", {
-  id: serial("id").primaryKey(),
+  id: uuid("id").notNull().defaultRandom(),
   userId: integer("user_id").references(() => users.id),
   locationEnvironmentId: integer("location_environment_id")
     .notNull()
@@ -137,9 +138,35 @@ export const worldRooms = pgTable("world_rooms", {
   code: worldRoomCodeEnum("code").notNull().unique(),
 });
 
-export const companionOneToOnes = pgTable("companion_one_to_ones", {
-  id: serial("id").primaryKey(),
-});
+export const companionOneToOneEnvironments = pgTable(
+  "companion_one_to_one_environments",
+  {
+    environmentId: integer("environment_id").notNull(),
+    id: serial("id").primaryKey(),
+    userId: integer("user_id").notNull(),
+    companionUserId: integer("companion_user_id").notNull(),
+  },
+  (table) => {
+    return {
+      fk_o2o_env: foreignKey({
+        columns: [table.environmentId],
+        foreignColumns: [environments.id],
+        name: "fk_o2o_env",
+      }),
+      fk_o2o_user: foreignKey({
+        columns: [table.userId],
+        foreignColumns: [users.id],
+        name: "fk_o2o_user",
+      }),
+      fk_o2o_companion: foreignKey({
+        columns: [table.companionUserId],
+        foreignColumns: [users.id],
+        name: "fk_o2o_companion",
+      }),
+      uniqueUserConstraint: unique().on(table.userId),
+    };
+  },
+);
 
 /*
  * Join Tables
@@ -199,25 +226,3 @@ export const environmentWorldRooms = pgTable("environment_world_rooms", {
     .notNull()
     .references(() => worldRooms.id),
 });
-
-export const environmentCompanionOneToOnes = pgTable(
-  "environment_companion_one_to_ones",
-  {
-    environmentId: integer("environment_id").notNull(),
-    companionOneToOneId: integer("companion_one_to_one_id").notNull(),
-  },
-  (table) => {
-    return {
-      fk_env_comp_o2o_env: foreignKey({
-        columns: [table.environmentId],
-        foreignColumns: [environments.id],
-        name: "fk_env_comp_o2o_env",
-      }),
-      fk_env_comp_o2o_companion: foreignKey({
-        columns: [table.companionOneToOneId],
-        foreignColumns: [companionOneToOnes.id],
-        name: "fk_env_comp_o2o_companion",
-      }),
-    };
-  },
-);

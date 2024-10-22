@@ -3,8 +3,8 @@ import {
   authenticatedUsers,
   anonymousUsers,
   aiUsers,
+  environments,
 } from "@2pm/data/schema";
-import { DbModule } from "./db-module";
 import {
   AiUserDto,
   AnonymousUserDto,
@@ -12,6 +12,8 @@ import {
   AuthenticatedUserDto,
   InferUserDto,
 } from "@2pm/data";
+import { eq } from "drizzle-orm";
+import { DbModule } from "./db-module";
 
 export default class Users extends DbModule {
   public async insert<T extends CreateUserDto>(
@@ -25,6 +27,16 @@ export default class Users extends DbModule {
 
       if (dto.type === "ANONYMOUS") {
         const { locationEnvironmentId } = dto;
+
+        const [environment] = await this.drizzle
+          .select()
+          .from(environments)
+          .where(eq(environments.id, locationEnvironmentId))
+          .limit(1);
+
+        if (!environment) {
+          throw new Error();
+        }
 
         const [anonymousUser] = await tx
           .insert(anonymousUsers)

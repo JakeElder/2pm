@@ -61,6 +61,7 @@ export const Avatar = ({ src, width, height, alt, style }: AvatarProps) => {
   return (
     <div className={css["companion-avatar"]}>
       <Image
+        priority
         src={src}
         width={width}
         height={height}
