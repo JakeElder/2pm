@@ -5,6 +5,7 @@ import {
   getSession,
   getCompanionOneToOneEnvironmentsByUserId,
 } from "@/actions";
+import { SessionProvider } from "../client/SessionProvider";
 
 type Props = {};
 
@@ -16,13 +17,15 @@ const CompanionOneToOneContainer = async ({}: Props) => {
 
   return (
     <CompanionOneToOneModule.Root>
-      <CompanionOneToOneModule.Avatar code="IVAN" />
+      <CompanionOneToOneModule.Avatar code={o2o.data.companionAiUser.code} />
       <CompanionOneToOneModule.Main>
-        <CompanionOneToOneModule.Header handle="ivan" />
+        <CompanionOneToOneModule.Header tag={o2o.data.companionAiUser.tag} />
         <CompanionOneToOneModule.Body>
           <NarrativeContainer environment={o2o} />
         </CompanionOneToOneModule.Body>
-        <CompanionOneToOneFooterViewContainer environment={o2o} />
+        <SessionProvider session={session}>
+          <CompanionOneToOneFooterViewContainer environment={o2o} />
+        </SessionProvider>
       </CompanionOneToOneModule.Main>
     </CompanionOneToOneModule.Root>
   );

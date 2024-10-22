@@ -3,6 +3,7 @@ import Image from "next/image";
 import css from "./Module.module.css";
 import ivan from "../../../public/images/avatars/IVAN.png";
 import { AiUserCode } from "@2pm/data";
+import { avatars } from "../../images";
 
 /*
  * Root
@@ -81,11 +82,15 @@ type AiAvatarProps = {
 };
 
 export const AiAvatar = ({ code }: AiAvatarProps) => {
+  const { width, height, src } = avatars[code];
+
   if (code === "IVAN") {
     return (
       <Avatar
-        {...ivan}
-        alt="Ivan"
+        width={width}
+        height={height}
+        src={src}
+        alt={code}
         style={{
           width: 54,
           height: 54,
@@ -97,7 +102,7 @@ export const AiAvatar = ({ code }: AiAvatarProps) => {
     );
   }
 
-  return null;
+  return <Avatar width={width} height={height} src={src} alt={code} />;
 };
 
 /*

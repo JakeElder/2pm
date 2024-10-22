@@ -43,13 +43,13 @@ export const Main = (props: MainProps) => {
  */
 
 type HeaderProps = {
-  handle: string;
+  tag: string;
 };
 
-export const Header = ({ handle }: HeaderProps) => {
+export const Header = ({ tag }: HeaderProps) => {
   return (
     <Module.Header>
-      <div className={css["handle"]}>@{handle}</div>
+      <div className={css["tag"]}>@{tag}</div>
       <div className={css["badge"]}>
         <Badge icon="LOCK">Private</Badge>
       </div>

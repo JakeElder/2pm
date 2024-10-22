@@ -22,7 +22,8 @@ export const createAnonymousSession = async () => {
     userId: userRes.data.user.id,
   });
 
-  cookies().set("sid", sessionRes.data.session.id, {
+  const store = await cookies();
+  store.set("sid", sessionRes.data.session.id, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
@@ -33,7 +34,7 @@ export const createAnonymousSession = async () => {
 };
 
 export async function getSession() {
-  const store = cookies();
+  const store = await cookies();
   const sid = store.get("sid");
 
   if (sid) {

@@ -58,7 +58,7 @@
 }
 
 .channel,
-.handle,
+.tag,
 .user-tag {
   font-family: var(--font-family-0);
   font-size: 13px;
@@ -67,7 +67,7 @@
   text-shadow: var(--text-shadow-0);
 }
 
-.handle {
+.tag {
   margin-left: calc(var(--avatar-size) + var(--avatar-margin));
 }
 
