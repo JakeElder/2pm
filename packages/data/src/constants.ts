@@ -1,6 +1,7 @@
 export const USER_TYPES = ["ANONYMOUS", "AUTHENTICATED", "AI"] as const;
 
 export const PLOT_POINT_TYPES = [
+  "ANONYMOUS_USER_MESSAGE",
   "AUTHENTICATED_USER_MESSAGE",
   "AI_USER_MESSAGE",
   "ENVIRONMENT_ENTERED",
@@ -9,7 +10,11 @@ export const PLOT_POINT_TYPES = [
 
 export const AI_USER_CODES = ["G", "IVAN", "THE_HOSTESS"] as const;
 
-export const MESSAGE_TYPES = ["AUTHENTICATED_USER", "AI_USER"] as const;
+export const MESSAGE_TYPES = [
+  "ANONYMOUS_USER",
+  "AUTHENTICATED_USER",
+  "AI_USER",
+] as const;
 
 export const ENVIRONMENT_TYPE_CODES = [
   "WORLD_ROOM",

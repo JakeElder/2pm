@@ -4,9 +4,54 @@ import { createZodDto } from "@anatine/zod-nestjs";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import {
   AiUserMessageDtoSchema,
+  AnonymousUserMessageDtoSchema,
   AuthenticatedUserMessageDtoSchema,
 } from "./message";
 import type { PLOT_POINT_TYPES } from "../constants";
+
+/**
+ * Anonymous User Message
+ */
+export const AnonymousUserMessagePlotPointDtoSchema = z.object({
+  type: z.literal("ANONYMOUS_USER_MESSAGE"),
+  data: AnonymousUserMessageDtoSchema,
+});
+
+export const AnonymousUserMessagePlotPointSummaryDtoSchema = z.object({
+  type: z.literal("ANONYMOUS_USER_MESSAGE"),
+  data: z.object({
+    user: z.object({
+      type: z.literal("ANONYMOUS_USER"),
+      id: createSelectSchema(schema.users).shape.id,
+    }),
+    anonymousUser: z.object({
+      id: createSelectSchema(schema.anonymousUsers).shape.id,
+    }),
+    message: z.object({
+      id: createSelectSchema(schema.messages).shape.id,
+      content: createSelectSchema(schema.anonymousUserMessages).shape.content,
+    }),
+  }),
+});
+
+export const CreateAnonymousUserMessagePlotPointDtoSchema = z.object({
+  type: z.literal("ANONYMOUS_USER_MESSAGE"),
+  userId: createSelectSchema(schema.users).shape.id,
+  environmentId: createSelectSchema(schema.environments).shape.id,
+  content: createSelectSchema(schema.anonymousUserMessages).shape.content,
+});
+
+export class AnonymousUserMessagePlotPointDto extends createZodDto(
+  AnonymousUserMessagePlotPointDtoSchema,
+) {}
+
+export class AnonymousUserMessagePlotPointSummaryDto extends createZodDto(
+  AnonymousUserMessagePlotPointSummaryDtoSchema,
+) {}
+
+export class CreateAnonymousUserMessagePlotPointDto extends createZodDto(
+  CreateAnonymousUserMessagePlotPointDtoSchema,
+) {}
 
 /**
  * Authenticated User Message
@@ -99,16 +144,19 @@ export class CreateAiUserMessagePlotPointDto extends createZodDto(
  * Unions
  */
 export const PlotPointDtoSchema = z.discriminatedUnion("type", [
+  AnonymousUserMessagePlotPointDtoSchema,
   AuthenticatedUserMessagePlotPointDtoSchema,
   AiUserMessagePlotPointDtoSchema,
 ]);
 
 export const PlotPointSummaryDtoSchema = z.discriminatedUnion("type", [
+  AnonymousUserMessagePlotPointSummaryDtoSchema,
   AuthenticatedUserMessagePlotPointSummaryDtoSchema,
   AiUserMessagePlotPointSummaryDtoSchema,
 ]);
 
 export const CreatePlotPointDtoSchema = z.discriminatedUnion("type", [
+  CreateAnonymousUserMessagePlotPointDtoSchema,
   CreateAuthenticatedUserMessagePlotPointDtoSchema,
   CreateAiUserMessagePlotPointDtoSchema,
 ]);
@@ -121,6 +169,7 @@ export type PlotPointDto = z.infer<typeof PlotPointDtoSchema>;
 export type PlotPointSummaryDto = z.infer<typeof PlotPointSummaryDtoSchema>;
 
 type PlotPointDtoMap = {
+  ANONYMOUS_USER_MESSAGE: AnonymousUserMessagePlotPointDto;
   AUTHENTICATED_USER_MESSAGE: AuthenticatedUserMessagePlotPointDto;
   AI_USER_MESSAGE: AiUserMessagePlotPointDto;
 };

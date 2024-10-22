@@ -15,6 +15,7 @@ import {
   plotPointEnvironmentPresences,
   sessions,
   anonymousUsers,
+  anonymousUserMessages,
 } from "@2pm/data/schema";
 import { DbModule } from "./db-module";
 import WorldRooms from "./world-rooms";
@@ -36,6 +37,7 @@ export default class Utils extends DbModule {
     await rm(companionOneToOneEnvironments);
 
     // Truncate tables that depend on users or messages
+    await rm(anonymousUserMessages);
     await rm(aiUserMessages);
     await rm(authenticatedUserMessages);
     await rm(aiUsers);

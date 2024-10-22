@@ -8,6 +8,8 @@ import {
   authenticatedUserMessages,
   plotPointMessages,
   aiUserMessages,
+  anonymousUsers,
+  anonymousUserMessages,
 } from "@2pm/data/schema";
 import { DbModule } from "./db-module";
 import {
@@ -19,6 +21,9 @@ import {
   AuthenticatedUserMessageDto,
   AuthenticatedUserMessagePlotPointDto,
   InferPlotPointDto,
+  AnonymousUserMessagePlotPointDto,
+  CreateAnonymousUserMessagePlotPointDto,
+  AnonymousUserMessageDto,
 } from "@2pm/data";
 import { eq } from "drizzle-orm";
 
@@ -28,28 +33,62 @@ export default class PlotPoints extends DbModule {
   ): Promise<InferPlotPointDto<T>> {
     const { type, userId, environmentId } = dto;
 
-    const [[environment], [{ user, aiUser, authenticatedUser }]] =
-      await Promise.all([
-        this.drizzle
-          .select()
-          .from(environments)
-          .where(eq(environments.id, environmentId))
-          .limit(1),
-        this.drizzle
-          .select({
-            user: users,
-            authenticatedUser: authenticatedUsers,
-            aiUser: aiUsers,
-          })
-          .from(users)
-          .leftJoin(aiUsers, eq(users.id, userId))
-          .leftJoin(authenticatedUsers, eq(users.id, userId))
-          .where(eq(users.id, userId))
-          .limit(1),
-      ]);
+    const [
+      [environment],
+      [{ user, aiUser, authenticatedUser, anonymousUser }],
+    ] = await Promise.all([
+      this.drizzle
+        .select()
+        .from(environments)
+        .where(eq(environments.id, environmentId))
+        .limit(1),
+      this.drizzle
+        .select({
+          user: users,
+          anonymousUser: anonymousUsers,
+          authenticatedUser: authenticatedUsers,
+          aiUser: aiUsers,
+        })
+        .from(users)
+        .leftJoin(anonymousUsers, eq(users.id, userId))
+        .leftJoin(aiUsers, eq(users.id, userId))
+        .leftJoin(authenticatedUsers, eq(users.id, userId))
+        .where(eq(users.id, userId))
+        .limit(1),
+    ]);
 
     if (!environment || !user) {
       throw new Error();
+    }
+
+    if (type === "ANONYMOUS_USER_MESSAGE") {
+      if (!anonymousUser) {
+        throw new Error();
+      }
+
+      const { content } = dto;
+
+      const { message, plotPoint, anonymousUserMessage } =
+        await this.insertAnonymousUserMessagePlotPoint({
+          environmentId,
+          userId,
+          content,
+        });
+
+      const res: AnonymousUserMessagePlotPointDto = {
+        type: "ANONYMOUS_USER_MESSAGE",
+        data: {
+          type: "ANONYMOUS_USER",
+          plotPoint,
+          message,
+          anonymousUserMessage,
+          environment,
+          user,
+          anonymousUser,
+        },
+      };
+
+      return res as InferPlotPointDto<T>;
     }
 
     if (type === "AUTHENTICATED_USER_MESSAGE") {
@@ -114,6 +153,46 @@ export default class PlotPoints extends DbModule {
     }
 
     throw new Error();
+  }
+
+  private async insertAnonymousUserMessagePlotPoint({
+    userId,
+    environmentId,
+    content,
+  }: Omit<CreateAnonymousUserMessagePlotPointDto, "type">): Promise<
+    Pick<
+      AnonymousUserMessageDto,
+      "plotPoint" | "message" | "anonymousUserMessage"
+    >
+  > {
+    return this.drizzle.transaction(async (tx) => {
+      const [plotPoint] = await tx
+        .insert(plotPoints)
+        .values({ type: "ANONYMOUS_USER_MESSAGE", environmentId })
+        .returning();
+
+      const [message] = await tx
+        .insert(messages)
+        .values({ type: "ANONYMOUS_USER", userId, environmentId })
+        .returning();
+
+      const [anonymousUserMessage] = await tx
+        .insert(anonymousUserMessages)
+        .values({ messageId: message.id, content })
+        .returning();
+
+      const [plotPointMessage] = await tx
+        .insert(plotPointMessages)
+        .values({ plotPointId: plotPoint.id, messageId: message.id })
+        .returning();
+
+      return {
+        plotPoint,
+        plotPointMessage,
+        message,
+        anonymousUserMessage,
+      };
+    });
   }
 
   private async insertAuthenticatedUserMessagePlotPoint({

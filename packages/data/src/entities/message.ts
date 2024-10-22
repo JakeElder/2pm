@@ -8,6 +8,25 @@ import type { MESSAGE_TYPES } from "../constants";
 import { messages } from "../schema";
 
 /**
+ * Anonymous User Message
+ */
+export const AnonymousUserMessageDtoSchema = z.object({
+  type: z.literal("ANONYMOUS_USER"),
+  plotPoint: createSelectSchema(schema.plotPoints),
+  message: createSelectSchema(schema.messages),
+  anonymousUserMessage: createSelectSchema(schema.anonymousUserMessages),
+  environment: createSelectSchema(schema.environments),
+  user: createSelectSchema(schema.users),
+  anonymousUser: createSelectSchema(schema.anonymousUsers),
+});
+
+export const UpdateAnonymousUserMessageDtoSchema = z.object({
+  type: z.literal("ANONYMOUS_USER"),
+  id: createSelectSchema(schema.messages).shape.id,
+  content: createInsertSchema(schema.anonymousUserMessages).shape.content,
+});
+
+/**
  * Authenticated User Message
  */
 export const AuthenticatedUserMessageDtoSchema = z.object({
@@ -63,16 +82,14 @@ export class FindMessagesQueryDto extends createZodDto(
 /**
  * Unions
  */
-export const NonAiMessageDtoSchema = z.discriminatedUnion("type", [
-  AuthenticatedUserMessageDtoSchema,
-]);
-
 export const MessageDtoSchema = z.discriminatedUnion("type", [
+  AnonymousUserMessageDtoSchema,
   AuthenticatedUserMessageDtoSchema,
   AiUserMessageDtoSchema,
 ]);
 
 export const UpdateMessageDtoSchema = z.discriminatedUnion("type", [
+  UpdateAnonymousUserMessageDtoSchema,
   UpdateAuthenticatedUserMessageDtoSchema,
   UpdateAiUserMessageDtoSchema,
 ]);
@@ -80,11 +97,17 @@ export const UpdateMessageDtoSchema = z.discriminatedUnion("type", [
 /**
  * Dtos
  */
+export class AnonymousUserMessageDto extends createZodDto(
+  AnonymousUserMessageDtoSchema,
+) {}
 export class AuthenticatedUserMessageDto extends createZodDto(
   AuthenticatedUserMessageDtoSchema,
 ) {}
 export class AiUserMessageDto extends createZodDto(AiUserMessageDtoSchema) {}
 
+export class UpdateAnonymousUserMessageDto extends createZodDto(
+  UpdateAnonymousUserMessageDtoSchema,
+) {}
 export class UpdateAuthenticatedUserMessageDto extends createZodDto(
   UpdateAuthenticatedUserMessageDtoSchema,
 ) {}
@@ -99,6 +122,7 @@ export type UpdateMessageDto = z.infer<typeof UpdateMessageDtoSchema>;
 export type MessageDto = z.infer<typeof MessageDtoSchema>;
 
 type MessageDtoMap = {
+  ANONYMOUS_USER: AnonymousUserMessageDto;
   AUTHENTICATED_USER: AuthenticatedUserMessageDto;
   AI_USER: AiUserMessageDto;
 };

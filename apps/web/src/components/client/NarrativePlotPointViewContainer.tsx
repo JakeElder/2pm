@@ -3,15 +3,20 @@
 import { Narrative } from "@2pm/ui";
 import PlotPointViewContainer from "./PlotPointViewContainer";
 import { PlotPointDto, PlotPointPerspective } from "@2pm/data";
+import { useSession } from "@/hooks/use-session";
 
 type Props = PlotPointDto;
 
 const getPerspective = (plotPoint: PlotPointDto): PlotPointPerspective => {
+  const session = useSession();
   if (
+    plotPoint.type === "ANONYMOUS_USER_MESSAGE" ||
     plotPoint.type === "AUTHENTICATED_USER_MESSAGE" ||
     plotPoint.type === "AI_USER_MESSAGE"
   ) {
-    return plotPoint.data.user.id === 3 ? "FIRST_PERSON" : "THIRD_PERSON";
+    return plotPoint.data.user.id === session.data.user.id
+      ? "FIRST_PERSON"
+      : "THIRD_PERSON";
   }
   return "NEUTRAL";
 };

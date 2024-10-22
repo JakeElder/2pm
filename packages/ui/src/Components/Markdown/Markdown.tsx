@@ -10,11 +10,15 @@ const Markdown = (props: Options) => {
       allowedElements={["a"]}
       unwrapDisallowed={true}
       components={{
-        a({ className, node, ...rest }) {
+        a({ className, node, ref, children, ...rest }) {
           const cn = classNames(className, {
             [css["email"]]: rest.href?.startsWith("mailto:"),
           });
-          return <a className={cn} {...rest} />;
+          return (
+            <a className={cn} {...rest}>
+              {children as any}
+            </a>
+          );
         },
       }}
     />

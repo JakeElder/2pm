@@ -1,7 +1,9 @@
 "use client";
 
+import { useSession } from "@/hooks/use-session";
 import { messagesSocket } from "@/socket";
 import {
+  AnonymousUserMessagePlotPointDto,
   AuthenticatedUserMessagePlotPointDto,
   MessagesRoomJoinedEventDto,
   PlotPointPerspective,
@@ -50,6 +52,23 @@ export const AiUserMessage = (props: AiUserMessageProps) => {
 };
 
 /**
+ * AnonymousUserMessage
+ */
+
+type AnonymousUserMessageProps = Perspective & {
+  plotPoint: AnonymousUserMessagePlotPointDto;
+};
+
+export const AnonymousUserMessage = (props: AnonymousUserMessageProps) => {
+  const { perspective } = props;
+  return (
+    <Message perspective={perspective}>
+      {props.plotPoint.data.anonymousUserMessage.content}
+    </Message>
+  );
+};
+
+/**
  * AuthenticatedUserMessage
  */
 
@@ -72,20 +91,35 @@ export const AuthenticatedUserMessage = (
  * MessageContainer
  */
 
-type Props = AiUserMessagePlotPointDto | AuthenticatedUserMessagePlotPointDto;
+type Props =
+  | AiUserMessagePlotPointDto
+  | AuthenticatedUserMessagePlotPointDto
+  | AnonymousUserMessagePlotPointDto;
 
 const MessageViewContainer = (plotPoint: Props) => {
-  const { user } = plotPoint.data;
-  const perspective = user.id === 3 ? "FIRST_PERSON" : "THIRD_PERSON";
+  const session = useSession();
+
+  const perspective =
+    plotPoint.data.message.userId === session.data.user.id
+      ? "FIRST_PERSON"
+      : "THIRD_PERSON";
 
   if (plotPoint.type === "AI_USER_MESSAGE") {
     return <AiUserMessage perspective={perspective} plotPoint={plotPoint} />;
-  } else {
+  }
+
+  if (plotPoint.type === "AUTHENTICATED_USER_MESSAGE") {
     return (
       <AuthenticatedUserMessage
         perspective={perspective}
         plotPoint={plotPoint}
       />
+    );
+  }
+
+  if (plotPoint.type === "ANONYMOUS_USER_MESSAGE") {
+    return (
+      <AnonymousUserMessage perspective={perspective} plotPoint={plotPoint} />
     );
   }
 };

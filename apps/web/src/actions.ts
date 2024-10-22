@@ -3,12 +3,25 @@
 import { CreateAuthenticatedUserMessagePlotPointDto } from "@2pm/api/client";
 import { cookies } from "next/headers";
 import api from "@/api";
+import { CreateAnonymousUserMessagePlotPointDto } from "@2pm/data";
 
 export const submitMessage = async (
-  dto: CreateAuthenticatedUserMessagePlotPointDto,
+  dto:
+    | CreateAuthenticatedUserMessagePlotPointDto
+    | CreateAnonymousUserMessagePlotPointDto,
 ) => {
-  const res = await api.plotPoints.createAuthenticatedUserMessagePlotPoint(dto);
-  return res.data;
+  if (dto.type === "AUTHENTICATED_USER_MESSAGE") {
+    const res =
+      await api.plotPoints.createAuthenticatedUserMessagePlotPoint(dto);
+    return res.data;
+  }
+
+  if (dto.type === "ANONYMOUS_USER_MESSAGE") {
+    const res = await api.plotPoints.createAnonymousUserMessagePlotPoint(dto);
+    return res.data;
+  }
+
+  throw new Error();
 };
 
 export const createAnonymousSession = async () => {

@@ -104,6 +104,14 @@ export const messages = pgTable("messages", {
     .references(() => environments.id),
 });
 
+export const anonymousUserMessages = pgTable("anonymous_user_messages", {
+  id: serial("id").primaryKey(),
+  content: text("content").notNull(),
+  messageId: integer("message_id")
+    .notNull()
+    .references(() => messages.id),
+});
+
 export const authenticatedUserMessages = pgTable(
   "authenticated_user_messages",
   {

@@ -55,7 +55,7 @@ export const CompanionOneToOne: Story = {
       <CompanionOneToOneModule.Root>
         <CompanionOneToOneModule.Avatar code="IVAN" />
         <CompanionOneToOneModule.Main>
-          <CompanionOneToOneModule.Header handle="ivan" />
+          <CompanionOneToOneModule.Header tag="ivan" />
           <CompanionOneToOneModule.Body>
             <Body />
           </CompanionOneToOneModule.Body>

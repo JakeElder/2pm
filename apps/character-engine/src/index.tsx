@@ -56,10 +56,19 @@ class CharacterEngine {
         ),
       },
       ...narrative.map((dto) => {
+        const name = (() => {
+          if (dto.type === "ANONYMOUS_USER_MESSAGE") {
+            return `anon_${dto.data.anonymousUser.id}`;
+          }
+          return dto.data.user.tag;
+        })();
         const res: OpenAiMessage = {
           role:
-            dto.type === "AUTHENTICATED_USER_MESSAGE" ? "user" : "assistant",
-          name: dto.data.user.tag,
+            dto.type === "AUTHENTICATED_USER_MESSAGE" ||
+            dto.type === "ANONYMOUS_USER_MESSAGE"
+              ? "user"
+              : "assistant",
+          name,
           content: dto.data.message.content,
         };
         return res;
