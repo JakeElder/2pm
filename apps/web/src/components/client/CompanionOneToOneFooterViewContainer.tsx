@@ -1,7 +1,8 @@
 "use client";
 
 import { submitMessage } from "@/actions";
-import { CreateAuthenticatedUserMessagePlotPointDto } from "@2pm/api/client";
+import { useSession } from "@/hooks/use-session";
+import { CompanionOneToOneEnvironmentDto } from "@2pm/data";
 import {
   PromptInput,
   PromptSubmitButton,
@@ -9,17 +10,17 @@ import {
 } from "@2pm/ui";
 import { useForm, SubmitHandler } from "react-hook-form";
 
-interface Props
-  extends Pick<
-    CreateAuthenticatedUserMessagePlotPointDto,
-    "userId" | "environmentId"
-  > {}
+type Props = {
+  environment: CompanionOneToOneEnvironmentDto;
+};
 
 type Inputs = {
   content: string;
 };
 
-const CompanionOneToOneFooterContainer = ({ userId, environmentId }: Props) => {
+const CompanionOneToOneFooterViewContainer = ({ environment }: Props) => {
+  const session = useSession();
+
   const {
     register,
     handleSubmit,
@@ -30,8 +31,8 @@ const CompanionOneToOneFooterContainer = ({ userId, environmentId }: Props) => {
   const onSubmit: SubmitHandler<Inputs> = async ({ content }) => {
     await submitMessage({
       type: "AUTHENTICATED_USER_MESSAGE",
-      environmentId,
-      userId,
+      environmentId: environment.data.environment.id,
+      userId: session.data.user.id,
       content,
     });
     reset();
@@ -51,4 +52,4 @@ const CompanionOneToOneFooterContainer = ({ userId, environmentId }: Props) => {
   );
 };
 
-export default CompanionOneToOneFooterContainer;
+export default CompanionOneToOneFooterViewContainer;

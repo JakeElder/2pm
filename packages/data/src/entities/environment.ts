@@ -31,7 +31,7 @@ export const CreateCompanionOneToOneEnvironmentDtoSchema = z.object({
   type: z.literal("COMPANION_ONE_TO_ONE"),
   id: createInsertSchema(environments).shape.id,
   userId: createSelectSchema(users).shape.id,
-  companionUserId: createSelectSchema(users).shape.id,
+  companionUserId: createSelectSchema(users).shape.id.optional(),
 });
 
 export class CompanionOneToOneEnvironmentDto extends createZodDto(
@@ -74,12 +74,12 @@ export type InferEnvironmentDto<T extends CreateEnvironmentDto> = T extends {
  */
 export const EnvironmentsRoomJoinedEventSchema = z.object({
   user: createSelectSchema(users),
-  environment: createSelectSchema(environments),
+  environment: EnvironmentDtoSchema,
 });
 
 export const EnvironmentsRoomLeftEventSchema = z.object({
   user: createSelectSchema(users),
-  environment: createSelectSchema(environments),
+  environment: EnvironmentDtoSchema,
 });
 
 export class EnvironmentsRoomJoinedEventDto extends createZodDto(

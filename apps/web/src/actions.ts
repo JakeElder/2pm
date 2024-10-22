@@ -1,6 +1,5 @@
 "use server";
 
-import { createAuthenticatedUserMessagePlotPoint } from "@/api/plot-points";
 import { CreateAuthenticatedUserMessagePlotPointDto } from "@2pm/api/client";
 import { cookies } from "next/headers";
 import api from "@/api";
@@ -8,7 +7,7 @@ import api from "@/api";
 export const submitMessage = async (
   dto: CreateAuthenticatedUserMessagePlotPointDto,
 ) => {
-  const res = await createAuthenticatedUserMessagePlotPoint(dto);
+  const res = await api.plotPoints.createAuthenticatedUserMessagePlotPoint(dto);
   return res.data;
 };
 
@@ -45,7 +44,26 @@ export async function getSession() {
     if (!data[0]) {
       throw new Error();
     }
+
+    return data[0];
   }
 
   throw new Error();
+}
+
+export async function getCompanionOneToOneEnvironmentsByUserId(id: number) {
+  const res = await api.users.getCompanionOneToOneEnvironmentsByUserId(id);
+
+  if (!res.ok) {
+    const res = await api.environments.createCompanionOneToOneEnvironment({
+      type: "COMPANION_ONE_TO_ONE",
+      userId: id,
+    });
+
+    if (res.ok) {
+      return res.data;
+    }
+  }
+
+  return res.data;
 }

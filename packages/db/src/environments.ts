@@ -17,7 +17,10 @@ export default class Environments extends DbModule {
     dto: T,
   ): Promise<InferEnvironmentDto<T>> {
     const { transaction } = this.drizzle;
-    const { id, type, userId, companionUserId } = dto;
+    const { id, type, userId } = dto;
+
+    const companionUserId =
+      dto.companionUserId ?? (await this.getDefaultCompanionUserId());
 
     const [user] = await this.drizzle
       .select()
@@ -45,7 +48,6 @@ export default class Environments extends DbModule {
         .returning();
 
       if (type === "COMPANION_ONE_TO_ONE") {
-        const { userId, companionUserId } = dto;
         const [companionOneToOneEnvironment] = await tx
           .insert(companionOneToOneEnvironments)
           .values({
@@ -71,5 +73,9 @@ export default class Environments extends DbModule {
 
       throw new Error();
     });
+  }
+
+  async getDefaultCompanionUserId() {
+    return 2;
   }
 }

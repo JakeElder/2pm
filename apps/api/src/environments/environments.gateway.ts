@@ -31,8 +31,8 @@ export class EnvironmentGateway {
     @MessageBody() { environment, user }: EnvironmentsRoomJoinedEventDto,
     @ConnectedSocket() socket: EnvironmentsServerSocket,
   ) {
-    if (!socket.rooms.has(`${environment.id}`)) {
-      socket.join(`${environment.id}`);
+    if (!socket.rooms.has(`${environment.data.environment.id}`)) {
+      socket.join(`${environment.data.environment.id}`);
       this.logger.debug(`joined: ${socket.id}`);
       this.events.emit('environments.joined', { environment, user });
     }
@@ -43,8 +43,8 @@ export class EnvironmentGateway {
     @MessageBody() { environment }: EnvironmentsRoomLeftEventDto,
     @ConnectedSocket() socket: EnvironmentsServerSocket,
   ) {
-    if (socket.rooms.has(`${environment.id}`)) {
-      socket.leave(`${environment.id}`);
+    if (socket.rooms.has(`${environment.data.environment.id}`)) {
+      socket.leave(`${environment.data.environment.id}`);
       this.logger.debug(`left: ${socket.id}`);
     }
   }

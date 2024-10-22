@@ -63,6 +63,10 @@ export class FindMessagesQueryDto extends createZodDto(
 /**
  * Unions
  */
+export const NonAiMessageDtoSchema = z.discriminatedUnion("type", [
+  AuthenticatedUserMessageDtoSchema,
+]);
+
 export const MessageDtoSchema = z.discriminatedUnion("type", [
   AuthenticatedUserMessageDtoSchema,
   AiUserMessageDtoSchema,

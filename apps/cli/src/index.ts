@@ -131,7 +131,8 @@ generate
         output: path.resolve(process.cwd(), dir),
         name,
         silent: true,
-      });
+        disableThrowOnError: true,
+      } as any);
 
       spinner.succeed(`TypeScript fetch client generated at ${options.out}`);
     } catch (e) {

@@ -2,23 +2,25 @@
 
 import { useEffect, useState } from "react";
 import { Narrative } from "@2pm/ui";
-import { PlotPointDto } from "@2pm/data";
+import { EnvironmentDto, PlotPointDto } from "@2pm/data";
 import { EnvironmentsRoomJoinedEventDto } from "@2pm/data";
 import { environmentsSocket } from "@/socket";
 import NarrativePlotPointViewContainer from "./NarrativePlotPointViewContainer";
+import { useSession } from "@/hooks/use-session";
 
 type Props = {
-  environmentId: number;
+  environment: EnvironmentDto;
   plotPoints: PlotPointDto[];
 };
 
-const NarrativeViewContainer = ({ environmentId, plotPoints }: Props) => {
+const NarrativeViewContainer = ({ environment, plotPoints }: Props) => {
   const [data, setPlotPoints] = useState<PlotPointDto[]>(plotPoints);
+  const session = useSession();
 
   useEffect(() => {
     const e: EnvironmentsRoomJoinedEventDto = {
-      user: { id: 3, type: "AUTHENTICATED" },
-      environment: { id: environmentId, type: "COMPANION_ONE_TO_ONE" },
+      user: session.data.user,
+      environment,
     };
 
     environmentsSocket

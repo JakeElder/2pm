@@ -21,7 +21,7 @@ export class EnvironmentController implements OnModuleInit {
   bindEventListeners() {
     // this.events.on('environments.joined', (e) => {});
     this.events.on('plot-points.created', (e) => {
-      this.queues.handlePlotPointCreated(e);
+      // this.queues.handlePlotPointCreated(e);
       this.gateway.sendPlotPointCreatedEvent(e);
     });
   }
