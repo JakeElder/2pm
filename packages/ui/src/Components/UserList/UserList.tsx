@@ -3,6 +3,7 @@ import React from "react";
 import css from "./UserList.module.css";
 import { AiUserCode } from "@2pm/data";
 import { aiUserIcons, anonymousAvatar } from "../../images";
+import { omit } from "remeda";
 
 /*
  * Root
@@ -43,7 +44,7 @@ export const AiUser = ({ children, code }: AiUserProps) => {
       <div className={css["ai-avatar"]}>
         <Image
           className={css["ai-avatar-image"]}
-          {...aiUserIcons[code]}
+          {...omit(aiUserIcons[code], ["blurWidth", "blurHeight"])}
           alt={code}
         />
       </div>

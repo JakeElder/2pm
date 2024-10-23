@@ -45,9 +45,10 @@ type TagProps = {
 };
 
 export const Tag = ({ children }: TagProps) => {
+  const { blurWidth, blurHeight, ...img } = tag;
   return (
     <div className={css["user-tag"]}>
-      <Image className={css["tag-icon"]} {...tag} alt="tag" />
+      <Image className={css["tag-icon"]} {...img} alt="tag" />
       <div>@{children}</div>
     </div>
   );
@@ -93,15 +94,12 @@ export const Body = ({ children }: BodyProps) => {
 type AvatarProps = {};
 
 export const Avatar = (props: AvatarProps) => {
+  const { blurHeight, blurWidth, ...img } = anonymous;
   return (
     <div className={css["user-avatar"]}>
       <div className={css["outer"]}>
         <div className={css["inner"]}>
-          <Image
-            className={css["user-avatar-img"]}
-            {...anonymous}
-            alt="anonymous"
-          />
+          <Image className={css["user-avatar-img"]} {...img} alt="anonymous" />
         </div>
       </div>
     </div>

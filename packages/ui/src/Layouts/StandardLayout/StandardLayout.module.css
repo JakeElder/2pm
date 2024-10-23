@@ -1,6 +1,8 @@
 .root {
   display: flex;
-  height: 100dvh;
+  height: 80dvh;
+  position: relative;
+  top: 10dvh;
   box-sizing: border-box;
   padding: 50px;
   gap: 26px;

@@ -4,6 +4,7 @@ import { WorldRoomCode } from "@2pm/data";
 import UNIVERSE from "../../../public/images/medallions/UNIVERSE.png";
 import Image, { StaticImageData } from "next/image";
 import Badge from "../Badge";
+import { omit } from "remeda";
 
 /*
  * Root
@@ -50,7 +51,7 @@ export const Header = ({ code, channel }: HeaderProps) => {
       <div className={css["world-room-header"]}>
         <div className={css["medallion"]}>
           <Image
-            {...medallions[code]}
+            {...omit(medallions[code], ["blurWidth", "blurHeight"])}
             alt={code}
             style={{ width: 25, height: 25 }}
           />
