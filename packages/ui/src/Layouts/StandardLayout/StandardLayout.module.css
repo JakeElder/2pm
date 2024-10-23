@@ -1,0 +1,11 @@
+.root {
+  display: flex;
+  height: 100dvh;
+  box-sizing: border-box;
+  padding: 50px;
+  gap: 26px;
+}
+
+.world-room {
+  flex: 1;
+}
