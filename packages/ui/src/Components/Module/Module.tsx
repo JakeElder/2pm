@@ -1,7 +1,6 @@
 import React from "react";
 import Image from "next/image";
 import css from "./Module.module.css";
-import ivan from "../../../public/images/avatars/IVAN.png";
 import { AiUserCode } from "@2pm/data";
 import { avatars } from "../../images";
 
@@ -11,12 +10,19 @@ import { avatars } from "../../images";
 
 type RootProps = {
   children: React.ReactNode;
+  minWidth?: number;
   expand?: boolean;
 };
 
-export const Root = ({ children, expand }: RootProps) => {
+export const Root = ({ children, expand, minWidth = 280 }: RootProps) => {
   return (
-    <div className={css["root"]} style={expand ? { height: "100%" } : {}}>
+    <div
+      className={css["root"]}
+      style={{
+        minWidth,
+        ...(expand ? { height: "100%" } : {}),
+      }}
+    >
       {children}
     </div>
   );

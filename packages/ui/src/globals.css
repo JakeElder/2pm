@@ -25,7 +25,7 @@
   --color-3: #d9d9db;
 
   /* Text Shadows */
-  --text-shadow-0: 1px 1px 1px rgba(0, 0, 0, 0.8);
+  --text-shadow-0: 1px 1px 1px rgba(0, 0, 0, 0.6);
 }
 
 @font-face {

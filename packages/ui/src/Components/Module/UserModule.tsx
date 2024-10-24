@@ -14,7 +14,7 @@ type RootProps = {
 
 export const Root = ({ children }: RootProps) => {
   return (
-    <Module.Root>
+    <Module.Root minWidth={260}>
       <Module.Main>{children}</Module.Main>
     </Module.Root>
   );
