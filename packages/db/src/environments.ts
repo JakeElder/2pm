@@ -3,12 +3,14 @@ import {
   companionOneToOneEnvironments,
   users,
   aiUsers,
+  worldRoomEnvironments,
 } from "@2pm/data/schema";
 import { DbModule } from "./db-module";
 import {
   CreateEnvironmentDto,
   InferEnvironmentDto,
   CompanionOneToOneEnvironmentDto,
+  WorldRoomEnvironmentDto,
 } from "@2pm/data";
 import { eq } from "drizzle-orm";
 
@@ -17,29 +19,7 @@ export default class Environments extends DbModule {
     dto: T,
   ): Promise<InferEnvironmentDto<T>> {
     const { transaction } = this.drizzle;
-    const { id, type, userId } = dto;
-
-    const companionUserId =
-      dto.companionUserId ?? (await this.getDefaultCompanionUserId());
-
-    const [user] = await this.drizzle
-      .select()
-      .from(users)
-      .where(eq(users.id, userId))
-      .limit(1);
-
-    const [{ companionUser, companionAiUser }] = await this.drizzle
-      .select({
-        companionUser: users,
-        companionAiUser: aiUsers,
-      })
-      .from(users)
-      .where(eq(users.id, companionUserId))
-      .innerJoin(aiUsers, eq(users.id, aiUsers.userId));
-
-    if (!user || !companionUser || !companionAiUser) {
-      throw new Error();
-    }
+    const { id, type } = dto;
 
     return transaction(async (tx) => {
       const [environment] = await tx
@@ -47,7 +27,52 @@ export default class Environments extends DbModule {
         .values({ id, type })
         .returning();
 
+      if (type === "WORLD_ROOM") {
+        const { code } = dto;
+
+        const [worldRoomEnvironment] = await tx
+          .insert(worldRoomEnvironments)
+          .values({
+            environmentId: environment.id,
+            code,
+          })
+          .returning();
+
+        const res: WorldRoomEnvironmentDto = {
+          type: "WORLD_ROOM",
+          data: {
+            environment,
+            worldRoomEnvironment,
+          },
+        };
+
+        return res as InferEnvironmentDto<T>;
+      }
+
       if (type === "COMPANION_ONE_TO_ONE") {
+        const { userId } = dto;
+        const companionUserId =
+          dto.companionUserId ?? (await this.getDefaultCompanionUserId());
+
+        const [user] = await this.drizzle
+          .select()
+          .from(users)
+          .where(eq(users.id, userId))
+          .limit(1);
+
+        const [{ companionUser, companionAiUser }] = await this.drizzle
+          .select({
+            companionUser: users,
+            companionAiUser: aiUsers,
+          })
+          .from(users)
+          .where(eq(users.id, companionUserId))
+          .innerJoin(aiUsers, eq(users.id, aiUsers.userId));
+
+        if (!user || !companionUser || !companionAiUser) {
+          throw new Error();
+        }
+
         const [companionOneToOneEnvironment] = await tx
           .insert(companionOneToOneEnvironments)
           .values({

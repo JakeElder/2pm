@@ -4,7 +4,6 @@ export * from "./entities/message";
 export * from "./entities/session";
 export * from "./entities/user";
 export * from "./entities/user-environment-presence";
-export * from "./entities/world-room";
 
 export * from "./types";
 export * from "./constants";

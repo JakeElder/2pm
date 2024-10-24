@@ -1,6 +1,7 @@
 import api from "@/api";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { WORLD_ROOM_ENVIRONMENTS } from "@2pm/data/seed";
 
 export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
@@ -17,14 +18,19 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  const { data: userRes } = await api.users.createAnonymousUser({
+  const userRes = await api.users.createAnonymousUser({
     type: "ANONYMOUS",
-    locationEnvironmentId: 1,
+    locationEnvironmentId: WORLD_ROOM_ENVIRONMENTS[0].id,
   });
+
+  if (!userRes.ok) {
+    console.dir(userRes, { depth: null, colors: true });
+    throw new Error();
+  }
 
   const { data: sessionRes } = await api.sessions.createAnonymousSession({
     type: "ANONYMOUS",
-    userId: userRes.data.user.id,
+    userId: userRes.data.data.user.id,
   });
 
   response.cookies.set({

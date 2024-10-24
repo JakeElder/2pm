@@ -2,8 +2,7 @@ import {
   users,
   plotPoints,
   environments,
-  worldRooms,
-  environmentWorldRooms,
+  worldRoomEnvironments,
   plotPointMessages,
   messages,
   authenticatedUsers,
@@ -19,11 +18,11 @@ import {
 } from "@2pm/data/schema";
 import * as seed from "@2pm/data/seed";
 import { DbModule } from "./db-module";
-import WorldRooms from "./world-rooms";
 import UserEnvironmentPresences from "./user-environment-presences";
 import Users from "./users";
 import Messages from "./messages";
 import PlotPoints from "./plot-points";
+import Environments from "./environments";
 
 export default class Utils extends DbModule {
   public async clear() {
@@ -33,7 +32,6 @@ export default class Utils extends DbModule {
     await rm(plotPointEnvironmentPresences);
     await rm(plotPointMessages);
     await rm(userEnvironmentPresences);
-    await rm(environmentWorldRooms);
     await rm(sessions);
     await rm(companionOneToOneEnvironments);
 
@@ -51,7 +49,7 @@ export default class Utils extends DbModule {
     await rm(users);
 
     // Truncate remaining independent tables
-    await rm(worldRooms);
+    await rm(worldRoomEnvironments);
     await rm(environments);
   }
 
@@ -59,7 +57,7 @@ export default class Utils extends DbModule {
     await this.clear();
 
     const db = {
-      worldRooms: new WorldRooms(this.pg),
+      environments: new Environments(this.pg),
       users: new Users(this.pg),
       userEnvironmentPresences: new UserEnvironmentPresences(this.pg),
       plotPoints: new PlotPoints(this.pg),
@@ -68,7 +66,7 @@ export default class Utils extends DbModule {
 
     const [universe] = await Promise.all([
       ...seed.WORLD_ROOM_ENVIRONMENTS.map((room) =>
-        db.worldRooms.insert({ ...room }),
+        db.environments.insert({ type: "WORLD_ROOM", ...room }),
       ),
     ]);
 
@@ -81,7 +79,7 @@ export default class Utils extends DbModule {
 
     await Promise.all([
       db.userEnvironmentPresences.insert({
-        environmentId: universe.environment.id,
+        environmentId: universe.data.environment.id,
         userId: g.id,
       }),
     ]);
@@ -89,7 +87,7 @@ export default class Utils extends DbModule {
     await db.plotPoints.insert({
       type: "AI_USER_MESSAGE",
       userId: g.id,
-      environmentId: universe.environment.id,
+      environmentId: universe.data.environment.id,
       content: "Standby for G stuff",
       state: "COMPLETE",
     });

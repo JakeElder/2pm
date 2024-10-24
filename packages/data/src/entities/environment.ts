@@ -5,6 +5,7 @@ import {
   companionOneToOneEnvironments,
   environments,
   users,
+  worldRoomEnvironments,
 } from "../schema";
 import { createZodDto } from "@anatine/zod-nestjs";
 import type { Server, Socket } from "socket.io";
@@ -42,15 +43,41 @@ export class CreateCompanionOneToOneEnvironmentDto extends createZodDto(
 ) {}
 
 /**
+ * World Room Environments
+ */
+export const WorldRoomEnvironmentDtoSchema = z.object({
+  type: z.literal("WORLD_ROOM"),
+  data: z.object({
+    environment: createSelectSchema(environments),
+    worldRoomEnvironment: createSelectSchema(worldRoomEnvironments),
+  }),
+});
+
+export const CreateWorldRoomEnvironmentDtoSchema = z.object({
+  type: z.literal("WORLD_ROOM"),
+  id: createInsertSchema(environments).shape.id,
+  code: createInsertSchema(worldRoomEnvironments).shape.code,
+});
+
+export class WorldRoomEnvironmentDto extends createZodDto(
+  WorldRoomEnvironmentDtoSchema,
+) {}
+export class CreateWorldRoomEnvironmentDto extends createZodDto(
+  CreateWorldRoomEnvironmentDtoSchema,
+) {}
+
+/**
  * Unions
  */
 
 export const EnvironmentDtoSchema = z.discriminatedUnion("type", [
   CompanionOneToOneEnvironmentDtoSchema,
+  WorldRoomEnvironmentDtoSchema,
 ]);
 
 export const CreateEnvironmentDtoSchema = z.discriminatedUnion("type", [
   CreateCompanionOneToOneEnvironmentDtoSchema,
+  CreateWorldRoomEnvironmentDtoSchema,
 ]);
 
 /**
@@ -61,6 +88,7 @@ export type EnvironmentDto = z.infer<typeof EnvironmentDtoSchema>;
 
 type EnvironmentDtoMap = {
   COMPANION_ONE_TO_ONE: CompanionOneToOneEnvironmentDto;
+  WORLD_ROOM: WorldRoomEnvironmentDto;
 };
 
 export type InferEnvironmentDto<T extends CreateEnvironmentDto> = T extends {

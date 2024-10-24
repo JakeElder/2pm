@@ -141,16 +141,19 @@ export const environments = pgTable("environments", {
   type: environmentTypeEnum("type").notNull(),
 });
 
-export const worldRooms = pgTable("world_rooms", {
+export const worldRoomEnvironments = pgTable("world_room_environments", {
   id: serial("id").primaryKey(),
+  environmentId: integer("environment_id")
+    .notNull()
+    .references(() => environments.id),
   code: worldRoomCodeEnum("code").notNull().unique(),
 });
 
 export const companionOneToOneEnvironments = pgTable(
   "companion_one_to_one_environments",
   {
-    environmentId: integer("environment_id").notNull(),
     id: serial("id").primaryKey(),
+    environmentId: integer("environment_id").notNull(),
     userId: integer("user_id").notNull(),
     companionUserId: integer("companion_user_id").notNull(),
   },
@@ -225,12 +228,3 @@ export const plotPointEnvironmentPresences = pgTable(
     };
   },
 );
-
-export const environmentWorldRooms = pgTable("environment_world_rooms", {
-  environmentId: integer("environment_id")
-    .notNull()
-    .references(() => environments.id),
-  worldRoomId: integer("world_room_id")
-    .notNull()
-    .references(() => worldRooms.id),
-});

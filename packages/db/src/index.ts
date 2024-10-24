@@ -2,7 +2,6 @@ import { drizzle } from "drizzle-orm/postgres-js";
 import postgres, { Sql } from "postgres";
 import { Drizzle } from "@2pm/data";
 import Utils from "./utils";
-import WorldRooms from "./world-rooms";
 import UserEnvironmentPresences from "./user-environment-presences";
 import Users from "./users";
 import Messages from "./messages";
@@ -15,7 +14,6 @@ export default class DBService {
 
   public drizzle: Drizzle;
   public utils: Utils;
-  public worldRooms: WorldRooms;
   public users: Users;
   public userEnvironmentPresences: UserEnvironmentPresences;
   public plotPoints: PlotPoints;
@@ -27,7 +25,6 @@ export default class DBService {
     this.pg = postgres(dbUrl);
     this.drizzle = drizzle(this.pg);
     this.utils = new Utils(this.pg);
-    this.worldRooms = new WorldRooms(this.pg);
     this.users = new Users(this.pg);
     this.userEnvironmentPresences = new UserEnvironmentPresences(this.pg);
     this.plotPoints = new PlotPoints(this.pg);

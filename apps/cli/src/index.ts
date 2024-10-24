@@ -54,7 +54,7 @@ db.command("create")
 
       spinner.succeed(`Created database`);
     } catch (e) {
-      spinner.fail("Error dropping database");
+      spinner.fail("Error creating database");
       console.error(e);
       process.exit(1);
     }

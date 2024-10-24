@@ -3,12 +3,14 @@ import {
   CreateAuthenticatedUserDtoSchema,
 } from "./entities/user";
 import { z, ZodType } from "zod";
-import { CreateWorldRoomDtoSchema } from "./entities/world-room";
+import type { CreateWorldRoomEnvironmentDtoSchema } from "./entities/environment";
 
 type Z<T extends ZodType<any>> = z.infer<T>;
 type Seed<T extends ZodType<any>> = Omit<Required<Z<T>>, "type">;
 
-type WorldRoomEnvironmentSeed = Seed<typeof CreateWorldRoomDtoSchema>;
+type WorldRoomEnvironmentSeed = Seed<
+  typeof CreateWorldRoomEnvironmentDtoSchema
+>;
 type AiUserSeed = Seed<typeof CreateAiUserDtoSchema>;
 type AuthenticatedUserSeed = Seed<typeof CreateAuthenticatedUserDtoSchema>;
 
