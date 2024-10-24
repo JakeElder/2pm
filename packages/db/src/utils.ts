@@ -17,6 +17,7 @@ import {
   anonymousUsers,
   anonymousUserMessages,
 } from "@2pm/data/schema";
+import * as seed from "@2pm/data/seed";
 import { DbModule } from "./db-module";
 import WorldRooms from "./world-rooms";
 import UserEnvironmentPresences from "./user-environment-presences";
@@ -65,20 +66,17 @@ export default class Utils extends DbModule {
       messages: new Messages(this.pg),
     };
 
-    const universe = await db.worldRooms.insert({
-      id: 1,
-      code: "UNIVERSE",
-    });
+    const [universe] = await Promise.all([
+      ...seed.WORLD_ROOM_ENVIRONMENTS.map((room) =>
+        db.worldRooms.insert({ ...room }),
+      ),
+    ]);
 
     const [g] = await Promise.all([
-      db.users.insert({ type: "AI", id: 1, tag: "g", code: "G" }),
-      db.users.insert({ type: "AI", id: 2, tag: "ivan", code: "IVAN" }),
-      db.users.insert({
-        type: "AUTHENTICATED",
-        id: 3,
-        tag: "jake",
-        locationEnvironmentId: universe.environment.id,
-      }),
+      ...seed.AI_USERS.map((user) => db.users.insert({ type: "AI", ...user })),
+      ...seed.AUTHENTICATED_USERS.map((user) =>
+        db.users.insert({ type: "AUTHENTICATED", ...user }),
+      ),
     ]);
 
     await Promise.all([
