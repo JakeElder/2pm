@@ -29,9 +29,13 @@ type HeaderProps = {
 };
 
 export const Header = ({ children }: HeaderProps) => {
+  const { blurWidth, blurHeight, ...img } = tag;
   return (
     <Module.Header>
-      <div className={css["user-header"]}>{children}</div>
+      <div className={css["user-header"]}>
+        <Image className={css["tag-icon"]} {...img} alt="tag" />
+        {children}
+      </div>
     </Module.Header>
   );
 };
@@ -45,11 +49,28 @@ type TagProps = {
 };
 
 export const Tag = ({ children }: TagProps) => {
-  const { blurWidth, blurHeight, ...img } = tag;
   return (
     <div className={css["user-tag"]}>
-      <Image className={css["tag-icon"]} {...img} alt="tag" />
-      <div>@{children}</div>
+      <div className={css["user-tag-tag"]}>@{children}</div>
+    </div>
+  );
+};
+
+/*
+ * AnonymousTag
+ */
+
+type AnonymousTagProps = {
+  children: React.ReactNode;
+};
+
+export const AnonymousTag = ({ children }: TagProps) => {
+  return (
+    <div className={css["user-tag"]}>
+      <div className={css["user-tag-at"]}>@</div>
+      <div className={css["user-tag-tag"]}>anon</div>
+      <div className={css["hash"]}>#</div>
+      <div className={css["uuid"]}>{children}</div>
     </div>
   );
 };

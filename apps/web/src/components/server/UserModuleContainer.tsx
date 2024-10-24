@@ -1,10 +1,44 @@
+import { UserModule } from "@2pm/ui";
 import { getSession } from "@/actions";
+import short from "short-uuid";
+import { SessionDto } from "@2pm/data";
 
 type Props = {};
 
+const translator = short();
+
+/*
+ * Tag
+ */
+
+type TagProps = {
+  session: SessionDto;
+};
+
+export const Tag = ({ session }: TagProps) => {
+  if (session.type === "ANONYMOUS") {
+    const uuid = translator.fromUUID(session.data.session.id);
+    return <UserModule.AnonymousTag>{uuid}</UserModule.AnonymousTag>;
+  }
+
+  return <UserModule.Tag>{session.data.authenticatedUser.tag}</UserModule.Tag>;
+};
+
 const UserModuleContainer = async ({}: Props) => {
   const session = await getSession();
-  return <pre>{JSON.stringify(session)}</pre>;
+
+  return (
+    <UserModule.Root>
+      <UserModule.Header>
+        <Tag session={session} />
+        <UserModule.Level>{1}</UserModule.Level>
+      </UserModule.Header>
+      <UserModule.Body>
+        <UserModule.Avatar />
+        <UserModule.Rep>{0.000001}</UserModule.Rep>
+      </UserModule.Body>
+    </UserModule.Root>
+  );
 };
 
 export default UserModuleContainer;

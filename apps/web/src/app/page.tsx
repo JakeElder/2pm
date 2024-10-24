@@ -3,10 +3,10 @@ import {
   PromptSubmitButton,
   StandardLayout,
   UserList,
-  UserModule,
   WorldRoomModule,
 } from "@2pm/ui";
 import CompanionOneToOneContainer from "@/components/server/CompanionOneToOneContainer";
+import UserModuleContainer from "@/components/server/UserModuleContainer";
 
 const {
   AiUserList,
@@ -21,16 +21,7 @@ export default async function Home() {
     <StandardLayout.Root>
       <StandardLayout.UserAndLeaderboard>
         <StandardLayout.User>
-          <UserModule.Root>
-            <UserModule.Header>
-              <UserModule.Tag>jake</UserModule.Tag>
-              <UserModule.Level>{1}</UserModule.Level>
-            </UserModule.Header>
-            <UserModule.Body>
-              <UserModule.Avatar />
-              <UserModule.Rep>{0.000001}</UserModule.Rep>
-            </UserModule.Body>
-          </UserModule.Root>
+          <UserModuleContainer />
         </StandardLayout.User>
         <StandardLayout.Leaderboard>{null}</StandardLayout.Leaderboard>
       </StandardLayout.UserAndLeaderboard>

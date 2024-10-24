@@ -11,3 +11,7 @@
 .world-room {
   flex: 1;
 }
+
+.user-and-leaderboard {
+  max-width: 290px;
+}
