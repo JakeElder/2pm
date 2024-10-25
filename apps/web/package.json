@@ -12,6 +12,7 @@
   "dependencies": {
     "@2pm/data": "workspace:*",
     "@2pm/ui": "workspace:*",
+    "@2pm/api": "workspace:*",
     "react-hook-form": "^7.53.0"
   }
 }

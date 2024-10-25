@@ -15,15 +15,11 @@ import {
   CreateCompanionOneToOneEnvironmentDto,
 } from '@2pm/data';
 import { EnvironmentsService } from './environments.service';
-import { EnvironmentQueueService } from './environments.queue.service';
 
 @ApiTags('Environments')
 @Controller()
 export class CompanionOneToOneEnvironmentsController {
-  constructor(
-    private readonly service: EnvironmentsService,
-    private readonly queues: EnvironmentQueueService,
-  ) {}
+  constructor(private readonly service: EnvironmentsService) {}
 
   @Get('environments/companion-one-to-one')
   @ApiOperation({
@@ -72,7 +68,6 @@ export class CompanionOneToOneEnvironmentsController {
   @ApiResponse({ status: 201, type: CompanionOneToOneEnvironmentDto })
   async create(@Body() createDto: CreateCompanionOneToOneEnvironmentDto) {
     const dto = await this.service.create(createDto);
-    await this.queues.add(dto.data.environment.id);
     return dto;
   }
 }

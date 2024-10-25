@@ -102,6 +102,7 @@ export class UsersService {
           type: 'AI',
           tag: row.aiUser.tag,
           code: row.aiUser.code,
+          bio: row.aiUser.bio,
         };
         return res;
       }

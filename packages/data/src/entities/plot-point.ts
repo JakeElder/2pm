@@ -8,6 +8,7 @@ import {
   AuthenticatedUserMessageDtoSchema,
 } from "./message";
 import type { PLOT_POINT_TYPES } from "../constants";
+import type { InferSelectModel } from "drizzle-orm";
 
 /**
  * Anonymous User Message
@@ -164,6 +165,8 @@ export const CreatePlotPointDtoSchema = z.discriminatedUnion("type", [
 /**
  * Types
  */
+export type PlotPoint = InferSelectModel<typeof schema.plotPoints>;
+
 export type CreatePlotPointDto = z.infer<typeof CreatePlotPointDtoSchema>;
 export type PlotPointDto = z.infer<typeof PlotPointDtoSchema>;
 export type PlotPointSummaryDto = z.infer<typeof PlotPointSummaryDtoSchema>;

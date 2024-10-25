@@ -62,6 +62,7 @@ export const AiUserDtoSchema = z.object({
   id: createSelectSchema(users).shape.id,
   tag: createSelectSchema(aiUsers).shape.tag,
   code: createSelectSchema(aiUsers).shape.code,
+  bio: createSelectSchema(aiUsers).shape.bio,
 });
 
 export const CreateAiUserDtoSchema = z.object({
@@ -69,6 +70,7 @@ export const CreateAiUserDtoSchema = z.object({
   id: createInsertSchema(users).shape.id,
   tag: createInsertSchema(aiUsers).shape.tag,
   code: createInsertSchema(aiUsers).shape.code,
+  bio: createInsertSchema(aiUsers).shape.bio,
 });
 
 export class AiUserDto extends createZodDto(AiUserDtoSchema) {}

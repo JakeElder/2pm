@@ -12,7 +12,9 @@ import { messages } from "../schema";
  */
 export const AnonymousUserMessageDtoSchema = z.object({
   type: z.literal("ANONYMOUS_USER"),
-  plotPoint: createSelectSchema(schema.plotPoints),
+  plotPoint: createSelectSchema(schema.plotPoints).extend({
+    createdAt: z.string(),
+  }),
   message: createSelectSchema(schema.messages),
   anonymousUserMessage: createSelectSchema(schema.anonymousUserMessages),
   environment: createSelectSchema(schema.environments),
@@ -31,7 +33,9 @@ export const UpdateAnonymousUserMessageDtoSchema = z.object({
  */
 export const AuthenticatedUserMessageDtoSchema = z.object({
   type: z.literal("AUTHENTICATED_USER"),
-  plotPoint: createSelectSchema(schema.plotPoints),
+  plotPoint: createSelectSchema(schema.plotPoints).extend({
+    createdAt: z.string(),
+  }),
   message: createSelectSchema(schema.messages),
   authenticatedUserMessage: createSelectSchema(
     schema.authenticatedUserMessages,
@@ -52,7 +56,9 @@ export const UpdateAuthenticatedUserMessageDtoSchema = z.object({
  */
 export const AiUserMessageDtoSchema = z.object({
   type: z.literal("AI_USER"),
-  plotPoint: createSelectSchema(schema.plotPoints),
+  plotPoint: createSelectSchema(schema.plotPoints).extend({
+    createdAt: z.string(),
+  }),
   message: createSelectSchema(schema.messages),
   aiUserMessage: createSelectSchema(schema.aiUserMessages),
   environment: createSelectSchema(schema.environments),

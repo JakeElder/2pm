@@ -1,7 +1,7 @@
 {
   "name": "@2pm/data",
   "exports": {
-    "./seed": "./src/seed.ts",
+    "./seed": "./src/seed.tsx",
     "./schema": "./src/schema.ts",
     ".": "./src/index.ts"
   },
@@ -11,6 +11,9 @@
     "migrate": "drizzle-kit migrate",
     "typecheck": "tsc --noEmit",
     "format": "prettier --write \"**/*.{ts,tsx}\""
+  },
+  "dependencies": {
+    "@2pm/utils": "workspace:*"
   },
   "devDependencies": {
     "drizzle-kit": "^0.24.2"

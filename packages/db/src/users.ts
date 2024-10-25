@@ -73,11 +73,11 @@ export default class Users extends DbModule {
       }
 
       if (dto.type === "AI") {
-        const { code, tag } = dto;
+        const { code, tag, bio } = dto;
 
         const [aiUser] = await tx
           .insert(aiUsers)
-          .values({ userId: user.id, tag, code })
+          .values({ userId: user.id, tag, code, bio })
           .returning();
 
         const res: AiUserDto = {
@@ -85,6 +85,7 @@ export default class Users extends DbModule {
           type: "AI",
           tag: aiUser.tag,
           code: aiUser.code,
+          bio: aiUser.bio,
         };
 
         return res as InferUserDto<T>;

@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
 import { BullBoardModule } from '@bull-board/nestjs';
-import { ExpressAdapter } from '@bull-board/express';
 import { ConfigModule } from '@nestjs/config';
+import { ExpressAdapter } from '@bull-board/express';
+import { BullModule } from '@nestjs/bull';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CharacterEngineModule } from './character-engine/character-engine.module';
@@ -17,7 +18,10 @@ import { SessionsModule } from './sessions/sessions.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '.env',
+    }),
     CharacterEngineModule,
     EnvironmentModule,
     PlotPointsModule,
@@ -26,6 +30,9 @@ import { SessionsModule } from './sessions/sessions.module';
     DatabaseModule,
     UsersModule,
     MessagesModule,
+    BullModule.forRoot({
+      redis: { host: 'localhost', port: 6379 },
+    }),
     BullBoardModule.forRoot({
       route: '/queues',
       adapter: ExpressAdapter,

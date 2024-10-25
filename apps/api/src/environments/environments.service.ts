@@ -1,11 +1,9 @@
-import CharacterEngine from '@2pm/character-engine';
 import {
   CompanionOneToOneEnvironmentDto,
   CreateEnvironmentDto,
   InferEnvironmentDto,
 } from '@2pm/data';
 import { Inject, Injectable } from '@nestjs/common';
-import { EnvironmentGateway } from './environments.gateway';
 import DBService from '@2pm/db';
 import { and, count, eq, inArray } from 'drizzle-orm';
 import {
@@ -19,21 +17,12 @@ import { alias } from 'drizzle-orm/pg-core';
 
 @Injectable()
 export class EnvironmentsService {
-  constructor(
-    @Inject('CE') private readonly ce: CharacterEngine,
-    @Inject('DB') private readonly db: DBService,
-    private readonly environmentsGateway: EnvironmentGateway,
-  ) {}
+  constructor(@Inject('DB') private readonly db: DBService) {}
 
   public async create<T extends CreateEnvironmentDto>(
     dto: T,
   ): Promise<InferEnvironmentDto<T>> {
     return this.db.environments.insert(dto);
-  }
-
-  respondCompanionOneToOne(environmentId: number) {
-    // const environment = this.getEnvironmentByEnvironmentId(environmentId);
-    // this.ce.evaluate(environment);
   }
 
   async getEnvironmentMessageCount(environmentId: number) {

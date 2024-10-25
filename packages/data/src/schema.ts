@@ -64,6 +64,7 @@ export const aiUsers = pgTable("ai_users", {
   tag: text("tag").notNull(),
   userId: integer("user_id").references(() => users.id),
   code: aiUserCodeEnum("code").notNull().unique(),
+  bio: text("bio").notNull(),
 });
 
 /**
@@ -87,6 +88,9 @@ export const plotPoints = pgTable("plot_points", {
     .notNull()
     .references(() => environments.id),
   type: plotPointTypeEnum("type").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true, precision: 3 })
+    .defaultNow()
+    .notNull(),
 });
 
 /**
