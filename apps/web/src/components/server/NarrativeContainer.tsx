@@ -1,7 +1,7 @@
 "use server";
 
 import { getPlotPointsByEnvironmentId } from "@/api/environments";
-import { EnvironmentDto } from "@2pm/data";
+import { EnvironmentDto, PlotPointDtoSchema } from "@2pm/data";
 import { getSession } from "@/actions";
 import NarrativeViewContainer from "../client/NarrativeViewContainer";
 import { SessionProvider } from "../client/SessionProvider";
@@ -20,7 +20,7 @@ const NarrativeContainer = async ({ environment }: Props) => {
     <SessionProvider session={session}>
       <NarrativeViewContainer
         environment={environment}
-        plotPoints={plotPoints}
+        plotPoints={plotPoints.map((p) => PlotPointDtoSchema.parse(p))}
       />
     </SessionProvider>
   );

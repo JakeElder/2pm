@@ -51,7 +51,7 @@ const AI_USERS: AiUserSeed[] = [
         </p>
         <p>
           A witty, stoic, yet oddly charming chatacter - Ivan will respond as
-          best he can, with humility to guide you through the 2PM universe.
+          best he can, with humility to guide you through the 2PM Universe.
         </p>
       </>,
     ),
