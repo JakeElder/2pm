@@ -1,29 +1,18 @@
 import {
+  Body,
   Controller,
   Get,
   ParseArrayPipe,
   ParseIntPipe,
+  Post,
   Query,
   UsePipes,
 } from '@nestjs/common';
-import {
-  ApiExtraModels,
-  ApiOperation,
-  ApiQuery,
-  ApiResponse,
-  ApiTags,
-  getSchemaPath,
-} from '@nestjs/swagger';
+import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { SessionsService } from './sessions.service';
-import {
-  AnonymousSessionDto,
-  AuthenticatedSessionDto,
-  FindSessionsQueryDto,
-} from '@2pm/data';
+import { CreateSessionDto, FindSessionsQueryDto, SessionDto } from '@2pm/data';
 import { ZodValidationPipe } from '@anatine/zod-nestjs';
 
-@ApiExtraModels(AnonymousSessionDto)
-@ApiExtraModels(AuthenticatedSessionDto)
 @ApiTags('Sessions')
 @Controller('sessions')
 export class SessionsController {
@@ -38,15 +27,7 @@ export class SessionsController {
   @ApiResponse({
     status: 200,
     description: 'The array of sessions',
-    schema: {
-      type: 'array',
-      items: {
-        oneOf: [
-          { $ref: getSchemaPath(AnonymousSessionDto) },
-          { $ref: getSchemaPath(AuthenticatedSessionDto) },
-        ],
-      },
-    },
+    type: [SessionDto],
   })
   @ApiQuery({
     name: 'ids',
@@ -67,5 +48,17 @@ export class SessionsController {
   ) {
     const res = this.service.find({ ids, limit });
     return res;
+  }
+
+  @Post()
+  @UsePipes(ZodValidationPipe)
+  @ApiOperation({
+    summary: 'Create',
+    operationId: 'createSession',
+  })
+  @ApiResponse({ status: 201, type: SessionDto })
+  async create(@Body() createDto: CreateSessionDto) {
+    const dto = await this.service.create(createDto);
+    return dto;
   }
 }

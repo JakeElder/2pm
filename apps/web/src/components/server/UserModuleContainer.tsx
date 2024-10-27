@@ -16,12 +16,8 @@ type TagProps = {
 };
 
 export const Tag = ({ session }: TagProps) => {
-  if (session.type === "ANONYMOUS") {
-    const uuid = translator.fromUUID(session.data.session.id);
-    return <UserModule.AnonymousTag>{uuid}</UserModule.AnonymousTag>;
-  }
-
-  return <UserModule.Tag>{session.data.authenticatedUser.tag}</UserModule.Tag>;
+  const uuid = translator.fromUUID(session.session.id);
+  return <UserModule.AnonymousTag>{uuid}</UserModule.AnonymousTag>;
 };
 
 const UserModuleContainer = async ({}: Props) => {

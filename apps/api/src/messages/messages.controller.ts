@@ -8,16 +8,10 @@ import {
   ApiQuery,
   getSchemaPath,
 } from '@nestjs/swagger';
-import {
-  AiUserMessageDto,
-  AuthenticatedUserMessageDto,
-  MESSAGE_TYPES,
-  type MessageType,
-} from '@2pm/data';
+import { AiUserMessageDto, MESSAGE_TYPES, type MessageType } from '@2pm/data';
 import { AppEventEmitter } from '../event-emitter';
 
 @ApiTags('Messages')
-@ApiExtraModels(AuthenticatedUserMessageDto)
 @ApiExtraModels(AiUserMessageDto)
 @Controller('messages')
 export class MessagesController implements OnModuleInit {
@@ -43,10 +37,7 @@ export class MessagesController implements OnModuleInit {
     schema: {
       type: 'array',
       items: {
-        oneOf: [
-          { $ref: getSchemaPath(AuthenticatedUserMessageDto) },
-          { $ref: getSchemaPath(AiUserMessageDto) },
-        ],
+        oneOf: [{ $ref: getSchemaPath(AiUserMessageDto) }],
       },
     },
   })

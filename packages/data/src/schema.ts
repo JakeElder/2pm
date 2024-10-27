@@ -54,15 +54,6 @@ export const anonymousUsers = pgTable("anonymous_users", {
     .references(() => environments.id),
 });
 
-export const authenticatedUsers = pgTable("authenticated_users", {
-  id: serial("id").primaryKey(),
-  tag: text("tag").notNull(),
-  userId: integer("user_id").references(() => users.id),
-  locationEnvironmentId: integer("location_environment_id")
-    .notNull()
-    .references(() => environments.id),
-});
-
 export const aiUsers = pgTable("ai_users", {
   id: aiUserCodeEnum("id").primaryKey(),
   tag: text("tag").notNull(),
@@ -119,18 +110,7 @@ export const anonymousUserMessages = pgTable("anonymous_user_messages", {
     .references(() => messages.id),
 });
 
-export const authenticatedUserMessages = pgTable(
-  "authenticated_user_messages",
-  {
-    id: serial("id").primaryKey(),
-    content: text("content").notNull(),
-    messageId: integer("message_id")
-      .notNull()
-      .references(() => messages.id),
-  },
-);
-
-export const aiUserMessages = pgTable("ai_messages", {
+export const aiUserMessages = pgTable("ai_user_messages", {
   id: serial("id").primaryKey(),
   content: text("content").notNull(),
   messageId: integer("message_id")

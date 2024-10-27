@@ -29,29 +29,6 @@ export const UpdateAnonymousUserMessageDtoSchema = z.object({
 });
 
 /**
- * Authenticated User Message
- */
-export const AuthenticatedUserMessageDtoSchema = z.object({
-  type: z.literal("AUTHENTICATED_USER"),
-  plotPoint: createSelectSchema(schema.plotPoints).extend({
-    createdAt: z.coerce.date(),
-  }),
-  message: createSelectSchema(schema.messages),
-  authenticatedUserMessage: createSelectSchema(
-    schema.authenticatedUserMessages,
-  ),
-  environment: createSelectSchema(schema.environments),
-  user: createSelectSchema(schema.users),
-  authenticatedUser: createSelectSchema(schema.authenticatedUsers),
-});
-
-export const UpdateAuthenticatedUserMessageDtoSchema = z.object({
-  type: z.literal("AUTHENTICATED_USER"),
-  id: createSelectSchema(schema.messages).shape.id,
-  content: createInsertSchema(schema.authenticatedUserMessages).shape.content,
-});
-
-/**
  * Ai User Message
  */
 export const AiUserMessageDtoSchema = z.object({
@@ -90,13 +67,11 @@ export class FindMessagesQueryDto extends createZodDto(
  */
 export const MessageDtoSchema = z.discriminatedUnion("type", [
   AnonymousUserMessageDtoSchema,
-  AuthenticatedUserMessageDtoSchema,
   AiUserMessageDtoSchema,
 ]);
 
 export const UpdateMessageDtoSchema = z.discriminatedUnion("type", [
   UpdateAnonymousUserMessageDtoSchema,
-  UpdateAuthenticatedUserMessageDtoSchema,
   UpdateAiUserMessageDtoSchema,
 ]);
 
@@ -106,16 +81,10 @@ export const UpdateMessageDtoSchema = z.discriminatedUnion("type", [
 export class AnonymousUserMessageDto extends createZodDto(
   AnonymousUserMessageDtoSchema,
 ) {}
-export class AuthenticatedUserMessageDto extends createZodDto(
-  AuthenticatedUserMessageDtoSchema,
-) {}
 export class AiUserMessageDto extends createZodDto(AiUserMessageDtoSchema) {}
 
 export class UpdateAnonymousUserMessageDto extends createZodDto(
   UpdateAnonymousUserMessageDtoSchema,
-) {}
-export class UpdateAuthenticatedUserMessageDto extends createZodDto(
-  UpdateAuthenticatedUserMessageDtoSchema,
 ) {}
 export class UpdateAiUserMessageDto extends createZodDto(
   UpdateAiUserMessageDtoSchema,
@@ -129,7 +98,6 @@ export type MessageDto = z.infer<typeof MessageDtoSchema>;
 
 type MessageDtoMap = {
   ANONYMOUS_USER: AnonymousUserMessageDto;
-  AUTHENTICATED_USER: AuthenticatedUserMessageDto;
   AI_USER: AiUserMessageDto;
 };
 

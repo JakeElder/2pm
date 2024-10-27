@@ -10,12 +10,7 @@ import {
   plotPointMessages,
 } from "@2pm/data/schema";
 import { DbModule } from "./db-module";
-import {
-  AiUserMessageDto,
-  AuthenticatedUserMessageDto,
-  InferMessageDto,
-  UpdateMessageDto,
-} from "@2pm/data";
+import { AiUserMessageDto, InferMessageDto, UpdateMessageDto } from "@2pm/data";
 import { eq } from "drizzle-orm";
 
 export default class Messages extends DbModule {
@@ -88,32 +83,6 @@ export default class Messages extends DbModule {
         environment,
         user,
         aiUser,
-      };
-
-      return res as InferMessageDto<T>;
-    }
-
-    if (type === "AUTHENTICATED_USER") {
-      if (!authenticatedUser || !authenticatedUserMessageId) {
-        throw new Error();
-      }
-
-      const { content } = dto;
-
-      const [authenticatedUserMessage] = await this.drizzle
-        .update(authenticatedUserMessages)
-        .set({ content })
-        .where(eq(authenticatedUserMessages.id, authenticatedUserMessageId))
-        .returning();
-
-      const res: AuthenticatedUserMessageDto = {
-        type: "AUTHENTICATED_USER",
-        plotPoint,
-        message,
-        authenticatedUserMessage,
-        environment,
-        user,
-        authenticatedUser,
       };
 
       return res as InferMessageDto<T>;

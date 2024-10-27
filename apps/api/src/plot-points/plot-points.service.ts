@@ -1,7 +1,6 @@
 import {
   AiUserMessagePlotPointDto,
   CreatePlotPointDto,
-  AuthenticatedUserMessagePlotPointDto,
   InferPlotPointDto,
   PlotPointDto,
   AnonymousUserMessagePlotPointDto,
@@ -71,9 +70,8 @@ export class PlotPointsService {
         and(
           eq(plotPoints.environmentId, id),
           inArray(plotPoints.type, [
-            'ANONYMOUS_USER_MESSAGE',
-            'AUTHENTICATED_USER_MESSAGE',
             'AI_USER_MESSAGE',
+            'ANONYMOUS_USER_MESSAGE',
           ]),
         ),
       )
@@ -97,38 +95,6 @@ export class PlotPointsService {
             anonymousUser,
             message,
             anonymousUserMessage,
-          },
-        };
-
-        return res;
-      }
-      if (row.plotPoint.type === 'AUTHENTICATED_USER_MESSAGE') {
-        const {
-          user,
-          authenticatedUser,
-          authenticatedUserMessage,
-          message,
-          ...rest
-        } = row;
-
-        if (
-          !user ||
-          !authenticatedUser ||
-          !authenticatedUserMessage ||
-          !message
-        ) {
-          throw new Error();
-        }
-
-        const res: AuthenticatedUserMessagePlotPointDto = {
-          type: 'AUTHENTICATED_USER_MESSAGE',
-          data: {
-            type: 'AUTHENTICATED_USER',
-            ...rest,
-            user,
-            authenticatedUser,
-            message,
-            authenticatedUserMessage,
           },
         };
 
@@ -193,44 +159,6 @@ export class PlotPointsService {
       const res: AnonymousUserMessagePlotPointDto = {
         type: 'ANONYMOUS_USER_MESSAGE',
         data: { type: 'ANONYMOUS_USER', ...row },
-      };
-
-      return res;
-    });
-
-    return data;
-  }
-
-  async findAuthenticatedUserMessages() {
-    const res = await this.db.drizzle
-      .select({
-        plotPoint: plotPoints,
-        message: messages,
-        authenticatedUserMessage: authenticatedUserMessages,
-        user: users,
-        authenticatedUser: authenticatedUsers,
-        environment: environments,
-      })
-      .from(plotPoints)
-      .innerJoin(
-        plotPointMessages,
-        eq(plotPoints.id, plotPointMessages.plotPointId),
-      )
-      .innerJoin(messages, eq(plotPointMessages.messageId, messages.id))
-      .innerJoin(
-        authenticatedUserMessages,
-        eq(messages.id, authenticatedUserMessages.messageId),
-      )
-      .innerJoin(users, eq(messages.userId, users.id))
-      .innerJoin(authenticatedUsers, eq(users.id, authenticatedUsers.userId))
-      .innerJoin(environments, eq(plotPoints.environmentId, environments.id))
-      .where(eq(plotPoints.type, 'AUTHENTICATED_USER_MESSAGE'))
-      .orderBy(desc(plotPoints.id));
-
-    const data: AuthenticatedUserMessagePlotPointDto[] = res.map((row) => {
-      const res: AuthenticatedUserMessagePlotPointDto = {
-        type: 'AUTHENTICATED_USER_MESSAGE',
-        data: { type: 'AUTHENTICATED_USER', ...row },
       };
 
       return res;

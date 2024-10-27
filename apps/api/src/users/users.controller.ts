@@ -7,10 +7,9 @@ import {
   ApiTags,
   getSchemaPath,
 } from '@nestjs/swagger';
-import { AiUserDto, AnonymousUserDto, AuthenticatedUserDto } from '@2pm/data';
+import { AiUserDto, AnonymousUserDto } from '@2pm/data';
 
 @ApiExtraModels(AnonymousUserDto)
-@ApiExtraModels(AuthenticatedUserDto)
 @ApiExtraModels(AiUserDto)
 @ApiTags('Users')
 @Controller('users')
@@ -29,7 +28,6 @@ export class UsersController {
       items: {
         oneOf: [
           { $ref: getSchemaPath(AnonymousUserDto) },
-          { $ref: getSchemaPath(AuthenticatedUserDto) },
           { $ref: getSchemaPath(AiUserDto) },
         ],
       },

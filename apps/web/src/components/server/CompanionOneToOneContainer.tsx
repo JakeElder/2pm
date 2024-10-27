@@ -11,9 +11,7 @@ type Props = {};
 
 const CompanionOneToOneContainer = async ({}: Props) => {
   const session = await getSession();
-  const o2o = await getCompanionOneToOneEnvironmentsByUserId(
-    session.data.user.id,
-  );
+  const o2o = await getCompanionOneToOneEnvironmentsByUserId(session.user.id);
 
   return (
     <CompanionOneToOneModule.Root>

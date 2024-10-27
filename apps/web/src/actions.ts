@@ -1,21 +1,12 @@
 "use server";
 
-import { CreateAuthenticatedUserMessagePlotPointDto } from "@2pm/api/client";
 import { cookies } from "next/headers";
 import api from "@/api";
 import { CreateAnonymousUserMessagePlotPointDto } from "@2pm/data";
 
 export const submitMessage = async (
-  dto:
-    | CreateAuthenticatedUserMessagePlotPointDto
-    | CreateAnonymousUserMessagePlotPointDto,
+  dto: CreateAnonymousUserMessagePlotPointDto,
 ) => {
-  if (dto.type === "AUTHENTICATED_USER_MESSAGE") {
-    const res =
-      await api.plotPoints.createAuthenticatedUserMessagePlotPoint(dto);
-    return res.data;
-  }
-
   if (dto.type === "ANONYMOUS_USER_MESSAGE") {
     const res = await api.plotPoints.createAnonymousUserMessagePlotPoint(dto);
     return res.data;
@@ -29,13 +20,12 @@ export const createAnonymousSession = async () => {
     type: "ANONYMOUS",
   });
 
-  const { data: sessionRes } = await api.sessions.createAnonymousSession({
-    type: "ANONYMOUS",
+  const { data: sessionRes } = await api.sessions.createSession({
     userId: userRes.data.user.id,
   });
 
   const store = await cookies();
-  store.set("sid", sessionRes.data.session.id, {
+  store.set("sid", sessionRes.session.id, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",

@@ -2,7 +2,6 @@ import {
   AiUserMessagePlotPointSummaryDtoSchema,
   AnonymousUserMessagePlotPointSummaryDtoSchema,
   AuthEmailSentPlotPointSummaryDtoSchema,
-  AuthenticatedUserMessagePlotPointSummaryDtoSchema,
   EvaluatablePlotPointType,
   EvaluationPlotPointDto,
   EvaluationPlotPointSummaryDtoSchema,
@@ -96,8 +95,6 @@ export class EnvironmentsProcessor {
     const schemas: Record<EvaluatablePlotPointType, ZodType<any>> = {
       EVALUATION: EvaluationPlotPointSummaryDtoSchema,
       AI_USER_MESSAGE: AiUserMessagePlotPointSummaryDtoSchema,
-      AUTHENTICATED_USER_MESSAGE:
-        AuthenticatedUserMessagePlotPointSummaryDtoSchema,
       ANONYMOUS_USER_MESSAGE: AnonymousUserMessagePlotPointSummaryDtoSchema,
       AUTH_EMAIL_SENT: AuthEmailSentPlotPointSummaryDtoSchema,
     };

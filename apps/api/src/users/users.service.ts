@@ -1,7 +1,6 @@
 import {
   AiUserDto,
   AnonymousUserDto,
-  AuthenticatedUserDto,
   CreateUserDto,
   InferUserDto,
   UserDto,
@@ -77,19 +76,6 @@ export class UsersService {
           },
         };
 
-        return res;
-      }
-
-      if (row.user.type === 'AUTHENTICATED') {
-        if (!row.authenticatedUser) {
-          throw new Error();
-        }
-        const res: AuthenticatedUserDto = {
-          id: row.user.id,
-          type: 'AUTHENTICATED',
-          tag: row.authenticatedUser.tag,
-          locationEnvironmentId: row.authenticatedUser.locationEnvironmentId,
-        };
         return res;
       }
 

@@ -1,8 +1,6 @@
 import {
   AiUserMessageDto,
   AiUserMessageDtoSchema,
-  AuthenticatedUserMessageDto,
-  AuthenticatedUserMessageDtoSchema,
   FindMessagesQueryDto,
   InferMessageDto,
   MessageDto,
@@ -78,11 +76,6 @@ export class MessagesService {
     });
 
     return data;
-  }
-
-  async findAuthenticatedUser(): Promise<AuthenticatedUserMessageDto[]> {
-    const res = await this.findAll({ type: 'AUTHENTICATED_USER' });
-    return res.map((row) => AuthenticatedUserMessageDtoSchema.parse(row));
   }
 
   async findAiUser(): Promise<AiUserMessageDto[]> {

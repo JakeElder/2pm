@@ -46,16 +46,6 @@ export default function summaryToOpenAiMessage(
         content: plotPoint.data.aiUserMessage.content,
       };
     },
-    AUTHENTICATED_USER_MESSAGE: (plotPoint) => {
-      if (plotPoint.type !== "AUTHENTICATED_USER_MESSAGE") {
-        throw new Error();
-      }
-      return {
-        role: "user",
-        name: plotPoint.data.authenticatedUser.tag,
-        content: plotPoint.data.authenticatedUserMessage.content,
-      };
-    },
     ANONYMOUS_USER_MESSAGE: (plotPoint) => {
       if (plotPoint.type !== "ANONYMOUS_USER_MESSAGE") {
         throw new Error();

@@ -5,7 +5,6 @@ import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import {
   AiUserMessageDtoSchema,
   AnonymousUserMessageDtoSchema,
-  AuthenticatedUserMessageDtoSchema,
 } from "./message";
 import type { PLOT_POINT_TYPES } from "../constants";
 import type { InferSelectModel } from "drizzle-orm";
@@ -47,48 +46,6 @@ export class AnonymousUserMessagePlotPointSummaryDto extends createZodDto(
 
 export class CreateAnonymousUserMessagePlotPointDto extends createZodDto(
   CreateAnonymousUserMessagePlotPointDtoSchema,
-) {}
-
-/**
- * Authenticated User Message
- */
-export const AuthenticatedUserMessagePlotPointDtoSchema = z.object({
-  type: z.literal("AUTHENTICATED_USER_MESSAGE"),
-  data: AuthenticatedUserMessageDtoSchema,
-});
-
-export const AuthenticatedUserMessagePlotPointSummaryDtoSchema = z.object({
-  type: z.literal("AUTHENTICATED_USER_MESSAGE"),
-  data: z.object({
-    user: createSelectSchema(schema.users).pick({ id: true }),
-    authenticatedUser: createSelectSchema(schema.authenticatedUsers).pick({
-      id: true,
-      tag: true,
-    }),
-    message: createSelectSchema(schema.messages).pick({ id: true }),
-    authenticatedUserMessage: createSelectSchema(
-      schema.authenticatedUserMessages,
-    ).pick({ content: true }),
-  }),
-});
-
-export const CreateAuthenticatedUserMessagePlotPointDtoSchema = z.object({
-  type: z.literal("AUTHENTICATED_USER_MESSAGE"),
-  userId: createSelectSchema(schema.users).shape.id,
-  environmentId: createSelectSchema(schema.environments).shape.id,
-  content: createSelectSchema(schema.authenticatedUserMessages).shape.content,
-});
-
-export class AuthenticatedUserMessagePlotPointDto extends createZodDto(
-  AuthenticatedUserMessagePlotPointDtoSchema,
-) {}
-
-export class AuthenticatedUserMessagePlotPointSummaryDto extends createZodDto(
-  AuthenticatedUserMessagePlotPointSummaryDtoSchema,
-) {}
-
-export class CreateAuthenticatedUserMessagePlotPointDto extends createZodDto(
-  CreateAuthenticatedUserMessagePlotPointDtoSchema,
 ) {}
 
 /**
@@ -233,7 +190,6 @@ export class AuthEmailSentPlotPointSummaryDto extends createZodDto(
  */
 export const PlotPointDtoSchema = z.discriminatedUnion("type", [
   AnonymousUserMessagePlotPointDtoSchema,
-  AuthenticatedUserMessagePlotPointDtoSchema,
   AiUserMessagePlotPointDtoSchema,
   EvaluationPlotPointDtoSchema,
   AuthEmailSentPlotPointDtoSchema,
@@ -241,7 +197,6 @@ export const PlotPointDtoSchema = z.discriminatedUnion("type", [
 
 export const PlotPointSummaryDtoSchema = z.discriminatedUnion("type", [
   AnonymousUserMessagePlotPointSummaryDtoSchema,
-  AuthenticatedUserMessagePlotPointSummaryDtoSchema,
   AiUserMessagePlotPointSummaryDtoSchema,
   EvaluationPlotPointSummaryDtoSchema,
   AuthEmailSentPlotPointSummaryDtoSchema,
@@ -249,7 +204,6 @@ export const PlotPointSummaryDtoSchema = z.discriminatedUnion("type", [
 
 export const CreatePlotPointDtoSchema = z.discriminatedUnion("type", [
   CreateAnonymousUserMessagePlotPointDtoSchema,
-  CreateAuthenticatedUserMessagePlotPointDtoSchema,
   CreateAiUserMessagePlotPointDtoSchema,
   CreateEvaluationPlotPointDtoSchema,
   CreateAuthEmailSentPlotPointDtoSchema,
@@ -266,7 +220,6 @@ export type PlotPointSummaryDto = z.infer<typeof PlotPointSummaryDtoSchema>;
 
 type PlotPointDtoMap = {
   ANONYMOUS_USER_MESSAGE: AnonymousUserMessagePlotPointDto;
-  AUTHENTICATED_USER_MESSAGE: AuthenticatedUserMessagePlotPointDto;
   AI_USER_MESSAGE: AiUserMessagePlotPointDto;
   EVALUATION: EvaluationPlotPointDto;
   AUTH_EMAIL_SENT: AuthEmailSentPlotPointDto;

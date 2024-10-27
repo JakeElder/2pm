@@ -1,7 +1,6 @@
 import api from "@/api";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { WORLD_ROOM_ENVIRONMENTS } from "@2pm/data/seed";
 
 export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
@@ -27,15 +26,14 @@ export async function middleware(request: NextRequest) {
     throw new Error();
   }
 
-  const { data: sessionRes } = await api.sessions.createAnonymousSession({
-    type: "ANONYMOUS",
+  const { data: sessionRes } = await api.sessions.createSession({
     userId: userRes.data.data.user.id,
   });
 
   response.cookies.set({
     name: "sid",
     httpOnly: true,
-    value: sessionRes.data.session.id,
+    value: sessionRes.session.id,
     path: "/",
   });
 

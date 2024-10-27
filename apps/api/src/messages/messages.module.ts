@@ -4,16 +4,11 @@ import { MessagesService } from './messages.service';
 import { DatabaseModule } from '../database/database.module';
 import { EventEmitterModule } from '../event-emitter/event-emitter.module';
 import { MessagesGateway } from './messages.gateway';
-import { AuthenticatedUserMessagesController } from './authenticated-user-messages.controller';
 import { AiUserMessagesController } from './ai-user-messages.controller';
 
 @Module({
   imports: [DatabaseModule, EventEmitterModule],
-  controllers: [
-    MessagesController,
-    AuthenticatedUserMessagesController,
-    AiUserMessagesController,
-  ],
+  controllers: [MessagesController, AiUserMessagesController],
   providers: [MessagesService, MessagesGateway],
   exports: [MessagesService],
 })

@@ -1,6 +1,5 @@
 import {
   users,
-  authenticatedUsers,
   anonymousUsers,
   aiUsers,
   environments,
@@ -10,7 +9,6 @@ import {
   AiUserDto,
   AnonymousUserDto,
   CreateUserDto,
-  AuthenticatedUserDto,
   InferUserDto,
 } from "@2pm/data";
 import { eq } from "drizzle-orm";
@@ -51,24 +49,6 @@ export default class Users extends DbModule {
             user,
             anonymousUser,
           },
-        };
-
-        return res as InferUserDto<T>;
-      }
-
-      if (dto.type === "AUTHENTICATED") {
-        const { locationEnvironmentId, tag } = dto;
-
-        const [authenticatedUser] = await tx
-          .insert(authenticatedUsers)
-          .values({ userId: user.id, tag, locationEnvironmentId })
-          .returning();
-
-        const res: AuthenticatedUserDto = {
-          id: user.id,
-          type: "AUTHENTICATED",
-          tag: authenticatedUser.tag,
-          locationEnvironmentId: authenticatedUser.locationEnvironmentId,
         };
 
         return res as InferUserDto<T>;

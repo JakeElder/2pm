@@ -1,7 +1,4 @@
-import {
-  CreateAiUserDtoSchema,
-  CreateAuthenticatedUserDtoSchema,
-} from "./entities/user";
+import { CreateAiUserDtoSchema } from "./entities/user";
 import { z, ZodType } from "zod";
 import type { CreateWorldRoomEnvironmentDtoSchema } from "./entities/environment";
 import { txt } from "@2pm/utils";
@@ -15,7 +12,6 @@ type WorldRoomEnvironmentSeed = Seed<
   typeof CreateWorldRoomEnvironmentDtoSchema
 >;
 type AiUserSeed = Seed<typeof CreateAiUserDtoSchema>;
-type AuthenticatedUserSeed = Seed<typeof CreateAuthenticatedUserDtoSchema>;
 type ToolSeed = InferInsertModel<typeof tools>;
 
 /**

@@ -1,17 +1,5 @@
-import {
-  AnonymousSessionDto,
-  AuthenticatedSessionDto,
-  CreateSessionDto,
-  FindSessionsQueryDto,
-  InferSessionDto,
-  SessionDto,
-} from '@2pm/data';
-import {
-  anonymousUsers,
-  authenticatedUsers,
-  sessions,
-  users,
-} from '@2pm/data/schema';
+import { CreateSessionDto, FindSessionsQueryDto, SessionDto } from '@2pm/data';
+import { anonymousUsers, sessions, users } from '@2pm/data/schema';
 import DBService from '@2pm/db';
 import { Inject, Injectable } from '@nestjs/common';
 import { inArray, SQL, and, eq } from 'drizzle-orm';
@@ -20,9 +8,7 @@ import { inArray, SQL, and, eq } from 'drizzle-orm';
 export class SessionsService {
   constructor(@Inject('DB') private readonly db: DBService) {}
 
-  public async create<T extends CreateSessionDto>(
-    dto: T,
-  ): Promise<InferSessionDto<T>> {
+  public async create(dto: CreateSessionDto) {
     return this.db.sessions.insert(dto);
   }
 
@@ -34,54 +20,11 @@ export class SessionsService {
     }
 
     const builder = this.db.drizzle
-      .select({
-        session: sessions,
-        user: users,
-        anonymousUser: anonymousUsers,
-        authenticatedUser: authenticatedUsers,
-      })
+      .select({ session: sessions, user: users })
       .from(sessions)
       .innerJoin(users, eq(users.id, sessions.userId))
-      .leftJoin(anonymousUsers, eq(users.id, anonymousUsers.userId))
-      .leftJoin(authenticatedUsers, eq(users.id, authenticatedUsers.userId))
       .where(and(...filters));
 
-    const res = await (limit ? builder.limit(limit) : builder);
-
-    return res.map((row) => {
-      const { session, user } = row;
-
-      if (user.type === 'ANONYMOUS') {
-        const { anonymousUser } = row;
-
-        if (!anonymousUser) {
-          throw new Error();
-        }
-
-        const res: AnonymousSessionDto = {
-          type: 'ANONYMOUS',
-          data: { user, session, anonymousUser },
-        };
-
-        return res;
-      }
-
-      if (row.user.type === 'AUTHENTICATED') {
-        const { authenticatedUser } = row;
-
-        if (!authenticatedUser) {
-          throw new Error();
-        }
-
-        const res: AuthenticatedSessionDto = {
-          type: 'AUTHENTICATED',
-          data: { user, session, authenticatedUser },
-        };
-
-        return res;
-      }
-
-      throw new Error();
-    });
+    return await (limit ? builder.limit(limit) : builder);
   }
 }

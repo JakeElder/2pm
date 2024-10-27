@@ -19,10 +19,7 @@ import {
   AiUserMessageDto,
   AiUserMessagePlotPointDto,
   CreateAiUserMessagePlotPointDto,
-  CreateAuthenticatedUserMessagePlotPointDto,
   CreatePlotPointDto,
-  AuthenticatedUserMessageDto,
-  AuthenticatedUserMessagePlotPointDto,
   InferPlotPointDto,
   AnonymousUserMessagePlotPointDto,
   CreateAnonymousUserMessagePlotPointDto,
@@ -90,36 +87,6 @@ export default class PlotPoints extends DbModule {
           environment,
           user,
           anonymousUser,
-        },
-      };
-
-      return res as InferPlotPointDto<T>;
-    }
-
-    if (type === "AUTHENTICATED_USER_MESSAGE") {
-      if (!authenticatedUser) {
-        throw new Error();
-      }
-
-      const { content } = dto;
-
-      const { message, plotPoint, authenticatedUserMessage } =
-        await this.insertAuthenticatedUserMessagePlotPoint({
-          environmentId,
-          userId,
-          content,
-        });
-
-      const res: AuthenticatedUserMessagePlotPointDto = {
-        type: "AUTHENTICATED_USER_MESSAGE",
-        data: {
-          type: "AUTHENTICATED_USER",
-          plotPoint,
-          message,
-          authenticatedUserMessage,
-          environment,
-          user,
-          authenticatedUser,
         },
       };
 
@@ -263,46 +230,6 @@ export default class PlotPoints extends DbModule {
         plotPointMessage,
         message,
         anonymousUserMessage,
-      };
-    });
-  }
-
-  private async insertAuthenticatedUserMessagePlotPoint({
-    userId,
-    environmentId,
-    content,
-  }: Omit<CreateAuthenticatedUserMessagePlotPointDto, "type">): Promise<
-    Pick<
-      AuthenticatedUserMessageDto,
-      "plotPoint" | "message" | "authenticatedUserMessage"
-    >
-  > {
-    return this.drizzle.transaction(async (tx) => {
-      const [plotPoint] = await tx
-        .insert(plotPoints)
-        .values({ type: "AUTHENTICATED_USER_MESSAGE", environmentId })
-        .returning();
-
-      const [message] = await tx
-        .insert(messages)
-        .values({ type: "AUTHENTICATED_USER", userId, environmentId })
-        .returning();
-
-      const [authenticatedUserMessage] = await tx
-        .insert(authenticatedUserMessages)
-        .values({ messageId: message.id, content })
-        .returning();
-
-      const [plotPointMessage] = await tx
-        .insert(plotPointMessages)
-        .values({ plotPointId: plotPoint.id, messageId: message.id })
-        .returning();
-
-      return {
-        plotPoint,
-        plotPointMessage,
-        message,
-        authenticatedUserMessage,
       };
     });
   }

@@ -19,7 +19,7 @@ const NarrativeViewContainer = ({ environment, plotPoints }: Props) => {
 
   useEffect(() => {
     const e: EnvironmentsRoomJoinedEventDto = {
-      user: session.data.user,
+      user: session.user,
       environment,
     };
 
