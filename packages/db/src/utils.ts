@@ -15,6 +15,11 @@ import {
   sessions,
   anonymousUsers,
   anonymousUserMessages,
+  tools,
+  plotPointEvaluations,
+  evaluations,
+  authEmails,
+  plotPointAuthEmails,
 } from "@2pm/data/schema";
 import * as seed from "@2pm/data/seed";
 import { DbModule } from "./db-module";
@@ -23,6 +28,7 @@ import Users from "./users";
 import Messages from "./messages";
 import PlotPoints from "./plot-points";
 import Environments from "./environments";
+import Tools from "./tools";
 
 export default class Utils extends DbModule {
   public async clear() {
@@ -31,9 +37,14 @@ export default class Utils extends DbModule {
     // Truncate dependent tables first
     await rm(plotPointEnvironmentPresences);
     await rm(plotPointMessages);
+    await rm(plotPointEvaluations);
+    await rm(plotPointAuthEmails);
     await rm(userEnvironmentPresences);
     await rm(sessions);
     await rm(companionOneToOneEnvironments);
+    await rm(tools);
+    await rm(evaluations);
+    await rm(authEmails);
 
     // Truncate tables that depend on users or messages
     await rm(anonymousUserMessages);
@@ -62,6 +73,7 @@ export default class Utils extends DbModule {
       userEnvironmentPresences: new UserEnvironmentPresences(this.pg),
       plotPoints: new PlotPoints(this.pg),
       messages: new Messages(this.pg),
+      tools: new Tools(this.pg),
     };
 
     const [universe] = await Promise.all([
@@ -91,5 +103,7 @@ export default class Utils extends DbModule {
       content: "Standby for G stuff",
       state: "COMPLETE",
     });
+
+    await Promise.all(seed.TOOLS.map((tool) => db.tools.insert(tool)));
   }
 }

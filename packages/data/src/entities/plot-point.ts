@@ -21,17 +21,12 @@ export const AnonymousUserMessagePlotPointDtoSchema = z.object({
 export const AnonymousUserMessagePlotPointSummaryDtoSchema = z.object({
   type: z.literal("ANONYMOUS_USER_MESSAGE"),
   data: z.object({
-    user: z.object({
-      type: z.literal("ANONYMOUS_USER"),
-      id: createSelectSchema(schema.users).shape.id,
-    }),
-    anonymousUser: z.object({
-      id: createSelectSchema(schema.anonymousUsers).shape.id,
-    }),
-    message: z.object({
-      id: createSelectSchema(schema.messages).shape.id,
-      content: createSelectSchema(schema.anonymousUserMessages).shape.content,
-    }),
+    user: createSelectSchema(schema.users).pick({ id: true }),
+    anonymousUser: createSelectSchema(schema.anonymousUsers).pick({ id: true }),
+    message: createSelectSchema(schema.messages).pick({ id: true }),
+    anonymousUserMessage: createSelectSchema(schema.anonymousUserMessages).pick(
+      { content: true },
+    ),
   }),
 });
 
@@ -65,16 +60,15 @@ export const AuthenticatedUserMessagePlotPointDtoSchema = z.object({
 export const AuthenticatedUserMessagePlotPointSummaryDtoSchema = z.object({
   type: z.literal("AUTHENTICATED_USER_MESSAGE"),
   data: z.object({
-    user: z.object({
-      type: z.literal("AUTHENTICATED_USER"),
-      id: createSelectSchema(schema.users).shape.id,
-      tag: createSelectSchema(schema.authenticatedUsers).shape.tag,
+    user: createSelectSchema(schema.users).pick({ id: true }),
+    authenticatedUser: createSelectSchema(schema.authenticatedUsers).pick({
+      id: true,
+      tag: true,
     }),
-    message: z.object({
-      id: createSelectSchema(schema.messages).shape.id,
-      content: createSelectSchema(schema.authenticatedUserMessages).shape
-        .content,
-    }),
+    message: createSelectSchema(schema.messages).pick({ id: true }),
+    authenticatedUserMessage: createSelectSchema(
+      schema.authenticatedUserMessages,
+    ).pick({ content: true }),
   }),
 });
 
@@ -108,15 +102,13 @@ export const AiUserMessagePlotPointDtoSchema = z.object({
 export const AiUserMessagePlotPointSummaryDtoSchema = z.object({
   type: z.literal("AI_USER_MESSAGE"),
   data: z.object({
-    user: z.object({
-      type: z.literal("AI"),
-      id: createSelectSchema(schema.users).shape.id,
-      tag: createSelectSchema(schema.aiUsers).shape.tag,
+    user: createSelectSchema(schema.users).pick({ id: true }),
+    aiUser: createSelectSchema(schema.aiUsers).pick({
+      code: true,
     }),
-    message: z.object({
-      id: createSelectSchema(schema.messages).shape.id,
-      state: createSelectSchema(schema.aiUserMessages).shape.state,
-      content: createSelectSchema(schema.aiUserMessages).shape.content,
+    message: createSelectSchema(schema.messages).pick({ id: true }),
+    aiUserMessage: createSelectSchema(schema.aiUserMessages).pick({
+      content: true,
     }),
   }),
 });
@@ -142,24 +134,125 @@ export class CreateAiUserMessagePlotPointDto extends createZodDto(
 ) {}
 
 /**
+ * Evaluation
+ */
+export const EvaluationPlotPointDtoSchema = z.object({
+  type: z.literal("EVALUATION"),
+  data: z.object({
+    plotPoint: createSelectSchema(schema.plotPoints),
+    user: createSelectSchema(schema.users),
+    aiUser: createSelectSchema(schema.aiUsers),
+    environment: createSelectSchema(schema.environments),
+    evaluation: createSelectSchema(schema.evaluations),
+    tool: createSelectSchema(schema.tools).extend({
+      definition: z.any(),
+    }),
+  }),
+});
+
+export const CreateEvaluationPlotPointDtoSchema = z.object({
+  type: z.literal("EVALUATION"),
+  userId: createSelectSchema(schema.users).shape.id,
+  environmentId: createSelectSchema(schema.environments).shape.id,
+  toolId: createSelectSchema(schema.tools).shape.id,
+  args: createSelectSchema(schema.evaluations).shape.args,
+});
+
+export const EvaluationPlotPointSummaryDtoSchema = z.object({
+  type: z.literal("EVALUATION"),
+  data: z.object({
+    user: createSelectSchema(schema.users).pick({ id: true }),
+    aiUser: createSelectSchema(schema.aiUsers).pick({ code: true }),
+    tool: createSelectSchema(schema.tools).pick({ code: true }),
+    evaluation: createSelectSchema(schema.evaluations).pick({
+      args: true,
+    }),
+  }),
+});
+
+export class EvaluationPlotPointDto extends createZodDto(
+  EvaluationPlotPointDtoSchema,
+) {}
+
+export class CreateEvaluationPlotPointDto extends createZodDto(
+  CreateEvaluationPlotPointDtoSchema,
+) {}
+
+export class EvaluationPlotPointSummaryDto extends createZodDto(
+  EvaluationPlotPointSummaryDtoSchema,
+) {}
+
+/**
+ * Auth Email Sent
+ */
+export const AuthEmailSentPlotPointDtoSchema = z.object({
+  type: z.literal("AUTH_EMAIL_SENT"),
+  data: z.object({
+    plotPoint: createSelectSchema(schema.plotPoints),
+    user: createSelectSchema(schema.users),
+    environment: createSelectSchema(schema.environments),
+    authEmail: createSelectSchema(schema.authEmails),
+  }),
+});
+
+export const CreateAuthEmailSentPlotPointDtoSchema = z.object({
+  type: z.literal("AUTH_EMAIL_SENT"),
+  environmentId: createSelectSchema(schema.environments).shape.id,
+  userId: createSelectSchema(schema.users).shape.id,
+  email: createSelectSchema(schema.authEmails).shape.email,
+  code: createSelectSchema(schema.authEmails).shape.code,
+});
+
+export const AuthEmailSentPlotPointSummaryDtoSchema = z.object({
+  type: z.literal("AUTH_EMAIL_SENT"),
+  data: z.object({
+    user: createSelectSchema(schema.users).pick({ id: true }),
+    authEmail: createSelectSchema(schema.authEmails).pick({
+      email: true,
+    }),
+    anonymousUser: createSelectSchema(schema.anonymousUsers).pick({
+      id: true,
+    }),
+  }),
+});
+
+export class AuthEmailSentPlotPointDto extends createZodDto(
+  AuthEmailSentPlotPointDtoSchema,
+) {}
+
+export class CreateAuthEmailSentPlotPointDto extends createZodDto(
+  CreateAuthEmailSentPlotPointDtoSchema,
+) {}
+
+export class AuthEmailSentPlotPointSummaryDto extends createZodDto(
+  AuthEmailSentPlotPointSummaryDtoSchema,
+) {}
+
+/**
  * Unions
  */
 export const PlotPointDtoSchema = z.discriminatedUnion("type", [
   AnonymousUserMessagePlotPointDtoSchema,
   AuthenticatedUserMessagePlotPointDtoSchema,
   AiUserMessagePlotPointDtoSchema,
+  EvaluationPlotPointDtoSchema,
+  AuthEmailSentPlotPointDtoSchema,
 ]);
 
 export const PlotPointSummaryDtoSchema = z.discriminatedUnion("type", [
   AnonymousUserMessagePlotPointSummaryDtoSchema,
   AuthenticatedUserMessagePlotPointSummaryDtoSchema,
   AiUserMessagePlotPointSummaryDtoSchema,
+  EvaluationPlotPointSummaryDtoSchema,
+  AuthEmailSentPlotPointSummaryDtoSchema,
 ]);
 
 export const CreatePlotPointDtoSchema = z.discriminatedUnion("type", [
   CreateAnonymousUserMessagePlotPointDtoSchema,
   CreateAuthenticatedUserMessagePlotPointDtoSchema,
   CreateAiUserMessagePlotPointDtoSchema,
+  CreateEvaluationPlotPointDtoSchema,
+  CreateAuthEmailSentPlotPointDtoSchema,
 ]);
 
 /**
@@ -175,6 +268,8 @@ type PlotPointDtoMap = {
   ANONYMOUS_USER_MESSAGE: AnonymousUserMessagePlotPointDto;
   AUTHENTICATED_USER_MESSAGE: AuthenticatedUserMessagePlotPointDto;
   AI_USER_MESSAGE: AiUserMessagePlotPointDto;
+  EVALUATION: EvaluationPlotPointDto;
+  AUTH_EMAIL_SENT: AuthEmailSentPlotPointDto;
 };
 
 export type InferPlotPointDto<

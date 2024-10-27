@@ -1,7 +1,8 @@
 import { Message as OllamaMessage, Ollama } from "ollama";
 import OpenAI from "openai";
 import { mimicAi, txt } from "@2pm/utils";
-import { PlotPointSummaryDto } from "@2pm/data";
+import { PlotPointSummaryDto, ToolCode } from "@2pm/data";
+import { summaryToOpenAiMessage } from "./utils";
 
 type OpenAiMessage = OpenAI.Chat.Completions.ChatCompletionMessageParam;
 type OpenAiTool = OpenAI.Chat.Completions.ChatCompletionTool;
@@ -31,7 +32,13 @@ class CharacterEngine {
     return res;
   }
 
-  async evaluate(narrative: PlotPointSummaryDto[]) {
+  async evaluate(
+    narrative: PlotPointSummaryDto[],
+    options: { debug: boolean } = { debug: false },
+  ): Promise<{
+    tool: ToolCode;
+    args: any;
+  }> {
     const params: OpenAiTool["function"]["parameters"] = {
       type: "object",
       properties: {},
@@ -43,9 +50,9 @@ class CharacterEngine {
         role: "system",
         content: txt(
           <>
-            You are @auto. The "man behind the curtain". You are the benevolent
-            bot tasked with evaluating narratives in the 2PM universe, then
-            deciding the best action to take.
+            You are @g. You are the benevolent Ai tasked with evaluating
+            narratives in the 2PM universe then deciding the best action to
+            take.
           </>,
         ),
       },
@@ -55,81 +62,135 @@ class CharacterEngine {
           <>Evaluate this narrative, then select a tool to progress it</>,
         ),
       },
+      {
+        role: "system",
+        content: txt(
+          <>Less is more. Use NOOP when appropriate. Don't double message</>,
+        ),
+      },
       ...narrative.map((dto) => {
-        const name = (() => {
-          if (dto.type === "ANONYMOUS_USER_MESSAGE") {
-            return `anon_${dto.data.anonymousUser.id}`;
-          }
-          return dto.data.user.tag;
-        })();
-        const res: OpenAiMessage = {
-          role:
-            dto.type === "AUTHENTICATED_USER_MESSAGE" ||
-            dto.type === "ANONYMOUS_USER_MESSAGE"
-              ? "user"
-              : "assistant",
-          name,
-          content: dto.data.message.content,
-        };
-        return res;
+        return summaryToOpenAiMessage(dto);
       }),
     ];
 
-    const res = await this.openai.chat.completions.create({
-      model: "gpt-4o",
-      messages: prompt,
-      tools: [
-        {
-          type: "function",
-          function: {
-            name: "respond_general",
-            description: "Make a general response",
-            strict: true,
-            parameters: { ...params },
-          },
-        },
-        {
-          type: "function",
-          function: {
-            name: "noop",
-            description: "Sometimes no action is required",
-            strict: true,
-            parameters: { ...params },
-          },
-        },
-        {
-          type: "function",
-          function: {
-            name: "report_abuse",
-            description: "If someone is being abusive",
-            strict: true,
-            parameters: { ...params },
-          },
-        },
-        {
-          type: "function",
-          function: {
-            name: "send_auth_email",
-            description: "Sends a log in email",
-            strict: true,
-            parameters: {
-              type: "object",
-              properties: {
-                email: {
-                  type: "string",
-                  description: "The address to send the email to",
+    try {
+      const res = await this.openai.chat.completions.create({
+        model: "gpt-4o",
+        messages: prompt,
+        tools: [
+          {
+            type: "function",
+            function: {
+              name: "CONFIRM_AUTH_EMAIL_SENT",
+              description:
+                "Notify the user the a confirmation email has been sent",
+              strict: true,
+              parameters: {
+                type: "object",
+                properties: {
+                  email: {
+                    type: "string",
+                    description: "The email the auth code has been sent to",
+                  },
                 },
+                additionalProperties: false,
+                required: ["email"],
               },
-              additionalProperties: false,
-              required: ["email"],
             },
           },
-        },
-      ],
-      tool_choice: "required",
-    });
+          {
+            type: "function",
+            function: {
+              name: "PROCESS_AUTH_TOKEN",
+              description:
+                "Processes an auth token supplied by the user to authenticate",
+              strict: true,
+              parameters: {
+                type: "object",
+                properties: {
+                  token: {
+                    type: "string",
+                    description:
+                      "the (hopefully) 5 digit code supplied by the user",
+                  },
+                },
+                additionalProperties: false,
+                required: ["token"],
+              },
+            },
+          },
+          {
+            type: "function",
+            function: {
+              name: "RESPOND_GENERAL",
+              description: "Make a general response",
+              strict: true,
+              parameters: { ...params },
+            },
+          },
+          {
+            type: "function",
+            function: {
+              name: "NOOP",
+              description: "Sometimes no action is required",
+              strict: true,
+              parameters: { ...params },
+            },
+          },
+          {
+            type: "function",
+            function: {
+              name: "REQUEST_EMAIL_ADDRESS",
+              description: "Requests the users email address",
+              strict: true,
+              parameters: { ...params },
+            },
+          },
+          {
+            type: "function",
+            function: {
+              name: "SEND_AUTH_EMAIL",
+              description: "Sends a log in email",
+              strict: true,
+              parameters: {
+                type: "object",
+                properties: {
+                  email: {
+                    type: "string",
+                    description: "The address to send the email to",
+                  },
+                },
+                additionalProperties: false,
+                required: ["email"],
+              },
+            },
+          },
+        ],
+        tool_choice: "required",
+      });
 
-    return res;
+      if (options.debug) {
+        // console.dir(prompt, { depth: null, colors: true });
+      }
+
+      const toolCall = res.choices[0].message?.tool_calls?.[0];
+
+      if (!toolCall) {
+        throw new Error();
+      }
+
+      const code = toolCall.function.name as ToolCode;
+      const args = JSON.parse(toolCall.function.arguments);
+
+      if (!code) {
+        throw new Error();
+      }
+
+      return { tool: code, args };
+    } catch (e) {
+      console.log(e);
+      throw new Error();
+    }
   }
 }
 

@@ -4,12 +4,12 @@ import {
   plotPoints,
   userEnvironmentPresences,
 } from "@2pm/data/schema";
-import { eq } from "drizzle-orm";
-import { DbModule } from "./db-module";
 import {
   CreateUserEnvironmentPresenceDto,
   UserEnvironmentPresenceDto,
 } from "@2pm/data";
+import { eq } from "drizzle-orm";
+import { DbModule } from "./db-module";
 
 export default class UserEnvironmentPresences extends DbModule {
   public async insert({

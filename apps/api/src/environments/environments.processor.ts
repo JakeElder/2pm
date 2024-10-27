@@ -1,4 +1,15 @@
-import { PlotPoint } from '@2pm/data';
+import {
+  AiUserMessagePlotPointSummaryDtoSchema,
+  AnonymousUserMessagePlotPointSummaryDtoSchema,
+  AuthEmailSentPlotPointSummaryDtoSchema,
+  AuthenticatedUserMessagePlotPointSummaryDtoSchema,
+  EVALUATABLE_PLOT_POINT_TYPES,
+  EvaluatablePlotPointType,
+  EvaluationPlotPointDto,
+  EvaluationPlotPointSummaryDtoSchema,
+  PlotPoint,
+  PlotPointSummaryDto,
+} from '@2pm/data';
 import { Processor, Process } from '@nestjs/bull';
 import { Inject, Logger } from '@nestjs/common';
 import { Job } from 'bull';
@@ -7,12 +18,29 @@ import CharacterEngine from '@2pm/character-engine';
 import { MessagesService } from '../messages/messages.service';
 import { PlotPointsService } from '../plot-points/plot-points.service';
 import { AppEventEmitter } from '../event-emitter';
+import {
+  aiUserMessages,
+  aiUsers,
+  environments,
+  authenticatedUserMessages,
+  authenticatedUsers,
+  messages,
+  plotPointMessages,
+  plotPoints,
+  users,
+  anonymousUserMessages,
+  anonymousUsers,
+} from '@2pm/data/schema';
+import DBService from '@2pm/db';
+import { asc, eq, and, inArray, lte } from 'drizzle-orm';
+import { ZodType } from 'zod';
 
 @Processor('environments')
 export class EnvironmentsProcessor {
   private readonly logger = new Logger(EnvironmentsProcessor.name);
 
   constructor(
+    @Inject('DB') private readonly db: DBService,
     @Inject('CE') private readonly ce: CharacterEngine,
     @Inject('REDIS') private readonly redis: Redis,
     @Inject('E') private readonly events: AppEventEmitter,
@@ -21,10 +49,83 @@ export class EnvironmentsProcessor {
   ) {}
 
   @Process()
-  async process(job: Job<{ trigger: PlotPoint }>) {
-    this.logger.log(job.data.trigger.createdAt);
-    await new Promise((resolve) => setTimeout(resolve, 5000));
-    return true;
+  async process(
+    job: Job<{ trigger: PlotPoint }>,
+  ): Promise<EvaluationPlotPointDto> {
+    const res = await this.db.drizzle
+      .select({
+        plotPoint: plotPoints,
+        message: messages,
+        anonymousUserMessage: anonymousUserMessages,
+        aiUserMessage: aiUserMessages,
+        authenticatedUserMessage: authenticatedUserMessages,
+        user: users,
+        anonymousUser: anonymousUsers,
+        authenticatedUser: authenticatedUsers,
+        aiUser: aiUsers,
+        environment: environments,
+      })
+      .from(plotPoints)
+      .leftJoin(
+        plotPointMessages,
+        eq(plotPoints.id, plotPointMessages.plotPointId),
+      )
+      .leftJoin(messages, eq(plotPointMessages.messageId, messages.id))
+      .leftJoin(
+        anonymousUserMessages,
+        eq(messages.id, anonymousUserMessages.messageId),
+      )
+      .leftJoin(
+        authenticatedUserMessages,
+        eq(messages.id, authenticatedUserMessages.messageId),
+      )
+      .leftJoin(aiUserMessages, eq(messages.id, aiUserMessages.messageId))
+      .leftJoin(users, eq(messages.userId, users.id))
+      .leftJoin(anonymousUsers, eq(users.id, anonymousUsers.userId))
+      .leftJoin(authenticatedUsers, eq(users.id, authenticatedUsers.userId))
+      .leftJoin(aiUsers, eq(users.id, aiUsers.userId))
+      .innerJoin(environments, eq(plotPoints.environmentId, environments.id))
+      .where(
+        and(
+          eq(plotPoints.environmentId, job.data.trigger.environmentId),
+          inArray(plotPoints.type, EVALUATABLE_PLOT_POINT_TYPES as any),
+          lte(plotPoints.createdAt, new Date(job.data.trigger.createdAt)),
+        ),
+      )
+      .orderBy(asc(plotPoints.id));
+
+    const schemas: Record<EvaluatablePlotPointType, ZodType<any>> = {
+      EVALUATION: EvaluationPlotPointSummaryDtoSchema,
+      AI_USER_MESSAGE: AiUserMessagePlotPointSummaryDtoSchema,
+      AUTHENTICATED_USER_MESSAGE:
+        AuthenticatedUserMessagePlotPointSummaryDtoSchema,
+      ANONYMOUS_USER_MESSAGE: AnonymousUserMessagePlotPointSummaryDtoSchema,
+      AUTH_EMAIL_SENT: AuthEmailSentPlotPointSummaryDtoSchema,
+    };
+
+    const summaries = res.map((row) => {
+      const Schema = schemas[row.plotPoint.type as EvaluatablePlotPointType];
+
+      const summary = Schema.safeParse({
+        type: row.plotPoint.type,
+        data: row,
+      });
+
+      if (summary.error) {
+        console.log(row.plotPoint.type);
+        console.error(summary.error);
+      }
+
+      return summary.data as PlotPointSummaryDto;
+    });
+
+    const e = await this.ce.evaluate(summaries);
+
+    console.dir(e, { depth: null, colors: true });
+
+    return {
+      type: 'EVALUATION',
+    } as any;
   }
 
   // async p(job: Job<{ trigger: PlotPointDto }>) {

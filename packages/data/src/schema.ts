@@ -1,6 +1,8 @@
+import OpenAI from "openai";
 import {
   foreignKey,
   integer,
+  jsonb,
   pgEnum,
   pgTable,
   serial,
@@ -14,6 +16,7 @@ import {
   ENVIRONMENT_TYPE_CODES,
   MESSAGE_TYPES,
   PLOT_POINT_TYPES,
+  TOOL_CODES,
   USER_TYPES,
   WORLD_ROOM_CODES,
 } from "./constants";
@@ -27,6 +30,7 @@ export const environmentTypeEnum = pgEnum(
   ENVIRONMENT_TYPE_CODES,
 );
 export const worldRoomCodeEnum = pgEnum("WorldRoomCodeEnum", WORLD_ROOM_CODES);
+export const toolCodeEnum = pgEnum("ToolCodeEnum", TOOL_CODES);
 export const aiUserCodeEnum = pgEnum("AiUserCodeEnum", AI_USER_CODES);
 export const aiUserMessageStateEnum = pgEnum("AiUserMessageStateEnum", [
   "OUTPUTTING",
@@ -183,6 +187,52 @@ export const companionOneToOneEnvironments = pgTable(
   },
 );
 
+/**
+ * Tools
+ */
+
+export const tools = pgTable("tools", {
+  id: serial("id").primaryKey(),
+  code: toolCodeEnum("code").notNull().unique(),
+  definition: jsonb("definition")
+    .$type<OpenAI.Chat.Completions.ChatCompletionTool>()
+    .notNull(),
+});
+
+/**
+ * Evaluations
+ */
+
+export const evaluations = pgTable("evaluations", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id")
+    .notNull()
+    .references(() => users.id),
+  plotPointId: integer("plot_point_id")
+    .notNull()
+    .references(() => plotPoints.id),
+  toolId: integer("tool_id")
+    .notNull()
+    .references(() => tools.id),
+  args: jsonb("args").$type<any>(),
+});
+
+/**
+ * Auth Emails
+ */
+
+export const authEmails = pgTable("auth_emails", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id")
+    .notNull()
+    .references(() => users.id),
+  plotPointId: integer("plot_point_id")
+    .notNull()
+    .references(() => plotPoints.id),
+  email: text("email").notNull(),
+  code: text("code").notNull(),
+});
+
 /*
  * Join Tables
  */
@@ -207,6 +257,24 @@ export const plotPointMessages = pgTable("plot_point_messages", {
   messageId: integer("message_id")
     .notNull()
     .references(() => messages.id),
+});
+
+export const plotPointEvaluations = pgTable("plot_point_evaluations", {
+  plotPointId: integer("plot_point_id")
+    .notNull()
+    .references(() => plotPoints.id),
+  evaluationId: integer("evaluation_id")
+    .notNull()
+    .references(() => evaluations.id),
+});
+
+export const plotPointAuthEmails = pgTable("plot_point_auth_emails", {
+  plotPointId: integer("plot_point_id")
+    .notNull()
+    .references(() => plotPoints.id),
+  authEmailId: integer("auth_email_id")
+    .notNull()
+    .references(() => authEmails.id),
 });
 
 export const plotPointEnvironmentPresences = pgTable(

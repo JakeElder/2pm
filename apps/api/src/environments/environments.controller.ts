@@ -31,6 +31,7 @@ export class EnvironmentsController implements OnModuleInit {
     });
 
     this.queue.on('completed', (job) => {
+      console.log(job.returnvalue);
       this.handleJobCompleted(job);
     });
 

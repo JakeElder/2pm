@@ -5,6 +5,8 @@ import {
 import { z, ZodType } from "zod";
 import type { CreateWorldRoomEnvironmentDtoSchema } from "./entities/environment";
 import { txt } from "@2pm/utils";
+import type { InferInsertModel } from "drizzle-orm";
+import type { tools } from "./schema";
 
 type Z<T extends ZodType<any>> = z.infer<T>;
 type Seed<T extends ZodType<any>> = Omit<Required<Z<T>>, "type">;
@@ -14,6 +16,7 @@ type WorldRoomEnvironmentSeed = Seed<
 >;
 type AiUserSeed = Seed<typeof CreateAiUserDtoSchema>;
 type AuthenticatedUserSeed = Seed<typeof CreateAuthenticatedUserDtoSchema>;
+type ToolSeed = InferInsertModel<typeof tools>;
 
 /**
  * World Room Environments
@@ -88,4 +91,68 @@ const AUTHENTICATED_USERS: AuthenticatedUserSeed[] = [
   },
 ];
 
-export { WORLD_ROOM_ENVIRONMENTS, AI_USERS, AUTHENTICATED_USERS };
+/**
+ * Tools
+ */
+
+const TOOLS: ToolSeed[] = [
+  {
+    id: 1,
+    code: "NOOP",
+    definition: {
+      type: "function",
+      function: {
+        name: "noop",
+        description: "Sometimes no action is required",
+        strict: true,
+        parameters: {
+          type: "object",
+          properties: {},
+          additionalProperties: false,
+        },
+      },
+    },
+  },
+  {
+    id: 2,
+    code: "RESPOND_GENERAL",
+    definition: {
+      type: "function",
+      function: {
+        name: "respond_general",
+        description: "Make a general response",
+        strict: true,
+        parameters: {
+          type: "object",
+          properties: {},
+          additionalProperties: false,
+        },
+      },
+    },
+  },
+  {
+    id: 3,
+    code: "SEND_AUTH_EMAIL",
+    definition: {
+      type: "function",
+      function: {
+        name: "send_auth_email",
+        description: "Sends a log in email",
+        strict: true,
+        parameters: {
+          type: "object",
+          properties: {
+            email: {
+              type: "string",
+              description: "The address to send the email to",
+            },
+          },
+          additionalProperties: false,
+          required: ["email"],
+        },
+      },
+    },
+  },
+];
+
+export { WORLD_ROOM_ENVIRONMENTS, AI_USERS, AUTHENTICATED_USERS, TOOLS };

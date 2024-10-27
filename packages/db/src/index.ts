@@ -8,6 +8,7 @@ import Messages from "./messages";
 import PlotPoints from "./plot-points";
 import Sessions from "./sessions";
 import Environments from "./environments";
+import AuthEmails from "./auth-emails";
 
 export default class DBService {
   public pg: Sql;
@@ -20,6 +21,7 @@ export default class DBService {
   public messages: Messages;
   public sessions: Sessions;
   public environments: Environments;
+  public authEmails: AuthEmails;
 
   constructor(dbUrl: string) {
     this.pg = postgres(dbUrl);
@@ -31,6 +33,7 @@ export default class DBService {
     this.messages = new Messages(this.pg);
     this.sessions = new Sessions(this.pg);
     this.environments = new Environments(this.pg);
+    this.authEmails = new AuthEmails(this.pg);
   }
 
   end() {
