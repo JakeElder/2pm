@@ -10,7 +10,7 @@ type Props = PlotPointDto;
 const getPerspective = (plotPoint: PlotPointDto): PlotPointPerspective => {
   const session = useSession();
   if (
-    plotPoint.type === "ANONYMOUS_USER_MESSAGE" ||
+    plotPoint.type === "HUMAN_USER_MESSAGE" ||
     plotPoint.type === "AI_USER_MESSAGE"
   ) {
     return plotPoint.data.user.id === session.user.id

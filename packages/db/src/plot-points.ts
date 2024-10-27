@@ -3,13 +3,11 @@ import {
   environments,
   users,
   aiUsers,
-  authenticatedUsers,
   messages,
-  authenticatedUserMessages,
   plotPointMessages,
   aiUserMessages,
-  anonymousUsers,
-  anonymousUserMessages,
+  humanUsers,
+  humanUserMessages,
   evaluations,
   plotPointEvaluations,
   tools,
@@ -21,9 +19,9 @@ import {
   CreateAiUserMessagePlotPointDto,
   CreatePlotPointDto,
   InferPlotPointDto,
-  AnonymousUserMessagePlotPointDto,
-  CreateAnonymousUserMessagePlotPointDto,
-  AnonymousUserMessageDto,
+  HumanUserMessagePlotPointDto,
+  CreateHumanUserMessagePlotPointDto,
+  HumanUserMessageDto,
   CreateEvaluationPlotPointDto,
   EvaluationPlotPointDto,
 } from "@2pm/data";
@@ -35,10 +33,7 @@ export default class PlotPoints extends DbModule {
   ): Promise<InferPlotPointDto<T>> {
     const { type, userId, environmentId } = dto;
 
-    const [
-      [environment],
-      [{ user, aiUser, authenticatedUser, anonymousUser }],
-    ] = await Promise.all([
+    const [[environment], [{ user, aiUser, humanUser }]] = await Promise.all([
       this.drizzle
         .select()
         .from(environments)
@@ -47,14 +42,12 @@ export default class PlotPoints extends DbModule {
       this.drizzle
         .select({
           user: users,
-          anonymousUser: anonymousUsers,
-          authenticatedUser: authenticatedUsers,
+          humanUser: humanUsers,
           aiUser: aiUsers,
         })
         .from(users)
-        .leftJoin(anonymousUsers, eq(users.id, userId))
+        .leftJoin(humanUsers, eq(users.id, userId))
         .leftJoin(aiUsers, eq(users.id, userId))
-        .leftJoin(authenticatedUsers, eq(users.id, userId))
         .where(eq(users.id, userId))
         .limit(1),
     ]);
@@ -63,30 +56,30 @@ export default class PlotPoints extends DbModule {
       throw new Error();
     }
 
-    if (type === "ANONYMOUS_USER_MESSAGE") {
-      if (!anonymousUser) {
+    if (type === "HUMAN_USER_MESSAGE") {
+      if (!humanUser) {
         throw new Error();
       }
 
       const { content } = dto;
 
-      const { message, plotPoint, anonymousUserMessage } =
-        await this.insertAnonymousUserMessagePlotPoint({
+      const { message, plotPoint, humanUserMessage } =
+        await this.insertHumanUserMessagePlotPoint({
           environmentId,
           userId,
           content,
         });
 
-      const res: AnonymousUserMessagePlotPointDto = {
-        type: "ANONYMOUS_USER_MESSAGE",
+      const res: HumanUserMessagePlotPointDto = {
+        type: "HUMAN_USER_MESSAGE",
         data: {
-          type: "ANONYMOUS_USER",
+          type: "HUMAN_USER",
           plotPoint,
           message,
-          anonymousUserMessage,
+          humanUserMessage,
           environment,
           user,
-          anonymousUser,
+          humanUser,
         },
       };
 
@@ -194,29 +187,26 @@ export default class PlotPoints extends DbModule {
     });
   }
 
-  private async insertAnonymousUserMessagePlotPoint({
+  private async insertHumanUserMessagePlotPoint({
     userId,
     environmentId,
     content,
-  }: Omit<CreateAnonymousUserMessagePlotPointDto, "type">): Promise<
-    Pick<
-      AnonymousUserMessageDto,
-      "plotPoint" | "message" | "anonymousUserMessage"
-    >
+  }: Omit<CreateHumanUserMessagePlotPointDto, "type">): Promise<
+    Pick<HumanUserMessageDto, "plotPoint" | "message" | "humanUserMessage">
   > {
     return this.drizzle.transaction(async (tx) => {
       const [plotPoint] = await tx
         .insert(plotPoints)
-        .values({ type: "ANONYMOUS_USER_MESSAGE", environmentId })
+        .values({ type: "HUMAN_USER_MESSAGE", environmentId })
         .returning();
 
       const [message] = await tx
         .insert(messages)
-        .values({ type: "ANONYMOUS_USER", userId, environmentId })
+        .values({ type: "HUMAN_USER", userId, environmentId })
         .returning();
 
-      const [anonymousUserMessage] = await tx
-        .insert(anonymousUserMessages)
+      const [humanUserMessage] = await tx
+        .insert(humanUserMessages)
         .values({ messageId: message.id, content })
         .returning();
 
@@ -229,7 +219,7 @@ export default class PlotPoints extends DbModule {
         plotPoint,
         plotPointMessage,
         message,
-        anonymousUserMessage,
+        humanUserMessage,
       };
     });
   }

@@ -26,7 +26,7 @@ interface PlotPointProps {
 }
 
 export const PlotPoint = ({ type, perspective, children }: PlotPointProps) => {
-  if (type === "ANONYMOUS_USER_MESSAGE" || type === "AI_USER_MESSAGE") {
+  if (type === "HUMAN_USER_MESSAGE" || type === "AI_USER_MESSAGE") {
     return (
       <div className={css["plot-point"]}>
         <Message perspective={perspective}>{children}</Message>

@@ -11,8 +11,6 @@ import {
   aiUserMessages,
   aiUsers,
   environments,
-  authenticatedUserMessages,
-  authenticatedUsers,
   messages,
   plotPointMessages,
   plotPoints,
@@ -47,10 +45,8 @@ export class MessagesService {
         plotPoint: plotPoints,
         message: messages,
         aiUserMessage: aiUserMessages,
-        authenticatedUserMessage: authenticatedUserMessages,
         user: users,
         aiUser: aiUsers,
-        authenticatedUser: authenticatedUsers,
         environment: environments,
       })
       .from(messages)
@@ -62,12 +58,7 @@ export class MessagesService {
       .innerJoin(users, eq(messages.userId, users.id))
       .innerJoin(environments, eq(messages.environmentId, environments.id))
       .leftJoin(aiUserMessages, eq(messages.id, aiUserMessages.messageId))
-      .leftJoin(
-        authenticatedUserMessages,
-        eq(messages.id, authenticatedUserMessages.messageId),
-      )
       .leftJoin(aiUsers, eq(users.id, aiUsers.userId))
-      .leftJoin(authenticatedUsers, eq(users.id, authenticatedUsers.userId))
       .where(and(...filters))
       .orderBy(desc(messages.id));
 

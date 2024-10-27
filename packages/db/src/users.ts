@@ -1,13 +1,13 @@
 import {
   users,
-  anonymousUsers,
+  humanUsers,
   aiUsers,
   environments,
   worldRoomEnvironments,
 } from "@2pm/data/schema";
 import {
   AiUserDto,
-  AnonymousUserDto,
+  HumanUserDto,
   CreateUserDto,
   InferUserDto,
 } from "@2pm/data";
@@ -24,7 +24,7 @@ export default class Users extends DbModule {
     return transaction(async (tx) => {
       const [user] = await tx.insert(users).values({ type }).returning();
 
-      if (dto.type === "ANONYMOUS") {
+      if (dto.type === "HUMAN") {
         const [{ environment }] = await this.drizzle
           .select({ environment: environments })
           .from(worldRoomEnvironments)
@@ -38,16 +38,16 @@ export default class Users extends DbModule {
           throw new Error();
         }
 
-        const [anonymousUser] = await tx
-          .insert(anonymousUsers)
+        const [humanUser] = await tx
+          .insert(humanUsers)
           .values({ userId: user.id, locationEnvironmentId: environment.id })
           .returning();
 
-        const res: AnonymousUserDto = {
-          type: "ANONYMOUS",
+        const res: HumanUserDto = {
+          type: "HUMAN",
           data: {
             user,
-            anonymousUser,
+            humanUser,
           },
         };
 

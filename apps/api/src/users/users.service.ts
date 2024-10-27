@@ -1,16 +1,11 @@
 import {
   AiUserDto,
-  AnonymousUserDto,
+  HumanUserDto,
   CreateUserDto,
   InferUserDto,
   UserDto,
 } from '@2pm/data';
-import {
-  aiUsers,
-  anonymousUsers,
-  authenticatedUsers,
-  users,
-} from '@2pm/data/schema';
+import { aiUsers, humanUsers, users } from '@2pm/data/schema';
 import DBService from '@2pm/db';
 import { Inject, Injectable } from '@nestjs/common';
 import { eq } from 'drizzle-orm';
@@ -25,21 +20,21 @@ export class UsersService {
     return this.db.users.insert(dto);
   }
 
-  async findAnonymousUsers(): Promise<AnonymousUserDto[]> {
+  async findHumanUsers(): Promise<HumanUserDto[]> {
     const res = await this.db.drizzle
       .select({
         user: users,
-        anonymousUser: anonymousUsers,
+        humanUser: humanUsers,
       })
       .from(users)
-      .innerJoin(anonymousUsers, eq(users.id, anonymousUsers.userId));
+      .innerJoin(humanUsers, eq(users.id, humanUsers.userId));
 
     return res.map((row) => {
-      const user: AnonymousUserDto = {
-        type: 'ANONYMOUS',
+      const user: HumanUserDto = {
+        type: 'HUMAN',
         data: {
           user: row.user,
-          anonymousUser: row.anonymousUser,
+          humanUser: row.humanUser,
         },
       };
 
@@ -51,28 +46,26 @@ export class UsersService {
     const res = await this.db.drizzle
       .select({
         user: users,
-        anonymousUser: anonymousUsers,
+        humanUser: humanUsers,
         aiUser: aiUsers,
-        authenticatedUser: authenticatedUsers,
       })
       .from(users)
       .leftJoin(aiUsers, eq(users.id, aiUsers.userId))
-      .leftJoin(authenticatedUsers, eq(users.id, authenticatedUsers.userId))
-      .leftJoin(anonymousUsers, eq(users.id, anonymousUsers.userId));
+      .leftJoin(humanUsers, eq(users.id, humanUsers.userId));
 
     const data: UserDto[] = res.map((row) => {
-      if (row.user.type === 'ANONYMOUS') {
-        const { user, anonymousUser } = row;
+      if (row.user.type === 'HUMAN') {
+        const { user, humanUser } = row;
 
-        if (!anonymousUser) {
+        if (!humanUser) {
           throw new Error();
         }
 
-        const res: AnonymousUserDto = {
-          type: 'ANONYMOUS',
+        const res: HumanUserDto = {
+          type: 'HUMAN',
           data: {
             user,
-            anonymousUser,
+            humanUser,
           },
         };
 

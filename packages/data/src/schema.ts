@@ -46,8 +46,8 @@ export const users = pgTable("users", {
   type: userTypeEnum("type").notNull(),
 });
 
-export const anonymousUsers = pgTable("anonymous_users", {
-  id: uuid("id").notNull().defaultRandom(),
+export const humanUsers = pgTable("human_users", {
+  id: uuid("id").primaryKey().defaultRandom(),
   userId: integer("user_id").references(() => users.id),
   locationEnvironmentId: integer("location_environment_id")
     .notNull()
@@ -102,7 +102,7 @@ export const messages = pgTable("messages", {
     .references(() => environments.id),
 });
 
-export const anonymousUserMessages = pgTable("anonymous_user_messages", {
+export const humanUserMessages = pgTable("human_user_messages", {
   id: serial("id").primaryKey(),
   content: text("content").notNull(),
   messageId: integer("message_id")

@@ -1,6 +1,6 @@
 import {
   AiUserMessagePlotPointSummaryDtoSchema,
-  AnonymousUserMessagePlotPointSummaryDtoSchema,
+  HumanUserMessagePlotPointSummaryDtoSchema,
   AuthEmailSentPlotPointSummaryDtoSchema,
   EvaluatablePlotPointType,
   EvaluationPlotPointDto,
@@ -23,14 +23,12 @@ import {
   aiUserMessages,
   aiUsers,
   environments,
-  authenticatedUserMessages,
-  authenticatedUsers,
   messages,
   plotPointMessages,
   plotPoints,
   users,
-  anonymousUserMessages,
-  anonymousUsers,
+  humanUserMessages,
+  humanUsers,
 } from '@2pm/data/schema';
 import DBService from '@2pm/db';
 import { asc, eq, and, inArray, lte } from 'drizzle-orm';
@@ -54,12 +52,10 @@ export class EnvironmentsProcessor {
       .select({
         plotPoint: plotPoints,
         message: messages,
-        anonymousUserMessage: anonymousUserMessages,
+        humanUserMessage: humanUserMessages,
         aiUserMessage: aiUserMessages,
-        authenticatedUserMessage: authenticatedUserMessages,
         user: users,
-        anonymousUser: anonymousUsers,
-        authenticatedUser: authenticatedUsers,
+        humanUser: humanUsers,
         aiUser: aiUsers,
         environment: environments,
       })
@@ -69,18 +65,10 @@ export class EnvironmentsProcessor {
         eq(plotPoints.id, plotPointMessages.plotPointId),
       )
       .leftJoin(messages, eq(plotPointMessages.messageId, messages.id))
-      .leftJoin(
-        anonymousUserMessages,
-        eq(messages.id, anonymousUserMessages.messageId),
-      )
-      .leftJoin(
-        authenticatedUserMessages,
-        eq(messages.id, authenticatedUserMessages.messageId),
-      )
+      .leftJoin(humanUserMessages, eq(messages.id, humanUserMessages.messageId))
       .leftJoin(aiUserMessages, eq(messages.id, aiUserMessages.messageId))
       .leftJoin(users, eq(messages.userId, users.id))
-      .leftJoin(anonymousUsers, eq(users.id, anonymousUsers.userId))
-      .leftJoin(authenticatedUsers, eq(users.id, authenticatedUsers.userId))
+      .leftJoin(humanUsers, eq(users.id, humanUsers.userId))
       .leftJoin(aiUsers, eq(users.id, aiUsers.userId))
       .innerJoin(environments, eq(plotPoints.environmentId, environments.id))
       .where(
@@ -95,7 +83,7 @@ export class EnvironmentsProcessor {
     const schemas: Record<EvaluatablePlotPointType, ZodType<any>> = {
       EVALUATION: EvaluationPlotPointSummaryDtoSchema,
       AI_USER_MESSAGE: AiUserMessagePlotPointSummaryDtoSchema,
-      ANONYMOUS_USER_MESSAGE: AnonymousUserMessagePlotPointSummaryDtoSchema,
+      HUMAN_USER_MESSAGE: HumanUserMessagePlotPointSummaryDtoSchema,
       AUTH_EMAIL_SENT: AuthEmailSentPlotPointSummaryDtoSchema,
     };
 

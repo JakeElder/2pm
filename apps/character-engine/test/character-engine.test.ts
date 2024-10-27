@@ -12,12 +12,12 @@ describe.skip("evaluate", () => {
   it("should evaluate to REQUEST_EMAIL_ADDRESS when necessary", async () => {
     const narrative: PlotPointSummaryDto[] = [
       {
-        type: "ANONYMOUS_USER_MESSAGE",
+        type: "HUMAN_USER_MESSAGE",
         data: {
           user: { id: 1 },
-          anonymousUserMessage: { content: "Hi, log me in" },
+          humanUserMessage: { content: "Hi, log me in" },
           message: { id: 1 },
-          anonymousUser: { id: "cbab331a-4fda-4af3-a93e-46eec572a089" },
+          humanUser: { id: "cbab331a-4fda-4af3-a93e-46eec572a089" },
         },
       },
     ];
@@ -29,12 +29,12 @@ describe.skip("evaluate", () => {
   it("should evaluate to SEND_AUTH_EMAIL when necessary", async () => {
     const narrative: PlotPointSummaryDto[] = [
       {
-        type: "ANONYMOUS_USER_MESSAGE",
+        type: "HUMAN_USER_MESSAGE",
         data: {
           user: { id: 1 },
-          anonymousUserMessage: { content: "Hi, log me in" },
+          humanUserMessage: { content: "Hi, log me in" },
           message: { id: 1 },
-          anonymousUser: { id: "cbab331a-4fda-4af3-a93e-46eec572a089" },
+          humanUser: { id: "cbab331a-4fda-4af3-a93e-46eec572a089" },
         },
       },
       {
@@ -56,12 +56,12 @@ describe.skip("evaluate", () => {
         },
       },
       {
-        type: "ANONYMOUS_USER_MESSAGE",
+        type: "HUMAN_USER_MESSAGE",
         data: {
           user: { id: 1 },
-          anonymousUserMessage: { content: "Oh right, it's jake@gmail.com" },
+          humanUserMessage: { content: "Oh right, it's jake@gmail.com" },
           message: { id: 1 },
-          anonymousUser: { id: "cbab331a-4fda-4af3-a93e-46eec572a089" },
+          humanUser: { id: "cbab331a-4fda-4af3-a93e-46eec572a089" },
         },
       },
     ];
@@ -75,12 +75,12 @@ describe.skip("evaluate", () => {
   it("responds after sending an email", async () => {
     const narrative: PlotPointSummaryDto[] = [
       {
-        type: "ANONYMOUS_USER_MESSAGE",
+        type: "HUMAN_USER_MESSAGE",
         data: {
           user: { id: 1 },
-          anonymousUserMessage: { content: "Hi, log me in" },
+          humanUserMessage: { content: "Hi, log me in" },
           message: { id: 1 },
-          anonymousUser: { id: "cbab331a-4fda-4af3-a93e-46eec572a089" },
+          humanUser: { id: "cbab331a-4fda-4af3-a93e-46eec572a089" },
         },
       },
       {
@@ -102,12 +102,12 @@ describe.skip("evaluate", () => {
         },
       },
       {
-        type: "ANONYMOUS_USER_MESSAGE",
+        type: "HUMAN_USER_MESSAGE",
         data: {
           user: { id: 1 },
-          anonymousUserMessage: { content: "Oh right, it's jake@gmail.com" },
+          humanUserMessage: { content: "Oh right, it's jake@gmail.com" },
           message: { id: 1 },
-          anonymousUser: { id: "cbab331a-4fda-4af3-a93e-46eec572a089" },
+          humanUser: { id: "cbab331a-4fda-4af3-a93e-46eec572a089" },
         },
       },
       {
@@ -125,7 +125,7 @@ describe.skip("evaluate", () => {
         type: "AUTH_EMAIL_SENT",
         data: {
           user: { id: 1 },
-          anonymousUser: { id: "cbab331a-4fda-4af3-a93e-46eec572a089" },
+          humanUser: { id: "cbab331a-4fda-4af3-a93e-46eec572a089" },
           authEmail: {
             email: "jake@gmail.com",
           },
@@ -141,12 +141,12 @@ describe.skip("evaluate", () => {
   it("processes auth tokens", async () => {
     const narrative: PlotPointSummaryDto[] = [
       {
-        type: "ANONYMOUS_USER_MESSAGE",
+        type: "HUMAN_USER_MESSAGE",
         data: {
           user: { id: 1 },
-          anonymousUserMessage: { content: "Hi, log me in" },
+          humanUserMessage: { content: "Hi, log me in" },
           message: { id: 1 },
-          anonymousUser: { id: "cbab331a-4fda-4af3-a93e-46eec572a089" },
+          humanUser: { id: "cbab331a-4fda-4af3-a93e-46eec572a089" },
         },
       },
       {
@@ -168,12 +168,12 @@ describe.skip("evaluate", () => {
         },
       },
       {
-        type: "ANONYMOUS_USER_MESSAGE",
+        type: "HUMAN_USER_MESSAGE",
         data: {
           user: { id: 1 },
-          anonymousUserMessage: { content: "Oh right, it's jake@gmail.com" },
+          humanUserMessage: { content: "Oh right, it's jake@gmail.com" },
           message: { id: 1 },
-          anonymousUser: { id: "cbab331a-4fda-4af3-a93e-46eec572a089" },
+          humanUser: { id: "cbab331a-4fda-4af3-a93e-46eec572a089" },
         },
       },
       {
@@ -191,7 +191,7 @@ describe.skip("evaluate", () => {
         type: "AUTH_EMAIL_SENT",
         data: {
           user: { id: 1 },
-          anonymousUser: { id: "cbab331a-4fda-4af3-a93e-46eec572a089" },
+          humanUser: { id: "cbab331a-4fda-4af3-a93e-46eec572a089" },
           authEmail: {
             email: "jake@gmail.com",
           },
@@ -228,12 +228,12 @@ describe.skip("evaluate", () => {
         },
       },
       {
-        type: "ANONYMOUS_USER_MESSAGE",
+        type: "HUMAN_USER_MESSAGE",
         data: {
           user: { id: 1 },
-          anonymousUserMessage: { content: "Ok - the id is 15132" },
+          humanUserMessage: { content: "Ok - the id is 15132" },
           message: { id: 1 },
-          anonymousUser: { id: "cbab331a-4fda-4af3-a93e-46eec572a089" },
+          humanUser: { id: "cbab331a-4fda-4af3-a93e-46eec572a089" },
         },
       },
     ];
@@ -250,12 +250,12 @@ describe("requestEmailAddress", () => {
   it("should stream a message requesting an email address", async () => {
     const narrative: PlotPointSummaryDto[] = [
       {
-        type: "ANONYMOUS_USER_MESSAGE",
+        type: "HUMAN_USER_MESSAGE",
         data: {
           user: { id: 1 },
-          anonymousUserMessage: { content: "Hi, log me in" },
+          humanUserMessage: { content: "Hi, log me in" },
           message: { id: 1 },
-          anonymousUser: { id: "cbab331a-4fda-4af3-a93e-46eec572a089" },
+          humanUser: { id: "cbab331a-4fda-4af3-a93e-46eec572a089" },
         },
       },
       {

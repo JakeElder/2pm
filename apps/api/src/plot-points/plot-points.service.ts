@@ -3,20 +3,18 @@ import {
   CreatePlotPointDto,
   InferPlotPointDto,
   PlotPointDto,
-  AnonymousUserMessagePlotPointDto,
+  HumanUserMessagePlotPointDto,
 } from '@2pm/data';
 import {
   aiUserMessages,
   aiUsers,
   environments,
-  authenticatedUserMessages,
-  authenticatedUsers,
   messages,
   plotPointMessages,
   plotPoints,
   users,
-  anonymousUserMessages,
-  anonymousUsers,
+  humanUserMessages,
+  humanUsers,
 } from '@2pm/data/schema';
 import DBService from '@2pm/db';
 import { Inject, Injectable } from '@nestjs/common';
@@ -37,12 +35,10 @@ export class PlotPointsService {
       .select({
         plotPoint: plotPoints,
         message: messages,
-        anonymousUserMessage: anonymousUserMessages,
+        humanUserMessage: humanUserMessages,
         aiUserMessage: aiUserMessages,
-        authenticatedUserMessage: authenticatedUserMessages,
         user: users,
-        anonymousUser: anonymousUsers,
-        authenticatedUser: authenticatedUsers,
+        humanUser: humanUsers,
         aiUser: aiUsers,
         environment: environments,
       })
@@ -52,49 +48,37 @@ export class PlotPointsService {
         eq(plotPoints.id, plotPointMessages.plotPointId),
       )
       .leftJoin(messages, eq(plotPointMessages.messageId, messages.id))
-      .leftJoin(
-        anonymousUserMessages,
-        eq(messages.id, anonymousUserMessages.messageId),
-      )
-      .leftJoin(
-        authenticatedUserMessages,
-        eq(messages.id, authenticatedUserMessages.messageId),
-      )
+      .leftJoin(humanUserMessages, eq(messages.id, humanUserMessages.messageId))
       .leftJoin(aiUserMessages, eq(messages.id, aiUserMessages.messageId))
       .leftJoin(users, eq(messages.userId, users.id))
-      .leftJoin(anonymousUsers, eq(users.id, anonymousUsers.userId))
-      .leftJoin(authenticatedUsers, eq(users.id, authenticatedUsers.userId))
+      .leftJoin(humanUsers, eq(users.id, humanUsers.userId))
       .leftJoin(aiUsers, eq(users.id, aiUsers.userId))
       .innerJoin(environments, eq(plotPoints.environmentId, environments.id))
       .where(
         and(
           eq(plotPoints.environmentId, id),
-          inArray(plotPoints.type, [
-            'AI_USER_MESSAGE',
-            'ANONYMOUS_USER_MESSAGE',
-          ]),
+          inArray(plotPoints.type, ['AI_USER_MESSAGE', 'HUMAN_USER_MESSAGE']),
         ),
       )
       .orderBy(desc(plotPoints.id));
 
     const data: PlotPointDto[] = res.map((row) => {
-      if (row.plotPoint.type === 'ANONYMOUS_USER_MESSAGE') {
-        const { user, anonymousUser, anonymousUserMessage, message, ...rest } =
-          row;
+      if (row.plotPoint.type === 'HUMAN_USER_MESSAGE') {
+        const { user, humanUser, humanUserMessage, message, ...rest } = row;
 
-        if (!user || !anonymousUser || !anonymousUserMessage || !message) {
+        if (!user || !humanUser || !humanUserMessage || !message) {
           throw new Error();
         }
 
-        const res: AnonymousUserMessagePlotPointDto = {
-          type: 'ANONYMOUS_USER_MESSAGE',
+        const res: HumanUserMessagePlotPointDto = {
+          type: 'HUMAN_USER_MESSAGE',
           data: {
-            type: 'ANONYMOUS_USER',
+            type: 'HUMAN_USER',
             ...rest,
             user,
-            anonymousUser,
+            humanUser,
             message,
-            anonymousUserMessage,
+            humanUserMessage,
           },
         };
 
@@ -129,14 +113,14 @@ export class PlotPointsService {
     return data;
   }
 
-  async findAnonymousUserMessages() {
+  async findHumanUserMessages() {
     const res = await this.db.drizzle
       .select({
         plotPoint: plotPoints,
         message: messages,
-        anonymousUserMessage: anonymousUserMessages,
+        humanUserMessage: humanUserMessages,
         user: users,
-        anonymousUser: anonymousUsers,
+        humanUser: humanUsers,
         environment: environments,
       })
       .from(plotPoints)
@@ -146,19 +130,19 @@ export class PlotPointsService {
       )
       .innerJoin(messages, eq(plotPointMessages.messageId, messages.id))
       .innerJoin(
-        anonymousUserMessages,
-        eq(messages.id, anonymousUserMessages.messageId),
+        humanUserMessages,
+        eq(messages.id, humanUserMessages.messageId),
       )
       .innerJoin(users, eq(messages.userId, users.id))
-      .innerJoin(anonymousUsers, eq(users.id, anonymousUsers.userId))
+      .innerJoin(humanUsers, eq(users.id, humanUsers.userId))
       .innerJoin(environments, eq(plotPoints.environmentId, environments.id))
-      .where(eq(plotPoints.type, 'ANONYMOUS_USER_MESSAGE'))
+      .where(eq(plotPoints.type, 'HUMAN_USER_MESSAGE'))
       .orderBy(desc(plotPoints.id));
 
-    const data: AnonymousUserMessagePlotPointDto[] = res.map((row) => {
-      const res: AnonymousUserMessagePlotPointDto = {
-        type: 'ANONYMOUS_USER_MESSAGE',
-        data: { type: 'ANONYMOUS_USER', ...row },
+    const data: HumanUserMessagePlotPointDto[] = res.map((row) => {
+      const res: HumanUserMessagePlotPointDto = {
+        type: 'HUMAN_USER_MESSAGE',
+        data: { type: 'HUMAN_USER', ...row },
       };
 
       return res;

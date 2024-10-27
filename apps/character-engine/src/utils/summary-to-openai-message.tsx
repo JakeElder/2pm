@@ -46,14 +46,14 @@ export default function summaryToOpenAiMessage(
         content: plotPoint.data.aiUserMessage.content,
       };
     },
-    ANONYMOUS_USER_MESSAGE: (plotPoint) => {
-      if (plotPoint.type !== "ANONYMOUS_USER_MESSAGE") {
+    HUMAN_USER_MESSAGE: (plotPoint) => {
+      if (plotPoint.type !== "HUMAN_USER_MESSAGE") {
         throw new Error();
       }
       return {
         role: "user",
-        name: `anon${translator.fromUUID(plotPoint.data.anonymousUser.id)}`,
-        content: plotPoint.data.anonymousUserMessage.content,
+        name: `anon${translator.fromUUID(plotPoint.data.humanUser.id)}`,
+        content: plotPoint.data.humanUserMessage.content,
       };
     },
   };

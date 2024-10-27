@@ -101,6 +101,12 @@ export default class Environments extends DbModule {
   }
 
   async getDefaultCompanionUserId() {
-    return 2;
+    const [{ user }] = await this.drizzle
+      .select({ user: users })
+      .from(aiUsers)
+      .where(eq(aiUsers.id, "IVAN"))
+      .innerJoin(users, eq(users.id, aiUsers.userId));
+
+    return user.id;
   }
 }

@@ -5,16 +5,14 @@ import {
   worldRoomEnvironments,
   plotPointMessages,
   messages,
-  authenticatedUsers,
   aiUsers,
   userEnvironmentPresences,
   companionOneToOneEnvironments,
   aiUserMessages,
-  authenticatedUserMessages,
   plotPointEnvironmentPresences,
   sessions,
-  anonymousUsers,
-  anonymousUserMessages,
+  humanUsers,
+  humanUserMessages,
   tools,
   plotPointEvaluations,
   evaluations,
@@ -47,12 +45,10 @@ export default class Utils extends DbModule {
     await rm(authEmails);
 
     // Truncate tables that depend on users or messages
-    await rm(anonymousUserMessages);
+    await rm(humanUserMessages);
+    await rm(humanUsers);
     await rm(aiUserMessages);
-    await rm(authenticatedUserMessages);
     await rm(aiUsers);
-    await rm(authenticatedUsers);
-    await rm(anonymousUsers);
 
     // Truncate parent tables
     await rm(messages);

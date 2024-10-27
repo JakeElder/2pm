@@ -1,5 +1,5 @@
 import { CreateSessionDto, FindSessionsQueryDto, SessionDto } from '@2pm/data';
-import { anonymousUsers, sessions, users } from '@2pm/data/schema';
+import { humanUsers, sessions, users } from '@2pm/data/schema';
 import DBService from '@2pm/db';
 import { Inject, Injectable } from '@nestjs/common';
 import { inArray, SQL, and, eq } from 'drizzle-orm';

@@ -1,27 +1,27 @@
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { createZodDto } from "@anatine/zod-nestjs";
 import { z } from "zod";
-import { aiUsers, users, anonymousUsers } from "../schema";
+import { aiUsers, users, humanUsers } from "../schema";
 
 /**
- * Anonymous User
+ * Human User
  */
 
-export const AnonymousUserDtoSchema = z.object({
-  type: z.literal("ANONYMOUS"),
+export const HumanUserDtoSchema = z.object({
+  type: z.literal("HUMAN"),
   data: z.object({
     user: createSelectSchema(users),
-    anonymousUser: createSelectSchema(anonymousUsers),
+    humanUser: createSelectSchema(humanUsers),
   }),
 });
 
-export const CreateAnonymousUserDtoSchema = z.object({
-  type: z.literal("ANONYMOUS"),
+export const CreateHumanUserDtoSchema = z.object({
+  type: z.literal("HUMAN"),
 });
 
-export class AnonymousUserDto extends createZodDto(AnonymousUserDtoSchema) {}
-export class CreateAnonymousUserDto extends createZodDto(
-  CreateAnonymousUserDtoSchema,
+export class HumanUserDto extends createZodDto(HumanUserDtoSchema) {}
+export class CreateHumanUserDto extends createZodDto(
+  CreateHumanUserDtoSchema,
 ) {}
 
 /**
@@ -49,12 +49,12 @@ export class AiUserDto extends createZodDto(AiUserDtoSchema) {}
  */
 
 export const UserDtoSchema = z.discriminatedUnion("type", [
-  AnonymousUserDtoSchema,
+  HumanUserDtoSchema,
   AiUserDtoSchema,
 ]);
 
 export const CreateUserDtoSchema = z.discriminatedUnion("type", [
-  CreateAnonymousUserDtoSchema,
+  CreateHumanUserDtoSchema,
   CreateAiUserDtoSchema,
 ]);
 
@@ -65,7 +65,7 @@ export type CreateUserDto = z.infer<typeof CreateUserDtoSchema>;
 export type UserDto = z.infer<typeof UserDtoSchema>;
 
 type UserDtoMap = {
-  ANONYMOUS: AnonymousUserDto;
+  HUMAN: HumanUserDto;
   AI: AiUserDto;
 };
 

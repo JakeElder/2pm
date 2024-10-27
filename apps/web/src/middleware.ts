@@ -17,8 +17,8 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  const userRes = await api.users.createAnonymousUser({
-    type: "ANONYMOUS",
+  const userRes = await api.users.createHumanUser({
+    type: "HUMAN",
   });
 
   if (!userRes.ok) {

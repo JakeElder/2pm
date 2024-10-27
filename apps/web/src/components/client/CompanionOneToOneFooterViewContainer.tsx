@@ -30,7 +30,7 @@ const CompanionOneToOneFooterViewContainer = ({ environment }: Props) => {
 
   const onSubmit: SubmitHandler<Inputs> = async ({ content }) => {
     await submitMessage({
-      type: "ANONYMOUS_USER_MESSAGE",
+      type: "HUMAN_USER_MESSAGE",
       environmentId: environment.data.environment.id,
       userId: session.user.id,
       content,

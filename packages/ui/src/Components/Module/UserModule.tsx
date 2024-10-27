@@ -120,7 +120,7 @@ export const Avatar = (props: AvatarProps) => {
     <div className={css["user-avatar"]}>
       <div className={css["outer"]}>
         <div className={css["inner"]}>
-          <Image className={css["user-avatar-img"]} {...img} alt="anonymous" />
+          <Image className={css["user-avatar-img"]} {...img} alt="human" />
         </div>
       </div>
     </div>

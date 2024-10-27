@@ -43,7 +43,7 @@ export const CompanionOneToOne: Story = {
           <Message perspective="THIRD_PERSON">Hi</Message>
         </Narrative.PlotPoint>
         <Narrative.PlotPoint
-          type="ANONYMOUS_USER_MESSAGE"
+          type="HUMAN_USER_MESSAGE"
           perspective="FIRST_PERSON"
         >
           <Message perspective="FIRST_PERSON">Hi</Message>
@@ -81,7 +81,7 @@ export const WorldRoom: Story = {
           <Message perspective="THIRD_PERSON">Hi</Message>
         </Narrative.PlotPoint>
         <Narrative.PlotPoint
-          type="ANONYMOUS_USER_MESSAGE"
+          type="HUMAN_USER_MESSAGE"
           perspective="FIRST_PERSON"
         >
           <Message perspective="FIRST_PERSON">Hi</Message>

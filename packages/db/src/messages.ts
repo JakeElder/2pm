@@ -1,11 +1,9 @@
 import {
   messages,
-  authenticatedUserMessages,
   aiUserMessages,
   environments,
   users,
   aiUsers,
-  authenticatedUsers,
   plotPoints,
   plotPointMessages,
 } from "@2pm/data/schema";
@@ -19,44 +17,27 @@ export default class Messages extends DbModule {
   ): Promise<InferMessageDto<T>> {
     const { type, id } = dto;
 
-    const [
-      {
-        plotPoint,
-        aiUser,
-        environment,
-        aiUserMessageId,
-        user,
-        authenticatedUser,
-        authenticatedUserMessageId,
-        message,
-      },
-    ] = await this.drizzle
-      .select({
-        plotPoint: plotPoints,
-        message: messages,
-        aiUserMessageId: aiUserMessages.id,
-        authenticatedUserMessageId: authenticatedUserMessages.id,
-        user: users,
-        aiUser: aiUsers,
-        authenticatedUser: authenticatedUsers,
-        environment: environments,
-      })
-      .from(messages)
-      .innerJoin(
-        plotPointMessages,
-        eq(messages.id, plotPointMessages.messageId),
-      )
-      .innerJoin(plotPoints, eq(plotPointMessages.plotPointId, plotPoints.id))
-      .innerJoin(users, eq(messages.userId, users.id))
-      .innerJoin(environments, eq(messages.environmentId, environments.id))
-      .leftJoin(aiUserMessages, eq(messages.id, aiUserMessages.messageId))
-      .leftJoin(
-        authenticatedUserMessages,
-        eq(messages.id, authenticatedUserMessages.messageId),
-      )
-      .leftJoin(aiUsers, eq(users.id, aiUsers.userId))
-      .leftJoin(authenticatedUsers, eq(users.id, authenticatedUsers.userId))
-      .where(eq(messages.id, id));
+    const [{ plotPoint, aiUser, environment, aiUserMessageId, user, message }] =
+      await this.drizzle
+        .select({
+          plotPoint: plotPoints,
+          message: messages,
+          aiUserMessageId: aiUserMessages.id,
+          user: users,
+          aiUser: aiUsers,
+          environment: environments,
+        })
+        .from(messages)
+        .innerJoin(
+          plotPointMessages,
+          eq(messages.id, plotPointMessages.messageId),
+        )
+        .innerJoin(plotPoints, eq(plotPointMessages.plotPointId, plotPoints.id))
+        .innerJoin(users, eq(messages.userId, users.id))
+        .innerJoin(environments, eq(messages.environmentId, environments.id))
+        .leftJoin(aiUserMessages, eq(messages.id, aiUserMessages.messageId))
+        .leftJoin(aiUsers, eq(users.id, aiUsers.userId))
+        .where(eq(messages.id, id));
 
     if (!environment || !user) {
       throw new Error();

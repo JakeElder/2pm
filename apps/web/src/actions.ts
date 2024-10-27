@@ -2,22 +2,22 @@
 
 import { cookies } from "next/headers";
 import api from "@/api";
-import { CreateAnonymousUserMessagePlotPointDto } from "@2pm/data";
+import { CreateHumanUserMessagePlotPointDto } from "@2pm/data";
 
 export const submitMessage = async (
-  dto: CreateAnonymousUserMessagePlotPointDto,
+  dto: CreateHumanUserMessagePlotPointDto,
 ) => {
-  if (dto.type === "ANONYMOUS_USER_MESSAGE") {
-    const res = await api.plotPoints.createAnonymousUserMessagePlotPoint(dto);
+  if (dto.type === "HUMAN_USER_MESSAGE") {
+    const res = await api.plotPoints.createHumanUserMessagePlotPoint(dto);
     return res.data;
   }
 
   throw new Error();
 };
 
-export const createAnonymousSession = async () => {
-  const { data: userRes } = await api.users.createAnonymousUser({
-    type: "ANONYMOUS",
+export const createHumanSession = async () => {
+  const { data: userRes } = await api.users.createHumanUser({
+    type: "HUMAN",
   });
 
   const { data: sessionRes } = await api.sessions.createSession({

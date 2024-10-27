@@ -34,7 +34,7 @@ export class EnvironmentsService {
           eq(plotPoints.environmentId, environmentId),
           inArray(plotPoints.type, [
             'AI_USER_MESSAGE',
-            'ANONYMOUS_USER_MESSAGE',
+            'HUMAN_USER_MESSAGE',
           ]),
         ),
       );
