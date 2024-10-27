@@ -17,7 +17,7 @@ const CompanionOneToOneContainer = async ({}: Props) => {
 
   return (
     <CompanionOneToOneModule.Root>
-      <CompanionOneToOneModule.Avatar code={o2o.data.companionAiUser.code} />
+      <CompanionOneToOneModule.Avatar code={o2o.data.companionAiUser.id} />
       <CompanionOneToOneModule.Main>
         <CompanionOneToOneModule.Header tag={o2o.data.companionAiUser.tag} />
         <CompanionOneToOneModule.Body>

@@ -4,6 +4,7 @@ import {
   anonymousUsers,
   aiUsers,
   environments,
+  worldRoomEnvironments,
 } from "@2pm/data/schema";
 import {
   AiUserDto,
@@ -20,19 +21,20 @@ export default class Users extends DbModule {
     dto: T,
   ): Promise<InferUserDto<T>> {
     const { transaction } = this.drizzle;
-    const { id, type } = dto;
+    const { type } = dto;
 
     return transaction(async (tx) => {
-      const [user] = await tx.insert(users).values({ id, type }).returning();
+      const [user] = await tx.insert(users).values({ type }).returning();
 
       if (dto.type === "ANONYMOUS") {
-        const { locationEnvironmentId } = dto;
-
-        const [environment] = await this.drizzle
-          .select()
-          .from(environments)
-          .where(eq(environments.id, locationEnvironmentId))
-          .limit(1);
+        const [{ environment }] = await this.drizzle
+          .select({ environment: environments })
+          .from(worldRoomEnvironments)
+          .where(eq(worldRoomEnvironments.id, "UNIVERSE"))
+          .innerJoin(
+            environments,
+            eq(environments.id, worldRoomEnvironments.environmentId),
+          );
 
         if (!environment) {
           throw new Error();
@@ -40,7 +42,7 @@ export default class Users extends DbModule {
 
         const [anonymousUser] = await tx
           .insert(anonymousUsers)
-          .values({ userId: user.id, locationEnvironmentId })
+          .values({ userId: user.id, locationEnvironmentId: environment.id })
           .returning();
 
         const res: AnonymousUserDto = {
@@ -73,18 +75,18 @@ export default class Users extends DbModule {
       }
 
       if (dto.type === "AI") {
-        const { code, tag, bio } = dto;
+        const { id, tag, bio } = dto;
 
         const [aiUser] = await tx
           .insert(aiUsers)
-          .values({ userId: user.id, tag, code, bio })
+          .values({ userId: user.id, tag, id, bio })
           .returning();
 
         const res: AiUserDto = {
-          id: user.id,
           type: "AI",
+          userId: user.id,
+          id: aiUser.id,
           tag: aiUser.tag,
-          code: aiUser.code,
           bio: aiUser.bio,
         };
 

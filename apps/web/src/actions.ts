@@ -27,7 +27,6 @@ export const submitMessage = async (
 export const createAnonymousSession = async () => {
   const { data: userRes } = await api.users.createAnonymousUser({
     type: "ANONYMOUS",
-    locationEnvironmentId: 1,
   });
 
   const { data: sessionRes } = await api.sessions.createAnonymousSession({

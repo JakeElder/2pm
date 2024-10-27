@@ -3,12 +3,14 @@ import {
   AnonymousUserMessagePlotPointSummaryDtoSchema,
   AuthEmailSentPlotPointSummaryDtoSchema,
   AuthenticatedUserMessagePlotPointSummaryDtoSchema,
-  EVALUATABLE_PLOT_POINT_TYPES,
   EvaluatablePlotPointType,
   EvaluationPlotPointDto,
   EvaluationPlotPointSummaryDtoSchema,
   PlotPoint,
   PlotPointSummaryDto,
+  EVALUATABLE_PLOT_POINT_TYPES,
+  ChatStream,
+  AiUserMessagePlotPointDto,
 } from '@2pm/data';
 import { Processor, Process } from '@nestjs/bull';
 import { Inject, Logger } from '@nestjs/common';
@@ -48,10 +50,7 @@ export class EnvironmentsProcessor {
     private readonly messageService: MessagesService,
   ) {}
 
-  @Process()
-  async process(
-    job: Job<{ trigger: PlotPoint }>,
-  ): Promise<EvaluationPlotPointDto> {
+  async getSummaries(plotPoint: PlotPoint) {
     const res = await this.db.drizzle
       .select({
         plotPoint: plotPoints,
@@ -87,9 +86,9 @@ export class EnvironmentsProcessor {
       .innerJoin(environments, eq(plotPoints.environmentId, environments.id))
       .where(
         and(
-          eq(plotPoints.environmentId, job.data.trigger.environmentId),
+          eq(plotPoints.environmentId, plotPoint.environmentId),
           inArray(plotPoints.type, EVALUATABLE_PLOT_POINT_TYPES as any),
-          lte(plotPoints.createdAt, new Date(job.data.trigger.createdAt)),
+          lte(plotPoints.createdAt, new Date(plotPoint.createdAt)),
         ),
       )
       .orderBy(asc(plotPoints.id));
@@ -119,13 +118,68 @@ export class EnvironmentsProcessor {
       return summary.data as PlotPointSummaryDto;
     });
 
+    return summaries;
+  }
+
+  @Process()
+  async process(
+    job: Job<{ trigger: PlotPoint }>,
+  ): Promise<EvaluationPlotPointDto> {
+    const summaries = await this.getSummaries(job.data.trigger);
+
     const e = await this.ce.evaluate(summaries);
 
-    console.dir(e, { depth: null, colors: true });
+    // this.db.plotPoints.insert({
+    //   type: 'EVALUATION',
+    //   environmentId: job.data.trigger.environmentId,
+    //   args: e.args,
+    //   toolId: e.tool,
+    //   userId: 1
+    // })
+
+    console.log(e.tool);
+
+    if (e.tool === 'REQUEST_EMAIL_ADDRESS') {
+      const res = await this.ce.requestEmailAddress([...summaries]);
+      await this.streamMessage(job.data.trigger.environmentId, res);
+    }
 
     return {
       type: 'EVALUATION',
     } as any;
+  }
+
+  async streamMessage(environmentId: number, stream: ChatStream) {
+    let init = false;
+    let content = '';
+    let dto: AiUserMessagePlotPointDto | null = null;
+
+    for await (const chunk of stream) {
+      content += chunk;
+
+      if (!init) {
+        dto = await this.plotPointsService.create({
+          type: 'AI_USER_MESSAGE',
+          environmentId,
+          content,
+          userId: 2,
+          state: 'OUTPUTTING',
+        });
+        this.events.emit('plot-points.created', dto);
+        init = true;
+      }
+
+      if (dto) {
+        const updated = await this.messageService.update({
+          type: 'AI_USER',
+          id: dto.data.message.id,
+          content,
+        });
+        this.events.emit('messages.updated', updated);
+      }
+    }
+
+    return true;
   }
 
   // async p(job: Job<{ trigger: PlotPointDto }>) {

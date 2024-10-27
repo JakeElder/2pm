@@ -22,10 +22,7 @@ type ToolSeed = InferInsertModel<typeof tools>;
  * World Room Environments
  */
 const WORLD_ROOM_ENVIRONMENTS: WorldRoomEnvironmentSeed[] = [
-  {
-    id: 1,
-    code: "UNIVERSE",
-  },
+  { id: "UNIVERSE" },
 ];
 
 /**
@@ -33,17 +30,15 @@ const WORLD_ROOM_ENVIRONMENTS: WorldRoomEnvironmentSeed[] = [
  */
 const AI_USERS: AiUserSeed[] = [
   {
-    id: 1,
+    id: "G",
     tag: "g",
-    code: "G",
     bio: txt(
       <>G watches over all of the 2PM universe when he's not catching waves.</>,
     ),
   },
   {
-    id: 2,
+    id: "IVAN",
     tag: "ivan",
-    code: "IVAN",
     bio: txt(
       <>
         <p>
@@ -60,9 +55,8 @@ const AI_USERS: AiUserSeed[] = [
     ),
   },
   {
-    id: 3,
+    id: "THE_HOSTESS",
     tag: "The_Hostess",
-    code: "THE_HOSTESS",
     bio: txt(
       <>
         <p>
@@ -79,26 +73,12 @@ const AI_USERS: AiUserSeed[] = [
 ];
 
 /**
- * Authenticated Users
- */
-
-const universe = WORLD_ROOM_ENVIRONMENTS[0];
-const AUTHENTICATED_USERS: AuthenticatedUserSeed[] = [
-  {
-    id: 4,
-    tag: "jake",
-    locationEnvironmentId: universe.id,
-  },
-];
-
-/**
  * Tools
  */
 
 const TOOLS: ToolSeed[] = [
   {
-    id: 1,
-    code: "NOOP",
+    id: "NOOP",
     definition: {
       type: "function",
       function: {
@@ -114,8 +94,7 @@ const TOOLS: ToolSeed[] = [
     },
   },
   {
-    id: 2,
-    code: "RESPOND_GENERAL",
+    id: "RESPOND_GENERAL",
     definition: {
       type: "function",
       function: {
@@ -131,8 +110,7 @@ const TOOLS: ToolSeed[] = [
     },
   },
   {
-    id: 3,
-    code: "SEND_AUTH_EMAIL",
+    id: "SEND_AUTH_EMAIL",
     definition: {
       type: "function",
       function: {
@@ -155,4 +133,4 @@ const TOOLS: ToolSeed[] = [
   },
 ];
 
-export { WORLD_ROOM_ENVIRONMENTS, AI_USERS, AUTHENTICATED_USERS, TOOLS };
+export { WORLD_ROOM_ENVIRONMENTS, AI_USERS, TOOLS };

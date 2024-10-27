@@ -64,10 +64,9 @@ export const authenticatedUsers = pgTable("authenticated_users", {
 });
 
 export const aiUsers = pgTable("ai_users", {
-  id: serial("id").primaryKey(),
+  id: aiUserCodeEnum("id").primaryKey(),
   tag: text("tag").notNull(),
   userId: integer("user_id").references(() => users.id),
-  code: aiUserCodeEnum("code").notNull().unique(),
   bio: text("bio").notNull(),
 });
 
@@ -150,11 +149,10 @@ export const environments = pgTable("environments", {
 });
 
 export const worldRoomEnvironments = pgTable("world_room_environments", {
-  id: serial("id").primaryKey(),
+  id: worldRoomCodeEnum("id").primaryKey(),
   environmentId: integer("environment_id")
     .notNull()
     .references(() => environments.id),
-  code: worldRoomCodeEnum("code").notNull().unique(),
 });
 
 export const companionOneToOneEnvironments = pgTable(
@@ -192,8 +190,7 @@ export const companionOneToOneEnvironments = pgTable(
  */
 
 export const tools = pgTable("tools", {
-  id: serial("id").primaryKey(),
-  code: toolCodeEnum("code").notNull().unique(),
+  id: toolCodeEnum("id").primaryKey(),
   definition: jsonb("definition")
     .$type<OpenAI.Chat.Completions.ChatCompletionTool>()
     .notNull(),
@@ -211,7 +208,7 @@ export const evaluations = pgTable("evaluations", {
   plotPointId: integer("plot_point_id")
     .notNull()
     .references(() => plotPoints.id),
-  toolId: integer("tool_id")
+  toolId: toolCodeEnum("tool_id")
     .notNull()
     .references(() => tools.id),
   args: jsonb("args").$type<any>(),

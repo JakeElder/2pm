@@ -19,22 +19,22 @@ export default class Environments extends DbModule {
     dto: T,
   ): Promise<InferEnvironmentDto<T>> {
     const { transaction } = this.drizzle;
-    const { id, type } = dto;
+    const { type } = dto;
 
     return transaction(async (tx) => {
       const [environment] = await tx
         .insert(environments)
-        .values({ id, type })
+        .values({ type })
         .returning();
 
       if (type === "WORLD_ROOM") {
-        const { code } = dto;
+        const { id } = dto;
 
         const [worldRoomEnvironment] = await tx
           .insert(worldRoomEnvironments)
           .values({
+            id,
             environmentId: environment.id,
-            code,
           })
           .returning();
 

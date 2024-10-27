@@ -84,21 +84,18 @@ export default class Utils extends DbModule {
 
     const [g] = await Promise.all([
       ...seed.AI_USERS.map((user) => db.users.insert({ type: "AI", ...user })),
-      ...seed.AUTHENTICATED_USERS.map((user) =>
-        db.users.insert({ type: "AUTHENTICATED", ...user }),
-      ),
     ]);
 
     await Promise.all([
       db.userEnvironmentPresences.insert({
         environmentId: universe.data.environment.id,
-        userId: g.id,
+        userId: g.userId,
       }),
     ]);
 
     await db.plotPoints.insert({
       type: "AI_USER_MESSAGE",
-      userId: g.id,
+      userId: g.userId,
       environmentId: universe.data.environment.id,
       content: "Standby for G stuff",
       state: "COMPLETE",

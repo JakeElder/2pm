@@ -23,8 +23,6 @@ export const AnonymousUserDtoSchema = z.object({
 
 export const CreateAnonymousUserDtoSchema = z.object({
   type: z.literal("ANONYMOUS"),
-  id: createInsertSchema(users).shape.id,
-  locationEnvironmentId: createSelectSchema(environments).shape.id,
 });
 
 export class AnonymousUserDto extends createZodDto(AnonymousUserDtoSchema) {}
@@ -38,7 +36,6 @@ export class CreateAnonymousUserDto extends createZodDto(
 
 export const CreateAuthenticatedUserDtoSchema = z.object({
   type: z.literal("AUTHENTICATED"),
-  id: createInsertSchema(users).shape.id,
   tag: createInsertSchema(authenticatedUsers).shape.tag,
   locationEnvironmentId: createSelectSchema(environments).shape.id,
 });
@@ -59,17 +56,16 @@ export class AuthenticatedUserDto extends createZodDto(
  */
 export const AiUserDtoSchema = z.object({
   type: z.literal("AI"),
-  id: createSelectSchema(users).shape.id,
+  userId: createSelectSchema(users).shape.id,
+  id: createSelectSchema(aiUsers).shape.id,
   tag: createSelectSchema(aiUsers).shape.tag,
-  code: createSelectSchema(aiUsers).shape.code,
   bio: createSelectSchema(aiUsers).shape.bio,
 });
 
 export const CreateAiUserDtoSchema = z.object({
   type: z.literal("AI"),
-  id: createInsertSchema(users).shape.id,
+  id: createInsertSchema(aiUsers).shape.id,
   tag: createInsertSchema(aiUsers).shape.tag,
-  code: createInsertSchema(aiUsers).shape.code,
   bio: createInsertSchema(aiUsers).shape.bio,
 });
 

@@ -98,10 +98,10 @@ export class UsersService {
           throw new Error();
         }
         const res: AiUserDto = {
-          id: row.user.id,
           type: 'AI',
+          id: row.aiUser.id,
+          userId: row.user.id,
           tag: row.aiUser.tag,
-          code: row.aiUser.code,
           bio: row.aiUser.bio,
         };
         return res;

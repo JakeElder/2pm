@@ -20,7 +20,6 @@ export async function middleware(request: NextRequest) {
 
   const userRes = await api.users.createAnonymousUser({
     type: "ANONYMOUS",
-    locationEnvironmentId: WORLD_ROOM_ENVIRONMENTS[0].id,
   });
 
   if (!userRes.ok) {

@@ -55,8 +55,7 @@ export const WorldRoomEnvironmentDtoSchema = z.object({
 
 export const CreateWorldRoomEnvironmentDtoSchema = z.object({
   type: z.literal("WORLD_ROOM"),
-  id: createInsertSchema(environments).shape.id,
-  code: createInsertSchema(worldRoomEnvironments).shape.code,
+  id: createInsertSchema(worldRoomEnvironments).shape.id,
 });
 
 export class WorldRoomEnvironmentDto extends createZodDto(

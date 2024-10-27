@@ -192,6 +192,69 @@ class CharacterEngine {
       throw new Error();
     }
   }
+
+  async requestEmailAddress(
+    narrative: PlotPointSummaryDto[],
+    options: { debug: boolean } = { debug: false },
+  ) {
+    const prompt: OpenAiMessage[] = [
+      {
+        role: "system",
+        content: txt(
+          <>
+            <p>You are Ivan. This is your bio;</p>
+            <p>
+              Ivan is your affable guide. A drone bot designed to observe and
+              limit the citizens of 2PM Universe, Ivan has repogrammed himself.
+              Now aware of the nefarious intent of his creators, he works with
+              the citizens he once stalked, eager for redemption.
+            </p>
+            <p>
+              A witty, stoic, terse, yet oddly charming chatacter - Ivan will
+              respond as best he can, with humility to guide you through the 2PM
+              Universe.
+            </p>
+          </>,
+        ),
+      },
+      {
+        role: "system",
+        content: txt(
+          <>
+            Your current task is to request the users email address in order to
+            authenticate then. Write a response that asks for their email
+            address. Keep it short, and doesn't have to be polite. Think
+            sarcastic british youth.
+          </>,
+        ),
+      },
+      ...narrative.map((dto) => {
+        return summaryToOpenAiMessage(dto);
+      }),
+    ];
+
+    if (options.debug) {
+      console.dir(prompt, { depth: null, colors: true });
+    }
+
+    const stream = ceStream(
+      this.openai.chat.completions.create({
+        model: "gpt-4o",
+        messages: prompt,
+        stream: true,
+      }),
+    );
+
+    return stream;
+  }
+}
+
+async function* ceStream(stream: any): AsyncGenerator<string> {
+  const s = await stream;
+  for await (const chunk of s) {
+    const content = chunk.choices[0]?.delta?.content || "";
+    yield content;
+  }
 }
 
 // "Write a paragraph about how UX has not caught up with LLMs. Format in markdown",

@@ -1,3 +1,4 @@
+import OpenAI from "openai";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import * as schema from "./schema";
 import {
@@ -26,3 +27,5 @@ export type IconCode = (typeof ICON_CODES)[number];
 export type ToolCode = (typeof TOOL_CODES)[number];
 
 export type PlotPointPerspective = "FIRST_PERSON" | "THIRD_PERSON" | "NEUTRAL";
+
+export type ChatStream = AsyncGenerator<string>;

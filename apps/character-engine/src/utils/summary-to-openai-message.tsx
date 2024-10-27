@@ -42,7 +42,7 @@ export default function summaryToOpenAiMessage(
       }
       return {
         role: "assistant",
-        name: plotPoint.data.aiUser.code,
+        name: plotPoint.data.aiUser.id,
         content: plotPoint.data.aiUserMessage.content,
       };
     },

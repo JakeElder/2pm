@@ -104,7 +104,7 @@ export const AiUserMessagePlotPointSummaryDtoSchema = z.object({
   data: z.object({
     user: createSelectSchema(schema.users).pick({ id: true }),
     aiUser: createSelectSchema(schema.aiUsers).pick({
-      code: true,
+      id: true,
     }),
     message: createSelectSchema(schema.messages).pick({ id: true }),
     aiUserMessage: createSelectSchema(schema.aiUserMessages).pick({
@@ -162,8 +162,8 @@ export const EvaluationPlotPointSummaryDtoSchema = z.object({
   type: z.literal("EVALUATION"),
   data: z.object({
     user: createSelectSchema(schema.users).pick({ id: true }),
-    aiUser: createSelectSchema(schema.aiUsers).pick({ code: true }),
-    tool: createSelectSchema(schema.tools).pick({ code: true }),
+    aiUser: createSelectSchema(schema.aiUsers).pick({ id: true }),
+    tool: createSelectSchema(schema.tools).pick({ id: true }),
     evaluation: createSelectSchema(schema.evaluations).pick({
       args: true,
     }),
