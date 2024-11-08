@@ -16,6 +16,6 @@
     "@2pm/utils": "workspace:*"
   },
   "devDependencies": {
-    "drizzle-kit": "^0.24.2"
+    "drizzle-kit": "^0.28.0"
   }
 }

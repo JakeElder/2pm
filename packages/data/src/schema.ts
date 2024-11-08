@@ -149,26 +149,24 @@ export const companionOneToOneEnvironments = pgTable(
     userId: integer("user_id").notNull(),
     companionUserId: integer("companion_user_id").notNull(),
   },
-  (table) => {
-    return {
-      fk_o2o_env: foreignKey({
-        columns: [table.environmentId],
-        foreignColumns: [environments.id],
-        name: "fk_o2o_env",
-      }),
-      fk_o2o_user: foreignKey({
-        columns: [table.userId],
-        foreignColumns: [users.id],
-        name: "fk_o2o_user",
-      }),
-      fk_o2o_companion: foreignKey({
-        columns: [table.companionUserId],
-        foreignColumns: [users.id],
-        name: "fk_o2o_companion",
-      }),
-      uniqueUserConstraint: unique().on(table.userId),
-    };
-  },
+  (table) => [
+    foreignKey({
+      columns: [table.environmentId],
+      foreignColumns: [environments.id],
+      name: "fk_o2o_env",
+    }),
+    foreignKey({
+      columns: [table.userId],
+      foreignColumns: [users.id],
+      name: "fk_o2o_user",
+    }),
+    foreignKey({
+      columns: [table.companionUserId],
+      foreignColumns: [users.id],
+      name: "fk_o2o_companion",
+    }),
+    unique().on(table.userId),
+  ],
 );
 
 /**
@@ -231,7 +229,7 @@ export const userEnvironmentPresences = pgTable("user_environment_presences", {
   environmentId: integer("environment_id")
     .notNull()
     .references(() => environments.id),
-  expired: timestamp("deleted_at")
+  expired: timestamp("expired")
     .default(sql`null`)
     .$type<Date | null>(),
 });
@@ -244,18 +242,16 @@ export const plotPointEnvironmentPresences = pgTable(
       "user_environment_presence_id",
     ).notNull(),
   },
-  (table) => {
-    return {
-      fk_plot_env_pres_plot: foreignKey({
-        columns: [table.plotPointId],
-        foreignColumns: [plotPoints.id],
-        name: "fk_plot_env_pres_plot",
-      }),
-      fk_plot_env_pres_user_env: foreignKey({
-        columns: [table.userEnvironmentPresenceId],
-        foreignColumns: [userEnvironmentPresences.id],
-        name: "fk_plot_env_pres_user_env",
-      }),
-    };
-  },
+  (table) => [
+    foreignKey({
+      columns: [table.plotPointId],
+      foreignColumns: [plotPoints.id],
+      name: "fk_plot_env_pres_plot",
+    }),
+    foreignKey({
+      columns: [table.userEnvironmentPresenceId],
+      foreignColumns: [userEnvironmentPresences.id],
+      name: "fk_plot_env_pres_user_env",
+    }),
+  ],
 );
