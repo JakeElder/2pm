@@ -8,6 +8,10 @@
   gap: 26px;
 }
 
+.companion-one-to-one {
+  max-width: 290px;
+}
+
 .world-room {
   flex: 1;
 }

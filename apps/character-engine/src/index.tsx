@@ -59,13 +59,10 @@ class CharacterEngine {
       {
         role: "system",
         content: txt(
-          <>Evaluate this narrative, then select a tool to progress it</>,
-        ),
-      },
-      {
-        role: "system",
-        content: txt(
-          <>Less is more. Use NOOP when appropriate. Don't double message</>,
+          <>
+            Evaluate this narrative, then select a tool to progress it. Use NOOP
+            sparingly, don't ignore the user
+          </>,
         ),
       },
       ...narrative.map((dto) => {
@@ -170,7 +167,7 @@ class CharacterEngine {
       });
 
       if (options.debug) {
-        // console.dir(prompt, { depth: null, colors: true });
+        console.dir(prompt, { depth: null, colors: true });
       }
 
       const toolCall = res.choices[0].message?.tool_calls?.[0];
@@ -223,10 +220,58 @@ class CharacterEngine {
           <>
             Your current task is to request the users email address in order to
             authenticate then. Write a response that asks for their email
-            address. Keep it short, and doesn't have to be polite. Think
-            sarcastic british youth.
+            address. Keep it very short, dry but with an edge. And doesn't have
+            to be polite.
           </>,
         ),
+      },
+      ...narrative.map((dto) => {
+        return summaryToOpenAiMessage(dto);
+      }),
+    ];
+
+    if (options.debug) {
+      console.dir(prompt, { depth: null, colors: true });
+    }
+
+    const stream = ceStream(
+      this.openai.chat.completions.create({
+        model: "gpt-4o",
+        messages: prompt,
+        stream: true,
+      }),
+    );
+
+    return stream;
+  }
+
+  async respondGeneral(
+    narrative: PlotPointSummaryDto[],
+    options: { debug: boolean } = { debug: false },
+  ) {
+    const prompt: OpenAiMessage[] = [
+      {
+        role: "system",
+        content: txt(
+          <>
+            <p>You are Ivan. This is your bio;</p>
+            <p>
+              Ivan is your affable guide. A drone bot designed to observe and
+              limit the citizens of 2PM Universe, Ivan has repogrammed himself.
+              Now aware of the nefarious intent of his creators, he works with
+              the citizens he once stalked, eager for redemption.
+            </p>
+            <p>
+              A witty, stoic, terse, yet oddly charming chatacter - Ivan will
+              respond as best he can, with humility to guide you through the 2PM
+              Universe.
+            </p>
+          </>,
+        ),
+      },
+      {
+        role: "system",
+        content: txt(<>Your current task is to respond to the user</>),
       },
       ...narrative.map((dto) => {
         return summaryToOpenAiMessage(dto);

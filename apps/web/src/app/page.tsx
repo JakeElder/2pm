@@ -43,7 +43,6 @@ export default async function Home() {
                 <Divider />
                 <AuthenticatedUserList>
                   <AuthenticatedUser>jake</AuthenticatedUser>
-                  <AuthenticatedUser>danbee</AuthenticatedUser>
                 </AuthenticatedUserList>
               </UserList.Root>
             </WorldRoomModule.Partition>

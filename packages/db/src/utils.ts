@@ -3,7 +3,6 @@ import {
   plotPoints,
   environments,
   worldRoomEnvironments,
-  plotPointMessages,
   messages,
   aiUsers,
   userEnvironmentPresences,
@@ -14,10 +13,8 @@ import {
   humanUsers,
   humanUserMessages,
   tools,
-  plotPointEvaluations,
   evaluations,
   authEmails,
-  plotPointAuthEmails,
 } from "@2pm/data/schema";
 import * as seed from "@2pm/data/seed";
 import { DbModule } from "./db-module";
@@ -34,9 +31,6 @@ export default class Utils extends DbModule {
 
     // Truncate dependent tables first
     await rm(plotPointEnvironmentPresences);
-    await rm(plotPointMessages);
-    await rm(plotPointEvaluations);
-    await rm(plotPointAuthEmails);
     await rm(userEnvironmentPresences);
     await rm(sessions);
     await rm(companionOneToOneEnvironments);

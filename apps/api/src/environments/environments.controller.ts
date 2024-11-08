@@ -1,13 +1,13 @@
 import { Controller, Inject, Logger, OnModuleInit } from '@nestjs/common';
 import { InjectQueue } from '@nestjs/bull';
 import { Job, type Queue } from 'bull';
-import { PlotPoint, PlotPointDto } from '@2pm/data';
+import { PlotPoint, PlotPointDto, PlotPointType } from '@2pm/data';
 import Redis from 'ioredis';
 import { AppEventEmitter } from '../event-emitter';
 import { EnvironmentGateway } from './environments.gateway';
 import DBService from '@2pm/db';
-import { environments, plotPoints } from '@2pm/data/schema';
-import { gt, desc } from 'drizzle-orm';
+import { environments, evaluations, plotPoints } from '@2pm/data/schema';
+import { gt, desc, eq } from 'drizzle-orm';
 
 @Controller()
 export class EnvironmentsController implements OnModuleInit {
@@ -30,8 +30,12 @@ export class EnvironmentsController implements OnModuleInit {
       this.handlePlotPointCreated(e);
     });
 
+    this.queue.on('error', (error) => {
+      this.logger.error(error);
+    });
+
     this.queue.on('completed', (job) => {
-      console.log(job.returnvalue);
+      // console.log(job.returnvalue);
       this.handleJobCompleted(job);
     });
 
@@ -40,6 +44,12 @@ export class EnvironmentsController implements OnModuleInit {
 
   async handlePlotPointCreated(dto: PlotPointDto) {
     this.gateway.sendPlotPointCreatedEvent(dto);
+
+    const triggers: PlotPointType[] = ['HUMAN_USER_MESSAGE'];
+
+    if (!triggers.includes(dto.type)) {
+      return;
+    }
 
     const existing = await this.redis.get(`env:${dto.data.environment.id}:job`);
 
@@ -55,14 +65,21 @@ export class EnvironmentsController implements OnModuleInit {
     this.logger.log('Completed', job.data.trigger.id);
     await this.redis.del(`env:${job.data.trigger.environmentId}:job`);
 
-    const [nextTrigger] = await this.db.drizzle
-      .select()
+    const [{ nextTrigger, evaluation }] = await this.db.drizzle
+      .select({
+        nextTrigger: plotPoints,
+        evaluation: evaluations,
+      })
       .from(plotPoints)
+      .leftJoin(evaluations, eq(evaluations.plotPointId, plotPoints.id))
       .where(gt(plotPoints.createdAt, new Date(trigger.createdAt)))
       .orderBy(desc(plotPoints.createdAt))
       .limit(1);
 
     if (nextTrigger) {
+      if (nextTrigger.type === 'EVALUATION' && evaluation?.toolId === 'NOOP') {
+        return;
+      }
       const job = await this.queue.add({ trigger: nextTrigger });
       this.redis.set(`env:${trigger.environmentId}:job`, job.id);
     }

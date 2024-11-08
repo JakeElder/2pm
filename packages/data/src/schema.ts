@@ -78,6 +78,9 @@ export const sessions = pgTable("sessions", {
 
 export const plotPoints = pgTable("plot_points", {
   id: serial("id").primaryKey(),
+  userId: integer("user_id")
+    .notNull()
+    .references(() => users.id),
   environmentId: integer("environment_id")
     .notNull()
     .references(() => environments.id),
@@ -94,6 +97,9 @@ export const plotPoints = pgTable("plot_points", {
 export const messages = pgTable("messages", {
   id: serial("id").primaryKey(),
   type: messageTypeEnum("type").notNull(),
+  plotPointId: integer("plot_point_id")
+    .notNull()
+    .references(() => plotPoints.id),
   userId: integer("user_id")
     .notNull()
     .references(() => users.id),
@@ -188,6 +194,9 @@ export const evaluations = pgTable("evaluations", {
   plotPointId: integer("plot_point_id")
     .notNull()
     .references(() => plotPoints.id),
+  triggerId: integer("trigger_id")
+    .notNull()
+    .references(() => plotPoints.id),
   toolId: toolCodeEnum("tool_id")
     .notNull()
     .references(() => tools.id),
@@ -225,33 +234,6 @@ export const userEnvironmentPresences = pgTable("user_environment_presences", {
   expired: timestamp("deleted_at")
     .default(sql`null`)
     .$type<Date | null>(),
-});
-
-export const plotPointMessages = pgTable("plot_point_messages", {
-  plotPointId: integer("plot_point_id")
-    .notNull()
-    .references(() => plotPoints.id),
-  messageId: integer("message_id")
-    .notNull()
-    .references(() => messages.id),
-});
-
-export const plotPointEvaluations = pgTable("plot_point_evaluations", {
-  plotPointId: integer("plot_point_id")
-    .notNull()
-    .references(() => plotPoints.id),
-  evaluationId: integer("evaluation_id")
-    .notNull()
-    .references(() => evaluations.id),
-});
-
-export const plotPointAuthEmails = pgTable("plot_point_auth_emails", {
-  plotPointId: integer("plot_point_id")
-    .notNull()
-    .references(() => plotPoints.id),
-  authEmailId: integer("auth_email_id")
-    .notNull()
-    .references(() => authEmails.id),
 });
 
 export const plotPointEnvironmentPresences = pgTable(

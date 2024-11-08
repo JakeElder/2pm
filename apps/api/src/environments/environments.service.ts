@@ -32,10 +32,7 @@ export class EnvironmentsService {
       .where(
         and(
           eq(plotPoints.environmentId, environmentId),
-          inArray(plotPoints.type, [
-            'AI_USER_MESSAGE',
-            'HUMAN_USER_MESSAGE',
-          ]),
+          inArray(plotPoints.type, ['AI_USER_MESSAGE', 'HUMAN_USER_MESSAGE']),
         ),
       );
     return messageCount;

@@ -2,10 +2,7 @@ import { z } from "zod";
 import * as schema from "../schema";
 import { createZodDto } from "@anatine/zod-nestjs";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import {
-  AiUserMessageDtoSchema,
-  HumanUserMessageDtoSchema,
-} from "./message";
+import { AiUserMessageDtoSchema, HumanUserMessageDtoSchema } from "./message";
 import type { PLOT_POINT_TYPES } from "../constants";
 import type { InferSelectModel } from "drizzle-orm";
 
@@ -23,9 +20,9 @@ export const HumanUserMessagePlotPointSummaryDtoSchema = z.object({
     user: createSelectSchema(schema.users).pick({ id: true }),
     humanUser: createSelectSchema(schema.humanUsers).pick({ id: true }),
     message: createSelectSchema(schema.messages).pick({ id: true }),
-    humanUserMessage: createSelectSchema(schema.humanUserMessages).pick(
-      { content: true },
-    ),
+    humanUserMessage: createSelectSchema(schema.humanUserMessages).pick({
+      content: true,
+    }),
   }),
 });
 
@@ -97,6 +94,7 @@ export const EvaluationPlotPointDtoSchema = z.object({
   type: z.literal("EVALUATION"),
   data: z.object({
     plotPoint: createSelectSchema(schema.plotPoints),
+    trigger: createSelectSchema(schema.plotPoints),
     user: createSelectSchema(schema.users),
     aiUser: createSelectSchema(schema.aiUsers),
     environment: createSelectSchema(schema.environments),
@@ -109,6 +107,7 @@ export const EvaluationPlotPointDtoSchema = z.object({
 
 export const CreateEvaluationPlotPointDtoSchema = z.object({
   type: z.literal("EVALUATION"),
+  triggerId: createSelectSchema(schema.plotPoints).shape.id,
   userId: createSelectSchema(schema.users).shape.id,
   environmentId: createSelectSchema(schema.environments).shape.id,
   toolId: createSelectSchema(schema.tools).shape.id,

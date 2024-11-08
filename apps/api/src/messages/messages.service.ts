@@ -12,7 +12,6 @@ import {
   aiUsers,
   environments,
   messages,
-  plotPointMessages,
   plotPoints,
   users,
 } from '@2pm/data/schema';
@@ -50,11 +49,7 @@ export class MessagesService {
         environment: environments,
       })
       .from(messages)
-      .innerJoin(
-        plotPointMessages,
-        eq(messages.id, plotPointMessages.messageId),
-      )
-      .innerJoin(plotPoints, eq(plotPointMessages.plotPointId, plotPoints.id))
+      .innerJoin(plotPoints, eq(messages.plotPointId, plotPoints.id))
       .innerJoin(users, eq(messages.userId, users.id))
       .innerJoin(environments, eq(messages.environmentId, environments.id))
       .leftJoin(aiUserMessages, eq(messages.id, aiUserMessages.messageId))

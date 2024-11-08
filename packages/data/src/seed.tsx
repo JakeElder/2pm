@@ -127,6 +127,22 @@ const TOOLS: ToolSeed[] = [
       },
     },
   },
+  {
+    id: "REQUEST_EMAIL_ADDRESS",
+    definition: {
+      type: "function",
+      function: {
+        name: "REQUEST_EMAIL_ADDRESS",
+        description: "Requests the users email address",
+        strict: true,
+        parameters: {
+          type: "object",
+          properties: {},
+          additionalProperties: false,
+        },
+      },
+    },
+  },
 ];
 
 export { WORLD_ROOM_ENVIRONMENTS, AI_USERS, TOOLS };

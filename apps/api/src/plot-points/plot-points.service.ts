@@ -10,7 +10,6 @@ import {
   aiUsers,
   environments,
   messages,
-  plotPointMessages,
   plotPoints,
   users,
   humanUserMessages,
@@ -43,11 +42,7 @@ export class PlotPointsService {
         environment: environments,
       })
       .from(plotPoints)
-      .leftJoin(
-        plotPointMessages,
-        eq(plotPoints.id, plotPointMessages.plotPointId),
-      )
-      .leftJoin(messages, eq(plotPointMessages.messageId, messages.id))
+      .leftJoin(messages, eq(messages.plotPointId, plotPoints.id))
       .leftJoin(humanUserMessages, eq(messages.id, humanUserMessages.messageId))
       .leftJoin(aiUserMessages, eq(messages.id, aiUserMessages.messageId))
       .leftJoin(users, eq(messages.userId, users.id))
@@ -124,11 +119,7 @@ export class PlotPointsService {
         environment: environments,
       })
       .from(plotPoints)
-      .innerJoin(
-        plotPointMessages,
-        eq(plotPoints.id, plotPointMessages.plotPointId),
-      )
-      .innerJoin(messages, eq(plotPointMessages.messageId, messages.id))
+      .innerJoin(messages, eq(messages.plotPointId, plotPoints.id))
       .innerJoin(
         humanUserMessages,
         eq(messages.id, humanUserMessages.messageId),
@@ -162,11 +153,7 @@ export class PlotPointsService {
         environment: environments,
       })
       .from(plotPoints)
-      .innerJoin(
-        plotPointMessages,
-        eq(plotPoints.id, plotPointMessages.plotPointId),
-      )
-      .innerJoin(messages, eq(plotPointMessages.messageId, messages.id))
+      .innerJoin(messages, eq(messages.plotPointId, plotPoints.id))
       .innerJoin(aiUserMessages, eq(messages.id, aiUserMessages.messageId))
       .innerJoin(users, eq(messages.userId, users.id))
       .innerJoin(aiUsers, eq(users.id, aiUsers.userId))

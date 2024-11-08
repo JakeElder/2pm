@@ -30,7 +30,7 @@ export default class UserEnvironmentPresences extends DbModule {
       await this.drizzle.transaction(async (tx) => {
         const [plotPoint] = await tx
           .insert(plotPoints)
-          .values({ type: "ENVIRONMENT_ENTERED", environmentId })
+          .values({ type: "ENVIRONMENT_ENTERED", userId, environmentId })
           .returning();
 
         const [userEnvironmentPresence] = await this.drizzle

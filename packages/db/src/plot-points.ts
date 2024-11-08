@@ -4,12 +4,10 @@ import {
   users,
   aiUsers,
   messages,
-  plotPointMessages,
   aiUserMessages,
   humanUsers,
   humanUserMessages,
   evaluations,
-  plotPointEvaluations,
   tools,
 } from "@2pm/data/schema";
 import { DbModule } from "./db-module";
@@ -118,13 +116,16 @@ export default class PlotPoints extends DbModule {
     }
 
     if (type === "EVALUATION") {
-      const { toolId, args } = dto;
+      const { toolId, args, triggerId } = dto;
 
-      const [tool] = await this.drizzle
-        .select()
-        .from(tools)
-        .where(eq(tools.id, toolId))
-        .limit(1);
+      const [[tool], [trigger]] = await Promise.all([
+        this.drizzle.select().from(tools).where(eq(tools.id, toolId)).limit(1),
+        this.drizzle
+          .select()
+          .from(plotPoints)
+          .where(eq(plotPoints.id, triggerId))
+          .limit(1),
+      ]);
 
       if (!aiUser || !tool) {
         throw new Error();
@@ -135,12 +136,14 @@ export default class PlotPoints extends DbModule {
         userId,
         toolId,
         args,
+        triggerId,
       });
 
       const res: EvaluationPlotPointDto = {
         type: "EVALUATION",
         data: {
           plotPoint,
+          trigger,
           environment,
           user,
           aiUser,
@@ -160,29 +163,24 @@ export default class PlotPoints extends DbModule {
     environmentId,
     toolId,
     args,
+    triggerId,
   }: Omit<CreateEvaluationPlotPointDto, "type">): Promise<
     Pick<EvaluationPlotPointDto["data"], "plotPoint" | "evaluation">
   > {
     return this.drizzle.transaction(async (tx) => {
       const [plotPoint] = await tx
         .insert(plotPoints)
-        .values({ type: "EVALUATION", environmentId })
+        .values({ userId, type: "EVALUATION", environmentId })
         .returning();
 
       const [evaluation] = await tx
         .insert(evaluations)
-        .values({ plotPointId: plotPoint.id, toolId, userId, args })
-        .returning();
-
-      const [plotPointEvaluation] = await tx
-        .insert(plotPointEvaluations)
-        .values({ plotPointId: plotPoint.id, evaluationId: evaluation.id })
+        .values({ plotPointId: plotPoint.id, triggerId, toolId, userId, args })
         .returning();
 
       return {
         plotPoint,
         evaluation,
-        plotPointEvaluation,
       };
     });
   }
@@ -197,12 +195,17 @@ export default class PlotPoints extends DbModule {
     return this.drizzle.transaction(async (tx) => {
       const [plotPoint] = await tx
         .insert(plotPoints)
-        .values({ type: "HUMAN_USER_MESSAGE", environmentId })
+        .values({ type: "HUMAN_USER_MESSAGE", userId, environmentId })
         .returning();
 
       const [message] = await tx
         .insert(messages)
-        .values({ type: "HUMAN_USER", userId, environmentId })
+        .values({
+          type: "HUMAN_USER",
+          plotPointId: plotPoint.id,
+          userId,
+          environmentId,
+        })
         .returning();
 
       const [humanUserMessage] = await tx
@@ -210,14 +213,8 @@ export default class PlotPoints extends DbModule {
         .values({ messageId: message.id, content })
         .returning();
 
-      const [plotPointMessage] = await tx
-        .insert(plotPointMessages)
-        .values({ plotPointId: plotPoint.id, messageId: message.id })
-        .returning();
-
       return {
         plotPoint,
-        plotPointMessage,
         message,
         humanUserMessage,
       };
@@ -235,12 +232,17 @@ export default class PlotPoints extends DbModule {
     return this.drizzle.transaction(async (tx) => {
       const [plotPoint] = await tx
         .insert(plotPoints)
-        .values({ type: "AI_USER_MESSAGE", environmentId })
+        .values({ type: "AI_USER_MESSAGE", userId, environmentId })
         .returning();
 
       const [message] = await tx
         .insert(messages)
-        .values({ type: "AI_USER", userId, environmentId })
+        .values({
+          type: "AI_USER",
+          plotPointId: plotPoint.id,
+          userId,
+          environmentId,
+        })
         .returning();
 
       const [aiUserMessage] = await tx
@@ -248,15 +250,9 @@ export default class PlotPoints extends DbModule {
         .values({ messageId: message.id, state, content })
         .returning();
 
-      const [plotPointMessage] = await tx
-        .insert(plotPointMessages)
-        .values({ plotPointId: plotPoint.id, messageId: message.id })
-        .returning();
-
       return {
-        plotPoint,
-        plotPointMessage,
         message,
+        plotPoint,
         aiUserMessage,
       };
     });

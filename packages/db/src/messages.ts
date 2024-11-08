@@ -5,7 +5,6 @@ import {
   users,
   aiUsers,
   plotPoints,
-  plotPointMessages,
 } from "@2pm/data/schema";
 import { DbModule } from "./db-module";
 import { AiUserMessageDto, InferMessageDto, UpdateMessageDto } from "@2pm/data";
@@ -28,11 +27,7 @@ export default class Messages extends DbModule {
           environment: environments,
         })
         .from(messages)
-        .innerJoin(
-          plotPointMessages,
-          eq(messages.id, plotPointMessages.messageId),
-        )
-        .innerJoin(plotPoints, eq(plotPointMessages.plotPointId, plotPoints.id))
+        .innerJoin(plotPoints, eq(messages.plotPointId, plotPoints.id))
         .innerJoin(users, eq(messages.userId, users.id))
         .innerJoin(environments, eq(messages.environmentId, environments.id))
         .leftJoin(aiUserMessages, eq(messages.id, aiUserMessages.messageId))
