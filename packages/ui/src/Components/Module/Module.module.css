@@ -52,7 +52,6 @@
 
 .footer {
   flex-shrink: 0;
-  height: var(--header-footer-height);
   border-top: var(--border-0);
 }
 

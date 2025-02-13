@@ -61,7 +61,11 @@ export const CompanionOneToOne: Story = {
           </CompanionOneToOneModule.Body>
           <CompanionOneToOneModule.Footer>
             <CompanionOneToOneModule.Input>
-              <PromptInput />
+              <PromptInput
+                onSubmit={(content) => {
+                  console.log(content);
+                }}
+              />
             </CompanionOneToOneModule.Input>
             <CompanionOneToOneModule.SubmitButton>
               <PromptSubmitButton />

@@ -45,3 +45,7 @@
   cursor: pointer;
   outline: inherit;
 }
+
+:focus-visible {
+  outline: 0;
+}
