@@ -3,15 +3,21 @@
   "version": "1.0.0",
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "format": "prettier --write \"**/*.{ts,tsx}\""
-  },
-  "bin": {
-    "ivan": "src/index.ts"
+    "format": "prettier --write \"**/*.{ts,tsx}\"",
+    "niko": "src/index.ts"
   },
   "dependencies": {
     "@2pm/api": "workspace:*",
+    "@langchain/community": "^0.3.40",
+    "@langchain/core": "^0.3.44",
+    "@langchain/ollama": "^0.2.0",
     "commander": "^12.1.0",
+    "langchain": "^0.3.21",
     "ora": "^8.1.0",
+    "pg": "^8.14.1",
     "swagger-typescript-api": "^13.0.22"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.11.11"
   }
 }
