@@ -10,9 +10,10 @@
     "format": "prettier --write \"**/*.{ts,tsx}\""
   },
   "dependencies": {
+    "@2pm/api": "workspace:*",
     "@2pm/data": "workspace:*",
     "@2pm/ui": "workspace:*",
-    "@2pm/api": "workspace:*",
+    "next": "^15.3.0",
     "react-hook-form": "^7.54.2"
   }
 }
