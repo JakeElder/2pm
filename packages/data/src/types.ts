@@ -28,3 +28,36 @@ export type ToolCode = (typeof TOOL_CODES)[number];
 export type PlotPointPerspective = "FIRST_PERSON" | "THIRD_PERSON" | "NEUTRAL";
 
 export type ChatStream = AsyncGenerator<string>;
+
+type CoreColor =
+  | "base"
+  | "mantle"
+  | "crust"
+  | "text"
+  | "subtext1"
+  | "subtext0"
+  | "overlay2"
+  | "overlay1"
+  | "overlay0"
+  | "surface2"
+  | "surface1"
+  | "surface0";
+
+type NamedColor =
+  | "rosewater"
+  | "flamingo"
+  | "pink"
+  | "mauve"
+  | "red"
+  | "maroon"
+  | "peach"
+  | "yellow"
+  | "green"
+  | "teal"
+  | "sky"
+  | "sapphire"
+  | "blue"
+  | "lavender";
+
+export type ThemeId = "frappe" | "latte";
+export type ThemeColor = CoreColor | NamedColor;

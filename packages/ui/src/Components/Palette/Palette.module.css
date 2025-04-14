@@ -1,0 +1,22 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.block {
+  width: 40px;
+  height: 40px;
+  margin-bottom: 2px;
+  border-radius: 2px;
+}
+
+.name {
+  font-size: 6px;
+}

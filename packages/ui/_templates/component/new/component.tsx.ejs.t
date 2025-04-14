@@ -2,7 +2,7 @@
 to: <%= dir %>/<%= name %>/<%= name %>.tsx
 ---
 import React from "react";
-import css from "./<%= name %>.module.css"
+import css from "./<%= name %>.module.css";
 
 type Props = {};
 
