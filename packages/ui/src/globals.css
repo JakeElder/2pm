@@ -1,36 +1,89 @@
 :root {
-  /* Font Families */
-  --font-family-0: "OCR-B";
-
-  /* TODO: Font Face for SF Mono*/
   --font-family-1: "SF Mono";
-
-  /* Borders */
-  --border-0: 1px solid rgba(255, 255, 255, 0.7);
-  --border-1: 1px solid rgba(255, 255, 255, 0.4);
-
-  /* Border Radius */
-  --border-radius-0: 6px;
-  --border-radius-1: 3px;
-
-  /* Backgrounds */
-  --background-0: rgba(30, 30, 46, 0.3);
-  --background-1: #eff1f5;
-  --background-2: #1e1e2e;
-
-  /* Colors */
-  --color-0: #38394d;
-  --color-1: #1e66f5;
-  --color-2: #bcc2dc;
-  --color-3: #d9d9db;
-
-  /* Text Shadows */
-  --text-shadow-0: 1px 1px 1px rgba(0, 0, 0, 0.6);
 }
 
 @font-face {
-  font-family: "OCR-B";
-  src: url("/fonts/ocr-b.woff2") format("woff2");
+  font-family: "SF Mono";
+  src: url("/fonts/sfmono-nerd-regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "SF Mono";
+  src: url("/fonts/sfmono-nerd-italic.otf") format("opentype");
+  font-weight: 400;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "SF Mono";
+  src: url("/fonts/sfmono-nerd-light.otf") format("opentype");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "SF Mono";
+  src: url("/fonts/sfmono-nerd-light-litalic.otf") format("opentype");
+  font-weight: 300;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "SF Mono";
+  src: url("/fonts/sfmono-nerd-medium.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "SF Mono";
+  src: url("/fonts/sfmono-nerd-medium-litalic.otf") format("opentype");
+  font-weight: 500;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "SF Mono";
+  src: url("/fonts/sfmono-nerd-semi-lbold.otf") format("opentype");
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "SF Mono";
+  src: url("/fonts/sfmono-nerd-semi-lbold-litalic.otf") format("opentype");
+  font-weight: 600;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "SF Mono";
+  src: url("/fonts/sfmono-nerd-bold.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "SF Mono";
+  src: url("/fonts/sfmono-nerd-bold-litalic.otf") format("opentype");
+  font-weight: 700;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "SF Mono";
+  src: url("/fonts/sfmono-nerd-heavy.otf") format("opentype");
+  font-weight: 800; /* Or 900 depending on preference */
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "SF Mono";
+  src: url("/fonts/sfmono-nerd-heavy-litalic.otf") format("opentype");
+  font-weight: 800; /* Or 900 depending on preference */
+  font-style: italic;
 }
 
 .reset {

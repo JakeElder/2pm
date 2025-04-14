@@ -1,21 +1,3 @@
 .root {
   display: flex;
-  height: 80dvh;
-  position: relative;
-  top: 10dvh;
-  box-sizing: border-box;
-  padding: 50px;
-  gap: 26px;
-}
-
-.companion-one-to-one {
-  max-width: 290px;
-}
-
-.world-room {
-  flex: 1;
-}
-
-.user-and-leaderboard {
-  max-width: 290px;
 }

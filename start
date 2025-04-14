@@ -6,8 +6,7 @@ packages=(
   packages/*
 )
 
-for i in "${packages[@]}"
-do
+for i in "${packages[@]}"; do
   if test -f "$i/.tmuxinator.yml"; then
     echo "Loading $i/.tmuxinator.yml"
     $(cd "$i" && tmuxinator start)
