@@ -1,3 +1,52 @@
 .root {
   display: flex;
+  flex-direction: column;
+  background: var(--base);
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 300;
+  width: 100dvw;
+  height: 100dvh;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  align-items: stretch;
+}
+
+.spaces,
+.reference-plot-points,
+.conversation-plot-points {
+  flex: 1;
+}
+
+.status-bar {
+  height: 18px;
+  background: var(--mantle);
+}
+
+.info-bar {
+  height: 50px;
+  display: flex;
+  align-items: center;
+  padding-left: 20px;
+}
+
+.spaces,
+.reference-plot-points {
+  border-right: 1px solid var(--mantle);
+}
+
+.spaces {
+  max-width: 220px;
+}
+
+.logo {
+  margin-right: 8px;
+}
+
+.separator {
+  margin-right: 8px;
+  color: var(--overlay0);
 }

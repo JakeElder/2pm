@@ -1,0 +1,24 @@
+.icon,
+.at,
+.name {
+  color: var(--green);
+}
+
+.hash,
+.id {
+  color: var(--surface2);
+}
+
+.icon {
+  margin-right: 6px;
+  font-size: 12px;
+}
+
+.name {
+  margin-right: 1px;
+  font-weight: 100;
+}
+
+.hash {
+  margin-right: 1px;
+}
