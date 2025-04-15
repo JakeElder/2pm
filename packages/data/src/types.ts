@@ -59,5 +59,5 @@ type NamedColor =
   | "blue"
   | "lavender";
 
-export type ThemeId = "frappe" | "latte";
+export type ThemeId = "frappe" | "latte" | "mocha" | "macchiato";
 export type ThemeColor = CoreColor | NamedColor;

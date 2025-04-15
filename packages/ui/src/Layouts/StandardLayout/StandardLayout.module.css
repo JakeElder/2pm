@@ -23,11 +23,11 @@
 
 .status-bar {
   height: 18px;
-  background: var(--mantle);
+  background: var(--separator);
 }
 
 .info-bar {
-  height: 50px;
+  height: 48px;
   display: flex;
   align-items: center;
   padding-left: 20px;
@@ -35,7 +35,7 @@
 
 .spaces,
 .reference-plot-points {
-  border-right: 1px solid var(--mantle);
+  border-right: 1px solid var(--separator);
 }
 
 .spaces {
@@ -43,10 +43,11 @@
 }
 
 .logo {
-  margin-right: 8px;
+  margin-right: 10px;
 }
 
 .separator {
-  margin-right: 8px;
+  margin-right: 10px;
   color: var(--overlay0);
+  font-size: 12px;
 }
