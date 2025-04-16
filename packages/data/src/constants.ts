@@ -37,3 +37,5 @@ export const ENVIRONMENT_TYPE_CODES = [
 export const WORLD_ROOM_CODES = ["UNIVERSE"] as const;
 
 export const ICON_CODES = ["STARS", "LOCK"] as const;
+
+export const THEMES = ["frappe", "latte"] as const;

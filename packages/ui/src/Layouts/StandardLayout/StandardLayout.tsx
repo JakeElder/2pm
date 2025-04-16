@@ -1,4 +1,8 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
+import { useHotkeys } from "react-hotkeys-hook";
+import { ThemeId, THEMES } from "@2pm/data";
 import css from "./StandardLayout.module.css";
 import Theme from "../../Components/Theme";
 import SpaceList from "../../Components/SpaceList";
@@ -15,8 +19,20 @@ type RootProps = {
 };
 
 export const Root = ({}: RootProps) => {
+  const [themeId, setThemeId] = useState<ThemeId>("frappe");
+
+  useHotkeys(
+    ["c"],
+    () =>
+      setThemeId((current) => {
+        const index = (THEMES.indexOf(current) + 1) % THEMES.length;
+        return THEMES[index];
+      }),
+    [themeId],
+  );
+
   return (
-    <Theme themeId="frappe">
+    <Theme themeId={themeId}>
       <div className={css["root"]}>
         <div className={css["main"]}>
           <div className={css["spaces"]}>

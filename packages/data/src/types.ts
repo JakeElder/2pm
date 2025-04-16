@@ -7,6 +7,7 @@ import {
   ICON_CODES,
   MESSAGE_TYPES,
   PLOT_POINT_TYPES,
+  THEMES,
   TOOL_CODES,
   USER_TYPES,
   WORLD_ROOM_CODES,
@@ -59,5 +60,5 @@ type NamedColor =
   | "blue"
   | "lavender";
 
-export type ThemeId = "frappe" | "latte" | "mocha" | "macchiato";
+export type ThemeId = (typeof THEMES)[number];
 export type ThemeColor = CoreColor | NamedColor;

@@ -4,85 +4,86 @@
 
 @font-face {
   font-family: "SF Mono";
-  src: url("/fonts/sfmono-nerd-regular.otf") format("opentype");
+  src: url("../public/fonts/sfmono-nerd-regular.otf") format("opentype");
   font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
   font-family: "SF Mono";
-  src: url("/fonts/sfmono-nerd-italic.otf") format("opentype");
+  src: url("../public/fonts/sfmono-nerd-italic.otf") format("opentype");
   font-weight: 400;
   font-style: italic;
 }
 
 @font-face {
   font-family: "SF Mono";
-  src: url("/fonts/sfmono-nerd-light.otf") format("opentype");
+  src: url("../public/fonts/sfmono-nerd-light.otf") format("opentype");
   font-weight: 300;
   font-style: normal;
 }
 
 @font-face {
   font-family: "SF Mono";
-  src: url("/fonts/sfmono-nerd-light-litalic.otf") format("opentype");
+  src: url("../public/fonts/sfmono-nerd-light-italic.otf") format("opentype");
   font-weight: 300;
   font-style: italic;
 }
 
 @font-face {
   font-family: "SF Mono";
-  src: url("/fonts/sfmono-nerd-medium.otf") format("opentype");
+  src: url("../public/fonts/sfmono-nerd-medium.otf") format("opentype");
   font-weight: 500;
   font-style: normal;
 }
 
 @font-face {
   font-family: "SF Mono";
-  src: url("/fonts/sfmono-nerd-medium-litalic.otf") format("opentype");
+  src: url("../public/fonts/sfmono-nerd-medium-italic.otf") format("opentype");
   font-weight: 500;
   font-style: italic;
 }
 
 @font-face {
   font-family: "SF Mono";
-  src: url("/fonts/sfmono-nerd-semi-lbold.otf") format("opentype");
+  src: url("../public/fonts/sfmono-nerd-semi-bold.otf") format("opentype");
   font-weight: 600;
   font-style: normal;
 }
 
 @font-face {
   font-family: "SF Mono";
-  src: url("/fonts/sfmono-nerd-semi-lbold-litalic.otf") format("opentype");
+  src: url("../public/fonts/sfmono-nerd-semi-bold-italic.otf")
+    format("opentype");
   font-weight: 600;
   font-style: italic;
 }
 
 @font-face {
   font-family: "SF Mono";
-  src: url("/fonts/sfmono-nerd-bold.otf") format("opentype");
+  src: url("../public/fonts/sfmono-nerd-bold.otf") format("opentype");
   font-weight: 700;
   font-style: normal;
 }
 
 @font-face {
   font-family: "SF Mono";
-  src: url("/fonts/sfmono-nerd-bold-litalic.otf") format("opentype");
+  src: url("../public/fonts/sfmono-nerd-bold-italic.otf") format("opentype");
   font-weight: 700;
   font-style: italic;
 }
 
 @font-face {
   font-family: "SF Mono";
-  src: url("/fonts/sfmono-nerd-heavy.otf") format("opentype");
-  font-weight: 800; /* Or 900 depending on preference */
+  src: url("../public/fonts/sfmono-nerd-heavy.otf") format("opentype");
+  font-weight: 800;
   font-style: normal;
 }
 
 @font-face {
   font-family: "SF Mono";
-  src: url("/fonts/sfmono-nerd-heavy-litalic.otf") format("opentype");
-  font-weight: 800; /* Or 900 depending on preference */
+  src: url("../public/fonts/sfmono-nerd-heavy-italic.otf") format("opentype");
+  font-weight: 800;
   font-style: italic;
 }
 
