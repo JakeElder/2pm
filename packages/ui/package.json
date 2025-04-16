@@ -10,7 +10,7 @@
   },
   "exports": {
     ".": "./src/index.ts",
-    "./plot-points": "./src/Components/PlotPoints/index.ts",
+    "./plot-points": "./src/PlotPoints/index.ts",
     "./globals.css": "./src/globals.css",
     "./images/*": "./public/images/*"
   },

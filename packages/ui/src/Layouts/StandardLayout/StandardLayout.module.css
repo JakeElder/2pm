@@ -3,7 +3,7 @@
   flex-direction: column;
   background: var(--base);
   color: var(--text);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 300;
   width: 100dvw;
   height: 100dvh;
@@ -49,5 +49,11 @@
 .separator {
   margin-right: 10px;
   color: var(--overlay0);
-  font-size: 12px;
+}
+
+.reference-plot-points {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 20px;
+  padding: 30px;
 }

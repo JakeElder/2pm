@@ -18,7 +18,7 @@ const prompt = ({ prompter }) => {
     const dirs = {
       Element: "Elements",
       Component: "Components",
-      "Plot Point": "Components/PlotPoints",
+      "Plot Point": "PlotPoints",
       Layout: "Layouts",
       Page: "Pages",
     };
