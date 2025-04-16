@@ -1,4 +1,5 @@
 import React from "react";
+import * as StandardPlotPoint from "../../Components/StandardPlotPoint";
 import css from "./EmailSent.module.css";
 
 type Props = {
@@ -8,18 +9,18 @@ type Props = {
 
 const EmailSent = ({ reference, email }: Props) => {
   return (
-    <div className={css["root"]}>
-      <div className={css["header"]}>
-        <div className={css["title-and-reference-number"]}>
-          <div className={css["title"]}>󱡰 Email Sent</div>
-          <div className={css["reference-number"]}>[{reference}]</div>
-        </div>
-      </div>
-      <div className={css["body"]}>
+    <StandardPlotPoint.Root>
+      <StandardPlotPoint.Header>
+        <StandardPlotPoint.HeadingAndReference>
+          <StandardPlotPoint.Heading>󱡰 Email Sent</StandardPlotPoint.Heading>
+          <StandardPlotPoint.Reference>{reference}</StandardPlotPoint.Reference>
+        </StandardPlotPoint.HeadingAndReference>
+      </StandardPlotPoint.Header>
+      <StandardPlotPoint.Body>
         <span className={css["key"]}>email</span>:{" "}
         <span className={css["value"]}>{email}</span>
-      </div>
-    </div>
+      </StandardPlotPoint.Body>
+    </StandardPlotPoint.Root>
   );
 };
 

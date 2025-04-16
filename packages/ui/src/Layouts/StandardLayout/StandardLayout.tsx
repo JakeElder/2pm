@@ -1,16 +1,14 @@
 "use client";
 
-import React, { useState } from "react";
-import { useHotkeys } from "react-hotkeys-hook";
-import { ThemeId, THEMES } from "@2pm/data";
+import React from "react";
 import css from "./StandardLayout.module.css";
 import Theme from "../../Components/Theme";
 import SpaceList from "../../Components/SpaceList";
 import PaneHeader from "../../Components/PaneHeader";
 import Logo from "../../Components/Logo";
 import InfoBarUser from "../../Components/InfoBarUser";
-import BibleVerse from "../../PlotPoints/BibleVerse/BibleVerse";
-import EmailSent from "../../PlotPoints/EmailSent/EmailSent";
+import BibleVerse from "../../PlotPoints/BibleVerse";
+import EmailSent from "../../PlotPoints/EmailSent";
 
 /*
  * Root
@@ -21,20 +19,8 @@ type RootProps = {
 };
 
 export const Root = ({}: RootProps) => {
-  const [themeId, setThemeId] = useState<ThemeId>("frappe");
-
-  useHotkeys(
-    ["c"],
-    () =>
-      setThemeId((current) => {
-        const index = (THEMES.indexOf(current) + 1) % THEMES.length;
-        return THEMES[index];
-      }),
-    [themeId],
-  );
-
   return (
-    <Theme themeId={themeId}>
+    <Theme>
       <div className={css["root"]}>
         <div className={css["main"]}>
           <div className={css["spaces"]}>

@@ -10,12 +10,10 @@ const meta: Meta<typeof Theme> = {
 type Story = StoryObj<typeof Theme>;
 
 export const Default: Story = {
-  args: {
-    themeId: "frappe",
-  },
-  render: ({ themeId }) => {
+  args: {},
+  render: () => {
     return (
-      <Theme themeId={themeId}>
+      <Theme>
         <Palette />
       </Theme>
     );

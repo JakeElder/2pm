@@ -15,7 +15,7 @@ const SpaceList = ({}: Props) => {
         </div>
       </li>
       <li className={css["channel"]}>
-        <div className={css["name"]}>#campfire</div>
+        <div className={css["name"]}>#mini-mart</div>
         <div className={css["users"]}>
           <span className={css["user-icon"]}></span>
           <span className={css["user-count"]}>190</span>

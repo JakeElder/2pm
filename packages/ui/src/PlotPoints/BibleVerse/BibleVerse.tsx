@@ -1,4 +1,5 @@
 import React from "react";
+import * as StandardPlotPoint from "../../Components/StandardPlotPoint";
 import css from "./BibleVerse.module.css";
 
 type Props = {
@@ -9,18 +10,18 @@ type Props = {
 
 const BibleVerse = ({ verse, reference, children }: Props) => {
   return (
-    <div className={css["root"]}>
-      <div className={css["header"]}>
-        <div className={css["source-and-reference-number"]}>
-          <div className={css["translation-and-verse"]}>
+    <StandardPlotPoint.Root>
+      <StandardPlotPoint.Header>
+        <StandardPlotPoint.HeadingAndReference>
+          <StandardPlotPoint.Heading>
             <div className={css["translation"]}> The Bible</div>
             <div className={css["verse"]}>{verse}</div>
-          </div>
-          <div className={css["reference-number"]}>[{reference}]</div>
-        </div>
-      </div>
-      <div className={css["body"]}>{children}</div>
-    </div>
+          </StandardPlotPoint.Heading>
+          <StandardPlotPoint.Reference>{reference}</StandardPlotPoint.Reference>
+        </StandardPlotPoint.HeadingAndReference>
+      </StandardPlotPoint.Header>
+      <StandardPlotPoint.Body>{children}</StandardPlotPoint.Body>
+    </StandardPlotPoint.Root>
   );
 };
 
