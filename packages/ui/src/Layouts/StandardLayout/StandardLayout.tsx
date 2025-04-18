@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import classNames from "classnames";
 import css from "./StandardLayout.module.css";
 import Theme from "../../Components/Theme";
 import SpaceList from "../../Components/SpaceList";
@@ -9,6 +10,7 @@ import Logo from "../../Components/Logo";
 import InfoBarUser from "../../Components/InfoBarUser";
 import BibleVerse from "../../PlotPoints/BibleVerse";
 import EmailSent from "../../PlotPoints/EmailSent";
+import TiptapEditor from "../../Components/TiptapEditor/TiptapEditor";
 
 /*
  * Root
@@ -43,7 +45,41 @@ export const Root = ({}: RootProps) => {
               </BibleVerse>
             </div>
           </div>
-          <div className={css["conversation-plot-points"]}></div>
+          <div className={css["conversation"]}>
+            <div className={css["conversation-plot-points"]}>
+              <div className={css["message"]}>
+                <div className={css["header"]}>
+                  <div className={css["user"]}>
+                    <div className={classNames(css["tag"], css["human-tag"])}>
+                      @jake
+                    </div>
+                  </div>
+                </div>
+                <div className={css["body"]}>
+                  Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                  laboris nisi ut aliquip ex ea commodo consequat.
+                </div>
+              </div>
+              <div className={css["message"]}>
+                <div className={css["header"]}>
+                  <div className={css["user"]}>
+                    <div className={classNames(css["tag"], css["ai-tag"])}>
+                      @niko
+                    </div>
+                  </div>
+                </div>
+                <div className={css["body"]}>
+                  Lorem ipsum dolor sit amet, [1] adipiscing elit, sed do
+                  eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+                  enim ad minim veniam, quis nostrud exercitation ullamco
+                  laboris nisi ut aliquip ex ea commodo consequat.{" "}
+                </div>
+              </div>
+            </div>
+            <div className={css["input-bar"]}>
+              <TiptapEditor />
+            </div>
+          </div>
         </div>
         <div className={css["status-bar"]}></div>
         <div className={css["info-bar"]}>

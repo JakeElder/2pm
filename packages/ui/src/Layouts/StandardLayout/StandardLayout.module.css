@@ -16,9 +16,12 @@
 }
 
 .spaces,
-.reference-plot-points,
-.conversation-plot-points {
-  flex: 1;
+.reference-plot-points {
+  flex: 2;
+}
+
+.conversation {
+  flex: 3;
 }
 
 .status-bar {
@@ -51,9 +54,52 @@
   color: var(--overlay0);
 }
 
-.reference-plot-points {
+.reference-plot-points,
+.conversation-plot-points {
   display: flex;
   flex-direction: column-reverse;
-  gap: 20px;
+}
+
+.reference-plot-points {
   padding: 30px;
+  gap: 20px;
+}
+
+.conversation {
+  display: flex;
+  flex-direction: column;
+}
+
+.conversation-plot-points {
+  flex: 1;
+  gap: 28px;
+  padding: 30px 30px 0 30px;
+}
+
+.input-bar {
+  padding: 30px;
+}
+
+/**/
+
+.header {
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid var(--surface1);
+}
+
+.tag {
+  font-weight: 400;
+}
+
+.ai-tag {
+  color: var(--peach);
+}
+
+.human-tag {
+  color: var(--sapphire);
+}
+
+.body {
+  line-height: 1.4;
 }
