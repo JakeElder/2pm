@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import { Extension } from "@tiptap/core";
@@ -33,6 +35,7 @@ type Props = {};
 const TiptapEditor = ({}: Props) => {
   const handleSubmit = React.useCallback(() => {
     if (!editor) {
+      console.log("no editor");
       return;
     }
     const json = editor.getJSON();
@@ -40,6 +43,7 @@ const TiptapEditor = ({}: Props) => {
   }, []);
 
   const editor = useEditor({
+    immediatelyRender: false,
     extensions: [
       Document,
       Paragraph,

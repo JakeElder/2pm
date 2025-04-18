@@ -9,7 +9,7 @@ import InfoBarUser from "../InfoBarUser";
 
 type SeparatorProps = {};
 
-export const Separator = (props: SeparatorProps) => {
+const Separator = ({}: SeparatorProps) => {
   return <div className={css["separator"]}>│</div>;
 };
 

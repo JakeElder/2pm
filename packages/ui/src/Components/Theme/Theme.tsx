@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from "react";
 import css from "./Theme.module.css";
 import classNames from "classnames";

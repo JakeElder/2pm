@@ -9,7 +9,8 @@
     "format": "prettier --write \"**/*.{ts,tsx}\""
   },
   "exports": {
-    ".": "./src/index.ts",
+    "./components": "./src/components/index.ts",
+    "./layouts": "./src/layouts/index.ts",
     "./plot-points": "./src/PlotPoints/index.ts",
     "./globals.css": "./src/globals.css",
     "./images/*": "./public/images/*"
