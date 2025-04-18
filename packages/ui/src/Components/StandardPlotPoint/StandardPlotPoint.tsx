@@ -1,8 +1,6 @@
 import React from "react";
 import css from "./StandardPlotPoint.module.css";
 
-type Props = {};
-
 /*
  * Root
  */

@@ -1,5 +1,8 @@
 .root {
   font-family: var(--font-family-1);
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--text);
 }
 
 .frappe {

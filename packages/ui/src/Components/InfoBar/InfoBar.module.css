@@ -1,0 +1,15 @@
+.info-bar {
+  height: 48px;
+  display: flex;
+  align-items: center;
+  padding-left: 20px;
+}
+
+.logo {
+  margin-right: 10px;
+}
+
+.separator {
+  margin-right: 10px;
+  color: var(--overlay0);
+}

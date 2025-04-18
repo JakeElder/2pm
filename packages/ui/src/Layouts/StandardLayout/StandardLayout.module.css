@@ -29,13 +29,6 @@
   background: var(--separator);
 }
 
-.info-bar {
-  height: 48px;
-  display: flex;
-  align-items: center;
-  padding-left: 20px;
-}
-
 .spaces,
 .reference-plot-points {
   border-right: 1px solid var(--separator);
@@ -43,15 +36,6 @@
 
 .spaces {
   max-width: 220px;
-}
-
-.logo {
-  margin-right: 10px;
-}
-
-.separator {
-  margin-right: 10px;
-  color: var(--overlay0);
 }
 
 .reference-plot-points,
@@ -78,28 +62,4 @@
 
 .input-bar {
   padding: 30px;
-}
-
-/**/
-
-.header {
-  padding-bottom: 10px;
-  margin-bottom: 10px;
-  border-bottom: 1px solid var(--surface1);
-}
-
-.tag {
-  font-weight: 400;
-}
-
-.ai-tag {
-  color: var(--peach);
-}
-
-.human-tag {
-  color: var(--sapphire);
-}
-
-.body {
-  line-height: 1.4;
 }
