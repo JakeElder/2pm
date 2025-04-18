@@ -13,7 +13,6 @@
     "@2pm/api": "workspace:*",
     "@2pm/data": "workspace:*",
     "@2pm/ui": "workspace:*",
-    "next": "^15.3.1",
-    "react-hook-form": "^7.54.2"
+    "next": "^15.3.1"
   }
 }
