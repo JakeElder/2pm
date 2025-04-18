@@ -1,8 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { useCallback } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
-import { Extension } from "@tiptap/core";
+import { Editor, Extension } from "@tiptap/core";
 import Document from "@tiptap/extension-document";
 import Paragraph from "@tiptap/extension-paragraph";
 import Text from "@tiptap/extension-text";
@@ -13,31 +13,24 @@ import Code from "@tiptap/extension-code";
 import History from "@tiptap/extension-history";
 import css from "./TiptapEditor.module.css";
 
-const SubmitShortcut = Extension.create({
-  name: "submitShortcut",
-  addOptions() {
-    return {
-      onSubmit: () => {},
-    };
+const SubmitShortcut = Extension.create<{ onSubmit: (editor: Editor) => void }>(
+  {
+    name: "submitShortcut",
+    addKeyboardShortcuts() {
+      return {
+        "Mod-Enter": () => {
+          this.options.onSubmit(this.editor);
+          return true;
+        },
+      };
+    },
   },
-  addKeyboardShortcuts() {
-    return {
-      "Mod-Enter": () => {
-        this.options.onSubmit();
-        return true;
-      },
-    };
-  },
-});
+);
 
 type Props = {};
 
 const TiptapEditor = ({}: Props) => {
-  const handleSubmit = React.useCallback(() => {
-    if (!editor) {
-      console.log("no editor");
-      return;
-    }
+  const handleSubmit = useCallback((editor: Editor) => {
     const json = editor.getJSON();
     console.log(json);
   }, []);
@@ -66,18 +59,13 @@ const TiptapEditor = ({}: Props) => {
         },
       ],
     },
-    editorProps: {
-      attributes: {
-        class: css["input"],
-      },
-    },
   });
 
-  if (!editor) {
-    return null;
-  }
-
-  return <EditorContent editor={editor} />;
+  return (
+    <div className={css["input"]}>
+      {editor ? <EditorContent editor={editor} /> : <>&nbsp;</>}
+    </div>
+  );
 };
 
 export default TiptapEditor;
