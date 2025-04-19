@@ -1,7 +1,7 @@
 import { Message as OllamaMessage, Ollama } from "ollama";
 import OpenAI from "openai";
 import { mimicAi, txt } from "@2pm/utils";
-import { PlotPointSummaryDto, ToolCode } from "@2pm/data";
+import { PlotPointSummaryDto, ToolCode } from "@2pm/core";
 import { summaryToOpenAiMessage } from "./utils";
 
 type OpenAiMessage = OpenAI.Chat.Completions.ChatCompletionMessageParam;

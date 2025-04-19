@@ -9,7 +9,7 @@ import {
   humanUserMessages,
   evaluations,
   tools,
-} from "@2pm/data/schema";
+} from "@2pm/core/schema";
 import { DBService } from "./db-module";
 import {
   AiUserMessageDto,
@@ -23,7 +23,7 @@ import {
   CreateEvaluationPlotPointDto,
   EvaluationPlotPointDto,
   PlotPointDto,
-} from "@2pm/data";
+} from "@2pm/core";
 import { desc, eq, and, inArray } from "drizzle-orm";
 
 export default class PlotPoints extends DBService {

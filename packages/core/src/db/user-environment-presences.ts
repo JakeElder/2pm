@@ -3,11 +3,11 @@ import {
   plotPointEnvironmentPresences,
   plotPoints,
   userEnvironmentPresences,
-} from "@2pm/data/schema";
+} from "@2pm/core/schema";
 import {
   CreateUserEnvironmentPresenceDto,
   UserEnvironmentPresenceDto,
-} from "@2pm/data";
+} from "@2pm/core";
 import { eq } from "drizzle-orm";
 import { DBService } from "./db-module";
 

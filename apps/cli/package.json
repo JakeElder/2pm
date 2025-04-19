@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@2pm/api": "workspace:*",
+    "@2pm/core": "workspace:*",
     "@langchain/community": "^0.3.40",
     "@langchain/core": "^0.3.44",
     "@langchain/ollama": "^0.2.0",

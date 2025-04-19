@@ -1,7 +1,8 @@
 {
-  "name": "@2pm/data",
+  "name": "@2pm/core",
   "exports": {
     "./seed": "./src/seed.tsx",
+    "./db": "./src/db/index.ts",
     "./schema": "./src/schema.ts",
     ".": "./src/index.ts"
   },

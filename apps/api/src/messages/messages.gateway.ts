@@ -4,7 +4,7 @@ import type {
   MessageDto,
   MessagesRoomJoinedEventDto,
   MessagesRoomLeftEventDto,
-} from '@2pm/data';
+} from '@2pm/core';
 import { Logger } from '@nestjs/common';
 import {
   ConnectedSocket,

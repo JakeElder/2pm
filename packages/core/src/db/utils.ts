@@ -15,8 +15,8 @@ import {
   tools,
   evaluations,
   authEmails,
-} from "@2pm/data/schema";
-import * as seed from "@2pm/data/seed";
+} from "@2pm/core/schema";
+import * as seed from "@2pm/core/seed";
 import { DBService } from "./db-module";
 import UserEnvironmentPresences from "./user-environment-presences";
 import Users from "./users";

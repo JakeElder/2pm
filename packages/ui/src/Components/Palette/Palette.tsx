@@ -1,6 +1,6 @@
 import React from "react";
 import css from "./Palette.module.css";
-import { ThemeColor } from "@2pm/data";
+import { ThemeColor } from "@2pm/core";
 
 /*
  * Color

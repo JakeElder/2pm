@@ -2,7 +2,7 @@
 
 import { Narrative } from "@2pm/ui";
 import PlotPointViewContainer from "./PlotPointViewContainer";
-import { PlotPointDto, PlotPointPerspective } from "@2pm/data";
+import { PlotPointDto, PlotPointPerspective } from "@2pm/core";
 import { useSession } from "@/hooks/use-session";
 
 type Props = PlotPointDto;

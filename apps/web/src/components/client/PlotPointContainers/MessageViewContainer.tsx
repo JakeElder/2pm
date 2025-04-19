@@ -6,8 +6,8 @@ import {
   HumanUserMessagePlotPointDto,
   MessagesRoomJoinedEventDto,
   PlotPointPerspective,
-} from "@2pm/data";
-import { AiUserMessagePlotPointDto } from "@2pm/data";
+} from "@2pm/core";
+import { AiUserMessagePlotPointDto } from "@2pm/core";
 import { Message } from "@2pm/ui/plot-points";
 import { useEffect, useState } from "react";
 
@@ -86,9 +86,7 @@ const MessageViewContainer = (plotPoint: Props) => {
   }
 
   if (plotPoint.type === "HUMAN_USER_MESSAGE") {
-    return (
-      <HumanUserMessage perspective={perspective} plotPoint={plotPoint} />
-    );
+    return <HumanUserMessage perspective={perspective} plotPoint={plotPoint} />;
   }
 };
 

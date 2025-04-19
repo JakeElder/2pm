@@ -1,7 +1,7 @@
 "use server";
 
 import { getPlotPointsByEnvironmentId } from "@/api/environments";
-import { EnvironmentDto, PlotPointDtoSchema } from "@2pm/data";
+import { EnvironmentDto, PlotPointDtoSchema } from "@2pm/core";
 import { getSession } from "@/actions";
 import NarrativeViewContainer from "../client/NarrativeViewContainer";
 import { SessionProvider } from "../client/SessionProvider";

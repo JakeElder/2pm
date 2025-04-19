@@ -14,8 +14,8 @@ import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import {
   CompanionOneToOneEnvironmentDto,
   CreateCompanionOneToOneEnvironmentDto,
-} from '@2pm/data';
-import DBService from '@2pm/db';
+} from '@2pm/core';
+import { DBService } from '@2pm/core/db';
 
 @ApiTags('Environments')
 @Controller()

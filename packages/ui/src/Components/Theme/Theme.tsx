@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import css from "./Theme.module.css";
 import classNames from "classnames";
-import { ThemeId, THEMES } from "@2pm/data";
+import { ThemeId, THEMES } from "@2pm/core";
 import { useHotkeys } from "react-hotkeys-hook";
 
 type Props = {

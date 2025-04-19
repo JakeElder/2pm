@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@2pm/api": "workspace:*",
-    "@2pm/data": "workspace:*",
+    "@2pm/core": "workspace:*",
     "@2pm/ui": "workspace:*",
     "next": "^15.3.1"
   }

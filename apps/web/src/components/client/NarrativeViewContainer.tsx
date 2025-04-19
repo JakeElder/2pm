@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { Narrative } from "@2pm/ui";
-import { EnvironmentDto, PlotPointDto } from "@2pm/data";
-import { EnvironmentsRoomJoinedEventDto } from "@2pm/data";
+import { EnvironmentDto, PlotPointDto } from "@2pm/core";
+import { EnvironmentsRoomJoinedEventDto } from "@2pm/core";
 import { environmentsSocket } from "@/socket";
 import NarrativePlotPointViewContainer from "./NarrativePlotPointViewContainer";
 import { useSession } from "@/hooks/use-session";

@@ -6,8 +6,8 @@ import {
   ApiTags,
   getSchemaPath,
 } from '@nestjs/swagger';
-import { AiUserDto, HumanUserDto } from '@2pm/data';
-import DBService from '@2pm/db';
+import { AiUserDto, HumanUserDto } from '@2pm/core';
+import { DBService } from '@2pm/core/db';
 
 @ApiExtraModels(HumanUserDto)
 @ApiExtraModels(AiUserDto)

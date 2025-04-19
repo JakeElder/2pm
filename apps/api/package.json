@@ -21,8 +21,7 @@
   },
   "dependencies": {
     "@2pm/character-engine": "workspace:*",
-    "@2pm/data": "workspace:*",
-    "@2pm/db": "workspace:*",
+    "@2pm/core": "workspace:*",
     "@2pm/utils": "workspace:*",
     "@bull-board/api": "^6.3.0",
     "@bull-board/express": "^6.3.0",

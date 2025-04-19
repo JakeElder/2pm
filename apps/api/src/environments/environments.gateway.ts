@@ -4,7 +4,7 @@ import type {
   PlotPointDto,
   EnvironmentsRoomJoinedEventDto,
   EnvironmentsRoomLeftEventDto,
-} from '@2pm/data';
+} from '@2pm/core';
 import {
   ConnectedSocket,
   MessageBody,

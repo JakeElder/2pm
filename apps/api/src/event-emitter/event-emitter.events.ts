@@ -2,7 +2,7 @@ import {
   EnvironmentsRoomJoinedEventDto,
   MessageDto,
   PlotPointDto,
-} from '@2pm/data';
+} from '@2pm/core';
 
 export type AppEvents = {
   /* Plot Points */

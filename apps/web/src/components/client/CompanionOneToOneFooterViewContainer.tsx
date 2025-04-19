@@ -2,7 +2,7 @@
 
 import { submitMessage } from "@/actions";
 import { useSession } from "@/hooks/use-session";
-import { CompanionOneToOneEnvironmentDto } from "@2pm/data";
+import { CompanionOneToOneEnvironmentDto } from "@2pm/core";
 import {
   PromptInput,
   PromptSubmitButton,

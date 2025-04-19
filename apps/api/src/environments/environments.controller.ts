@@ -1,12 +1,12 @@
 import { Controller, Inject, Logger, OnModuleInit } from '@nestjs/common';
 import { InjectQueue } from '@nestjs/bull';
 import { Job, type Queue } from 'bull';
-import { PlotPoint, PlotPointDto, PlotPointType } from '@2pm/data';
 import Redis from 'ioredis';
 import { AppEventEmitter } from '../event-emitter';
 import { EnvironmentGateway } from './environments.gateway';
-import DBService from '@2pm/db';
-import { environments, evaluations, plotPoints } from '@2pm/data/schema';
+import { environments, evaluations, plotPoints } from '@2pm/core/schema';
+import { PlotPoint, PlotPointDto, PlotPointType } from '@2pm/core';
+import { DBService } from '@2pm/core/db';
 import { gt, desc, eq } from 'drizzle-orm';
 
 @Controller()

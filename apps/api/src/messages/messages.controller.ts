@@ -7,9 +7,9 @@ import {
   ApiQuery,
   getSchemaPath,
 } from '@nestjs/swagger';
-import { AiUserMessageDto, MESSAGE_TYPES, type MessageType } from '@2pm/data';
+import { AiUserMessageDto, MESSAGE_TYPES, type MessageType } from '@2pm/core';
+import { DBService } from '@2pm/core/db';
 import { AppEventEmitter } from '../event-emitter';
-import DBService from '@2pm/db';
 import { MessagesGateway } from './messages.gateway';
 
 @ApiTags('Messages')

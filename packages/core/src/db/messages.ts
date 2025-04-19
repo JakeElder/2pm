@@ -5,7 +5,7 @@ import {
   users,
   aiUsers,
   plotPoints,
-} from "@2pm/data/schema";
+} from "@2pm/core/schema";
 import { DBService } from "./db-module";
 import {
   AiUserMessageDto,
@@ -15,7 +15,7 @@ import {
   MessageDto,
   MessageDtoSchema,
   UpdateMessageDto,
-} from "@2pm/data";
+} from "@2pm/core";
 import { eq, desc, and, SQL } from "drizzle-orm";
 
 export default class Messages extends DBService {

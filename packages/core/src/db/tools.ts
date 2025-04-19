@@ -1,6 +1,6 @@
-import { tools } from "@2pm/data/schema";
+import { tools } from "@2pm/core/schema";
 import { DBService } from "./db-module";
-import { CreateToolDto, ToolDto } from "@2pm/data";
+import { CreateToolDto, ToolDto } from "@2pm/core";
 
 export default class Tools extends DBService {
   public async insert(dto: CreateToolDto): Promise<ToolDto> {

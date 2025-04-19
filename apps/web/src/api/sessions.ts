@@ -1,4 +1,4 @@
-import { FindSessionsQueryDto } from "@2pm/data";
+import { FindSessionsQueryDto } from "@2pm/core";
 import api from ".";
 
 const { getSessions } = api.sessions;

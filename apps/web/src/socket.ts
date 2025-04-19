@@ -1,4 +1,4 @@
-import { EnvironmentsClientSocket, MessagesClientSocket } from "@2pm/data";
+import { EnvironmentsClientSocket, MessagesClientSocket } from "@2pm/core";
 import { io } from "socket.io-client";
 
 export const environmentsSocket: EnvironmentsClientSocket = io(

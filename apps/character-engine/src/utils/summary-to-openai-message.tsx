@@ -1,4 +1,4 @@
-import { PlotPointSummaryDto, PlotPointType } from "@2pm/data";
+import { PlotPointSummaryDto, PlotPointType } from "@2pm/core";
 import OpenAI from "openai";
 import short from "short-uuid";
 

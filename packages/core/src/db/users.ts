@@ -4,14 +4,14 @@ import {
   aiUsers,
   environments,
   worldRoomEnvironments,
-} from "@2pm/data/schema";
+} from "@2pm/core/schema";
 import {
   AiUserDto,
   HumanUserDto,
   CreateUserDto,
   InferUserDto,
   UserDto,
-} from "@2pm/data";
+} from "@2pm/core";
 import { eq } from "drizzle-orm";
 import { DBService } from "./db-module";
 

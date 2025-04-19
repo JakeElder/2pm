@@ -1,6 +1,6 @@
 "use client";
 
-import { SessionDto } from "@2pm/data";
+import { SessionDto } from "@2pm/core";
 import { createContext, ReactNode } from "react";
 
 type SessionContextType = {

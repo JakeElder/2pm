@@ -16,7 +16,7 @@
     "./images/*": "./public/images/*"
   },
   "dependencies": {
-    "@2pm/data": "workspace:*",
+    "@2pm/core": "workspace:*",
     "@tiptap/core": "^2.11.7",
     "@tiptap/extension-bold": "^2.11.7",
     "@tiptap/extension-code": "^2.11.7",

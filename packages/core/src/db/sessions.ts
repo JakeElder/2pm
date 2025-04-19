@@ -1,6 +1,6 @@
-import { users, sessions } from "@2pm/data/schema";
+import { users, sessions } from "@2pm/core/schema";
 import { DBService } from "./db-module";
-import { CreateSessionDto, FindSessionsQueryDto, SessionDto } from "@2pm/data";
+import { CreateSessionDto, FindSessionsQueryDto, SessionDto } from "@2pm/core";
 import { inArray, SQL, and, eq } from "drizzle-orm";
 
 export default class Sessions extends DBService {

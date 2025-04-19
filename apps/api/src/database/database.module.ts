@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import DBService from '@2pm/db';
+import { DBService } from '@2pm/core/db';
 import { ConfigService } from '@nestjs/config';
 
 @Module({

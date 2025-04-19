@@ -1,6 +1,6 @@
-import { evaluations } from "@2pm/data/schema";
+import { evaluations } from "@2pm/core/schema";
 import { DBService } from "./db-module";
-import { CreateEvaluationDto, EvaluationDto } from "@2pm/data";
+import { CreateEvaluationDto, EvaluationDto } from "@2pm/core";
 
 export default class Evaluations extends DBService {
   public async insert(dto: CreateEvaluationDto): Promise<EvaluationDto> {

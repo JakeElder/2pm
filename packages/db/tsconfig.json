@@ -1,9 +1,0 @@
-{
-  "compilerOptions": {
-    "jsx": "preserve",
-    "strict": true,
-    "module": "esnext",
-    "moduleResolution": "bundler",
-    "skipLibCheck": true
-  }
-}

@@ -1,6 +1,6 @@
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres, { Sql } from "postgres";
-import { Drizzle } from "@2pm/data";
+import { Drizzle } from "@2pm/core";
 import Utils from "./utils";
 import UserEnvironmentPresences from "./user-environment-presences";
 import Users from "./users";
@@ -10,7 +10,7 @@ import Sessions from "./sessions";
 import Environments from "./environments";
 import AuthEmails from "./auth-emails";
 
-export default class DBService {
+export class DBService {
   public pg: Sql;
 
   public drizzle: Drizzle;

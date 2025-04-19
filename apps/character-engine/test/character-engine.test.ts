@@ -1,6 +1,6 @@
 import { describe, it, beforeAll, expect } from "bun:test";
 import CharacterEngine from "../src/index";
-import { PlotPointSummaryDto } from "@2pm/data";
+import { PlotPointSummaryDto } from "@2pm/core";
 
 let ce: CharacterEngine;
 

@@ -3,10 +3,10 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import {
   CreateHumanUserMessagePlotPointDto,
   HumanUserMessagePlotPointDto,
-} from '@2pm/data';
+} from '@2pm/core';
+import { DBService } from '@2pm/core/db';
 import { AppEventEmitter } from '../event-emitter';
 import { ZodValidationPipe } from '@anatine/zod-nestjs';
-import DBService from '@2pm/db';
 
 @ApiTags('Plot Points')
 @Controller('plot-points/human-user-message')

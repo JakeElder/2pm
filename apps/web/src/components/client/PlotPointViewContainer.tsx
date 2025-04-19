@@ -1,6 +1,6 @@
 "use client";
 
-import { PlotPointDto } from "@2pm/data";
+import { PlotPointDto } from "@2pm/core";
 import MessageViewContainer from "./PlotPointContainers/MessageViewContainer";
 
 type Props = PlotPointDto;

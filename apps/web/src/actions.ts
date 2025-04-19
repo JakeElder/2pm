@@ -2,7 +2,7 @@
 
 import { cookies } from "next/headers";
 import api from "@/api";
-import { CreateHumanUserMessagePlotPointDto } from "@2pm/data";
+import { CreateHumanUserMessagePlotPointDto } from "@2pm/core";
 
 export const submitMessage = async (
   dto: CreateHumanUserMessagePlotPointDto,

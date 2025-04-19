@@ -1,4 +1,4 @@
-import { Drizzle } from "@2pm/data";
+import { Drizzle } from "@2pm/core";
 import { drizzle } from "drizzle-orm/postgres-js";
 import { Sql } from "postgres";
 

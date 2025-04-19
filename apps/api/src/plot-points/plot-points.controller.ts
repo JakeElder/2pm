@@ -7,8 +7,8 @@ import {
   ApiTags,
   getSchemaPath,
 } from '@nestjs/swagger';
-import { AiUserMessagePlotPointDto } from '@2pm/data';
-import DBService from '@2pm/db';
+import { AiUserMessagePlotPointDto } from '@2pm/core';
+import { DBService } from '@2pm/core/db';
 
 @ApiExtraModels(AiUserMessagePlotPointDto)
 @ApiTags('Plot Points')

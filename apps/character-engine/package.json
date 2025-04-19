@@ -6,7 +6,7 @@
     "format": "prettier --write \"**/*.{ts,tsx}\""
   },
   "dependencies": {
-    "@2pm/data": "workspace:*",
+    "@2pm/core": "workspace:*",
     "@2pm/utils": "workspace:*",
     "ollama": "^0.5.9",
     "openai": "^4.67.1",

@@ -5,14 +5,14 @@ import {
   aiUsers,
   worldRoomEnvironments,
   plotPoints,
-} from "@2pm/data/schema";
+} from "@2pm/core/schema";
 import { DBService } from "./db-module";
 import {
   CreateEnvironmentDto,
   InferEnvironmentDto,
   CompanionOneToOneEnvironmentDto,
   WorldRoomEnvironmentDto,
-} from "@2pm/data";
+} from "@2pm/core";
 import { and, count, eq, inArray } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 

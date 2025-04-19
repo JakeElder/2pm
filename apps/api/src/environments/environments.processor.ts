@@ -10,7 +10,8 @@ import {
   AiUserMessagePlotPointDto,
   EVALUATABLE_PLOT_POINT_TYPES,
   EvaluationPlotPointDto,
-} from '@2pm/data';
+} from '@2pm/core';
+import { DBService } from '@2pm/core/db';
 import { Processor, Process } from '@nestjs/bull';
 import { Inject, Logger } from '@nestjs/common';
 import { Job } from 'bull';
@@ -28,8 +29,7 @@ import {
   humanUsers,
   evaluations,
   tools,
-} from '@2pm/data/schema';
-import DBService from '@2pm/db';
+} from '@2pm/core/schema';
 import { asc, eq, and, inArray, lte } from 'drizzle-orm';
 import { ZodType } from 'zod';
 import { logError } from '../utils';

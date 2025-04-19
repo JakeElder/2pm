@@ -1,6 +1,6 @@
 import { Command } from "commander";
 import ora from "ora";
-import DBService from "@2pm/db";
+import { DBService } from "@2pm/core/db";
 
 // Create the db command
 const db = new Command("db");

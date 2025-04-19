@@ -1,9 +1,9 @@
 import { Body, Controller, Get, Inject, Patch, UsePipes } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { AiUserMessageDto, UpdateAiUserMessageDto } from '@2pm/data';
+import { AiUserMessageDto, UpdateAiUserMessageDto } from '@2pm/core';
+import { DBService } from '@2pm/core/db';
 import { ZodValidationPipe } from '@anatine/zod-nestjs';
 import { AppEventEmitter } from '../event-emitter';
-import DBService from '@2pm/db';
 
 @ApiTags('Messages')
 @Controller('/messages/ai-user')
