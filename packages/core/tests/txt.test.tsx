@@ -1,6 +1,5 @@
 import { describe, it, expect } from "bun:test";
-import React from "react";
-import txt from "../src/txt";
+import txt from "../src/utils/txt";
 
 describe("txt function", () => {
   it("should convert a React node to markdown", () => {

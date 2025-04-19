@@ -1,5 +1,5 @@
 import { describe, it } from "bun:test";
-import mimicAi from "../src/mimic-ai";
+import mimicAi from "../src/utils/mimic-ai";
 
 describe("mimicAi function", () => {
   it.skip("should convert a React node to markdown", async () => {

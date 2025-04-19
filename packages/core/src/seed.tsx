@@ -1,7 +1,7 @@
 import { CreateAiUserDtoSchema } from "./entities/user";
 import { z, ZodType } from "zod";
 import type { CreateWorldRoomEnvironmentDtoSchema } from "./entities/environment";
-import { txt } from "@2pm/utils";
+import { txt } from "@2pm/core/utils";
 import type { InferInsertModel } from "drizzle-orm";
 import type { tools } from "./schema";
 

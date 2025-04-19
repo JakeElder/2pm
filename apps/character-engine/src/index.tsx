@@ -1,6 +1,6 @@
 import { Message as OllamaMessage, Ollama } from "ollama";
 import OpenAI from "openai";
-import { mimicAi, txt } from "@2pm/utils";
+import { mimicAi, txt } from "@2pm/core/utils";
 import { PlotPointSummaryDto, ToolCode } from "@2pm/core";
 import { summaryToOpenAiMessage } from "./utils";
 

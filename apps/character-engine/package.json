@@ -7,7 +7,6 @@
   },
   "dependencies": {
     "@2pm/core": "workspace:*",
-    "@2pm/utils": "workspace:*",
     "ollama": "^0.5.9",
     "openai": "^4.67.1",
     "short-uuid": "^5.2.0"

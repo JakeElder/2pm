@@ -1,6 +1,6 @@
 "use client";
 
-import { Narrative } from "@2pm/ui";
+import { Narrative } from "@2pm/ui/components";
 import PlotPointViewContainer from "./PlotPointViewContainer";
 import { PlotPointDto, PlotPointPerspective } from "@2pm/core";
 import { useSession } from "@/hooks/use-session";
