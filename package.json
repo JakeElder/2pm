@@ -2,7 +2,7 @@
   "name": "@2pm/workspace",
   "scripts": {
     "generate:module": "hygen module new",
-    "generate:api-client": "bun ivan generate client --out ./apps/api/src/generated/client.ts",
+    "generate:api-client": "bun niko generate client --out ./apps/api/src/generated/client.ts",
     "watch:controllers": "nodemon --watch \"apps/api/src/**/*.ts\" --ignore \"apps/api/src/generated\" --ext ts --exec \"bun generate:api-client\""
   },
   "workspaces": [
@@ -11,7 +11,7 @@
   ],
   "dependencies": {
     "@anatine/zod-nestjs": "^2.0.9",
-    "drizzle-orm": "^0.36.1",
+    "drizzle-orm": "^0.36.4",
     "drizzle-zod": "^0.5.1",
     "next": "^15.1.0",
     "postgres": "^3.4.4",

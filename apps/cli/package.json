@@ -6,6 +6,9 @@
     "format": "prettier --write \"**/*.{ts,tsx}\"",
     "niko": "src/index.ts"
   },
+  "bin": {
+    "niko": "src/index.ts"
+  },
   "dependencies": {
     "@2pm/api": "workspace:*",
     "@langchain/community": "^0.3.40",
