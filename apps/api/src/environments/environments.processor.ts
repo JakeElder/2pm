@@ -16,8 +16,6 @@ import { Inject, Logger } from '@nestjs/common';
 import { Job } from 'bull';
 import Redis from 'ioredis';
 import CharacterEngine from '@2pm/character-engine';
-import { MessagesService } from '../messages/messages.service';
-import { PlotPointsService } from '../plot-points/plot-points.service';
 import { AppEventEmitter } from '../event-emitter';
 import {
   aiUserMessages,
@@ -45,8 +43,6 @@ export class EnvironmentsProcessor {
     @Inject('CE') private readonly ce: CharacterEngine,
     @Inject('REDIS') private readonly redis: Redis,
     @Inject('E') private readonly events: AppEventEmitter,
-    private readonly plotPointsService: PlotPointsService,
-    private readonly messageService: MessagesService,
   ) {}
 
   async getSummaries(plotPoint: PlotPoint) {
@@ -178,7 +174,7 @@ export class EnvironmentsProcessor {
       content += chunk;
 
       if (!init) {
-        dto = await this.plotPointsService.create({
+        dto = await this.db.plotPoints.insert({
           type: 'AI_USER_MESSAGE',
           environmentId,
           content,
@@ -190,7 +186,7 @@ export class EnvironmentsProcessor {
       }
 
       if (dto) {
-        const updated = await this.messageService.update({
+        const updated = await this.db.messages.update({
           type: 'AI_USER',
           id: dto.data.message.id,
           content,

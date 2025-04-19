@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { EnvironmentsService } from './environments.service';
 import { EnvironmentGateway } from './environments.gateway';
 import { EnvironmentsController } from './environments.controller';
 import { CharacterEngineModule } from '../character-engine/character-engine.module';
@@ -28,8 +27,8 @@ import { EnvironmentsProcessor } from './environments.processor';
       adapter: BullAdapter,
     }),
   ],
-  providers: [EnvironmentsService, EnvironmentGateway, EnvironmentsProcessor],
-  exports: [EnvironmentsService],
+  providers: [EnvironmentGateway, EnvironmentsProcessor],
+  exports: [],
   controllers: [
     EnvironmentsController,
     CompanionOneToOneEnvironmentsController,

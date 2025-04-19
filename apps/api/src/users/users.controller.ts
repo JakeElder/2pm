@@ -1,5 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
-import { UsersService } from './users.service';
+import { Controller, Get, Inject } from '@nestjs/common';
 import {
   ApiExtraModels,
   ApiOperation,
@@ -8,13 +7,14 @@ import {
   getSchemaPath,
 } from '@nestjs/swagger';
 import { AiUserDto, HumanUserDto } from '@2pm/data';
+import DBService from '@2pm/db';
 
 @ApiExtraModels(HumanUserDto)
 @ApiExtraModels(AiUserDto)
 @ApiTags('Users')
 @Controller('users')
 export class UsersController {
-  constructor(private readonly service: UsersService) {}
+  constructor(@Inject('DB') private readonly db: DBService) {}
   @Get()
   @ApiOperation({
     summary: 'Get',
@@ -34,6 +34,6 @@ export class UsersController {
     },
   })
   findAll() {
-    return this.service.findAll();
+    return this.db.users.findAll();
   }
 }

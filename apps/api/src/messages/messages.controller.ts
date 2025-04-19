@@ -1,5 +1,4 @@
 import { Controller, Get, Inject, OnModuleInit, Query } from '@nestjs/common';
-import { MessagesService } from './messages.service';
 import {
   ApiExtraModels,
   ApiOperation,
@@ -10,19 +9,22 @@ import {
 } from '@nestjs/swagger';
 import { AiUserMessageDto, MESSAGE_TYPES, type MessageType } from '@2pm/data';
 import { AppEventEmitter } from '../event-emitter';
+import DBService from '@2pm/db';
+import { MessagesGateway } from './messages.gateway';
 
 @ApiTags('Messages')
 @ApiExtraModels(AiUserMessageDto)
 @Controller('messages')
 export class MessagesController implements OnModuleInit {
   constructor(
-    private readonly service: MessagesService,
     @Inject('E') private events: AppEventEmitter,
+    @Inject('DB') private readonly db: DBService,
+    private readonly gateway: MessagesGateway,
   ) {}
 
   onModuleInit() {
-    this.events.on('messages.updated', (e) =>
-      this.service.sendMessageUpdatedEvent(e),
+    this.events.on('messages.updated', (dto) =>
+      this.gateway.sendMessageUpdated(dto),
     );
   }
 
@@ -47,6 +49,6 @@ export class MessagesController implements OnModuleInit {
     required: false,
   })
   async findAll(@Query('type') type?: MessageType) {
-    return this.service.findAll({ type });
+    return this.db.messages.findAll({ type });
   }
 }

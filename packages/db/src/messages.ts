@@ -6,11 +6,19 @@ import {
   aiUsers,
   plotPoints,
 } from "@2pm/data/schema";
-import { DbModule } from "./db-module";
-import { AiUserMessageDto, InferMessageDto, UpdateMessageDto } from "@2pm/data";
-import { eq } from "drizzle-orm";
+import { DBService } from "./db-module";
+import {
+  AiUserMessageDto,
+  AiUserMessageDtoSchema,
+  FindMessagesQueryDto,
+  InferMessageDto,
+  MessageDto,
+  MessageDtoSchema,
+  UpdateMessageDto,
+} from "@2pm/data";
+import { eq, desc, and, SQL } from "drizzle-orm";
 
-export default class Messages extends DbModule {
+export default class Messages extends DBService {
   public async update<T extends UpdateMessageDto>(
     dto: T,
   ): Promise<InferMessageDto<T>> {
@@ -65,5 +73,42 @@ export default class Messages extends DbModule {
     }
 
     throw new Error();
+  }
+
+  async findAll({ type }: FindMessagesQueryDto): Promise<MessageDto[]> {
+    const filters: SQL[] = [];
+
+    if (type) {
+      filters.push(eq(messages.type, type));
+    }
+
+    const res = await this.drizzle
+      .select({
+        plotPoint: plotPoints,
+        message: messages,
+        aiUserMessage: aiUserMessages,
+        user: users,
+        aiUser: aiUsers,
+        environment: environments,
+      })
+      .from(messages)
+      .innerJoin(plotPoints, eq(messages.plotPointId, plotPoints.id))
+      .innerJoin(users, eq(messages.userId, users.id))
+      .innerJoin(environments, eq(messages.environmentId, environments.id))
+      .leftJoin(aiUserMessages, eq(messages.id, aiUserMessages.messageId))
+      .leftJoin(aiUsers, eq(users.id, aiUsers.userId))
+      .where(and(...filters))
+      .orderBy(desc(messages.id));
+
+    const data: MessageDto[] = res.map((row) => {
+      return MessageDtoSchema.parse({ type: row.message.type, ...row });
+    });
+
+    return data;
+  }
+
+  async findAiUser(): Promise<AiUserMessageDto[]> {
+    const res = await this.findAll({ type: "AI_USER" });
+    return res.map((row) => AiUserMessageDtoSchema.parse(row));
   }
 }

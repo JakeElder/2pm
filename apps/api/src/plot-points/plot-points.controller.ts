@@ -1,5 +1,4 @@
-import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
-import { PlotPointsService } from './plot-points.service';
+import { Controller, Get, Inject, Param, ParseIntPipe } from '@nestjs/common';
 import {
   ApiExtraModels,
   ApiOperation,
@@ -9,12 +8,13 @@ import {
   getSchemaPath,
 } from '@nestjs/swagger';
 import { AiUserMessagePlotPointDto } from '@2pm/data';
+import DBService from '@2pm/db';
 
 @ApiExtraModels(AiUserMessagePlotPointDto)
 @ApiTags('Plot Points')
 @Controller()
 export class PlotPointsController {
-  constructor(private readonly service: PlotPointsService) {}
+  constructor(@Inject('DB') private readonly db: DBService) {}
   @Get('environments/:id/plot-points')
   @ApiOperation({
     summary: 'Get by Environment',
@@ -36,6 +36,6 @@ export class PlotPointsController {
     },
   })
   findPlotPointsByEnvironment(@Param('id', ParseIntPipe) id: number) {
-    return this.service.findAllByEnvironmentId(id);
+    return this.db.plotPoints.findAllByEnvironmentId(id);
   }
 }

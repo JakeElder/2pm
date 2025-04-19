@@ -9,9 +9,9 @@ import {
   UserEnvironmentPresenceDto,
 } from "@2pm/data";
 import { eq } from "drizzle-orm";
-import { DbModule } from "./db-module";
+import { DBService } from "./db-module";
 
-export default class UserEnvironmentPresences extends DbModule {
+export default class UserEnvironmentPresences extends DBService {
   public async insert({
     userId,
     environmentId,

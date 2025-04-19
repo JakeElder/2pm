@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Inject,
   ParseArrayPipe,
   ParseIntPipe,
   Post,
@@ -9,14 +10,14 @@ import {
   UsePipes,
 } from '@nestjs/common';
 import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { SessionsService } from './sessions.service';
 import { CreateSessionDto, FindSessionsQueryDto, SessionDto } from '@2pm/data';
 import { ZodValidationPipe } from '@anatine/zod-nestjs';
+import DBService from '@2pm/db';
 
 @ApiTags('Sessions')
 @Controller('sessions')
 export class SessionsController {
-  constructor(private readonly service: SessionsService) {}
+  constructor(@Inject('DB') private readonly db: DBService) {}
 
   @Get()
   @UsePipes(ZodValidationPipe)
@@ -46,7 +47,7 @@ export class SessionsController {
     @Query('limit', new ParseIntPipe({ optional: true }))
     limit: FindSessionsQueryDto['limit'],
   ) {
-    const res = this.service.find({ ids, limit });
+    const res = this.db.sessions.find({ ids, limit });
     return res;
   }
 
@@ -58,7 +59,7 @@ export class SessionsController {
   })
   @ApiResponse({ status: 201, type: SessionDto })
   async create(@Body() createDto: CreateSessionDto) {
-    const dto = await this.service.create(createDto);
+    const dto = await this.db.sessions.insert(createDto);
     return dto;
   }
 }

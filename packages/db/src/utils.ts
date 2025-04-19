@@ -17,7 +17,7 @@ import {
   authEmails,
 } from "@2pm/data/schema";
 import * as seed from "@2pm/data/seed";
-import { DbModule } from "./db-module";
+import { DBService } from "./db-module";
 import UserEnvironmentPresences from "./user-environment-presences";
 import Users from "./users";
 import Messages from "./messages";
@@ -25,7 +25,7 @@ import PlotPoints from "./plot-points";
 import Environments from "./environments";
 import Tools from "./tools";
 
-export default class Utils extends DbModule {
+export default class Utils extends DBService {
   public async clear() {
     const { delete: rm } = this.drizzle;
 

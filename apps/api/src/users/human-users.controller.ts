@@ -1,13 +1,13 @@
-import { Body, Controller, Get, Post, UsePipes } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Post, UsePipes } from '@nestjs/common';
 import { ZodValidationPipe } from '@anatine/zod-nestjs';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { HumanUserDto, CreateHumanUserDto } from '@2pm/data';
-import { UsersService } from './users.service';
+import DBService from '@2pm/db';
 
 @ApiTags('Users')
 @Controller('users/human')
 export class HumanUsersController {
-  constructor(private readonly service: UsersService) {}
+  constructor(@Inject('DB') private readonly db: DBService) {}
 
   @Get()
   @ApiOperation({
@@ -20,7 +20,7 @@ export class HumanUsersController {
     type: [HumanUserDto],
   })
   findUsersByEnvironment() {
-    return this.service.findHumanUsers();
+    return this.db.users.findHumanUsers();
   }
 
   @Post()
@@ -31,7 +31,7 @@ export class HumanUsersController {
   })
   @ApiResponse({ status: 201, type: HumanUserDto })
   async create(@Body() createDto: CreateHumanUserDto) {
-    const dto = await this.service.create(createDto);
+    const dto = await this.db.users.insert(createDto);
     return dto;
   }
 }

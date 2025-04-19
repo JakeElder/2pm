@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Inject,
   NotFoundException,
   Param,
   ParseIntPipe,
@@ -14,12 +15,12 @@ import {
   CompanionOneToOneEnvironmentDto,
   CreateCompanionOneToOneEnvironmentDto,
 } from '@2pm/data';
-import { EnvironmentsService } from './environments.service';
+import DBService from '@2pm/db';
 
 @ApiTags('Environments')
 @Controller()
 export class CompanionOneToOneEnvironmentsController {
-  constructor(private readonly service: EnvironmentsService) {}
+  constructor(@Inject('DB') private readonly db: DBService) {}
 
   @Get('environments/companion-one-to-one')
   @ApiOperation({
@@ -32,7 +33,7 @@ export class CompanionOneToOneEnvironmentsController {
     type: [CompanionOneToOneEnvironmentDto],
   })
   find() {
-    return this.service.findCompanionOneToOneEnvironments();
+    return this.db.environments.findCompanionOneToOneEnvironments();
   }
 
   @Get('users/:id/companion-one-to-one-environment')
@@ -52,7 +53,8 @@ export class CompanionOneToOneEnvironmentsController {
     type: CompanionOneToOneEnvironmentDto,
   })
   async findByUserId(@Param('id', ParseIntPipe) id: number) {
-    const dto = await this.service.findCompanionOneToOneEnvironmentByUserId(id);
+    const dto =
+      await this.db.environments.findCompanionOneToOneEnvironmentByUserId(id);
     if (!dto) {
       throw new NotFoundException();
     }
@@ -67,7 +69,7 @@ export class CompanionOneToOneEnvironmentsController {
   })
   @ApiResponse({ status: 201, type: CompanionOneToOneEnvironmentDto })
   async create(@Body() createDto: CreateCompanionOneToOneEnvironmentDto) {
-    const dto = await this.service.create(createDto);
+    const dto = await this.db.environments.insert(createDto);
     return dto;
   }
 }

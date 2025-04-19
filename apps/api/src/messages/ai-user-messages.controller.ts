@@ -1,16 +1,16 @@
 import { Body, Controller, Get, Inject, Patch, UsePipes } from '@nestjs/common';
-import { MessagesService } from './messages.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AiUserMessageDto, UpdateAiUserMessageDto } from '@2pm/data';
 import { ZodValidationPipe } from '@anatine/zod-nestjs';
 import { AppEventEmitter } from '../event-emitter';
+import DBService from '@2pm/db';
 
 @ApiTags('Messages')
 @Controller('/messages/ai-user')
 export class AiUserMessagesController {
   constructor(
-    private readonly service: MessagesService,
     @Inject('E') private events: AppEventEmitter,
+    @Inject('DB') private readonly db: DBService,
   ) {}
 
   @Get()
@@ -24,7 +24,7 @@ export class AiUserMessagesController {
     type: [AiUserMessageDto],
   })
   find() {
-    return this.service.findAiUser();
+    return this.db.messages.findAiUser();
   }
 
   @UsePipes(ZodValidationPipe)
@@ -35,7 +35,7 @@ export class AiUserMessagesController {
   })
   @ApiResponse({ status: 200, type: AiUserMessageDto })
   async update(@Body() updateDto: UpdateAiUserMessageDto) {
-    const res = await this.service.update(updateDto);
+    const res = await this.db.messages.update(updateDto);
     this.events.emit('messages.updated', res);
     return res;
   }
