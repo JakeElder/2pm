@@ -1,7 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import * as StandardLayout from "./StandardLayout";
 import { EmailSent, BibleVerse, Message } from "../../PlotPoints";
-import { PaneHeader, SpaceList, TiptapEditor, InfoBar } from "../../Components";
+import {
+  PaneHeader,
+  SpaceList,
+  TiptapEditor,
+  InfoBar,
+  InfoBarLogo,
+  InfoBarUser,
+} from "../../Components";
 
 const meta: Meta<typeof StandardLayout.Root> = {
   title: "Layouts/StandardLayout",
@@ -22,7 +29,7 @@ export const Default: Story = {
             <PaneHeader> Spaces</PaneHeader>
             <SpaceList />
           </StandardLayout.Spaces>
-          <StandardLayout.ReferencePlotPoints>
+          <StandardLayout.ReferenceNarrative>
             <StandardLayout.PlotPoint>
               <EmailSent email="jake@2pm.io" reference={2} />
             </StandardLayout.PlotPoint>
@@ -37,9 +44,9 @@ export const Default: Story = {
                 time to hate; a time of war, and a time of peace.
               </BibleVerse>
             </StandardLayout.PlotPoint>
-          </StandardLayout.ReferencePlotPoints>
+          </StandardLayout.ReferenceNarrative>
           <StandardLayout.Conversation>
-            <StandardLayout.ConversationPlotPoints>
+            <StandardLayout.ConversationNarrative>
               <Message type="HUMAN" user="jake">
                 Ut enim ad minim veniam, quis nostrud exercitation ullamco
                 laboris nisi ut aliquip ex ea commodo consequat.
@@ -48,7 +55,7 @@ export const Default: Story = {
                 Ut enim ad minim veniam, quis nostrud exercitation ullamco
                 laboris nisi ut aliquip ex ea commodo consequat.
               </Message>
-            </StandardLayout.ConversationPlotPoints>
+            </StandardLayout.ConversationNarrative>
             <StandardLayout.InputBar>
               <TiptapEditor />
             </StandardLayout.InputBar>
@@ -56,7 +63,15 @@ export const Default: Story = {
         </StandardLayout.Main>
         <StandardLayout.StatusBar />
         <StandardLayout.InfoBar>
-          <InfoBar />
+          <InfoBar.Root>
+            <InfoBar.Logo>
+              <InfoBarLogo />
+            </InfoBar.Logo>
+            <InfoBar.Separator />
+            <InfoBar.User>
+              <InfoBarUser name="anon" hash="uf4DyTAVLKBfDe6ky7mSoz" />
+            </InfoBar.User>
+          </InfoBar.Root>
         </StandardLayout.InfoBar>
       </StandardLayout.Root>
     );

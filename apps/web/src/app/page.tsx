@@ -1,3 +1,4 @@
+import ConversationNarrativeContainer from "@/components/server/ConversationNarrativeContainer";
 import InfoBarUserContainer from "@/components/server/InfoBarUserContainer";
 import {
   InfoBar,
@@ -19,7 +20,7 @@ export default async function Home() {
             <PaneHeader> Spaces</PaneHeader>
             <SpaceList />
           </StandardLayout.Spaces>
-          <StandardLayout.ReferencePlotPoints>
+          <StandardLayout.ReferenceNarrative>
             <StandardLayout.PlotPoint>
               <EmailSent email="jake@2pm.io" reference={2} />
             </StandardLayout.PlotPoint>
@@ -34,18 +35,9 @@ export default async function Home() {
                 time to hate; a time of war, and a time of peace.
               </BibleVerse>
             </StandardLayout.PlotPoint>
-          </StandardLayout.ReferencePlotPoints>
+          </StandardLayout.ReferenceNarrative>
           <StandardLayout.Conversation>
-            <StandardLayout.ConversationPlotPoints>
-              <Message type="HUMAN" user="jake">
-                Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                laboris nisi ut aliquip ex ea commodo consequat.
-              </Message>
-              <Message type="AI" user="niko">
-                Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                laboris nisi ut aliquip ex ea commodo consequat.
-              </Message>
-            </StandardLayout.ConversationPlotPoints>
+            <ConversationNarrativeContainer environmentId={5} />
             <StandardLayout.InputBar>
               <TiptapEditor />
             </StandardLayout.InputBar>

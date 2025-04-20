@@ -40,15 +40,15 @@ export const Spaces = ({ children }: SpacesProps) => {
 };
 
 /*
- * ReferencePlotPoints
+ * ReferenceNarrative
  */
 
-type ReferencePlotPointsProps = {
+type ReferenceNarrativeProps = {
   children: React.ReactNode;
 };
 
-export const ReferencePlotPoints = ({ children }: ReferencePlotPointsProps) => {
-  return <div className={css["reference-plot-points"]}>{children}</div>;
+export const ReferenceNarrative = ({ children }: ReferenceNarrativeProps) => {
+  return <div className={css["reference-narrative"]}>{children}</div>;
 };
 
 /*
@@ -76,17 +76,17 @@ export const Conversation = ({ children }: ConversationProps) => {
 };
 
 /*
- * ConversationPlotPoints
+ * ConversationNarrative
  */
 
-type ConversationPlotPointsProps = {
+type ConversationNarrativeProps = {
   children: React.ReactNode;
 };
 
-export const ConversationPlotPoints = ({
+export const ConversationNarrative = ({
   children,
-}: ConversationPlotPointsProps) => {
-  return <div className={css["conversation-plot-points"]}>{children}</div>;
+}: ConversationNarrativeProps) => {
+  return <div className={css["conversation-narrative"]}>{children}</div>;
 };
 
 /*

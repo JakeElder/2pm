@@ -1,13 +1,26 @@
-import { Controller, Get, Inject, Param, ParseIntPipe } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Inject,
+  Param,
+  ParseIntPipe,
+  Query,
+} from '@nestjs/common';
 import {
   ApiExtraModels,
   ApiOperation,
   ApiParam,
   ApiResponse,
   ApiTags,
+  ApiQuery,
   getSchemaPath,
 } from '@nestjs/swagger';
-import { AiUserMessagePlotPointDto } from '@2pm/core';
+import {
+  PLOT_POINT_TYPES,
+  AiUserMessagePlotPointDto,
+  FilterPlotPointsDto,
+  FilterPlotPointsDtoSchema,
+} from '@2pm/core';
 import { DBService } from '@2pm/core/db';
 
 @ApiExtraModels(AiUserMessagePlotPointDto)
@@ -25,9 +38,16 @@ export class PlotPointsController {
     description: 'The Id of the environment',
     type: Number,
   })
+  @ApiQuery({
+    name: 'types',
+    required: false,
+    description: 'Filter plot points by type',
+    enum: PLOT_POINT_TYPES,
+    isArray: true,
+  })
   @ApiResponse({
     status: 200,
-    description: 'A list of  plot points for the specified environment',
+    description: 'A list of plot points for the specified environment',
     schema: {
       type: 'array',
       items: {
@@ -35,7 +55,11 @@ export class PlotPointsController {
       },
     },
   })
-  findPlotPointsByEnvironment(@Param('id', ParseIntPipe) id: number) {
-    return this.db.plotPoints.findAllByEnvironmentId(id);
+  findPlotPointsByEnvironment(
+    @Param('id', ParseIntPipe) id: number,
+    @Query() query: FilterPlotPointsDto,
+  ) {
+    const q = FilterPlotPointsDtoSchema.parse(query);
+    return this.db.plotPoints.findByEnvironmentId(id, q);
   }
 }

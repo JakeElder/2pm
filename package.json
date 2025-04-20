@@ -10,7 +10,7 @@
     "packages/*"
   ],
   "dependencies": {
-    "@anatine/zod-nestjs": "^2.0.9",
+    "@anatine/zod-nestjs": "^2.0.12",
     "drizzle-orm": "^0.42.0",
     "drizzle-zod": "^0.7.1",
     "next": "^15.1.0",

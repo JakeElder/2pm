@@ -23,6 +23,8 @@ import {
   CreateEvaluationPlotPointDto,
   EvaluationPlotPointDto,
   PlotPointDto,
+  PlotPointType,
+  FilterPlotPointsDto,
 } from "@2pm/core";
 import { desc, eq, and, inArray } from "drizzle-orm";
 
@@ -259,7 +261,7 @@ export default class PlotPoints extends DBService {
     });
   }
 
-  async findAllByEnvironmentId(id: number) {
+  async findByEnvironmentId(id: number, { types }: FilterPlotPointsDto) {
     const res = await this.drizzle
       .select({
         plotPoint: plotPoints,
@@ -282,7 +284,9 @@ export default class PlotPoints extends DBService {
       .where(
         and(
           eq(plotPoints.environmentId, id),
-          inArray(plotPoints.type, ["AI_USER_MESSAGE", "HUMAN_USER_MESSAGE"]),
+          types && types.length > 0
+            ? inArray(plotPoints.type, types)
+            : undefined,
         ),
       )
       .orderBy(desc(plotPoints.id));

@@ -3,7 +3,7 @@ import * as schema from "../schema";
 import { createZodDto } from "@anatine/zod-nestjs";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { AiUserMessageDtoSchema, HumanUserMessageDtoSchema } from "./message";
-import type { PLOT_POINT_TYPES } from "../constants";
+import { PLOT_POINT_TYPES } from "../constants";
 import type { InferSelectModel } from "drizzle-orm";
 
 /**
@@ -207,6 +207,20 @@ export const CreatePlotPointDtoSchema = z.discriminatedUnion("type", [
   CreateEvaluationPlotPointDtoSchema,
   CreateAuthEmailSentPlotPointDtoSchema,
 ]);
+
+/**
+ * Filters
+ */
+export const FilterPlotPointsDtoSchema = z.object({
+  types: z.preprocess(
+    (val) => (val ? (Array.isArray(val) ? val : [val]) : undefined),
+    z.array(z.enum(PLOT_POINT_TYPES)).optional(),
+  ),
+});
+
+export class FilterPlotPointsDto extends createZodDto(
+  FilterPlotPointsDtoSchema,
+) {}
 
 /**
  * Types

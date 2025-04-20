@@ -1,42 +1,32 @@
 "use client";
 
-import { useSession } from "@/hooks/use-session";
 import { messagesSocket } from "@/socket";
 import {
   HumanUserMessagePlotPointDto,
   MessagesRoomJoinedEventDto,
-  PlotPointPerspective,
 } from "@2pm/core";
 import { AiUserMessagePlotPointDto } from "@2pm/core";
 import { Message } from "@2pm/ui/plot-points";
 import { useEffect, useState } from "react";
 
-type Perspective = {
-  perspective: PlotPointPerspective;
-};
-
 /**
  * AiUserMessage
  */
 
-type AiUserMessageProps = Perspective & {
-  plotPoint: AiUserMessagePlotPointDto;
-};
+type AiUserMessageProps = AiUserMessagePlotPointDto;
 
 export const AiUserMessage = (props: AiUserMessageProps) => {
-  const [content, setContent] = useState(
-    props.plotPoint.data.aiUserMessage.content,
-  );
+  const [content, setContent] = useState(props.data.aiUserMessage.content);
 
   useEffect(() => {
     const e: MessagesRoomJoinedEventDto = {
-      messageId: props.plotPoint.data.message.id,
+      messageId: props.data.message.id,
     };
 
     messagesSocket
       .emit("join", e)
       .on("messages.ai.updated", async ({ aiUserMessage }) => {
-        if (props.plotPoint.data.aiUserMessage.id === aiUserMessage.id) {
+        if (props.data.aiUserMessage.id === aiUserMessage.id) {
           setContent(aiUserMessage.content);
         }
       });
@@ -47,22 +37,23 @@ export const AiUserMessage = (props: AiUserMessageProps) => {
     };
   }, []);
 
-  return <Message perspective={props.perspective}>{content}</Message>;
+  return (
+    <Message type="AI" user={props.data.aiUser.tag}>
+      {content}
+    </Message>
+  );
 };
 
 /**
  * HumanUserMessage
  */
 
-type HumanUserMessageProps = Perspective & {
-  plotPoint: HumanUserMessagePlotPointDto;
-};
+type HumanUserMessageProps = HumanUserMessagePlotPointDto;
 
 export const HumanUserMessage = (props: HumanUserMessageProps) => {
-  const { perspective } = props;
   return (
-    <Message perspective={perspective}>
-      {props.plotPoint.data.humanUserMessage.content}
+    <Message type="HUMAN" user={props.data.humanUser.id}>
+      {props.data.humanUserMessage.content}
     </Message>
   );
 };
@@ -74,19 +65,12 @@ export const HumanUserMessage = (props: HumanUserMessageProps) => {
 type Props = AiUserMessagePlotPointDto | HumanUserMessagePlotPointDto;
 
 const MessageViewContainer = (plotPoint: Props) => {
-  const session = useSession();
-
-  const perspective =
-    plotPoint.data.message.userId === session.user.id
-      ? "FIRST_PERSON"
-      : "THIRD_PERSON";
-
   if (plotPoint.type === "AI_USER_MESSAGE") {
-    return <AiUserMessage perspective={perspective} plotPoint={plotPoint} />;
+    return <AiUserMessage {...plotPoint} />;
   }
 
   if (plotPoint.type === "HUMAN_USER_MESSAGE") {
-    return <HumanUserMessage perspective={perspective} plotPoint={plotPoint} />;
+    return <HumanUserMessage {...plotPoint} />;
   }
 };
 
