@@ -18,14 +18,28 @@ const SpaceList = ({}: Props) => {
         <div className={css["name"]}>#mini-mart</div>
         <div className={css["users"]}>
           <span className={css["user-icon"]}></span>
-          <span className={css["user-count"]}>190</span>
+          <span className={css["user-count"]}>22</span>
+        </div>
+      </li>
+      <li className={css["channel"]}>
+        <div className={css["name"]}>#lobby</div>
+        <div className={css["users"]}>
+          <span className={css["user-icon"]}></span>
+          <span className={css["user-count"]}>172</span>
+        </div>
+      </li>
+      <li className={css["channel"]}>
+        <div className={css["name"]}>#the-middle</div>
+        <div className={css["users"]}>
+          <span className={css["user-icon"]}></span>
+          <span className={css["user-count"]}>114</span>
         </div>
       </li>
       <li className={css["channel"]}>
         <div className={css["name"]}>#meditations</div>
         <div className={css["users"]}>
           <span className={css["user-icon"]}></span>
-          <span className={css["user-count"]}>114</span>
+          <span className={css["user-count"]}>190</span>
         </div>
       </li>
     </ul>

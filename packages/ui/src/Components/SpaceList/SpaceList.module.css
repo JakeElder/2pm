@@ -10,10 +10,12 @@
   justify-content: space-between;
 }
 
-.active-channel {
+.active-channel,
+.active-channel .user-icon {
   color: var(--teal);
 }
 
 .user-icon {
   margin-right: 8px;
+  color: var(--overlay2);
 }
