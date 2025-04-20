@@ -2,6 +2,10 @@ import { describe, it, expect } from "bun:test";
 import txt from "../src/utils/txt";
 
 describe("txt function", () => {
+  it("should strip fragment markers", () => {
+    expect(txt(<>just this</>)).toBe("just this");
+  });
+
   it("should convert a React node to markdown", () => {
     expect(txt(<strong>Bold Text</strong>)).toBe("**Bold Text**");
   });

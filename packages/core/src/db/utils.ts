@@ -1,22 +1,6 @@
-import {
-  users,
-  plotPoints,
-  environments,
-  worldRoomEnvironments,
-  messages,
-  aiUsers,
-  userEnvironmentPresences,
-  companionOneToOneEnvironments,
-  aiUserMessages,
-  plotPointEnvironmentPresences,
-  sessions,
-  humanUsers,
-  humanUserMessages,
-  tools,
-  evaluations,
-  authEmails,
-} from "@2pm/core/schema";
+import * as schema from "../schema";
 import * as seed from "@2pm/core/seed";
+import { reset } from "drizzle-seed";
 import { DBService } from "./db-module";
 import UserEnvironmentPresences from "./user-environment-presences";
 import Users from "./users";
@@ -27,31 +11,7 @@ import Tools from "./tools";
 
 export default class Utils extends DBService {
   public async clear() {
-    const { delete: rm } = this.drizzle;
-
-    // Truncate dependent tables first
-    await rm(plotPointEnvironmentPresences);
-    await rm(userEnvironmentPresences);
-    await rm(sessions);
-    await rm(companionOneToOneEnvironments);
-    await rm(tools);
-    await rm(evaluations);
-    await rm(authEmails);
-
-    // Truncate tables that depend on users or messages
-    await rm(humanUserMessages);
-    await rm(humanUsers);
-    await rm(aiUserMessages);
-    await rm(aiUsers);
-
-    // Truncate parent tables
-    await rm(messages);
-    await rm(plotPoints);
-    await rm(users);
-
-    // Truncate remaining independent tables
-    await rm(worldRoomEnvironments);
-    await rm(environments);
+    await reset(this.drizzle, schema);
   }
 
   public async seed() {
@@ -72,22 +32,22 @@ export default class Utils extends DBService {
       ),
     ]);
 
-    const [g] = await Promise.all([
+    const [niko] = await Promise.all([
       ...seed.AI_USERS.map((user) => db.users.insert({ type: "AI", ...user })),
     ]);
 
     await Promise.all([
       db.userEnvironmentPresences.insert({
         environmentId: universe.data.environment.id,
-        userId: g.userId,
+        userId: niko.userId,
       }),
     ]);
 
     await db.plotPoints.insert({
       type: "AI_USER_MESSAGE",
-      userId: g.userId,
+      userId: niko.userId,
       environmentId: universe.data.environment.id,
-      content: "Standby for G stuff",
+      content: "Welcome to 2PM",
       state: "COMPLETE",
     });
 

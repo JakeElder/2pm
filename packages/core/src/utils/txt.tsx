@@ -5,6 +5,8 @@ const txt = (node: React.ReactNode) => {
   const jsx = reactElementToJSXString(node)
     .replace(/\s+(?=<)/g, "")
     .replace(/(?<=>)\s+/g, "")
+    .replace(/^\<\>/, "")
+    .replace(/\<\/\>$/, "")
     .replaceAll("{' '}", " ");
 
   return NodeHtmlMarkdown.translate(jsx);
