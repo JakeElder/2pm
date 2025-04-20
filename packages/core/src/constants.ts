@@ -16,7 +16,7 @@ export const EVALUATABLE_PLOT_POINT_TYPES = [
   "AUTH_EMAIL_SENT",
 ] as const;
 
-export const AI_USER_CODES = ["G", "IVAN", "THE_HOSTESS"] as const;
+export const AI_USER_CODES = ["NIKO"] as const;
 
 export const TOOL_CODES = [
   "NOOP",
@@ -35,7 +35,5 @@ export const ENVIRONMENT_TYPE_CODES = [
 ] as const;
 
 export const WORLD_ROOM_CODES = ["UNIVERSE"] as const;
-
-export const ICON_CODES = ["STARS", "LOCK"] as const;
 
 export const THEMES = ["frappe", "latte"] as const;

@@ -106,7 +106,7 @@ export default class Environments extends DBService {
     const [{ user }] = await this.drizzle
       .select({ user: users })
       .from(aiUsers)
-      .where(eq(aiUsers.id, "IVAN"))
+      .where(eq(aiUsers.id, "NIKO"))
       .innerJoin(users, eq(users.id, aiUsers.userId));
 
     return user.id;

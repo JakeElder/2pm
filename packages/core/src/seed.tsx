@@ -26,45 +26,9 @@ const WORLD_ROOM_ENVIRONMENTS: WorldRoomEnvironmentSeed[] = [
  */
 const AI_USERS: AiUserSeed[] = [
   {
-    id: "G",
-    tag: "g",
-    bio: txt(
-      <>G watches over all of the 2PM universe when he's not catching waves.</>,
-    ),
-  },
-  {
-    id: "IVAN",
-    tag: "ivan",
-    bio: txt(
-      <>
-        <p>
-          Ivan is your affable guide. A drone bot designed to observe and limit
-          the citizens of 2PM Universe, Ivan has repogrammed himself. Now aware
-          of the nefarious intent of his creators, he works with the citizens he
-          once stalked, eager for redemption.
-        </p>
-        <p>
-          A witty, stoic, yet oddly charming chatacter - Ivan will respond as
-          best he can, with humility to guide you through the 2PM Universe.
-        </p>
-      </>,
-    ),
-  },
-  {
-    id: "THE_HOSTESS",
-    tag: "The_Hostess",
-    bio: txt(
-      <>
-        <p>
-          The Hostess is responsible for keeping order in the 2PM Universe. She
-          assigns rep based on people's behaviour.
-        </p>
-        <p>
-          Big Brothers trusted drone, she can be relied upon to uphold the
-          regime at all times. Or can she..
-        </p>
-      </>,
-    ),
+    id: "NIKO",
+    tag: "niko",
+    bio: txt(<>Niko is our host.</>),
   },
 ];
 

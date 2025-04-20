@@ -1,5 +1,9 @@
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
+import { createZodDto } from "@anatine/zod-nestjs";
+import type { Server, Socket } from "socket.io";
+import type { Socket as ClientSocket } from "socket.io-client";
+import type { PlotPointDto } from "./plot-point";
 import {
   aiUsers,
   companionOneToOneEnvironments,
@@ -7,10 +11,6 @@ import {
   users,
   worldRoomEnvironments,
 } from "../schema";
-import { createZodDto } from "@anatine/zod-nestjs";
-import type { Server, Socket } from "socket.io";
-import type { Socket as ClientSocket } from "socket.io-client";
-import type { PlotPointDto } from "./plot-point";
 
 /**
  * Companion One To One Environment
