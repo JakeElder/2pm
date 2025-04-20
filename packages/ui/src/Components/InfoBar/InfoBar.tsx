@@ -1,7 +1,41 @@
 import React from "react";
 import css from "./InfoBar.module.css";
-import Logo from "../Logo";
-import InfoBarUser from "../InfoBarUser";
+
+/*
+ * Root
+ */
+
+type RootProps = {
+  children: React.ReactNode;
+};
+
+export const Root = ({ children }: RootProps) => {
+  return <div className={css["root"]}>{children}</div>;
+};
+
+/*
+ * Logo
+ */
+
+type LogoProps = {
+  children: React.ReactNode;
+};
+
+export const Logo = ({ children }: LogoProps) => {
+  return <div className={css["logo"]}>{children}</div>;
+};
+
+/*
+ * User
+ */
+
+type UserProps = {
+  children: React.ReactNode;
+};
+
+export const User = ({ children }: UserProps) => {
+  return <div className={css["user"]}>{children}</div>;
+};
 
 /*
  * Separator
@@ -9,28 +43,6 @@ import InfoBarUser from "../InfoBarUser";
 
 type SeparatorProps = {};
 
-const Separator = ({}: SeparatorProps) => {
+export const Separator = ({}: SeparatorProps) => {
   return <div className={css["separator"]}>│</div>;
 };
-
-/*
- * InfoBar
- */
-
-type InfoBarProps = {};
-
-const InfoBar = ({}: InfoBarProps) => {
-  return (
-    <div className={css["info-bar"]}>
-      <div className={css["logo"]}>
-        <Logo />
-      </div>
-      <Separator />
-      <div className={css["user"]}>
-        <InfoBarUser />
-      </div>
-    </div>
-  );
-};
-
-export default InfoBar;

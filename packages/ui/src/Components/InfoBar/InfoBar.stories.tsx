@@ -1,10 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import InfoBar from "./InfoBar";
+import * as InfoBar from "./InfoBar";
 import * as Frame from "../../Components/Frame";
+import InfoBarLogo from "../InfoBarLogo/InfoBarLogo";
+import InfoBarUser from "../InfoBarUser/InfoBarUser";
 
-const meta: Meta<typeof InfoBar> = {
+const meta: Meta<typeof InfoBar.Root> = {
   title: "Components/InfoBar",
-  component: InfoBar,
+  component: InfoBar.Root,
   decorators: [
     (Story) => {
       return (
@@ -37,6 +39,19 @@ type Story = StoryObj<typeof InfoBar>;
 
 export const Default: Story = {
   args: {},
+  render() {
+    return (
+      <InfoBar.Root>
+        <InfoBar.Logo>
+          <InfoBarLogo />
+        </InfoBar.Logo>
+        <InfoBar.Separator />
+        <InfoBar.User>
+          <InfoBarUser name="anon" hash="uf4DyTAVLKBfDe6ky7mSoz" />
+        </InfoBar.User>
+      </InfoBar.Root>
+    );
+  },
 };
 
 export default meta;

@@ -21,7 +21,10 @@ const meta: Meta<typeof InfoBarUser> = {
 type Story = StoryObj<typeof InfoBarUser>;
 
 export const Default: Story = {
-  args: {},
+  args: {
+    name: "anon",
+    hash: "uf4DyTAVLKBfDe6ky7mSoz",
+  },
 };
 
 export default meta;

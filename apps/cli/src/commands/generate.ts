@@ -5,7 +5,6 @@ import { generateApi } from "swagger-typescript-api";
 import path from "path";
 import { generateSpecDocument } from "@2pm/api/utils";
 
-// Create the generate command
 const generate = new Command("generate");
 
 generate
@@ -43,10 +42,10 @@ generate
       await generateApi({
         spec: document as any,
         output: path.resolve(process.cwd(), dir),
-        name,
+        fileName: name,
         silent: true,
         disableThrowOnError: true,
-      } as any);
+      });
 
       spinner.succeed(`TypeScript fetch client generated at ${options.out}`);
     } catch (e) {

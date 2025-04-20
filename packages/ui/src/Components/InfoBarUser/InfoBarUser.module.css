@@ -4,8 +4,8 @@
   color: var(--green);
 }
 
-.hash,
-.id {
+.hash-symbol,
+.hash {
   color: var(--surface2);
 }
 
@@ -19,6 +19,6 @@
   font-weight: 100;
 }
 
-.hash {
+.hash-symbol {
   margin-right: 1px;
 }

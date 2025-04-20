@@ -78,6 +78,31 @@ export default class Users extends DBService {
     });
   }
 
+  async findHumanUserById(
+    id: HumanUserDto["data"]["user"]["id"],
+  ): Promise<HumanUserDto | null> {
+    const res = await this.drizzle
+      .select({
+        user: users,
+        humanUser: humanUsers,
+      })
+      .from(users)
+      .innerJoin(humanUsers, eq(users.id, humanUsers.userId))
+      .where(eq(users.id, id))
+      .limit(1);
+
+    if (res.length === 1) {
+      const user: HumanUserDto = {
+        type: "HUMAN",
+        data: res[0],
+      };
+
+      return user;
+    }
+
+    return null;
+  }
+
   async findHumanUsers(): Promise<HumanUserDto[]> {
     const res = await this.drizzle
       .select({

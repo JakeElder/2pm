@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import Logo from "./Logo";
+import InfoBarLogo from "./InfoBarLogo";
 import * as Frame from "../../Components/Frame";
 
-const meta: Meta<typeof Logo> = {
-  title: "Components/Logo",
-  component: Logo,
+const meta: Meta<typeof InfoBarLogo> = {
+  title: "Components/InfoBarLogo",
+  component: InfoBarLogo,
   decorators: [
     (Story) => {
       return (
@@ -16,7 +16,7 @@ const meta: Meta<typeof Logo> = {
   ],
 };
 
-type Story = StoryObj<typeof Logo>;
+type Story = StoryObj<typeof InfoBarLogo>;
 
 export const Default: Story = {
   args: {},

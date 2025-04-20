@@ -1,16 +1,19 @@
 import React from "react";
 import css from "./InfoBarUser.module.css";
 
-type Props = {};
+type Props = {
+  name: string;
+  hash: string;
+};
 
-const InfoBarUser = ({}: Props) => {
+const InfoBarUser = ({ name, hash }: Props) => {
   return (
     <div className={css["root"]}>
       <span className={css["icon"]}></span>
       <span className={css["at"]}>@</span>
-      <span className={css["name"]}>anon</span>
-      <span className={css["hash"]}>#</span>
-      <span className={css["id"]}>uf4DyTAVLKBfDe6ky7mSoz</span>
+      <span className={css["name"]}>{name}</span>
+      <span className={css["hash-symbol"]}>#</span>
+      <span className={css["hash"]}>{hash}</span>
     </div>
   );
 };

@@ -1,5 +1,7 @@
+import InfoBarUserContainer from "@/components/server/InfoBarUserContainer";
 import {
   InfoBar,
+  InfoBarLogo,
   PaneHeader,
   SpaceList,
   Theme,
@@ -51,7 +53,15 @@ export default async function Home() {
         </StandardLayout.Main>
         <StandardLayout.StatusBar />
         <StandardLayout.InfoBar>
-          <InfoBar />
+          <InfoBar.Root>
+            <InfoBar.Logo>
+              <InfoBarLogo />
+            </InfoBar.Logo>
+            <InfoBar.Separator />
+            <InfoBar.User>
+              <InfoBarUserContainer />
+            </InfoBar.User>
+          </InfoBar.Root>
         </StandardLayout.InfoBar>
       </StandardLayout.Root>
     </Theme>

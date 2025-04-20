@@ -1,9 +1,9 @@
 import React from "react";
-import css from "./Logo.module.css";
+import css from "./InfoBarLogo.module.css";
 
 type Props = {};
 
-const Logo = ({}: Props) => {
+const InfoBarLogo = ({}: Props) => {
   return (
     <div className={css["root"]}>
       <span className={css["icon"]}></span>
@@ -12,4 +12,4 @@ const Logo = ({}: Props) => {
   );
 };
 
-export default Logo;
+export default InfoBarLogo;

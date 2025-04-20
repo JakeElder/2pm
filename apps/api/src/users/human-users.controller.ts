@@ -1,6 +1,15 @@
-import { Body, Controller, Get, Inject, Post, UsePipes } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Inject,
+  NotFoundException,
+  Param,
+  Post,
+  UsePipes,
+} from '@nestjs/common';
 import { ZodValidationPipe } from '@anatine/zod-nestjs';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { HumanUserDto, CreateHumanUserDto } from '@2pm/core';
 import { DBService } from '@2pm/core/db';
 
@@ -21,6 +30,33 @@ export class HumanUsersController {
   })
   findUsersByEnvironment() {
     return this.db.users.findHumanUsers();
+  }
+
+  @Get(':id')
+  @ApiOperation({
+    summary: '[Human] Get By Id',
+    operationId: 'getHumanUserById',
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'The users id',
+    type: Number,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'A single human user',
+    type: HumanUserDto,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'User not found',
+  })
+  async findUserById(@Param('id') id: HumanUserDto['data']['user']['id']) {
+    const user = await this.db.users.findHumanUserById(id);
+    if (!user) {
+      throw new NotFoundException(`User with Id ${id} not found`);
+    }
+    return user;
   }
 
   @Post()
