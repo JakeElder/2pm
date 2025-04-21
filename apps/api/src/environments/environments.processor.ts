@@ -6,7 +6,6 @@ import {
   EvaluationPlotPointSummaryDtoSchema,
   PlotPoint,
   PlotPointSummaryDto,
-  ChatStream,
   AiUserMessagePlotPointDto,
   EVALUATABLE_PLOT_POINT_TYPES,
   EvaluationPlotPointDto,
@@ -164,7 +163,7 @@ export class EnvironmentsProcessor {
 
   async streamMessage(
     environmentId: number,
-    stream: ChatStream,
+    stream: any,
   ): Promise<AiUserMessagePlotPointDto> {
     let init = false;
     let content = '';

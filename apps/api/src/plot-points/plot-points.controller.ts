@@ -20,6 +20,7 @@ import {
   AiUserMessagePlotPointDto,
   FilterPlotPointsDto,
   FilterPlotPointsDtoSchema,
+  HumanUserMessagePlotPointDto,
 } from '@2pm/core';
 import { DBService } from '@2pm/core/db';
 
@@ -51,7 +52,10 @@ export class PlotPointsController {
     schema: {
       type: 'array',
       items: {
-        oneOf: [{ $ref: getSchemaPath(AiUserMessagePlotPointDto) }],
+        oneOf: [
+          { $ref: getSchemaPath(AiUserMessagePlotPointDto) },
+          { $ref: getSchemaPath(HumanUserMessagePlotPointDto) },
+        ],
       },
     },
   })

@@ -1,3 +1,4 @@
+//@ts-nocheck
 "use client";
 
 import { PlotPointDto } from "@2pm/core";

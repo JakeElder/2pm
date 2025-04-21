@@ -1,15 +1,15 @@
-import * as schema from "../schema";
-import * as seed from "@2pm/core/seed";
 import { reset } from "drizzle-seed";
-import { DBService } from "./db-module";
-import UserEnvironmentPresences from "./user-environment-presences";
-import Users from "./users";
-import Messages from "./messages";
-import PlotPoints from "./plot-points";
-import Environments from "./environments";
-import Tools from "./tools";
+import * as schema from "./schema";
+import * as seed from "./seed-data";
+import UserEnvironmentPresences from "../models/user-environment-presence/user-environment-presence.service";
+import Users from "../models/user/user.service";
+import Messages from "../models/message/message.service";
+import PlotPoints from "../models/plot-point/plot-points.service";
+import Environments from "../models/environment/environment.service";
+import Tools from "../models/tool/tool.service";
+import { DBServiceModule } from "./db-service-module";
 
-export default class Utils extends DBService {
+export default class Utils extends DBServiceModule {
   public async clear() {
     await reset(this.drizzle, schema);
   }

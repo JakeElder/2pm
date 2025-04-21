@@ -9,7 +9,7 @@ import {
   TiptapEditor,
 } from "@2pm/ui/components";
 import { StandardLayout } from "@2pm/ui/layouts";
-import { BibleVerse, EmailSent, Message } from "@2pm/ui/plot-points";
+import { BibleVerse, EmailSent } from "@2pm/ui/plot-points";
 
 export default async function Home() {
   return (

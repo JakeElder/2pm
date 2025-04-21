@@ -1,9 +1,9 @@
 import { getPlotPointsByEnvironmentId } from "@/api/environments";
-import { EnvironmentDto } from "@2pm/core";
+import { Environment } from "@2pm/core";
 import { StandardLayout } from "@2pm/ui/layouts";
 
 type Props = {
-  environmentId: EnvironmentDto["data"]["environment"]["id"];
+  environmentId: Environment["id"];
 };
 
 const ConversationNarrativeContainer = async ({ environmentId }: Props) => {
@@ -13,7 +13,9 @@ const ConversationNarrativeContainer = async ({ environmentId }: Props) => {
 
   return (
     <StandardLayout.ConversationNarrative>
-      <pre>{JSON.stringify(plotPoints, null, 2)}</pre>
+      {plotPoints.data.map((p) => {
+        return JSON.stringify(p, null, 2);
+      })}
     </StandardLayout.ConversationNarrative>
   );
 };
