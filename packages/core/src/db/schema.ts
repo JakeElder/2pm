@@ -12,14 +12,15 @@ import {
   uuid,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
+import { JSONContent } from "@tiptap/core";
 import { AI_USER_CODES, USER_TYPES } from "../models/user/user.constants";
 import { PLOT_POINT_TYPES } from "../models/plot-point/plot-point.constants";
+import { TOOL_CODES } from "../models/tool/tool.constants";
+import { MESSAGE_TYPES } from "../models/message/message.constants";
 import {
   ENVIRONMENT_TYPE_CODES,
   WORLD_ROOM_CODES,
 } from "../models/environment/environment.constants";
-import { TOOL_CODES } from "../models/tool/tool.constants";
-import { MESSAGE_TYPES } from "../models/message/message.constants";
 
 export const userTypeEnum = pgEnum("UserType", USER_TYPES);
 export const messageTypeEnum = pgEnum("MessageType", MESSAGE_TYPES);
@@ -109,9 +110,9 @@ export const messages = pgTable("messages", {
 });
 
 export const humanUserMessages = pgTable("human_user_messages", {
-  id: serial("id").primaryKey(),
-  content: text("content").notNull(),
-  messageId: integer("message_id")
+  id: serial().primaryKey(),
+  content: jsonb().notNull().$type<JSONContent>(),
+  messageId: integer()
     .notNull()
     .references(() => messages.id),
 });

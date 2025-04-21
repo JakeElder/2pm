@@ -25,6 +25,7 @@ import {
 import { DBService } from '@2pm/core/db';
 
 @ApiExtraModels(AiUserMessagePlotPointDto)
+@ApiExtraModels(HumanUserMessagePlotPointDto)
 @ApiTags('Plot Points')
 @Controller()
 export class PlotPointsController {

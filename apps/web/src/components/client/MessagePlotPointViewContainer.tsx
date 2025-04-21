@@ -2,10 +2,10 @@
 
 import { messagesSocket } from "@/socket";
 import {
+  AiUserMessagePlotPointDto,
   HumanUserMessagePlotPointDto,
-  MessagesRoomJoinedEventDto,
-} from "@2pm/core";
-import { AiUserMessagePlotPointDto } from "@2pm/core";
+} from "@2pm/api/client";
+import { MessagesRoomJoinedEventDto } from "@2pm/core";
 import { Message } from "@2pm/ui/plot-points";
 import { useEffect, useState } from "react";
 
@@ -64,7 +64,7 @@ export const HumanUserMessage = (props: HumanUserMessageProps) => {
 
 type Props = AiUserMessagePlotPointDto | HumanUserMessagePlotPointDto;
 
-const MessageViewContainer = (plotPoint: Props) => {
+const MessagePlotPointViewContainer = (plotPoint: Props) => {
   if (plotPoint.type === "AI_USER_MESSAGE") {
     return <AiUserMessage {...plotPoint} />;
   }
@@ -74,4 +74,4 @@ const MessageViewContainer = (plotPoint: Props) => {
   }
 };
 
-export default MessageViewContainer;
+export default MessagePlotPointViewContainer;

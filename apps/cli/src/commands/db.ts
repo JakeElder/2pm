@@ -1,8 +1,7 @@
 import { Command } from "commander";
 import ora from "ora";
-import { DBService } from "@2pm/core/db";
+import { DBService, clear, seed } from "@2pm/core/db";
 
-// Create the db command
 const db = new Command("db");
 
 db.command("drop")
@@ -60,7 +59,7 @@ db.command("seed")
 
     try {
       const db = new DBService(process.env.DATABASE_URL!);
-      await db.utils.seed();
+      await seed(db);
       await db.end();
       spinner.succeed(`Seeded database`);
     } catch (e) {
@@ -77,7 +76,7 @@ db.command("clear")
 
     try {
       const db = new DBService(process.env.DATABASE_URL!);
-      await db.utils.clear();
+      await clear(db);
       await db.end();
       spinner.succeed(`Cleared DB`);
     } catch (e) {

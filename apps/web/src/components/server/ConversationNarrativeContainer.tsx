@@ -1,6 +1,7 @@
 import { getPlotPointsByEnvironmentId } from "@/api/environments";
 import { Environment } from "@2pm/core";
 import { StandardLayout } from "@2pm/ui/layouts";
+import MessagePlotPointViewContainer from "../client/MessagePlotPointViewContainer";
 
 type Props = {
   environmentId: Environment["id"];
@@ -13,9 +14,12 @@ const ConversationNarrativeContainer = async ({ environmentId }: Props) => {
 
   return (
     <StandardLayout.ConversationNarrative>
-      {plotPoints.data.map((p) => {
-        return JSON.stringify(p, null, 2);
-      })}
+      {plotPoints.data.map((plotPoint) => (
+        <MessagePlotPointViewContainer
+          key={plotPoint.data.plotPoint.id}
+          {...plotPoint}
+        />
+      ))}
     </StandardLayout.ConversationNarrative>
   );
 };

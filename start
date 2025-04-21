@@ -2,8 +2,11 @@
 
 packages=(
   .
-  apps/*
-  packages/*
+  packages/core
+  apps/web
+  apps/api
+  packages/ui
+  apps/cli
 )
 
 for i in "${packages[@]}"; do
