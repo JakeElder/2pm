@@ -49,6 +49,7 @@ generate
 
       spinner.succeed(`TypeScript fetch client generated at ${options.out}`);
     } catch (e) {
+      console.error(e);
       spinner.fail("Error generating TypeScript fetch client.");
       process.exit(1);
     }

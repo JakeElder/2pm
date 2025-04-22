@@ -1,14 +1,14 @@
 import {
-  AiUserMessagePlotPointSummaryDtoSchema,
-  HumanUserMessagePlotPointSummaryDtoSchema,
-  AuthEmailSentPlotPointSummaryDtoSchema,
   EvaluatablePlotPointType,
-  EvaluationPlotPointSummaryDtoSchema,
   PlotPoint,
-  PlotPointSummaryDto,
   AiUserMessagePlotPointDto,
   EVALUATABLE_PLOT_POINT_TYPES,
   EvaluationPlotPointDto,
+  EvaluationPlotPointDtoSchema,
+  AiUserMessagePlotPointDtoSchema,
+  HumanUserMessagePlotPointDtoSchema,
+  AuthEmailSentPlotPointDtoSchema,
+  PlotPointDto,
 } from '@2pm/core';
 import { DBService } from '@2pm/core/db';
 import { Processor, Process } from '@nestjs/bull';
@@ -78,10 +78,10 @@ export class EnvironmentsProcessor {
       .orderBy(asc(plotPoints.id));
 
     const schemas: Record<EvaluatablePlotPointType, ZodType<any>> = {
-      EVALUATION: EvaluationPlotPointSummaryDtoSchema,
-      AI_USER_MESSAGE: AiUserMessagePlotPointSummaryDtoSchema,
-      HUMAN_USER_MESSAGE: HumanUserMessagePlotPointSummaryDtoSchema,
-      AUTH_EMAIL_SENT: AuthEmailSentPlotPointSummaryDtoSchema,
+      EVALUATION: EvaluationPlotPointDtoSchema,
+      AI_USER_MESSAGE: AiUserMessagePlotPointDtoSchema,
+      HUMAN_USER_MESSAGE: HumanUserMessagePlotPointDtoSchema,
+      AUTH_EMAIL_SENT: AuthEmailSentPlotPointDtoSchema,
     };
 
     const summaries = res.map((row) => {
@@ -98,7 +98,7 @@ export class EnvironmentsProcessor {
         console.error(summary.error);
       }
 
-      return summary.data as PlotPointSummaryDto;
+      return summary.data as PlotPointDto;
     });
 
     return summaries;
@@ -127,7 +127,7 @@ export class EnvironmentsProcessor {
       if (e.tool === 'REQUEST_EMAIL_ADDRESS') {
         const res = await this.ce.requestEmailAddress([
           ...summaries,
-          EvaluationPlotPointSummaryDtoSchema.parse(evaluationPlotPointDto),
+          EvaluationPlotPointDtoSchema.parse(evaluationPlotPointDto),
         ]);
 
         const aiUserMessagePlotPointDto = await this.streamMessage(
@@ -141,7 +141,7 @@ export class EnvironmentsProcessor {
       if (e.tool === 'RESPOND_GENERAL') {
         const res = await this.ce.respondGeneral([
           ...summaries,
-          EvaluationPlotPointSummaryDtoSchema.parse(evaluationPlotPointDto),
+          EvaluationPlotPointDtoSchema.parse(evaluationPlotPointDto),
         ]);
         const aiUserMessagePlotPointDto = await this.streamMessage(
           job.data.trigger.environmentId,
