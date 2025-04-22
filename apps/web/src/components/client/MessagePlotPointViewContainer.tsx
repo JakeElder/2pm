@@ -53,7 +53,7 @@ type HumanUserMessageProps = HumanUserMessagePlotPointDto;
 export const HumanUserMessage = (props: HumanUserMessageProps) => {
   return (
     <Message type="HUMAN" user={props.data.humanUser.id}>
-      {props.data.humanUserMessage.content}
+      {JSON.stringify(props.data.humanUserMessage.content)}
     </Message>
   );
 };

@@ -5,9 +5,9 @@ import {
   HttpException,
   Logger,
 } from '@nestjs/common';
-import ErrorStackParser from 'error-stack-parser';
-import path from 'path';
-import chalk from 'chalk';
+import PrettyError from 'pretty-error';
+
+const pe = new PrettyError();
 
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
@@ -21,14 +21,8 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       exception instanceof HttpException ? exception.getStatus() : 500;
 
     if (exception instanceof Error) {
-      const header = `Uncaught Exception: "${exception.message}"`;
-      this.logger.error(chalk.bgBlack(chalk.white(header)));
-      const stack = ErrorStackParser.parse(exception);
-      for (const step of stack) {
-        const { fileName, lineNumber } = step;
-        const relativePath = path.relative(process.cwd(), fileName || '');
-        this.logger.error(chalk.white(`${relativePath}:${lineNumber}`));
-      }
+      console.log();
+      console.error(pe.render(exception));
     } else {
       this.logger.error(`Unknown Exception: ${JSON.stringify(exception)}`);
     }

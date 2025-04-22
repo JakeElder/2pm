@@ -6,7 +6,7 @@ import { DatabaseModule } from '../database/database.module';
 import { MessagesModule } from '../messages/messages.module';
 import { PlotPointsModule } from '../plot-points/plot-points.module';
 import { RedisModule } from '../redis/redis.module';
-import { CompanionOneToOneEnvironmentsController } from './companion-one-to-one-environments.controller';
+import { CompanionEnvironmentsController } from './companion-environments.controller';
 import { BullModule } from '@nestjs/bull';
 import { BullBoardModule } from '@bull-board/nestjs';
 import { BullAdapter } from '@bull-board/api/bullAdapter';
@@ -29,9 +29,6 @@ import { EnvironmentsProcessor } from './environments.processor';
   ],
   providers: [EnvironmentGateway, EnvironmentsProcessor],
   exports: [],
-  controllers: [
-    EnvironmentsController,
-    CompanionOneToOneEnvironmentsController,
-  ],
+  controllers: [EnvironmentsController, CompanionEnvironmentsController],
 })
 export class EnvironmentModule {}

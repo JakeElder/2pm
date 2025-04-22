@@ -1,8 +1,8 @@
 import { Message as OllamaMessage, Ollama } from "ollama";
 import OpenAI from "openai";
 import { mimicAi, txt } from "@2pm/core/utils";
-import { PlotPointSummaryDto, ToolCode } from "@2pm/core";
-import { summaryToOpenAiMessage } from "./utils";
+import { PlotPointDto, ToolCode } from "@2pm/core";
+import { plotPointToOpenAiMessage } from "./utils";
 
 type OpenAiMessage = OpenAI.Chat.Completions.ChatCompletionMessageParam;
 type OpenAiTool = OpenAI.Chat.Completions.ChatCompletionTool;
@@ -33,7 +33,7 @@ class CharacterEngine {
   }
 
   async evaluate(
-    narrative: PlotPointSummaryDto[],
+    narrative: PlotPointDto[],
     options: { debug: boolean } = { debug: false },
   ): Promise<{
     tool: ToolCode;
@@ -66,7 +66,7 @@ class CharacterEngine {
         ),
       },
       ...narrative.map((dto) => {
-        return summaryToOpenAiMessage(dto);
+        return plotPointToOpenAiMessage(dto);
       }),
     ];
 
@@ -191,7 +191,7 @@ class CharacterEngine {
   }
 
   async requestEmailAddress(
-    narrative: PlotPointSummaryDto[],
+    narrative: PlotPointDto[],
     options: { debug: boolean } = { debug: false },
   ) {
     const prompt: OpenAiMessage[] = [
@@ -226,7 +226,7 @@ class CharacterEngine {
         ),
       },
       ...narrative.map((dto) => {
-        return summaryToOpenAiMessage(dto);
+        return plotPointToOpenAiMessage(dto);
       }),
     ];
 
@@ -246,7 +246,7 @@ class CharacterEngine {
   }
 
   async respondGeneral(
-    narrative: PlotPointSummaryDto[],
+    narrative: PlotPointDto[],
     options: { debug: boolean } = { debug: false },
   ) {
     const prompt: OpenAiMessage[] = [
@@ -274,7 +274,7 @@ class CharacterEngine {
         content: txt(<>Your current task is to respond to the user</>),
       },
       ...narrative.map((dto) => {
-        return summaryToOpenAiMessage(dto);
+        return plotPointToOpenAiMessage(dto);
       }),
     ];
 

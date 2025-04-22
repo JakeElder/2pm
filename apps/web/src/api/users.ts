@@ -1,4 +1,3 @@
 import api from ".";
 
-export const { getCompanionOneToOneEnvironmentsByUserId, getHumanUserById } =
-  api.users;
+export const { getHumanUserById } = api.users;

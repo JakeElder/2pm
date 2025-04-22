@@ -2,7 +2,7 @@ import { and, count, eq, inArray } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 import {
   environments,
-  companionOneToOneEnvironments,
+  companionEnvironments,
   users,
   aiUsers,
   worldRoomEnvironments,
@@ -12,7 +12,7 @@ import { DBServiceModule } from "../../db/db-service-module";
 import {
   CreateEnvironmentDto,
   InferEnvironmentDto,
-  CompanionOneToOneEnvironmentDto,
+  CompanionEnvironmentDto,
   WorldRoomEnvironmentDto,
 } from ".";
 
@@ -51,7 +51,7 @@ export default class Environments extends DBServiceModule {
         return res as InferEnvironmentDto<T>;
       }
 
-      if (type === "COMPANION_ONE_TO_ONE") {
+      if (type === "COMPANION") {
         const { userId } = dto;
         const companionUserId =
           dto.companionUserId ?? (await this.getDefaultCompanionUserId());
@@ -75,8 +75,8 @@ export default class Environments extends DBServiceModule {
           throw new Error();
         }
 
-        const [companionOneToOneEnvironment] = await tx
-          .insert(companionOneToOneEnvironments)
+        const [companionEnvironment] = await tx
+          .insert(companionEnvironments)
           .values({
             userId,
             companionUserId,
@@ -84,14 +84,14 @@ export default class Environments extends DBServiceModule {
           })
           .returning();
 
-        const res: CompanionOneToOneEnvironmentDto = {
-          type: "COMPANION_ONE_TO_ONE",
+        const res: CompanionEnvironmentDto = {
+          type: "COMPANION",
           data: {
             user,
             companionUser,
             companionAiUser,
             environment,
-            companionOneToOneEnvironment,
+            companionEnvironment,
           },
         };
 
@@ -125,86 +125,72 @@ export default class Environments extends DBServiceModule {
     return messageCount;
   }
 
-  async findCompanionOneToOneEnvironmentByUserId(
+  async findCompanionEnvironmentByUserId(
     id: number,
-  ): Promise<CompanionOneToOneEnvironmentDto | null> {
+  ): Promise<CompanionEnvironmentDto | null> {
     const userAlias = alias(users, "user");
     const companionUserAlias = alias(users, "companionUser");
 
     const [data] = await this.drizzle
       .select({
         environment: environments,
-        companionOneToOneEnvironment: companionOneToOneEnvironments,
+        companionEnvironment: companionEnvironments,
         user: userAlias,
         companionUser: companionUserAlias,
         companionAiUser: aiUsers,
       })
-      .from(companionOneToOneEnvironments)
+      .from(companionEnvironments)
       .innerJoin(
         environments,
-        eq(companionOneToOneEnvironments.environmentId, environments.id),
+        eq(companionEnvironments.environmentId, environments.id),
       )
-      .innerJoin(
-        userAlias,
-        eq(companionOneToOneEnvironments.userId, userAlias.id),
-      )
+      .innerJoin(userAlias, eq(companionEnvironments.userId, userAlias.id))
       .innerJoin(
         companionUserAlias,
-        eq(
-          companionOneToOneEnvironments.companionUserId,
-          companionUserAlias.id,
-        ),
+        eq(companionEnvironments.companionUserId, companionUserAlias.id),
       )
       .innerJoin(aiUsers, eq(companionUserAlias.id, aiUsers.userId))
-      .where(eq(companionOneToOneEnvironments.userId, id));
+      .where(eq(companionEnvironments.userId, id));
 
     if (!data) {
       return null;
     }
 
-    const dto: CompanionOneToOneEnvironmentDto = {
-      type: "COMPANION_ONE_TO_ONE",
+    const dto: CompanionEnvironmentDto = {
+      type: "COMPANION",
       data,
     };
 
     return dto;
   }
 
-  async findCompanionOneToOneEnvironments(): Promise<
-    CompanionOneToOneEnvironmentDto[]
-  > {
+  async findCompanionEnvironments(): Promise<CompanionEnvironmentDto[]> {
     const userAlias = alias(users, "user");
     const companionUserAlias = alias(users, "companionUser");
 
     const res = await this.drizzle
       .select({
         environment: environments,
-        companionOneToOneEnvironment: companionOneToOneEnvironments,
+        companionEnvironment: companionEnvironments,
         user: userAlias,
         companionUser: companionUserAlias,
         companionAiUser: aiUsers,
       })
       .from(environments)
       .innerJoin(
-        companionOneToOneEnvironments,
-        eq(environments.id, companionOneToOneEnvironments.environmentId),
+        companionEnvironments,
+        eq(environments.id, companionEnvironments.environmentId),
       )
-      .innerJoin(
-        userAlias,
-        eq(companionOneToOneEnvironments.userId, userAlias.id),
-      )
+      .innerJoin(userAlias, eq(companionEnvironments.userId, userAlias.id))
       .innerJoin(
         companionUserAlias,
-        eq(
-          companionOneToOneEnvironments.companionUserId,
-          companionUserAlias.id,
-        ),
+        eq(companionEnvironments.companionUserId, companionUserAlias.id),
       )
       .innerJoin(aiUsers, eq(companionUserAlias.id, aiUsers.userId));
 
     return res.map((data) => {
-      const environment: CompanionOneToOneEnvironmentDto = {
-        type: "COMPANION_ONE_TO_ONE",
+      const environment: CompanionEnvironmentDto = {
+        type: "COMPANION",
         data,
       };
 

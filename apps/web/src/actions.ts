@@ -53,20 +53,3 @@ export async function getSession() {
 
   throw new Error();
 }
-
-export async function getCompanionOneToOneEnvironmentsByUserId(id: number) {
-  const res = await api.users.getCompanionOneToOneEnvironmentsByUserId(id);
-
-  if (!res.ok) {
-    const res = await api.environments.createCompanionOneToOneEnvironment({
-      type: "COMPANION_ONE_TO_ONE",
-      userId: id,
-    });
-
-    if (res.ok) {
-      return res.data;
-    }
-  }
-
-  return res.data;
-}

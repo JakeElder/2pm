@@ -37,7 +37,7 @@ export default async function Home() {
             </StandardLayout.PlotPoint>
           </StandardLayout.ReferenceNarrative>
           <StandardLayout.Conversation>
-            <ConversationNarrativeContainer environmentId={5} />
+            <ConversationNarrativeContainer environmentId={2} />
             <StandardLayout.InputBar>
               <TiptapEditor />
             </StandardLayout.InputBar>

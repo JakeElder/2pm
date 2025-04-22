@@ -6,40 +6,38 @@ import type { Socket as ClientSocket } from "socket.io-client";
 import type { PlotPointDto } from "../plot-point/plot-point.dto";
 import {
   aiUsers,
-  companionOneToOneEnvironments,
+  companionEnvironments,
   environments,
   users,
   worldRoomEnvironments,
 } from "../../db/schema";
 
 /**
- * Companion One To One Environment
+ * Companion Environment
  */
-export const CompanionOneToOneEnvironmentDtoSchema = z.object({
-  type: z.literal("COMPANION_ONE_TO_ONE"),
+export const CompanionEnvironmentDtoSchema = z.object({
+  type: z.literal("COMPANION"),
   data: z.object({
     environment: createSelectSchema(environments),
-    companionOneToOneEnvironment: createSelectSchema(
-      companionOneToOneEnvironments,
-    ),
+    companionEnvironment: createSelectSchema(companionEnvironments),
     user: createSelectSchema(users),
     companionUser: createSelectSchema(users),
     companionAiUser: createSelectSchema(aiUsers),
   }),
 });
 
-export const CreateCompanionOneToOneEnvironmentDtoSchema = z.object({
-  type: z.literal("COMPANION_ONE_TO_ONE"),
+export const CreateCompanionEnvironmentDtoSchema = z.object({
+  type: z.literal("COMPANION"),
   id: createInsertSchema(environments).shape.id,
   userId: createSelectSchema(users).shape.id,
   companionUserId: createSelectSchema(users).shape.id.optional(),
 });
 
-export class CompanionOneToOneEnvironmentDto extends createZodDto(
-  CompanionOneToOneEnvironmentDtoSchema,
+export class CompanionEnvironmentDto extends createZodDto(
+  CompanionEnvironmentDtoSchema,
 ) {}
-export class CreateCompanionOneToOneEnvironmentDto extends createZodDto(
-  CreateCompanionOneToOneEnvironmentDtoSchema,
+export class CreateCompanionEnvironmentDto extends createZodDto(
+  CreateCompanionEnvironmentDtoSchema,
 ) {}
 
 /**
@@ -70,12 +68,12 @@ export class CreateWorldRoomEnvironmentDto extends createZodDto(
  */
 
 export const EnvironmentDtoSchema = z.discriminatedUnion("type", [
-  CompanionOneToOneEnvironmentDtoSchema,
+  CompanionEnvironmentDtoSchema,
   WorldRoomEnvironmentDtoSchema,
 ]);
 
 export const CreateEnvironmentDtoSchema = z.discriminatedUnion("type", [
-  CreateCompanionOneToOneEnvironmentDtoSchema,
+  CreateCompanionEnvironmentDtoSchema,
   CreateWorldRoomEnvironmentDtoSchema,
 ]);
 
@@ -86,7 +84,7 @@ export type CreateEnvironmentDto = z.infer<typeof CreateEnvironmentDtoSchema>;
 export type EnvironmentDto = z.infer<typeof EnvironmentDtoSchema>;
 
 type EnvironmentDtoMap = {
-  COMPANION_ONE_TO_ONE: CompanionOneToOneEnvironmentDto;
+  COMPANION: CompanionEnvironmentDto;
   WORLD_ROOM: WorldRoomEnvironmentDto;
 };
 

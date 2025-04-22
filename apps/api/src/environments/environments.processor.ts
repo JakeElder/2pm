@@ -2,13 +2,13 @@ import {
   EvaluatablePlotPointType,
   PlotPoint,
   AiUserMessagePlotPointDto,
-  EVALUATABLE_PLOT_POINT_TYPES,
   EvaluationPlotPointDto,
   EvaluationPlotPointDtoSchema,
   AiUserMessagePlotPointDtoSchema,
   HumanUserMessagePlotPointDtoSchema,
   AuthEmailSentPlotPointDtoSchema,
   PlotPointDto,
+  EVALUATABLE_PLOT_POINT_TYPES,
 } from '@2pm/core';
 import { DBService } from '@2pm/core/db';
 import { Processor, Process } from '@nestjs/bull';
@@ -31,7 +31,6 @@ import {
 } from '@2pm/core/schema';
 import { asc, eq, and, inArray, lte } from 'drizzle-orm';
 import { ZodType } from 'zod';
-import { logError } from '../utils';
 
 @Processor('environments')
 export class EnvironmentsProcessor {
@@ -44,7 +43,7 @@ export class EnvironmentsProcessor {
     @Inject('E') private readonly events: AppEventEmitter,
   ) {}
 
-  async getSummaries(plotPoint: PlotPoint) {
+  async getPlotPoints(plotPoint: PlotPoint) {
     const res = await this.db.drizzle
       .select({
         plotPoint: plotPoints,
@@ -84,7 +83,7 @@ export class EnvironmentsProcessor {
       AUTH_EMAIL_SENT: AuthEmailSentPlotPointDtoSchema,
     };
 
-    const summaries = res.map((row) => {
+    const parsed = res.map((row) => {
       const Schema = schemas[row.plotPoint.type as EvaluatablePlotPointType];
 
       const summary = Schema.safeParse({
@@ -101,7 +100,7 @@ export class EnvironmentsProcessor {
       return summary.data as PlotPointDto;
     });
 
-    return summaries;
+    return parsed;
   }
 
   @Process()
@@ -112,7 +111,7 @@ export class EnvironmentsProcessor {
     }>,
   ) {
     try {
-      const summaries = await this.getSummaries(job.data.trigger);
+      const summaries = await this.getPlotPoints(job.data.trigger);
       const e = await this.ce.evaluate(summaries);
 
       const evaluationPlotPointDto = await this.db.plotPoints.insert({
@@ -155,7 +154,7 @@ export class EnvironmentsProcessor {
 
       return [evaluationPlotPointDto];
     } catch (e) {
-      logError(this.logger, e);
+      console.error(this.logger, e);
       this.logger.error(e);
       throw new Error();
     }

@@ -1,4 +1,4 @@
-import { PlotPointSummaryDto, PlotPointType } from "@2pm/core";
+import { PlotPointDto, PlotPointType } from "@2pm/core";
 import OpenAI from "openai";
 import short from "short-uuid";
 
@@ -11,12 +11,12 @@ type SummarisablePlotPointType = Exclude<
 
 type OpenAiMessage = OpenAI.Chat.Completions.ChatCompletionMessageParam;
 
-export default function summaryToOpenAiMessage(
-  plotPoint: PlotPointSummaryDto,
+export default function plotPointToOpenAiMessage(
+  plotPoint: PlotPointDto,
 ): OpenAiMessage {
   const adapters: Record<
     SummarisablePlotPointType,
-    (plotPoint: PlotPointSummaryDto) => OpenAiMessage
+    (plotPoint: PlotPointDto) => OpenAiMessage
   > = {
     AUTH_EMAIL_SENT: (plotPoint) => {
       if (plotPoint.type !== "AUTH_EMAIL_SENT") {
@@ -53,7 +53,7 @@ export default function summaryToOpenAiMessage(
       return {
         role: "user",
         name: `anon${translator.fromUUID(plotPoint.data.humanUser.id)}`,
-        content: plotPoint.data.humanUserMessage.content,
+        content: JSON.stringify(plotPoint.data.humanUserMessage.content),
       };
     },
   };

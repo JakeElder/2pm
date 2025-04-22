@@ -8,11 +8,10 @@ import {
   serial,
   text,
   timestamp,
-  unique,
   uuid,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
-import { JSONContent } from "@tiptap/core";
+import { Content } from "@tiptap/core";
 import { AI_USER_CODES, USER_TYPES } from "../models/user/user.constants";
 import { PLOT_POINT_TYPES } from "../models/plot-point/plot-point.constants";
 import { TOOL_CODES } from "../models/tool/tool.constants";
@@ -110,9 +109,9 @@ export const messages = pgTable("messages", {
 });
 
 export const humanUserMessages = pgTable("human_user_messages", {
-  id: serial().primaryKey(),
-  content: jsonb().notNull().$type<JSONContent>(),
-  messageId: integer()
+  id: serial("id").primaryKey(),
+  content: jsonb("content").notNull().$type<Content>(),
+  messageId: integer("message_id")
     .notNull()
     .references(() => messages.id),
 });
@@ -142,33 +141,18 @@ export const worldRoomEnvironments = pgTable("world_room_environments", {
     .references(() => environments.id),
 });
 
-export const companionOneToOneEnvironments = pgTable(
-  "companion_one_to_one_environments",
-  {
-    id: serial("id").primaryKey(),
-    environmentId: integer("environment_id").notNull(),
-    userId: integer("user_id").notNull(),
-    companionUserId: integer("companion_user_id").notNull(),
-  },
-  (table) => [
-    foreignKey({
-      columns: [table.environmentId],
-      foreignColumns: [environments.id],
-      name: "fk_o2o_env",
-    }),
-    foreignKey({
-      columns: [table.userId],
-      foreignColumns: [users.id],
-      name: "fk_o2o_user",
-    }),
-    foreignKey({
-      columns: [table.companionUserId],
-      foreignColumns: [users.id],
-      name: "fk_o2o_companion",
-    }),
-    unique().on(table.userId),
-  ],
-);
+export const companionEnvironments = pgTable("companion_environments", {
+  id: serial("id").primaryKey(),
+  environmentId: integer("environment_id")
+    .notNull()
+    .references(() => environments.id),
+  userId: integer("user_id")
+    .notNull()
+    .references(() => users.id),
+  companionUserId: integer("companion_user_id")
+    .notNull()
+    .references(() => users.id),
+});
 
 /**
  * Tools
@@ -238,21 +222,11 @@ export const userEnvironmentPresences = pgTable("user_environment_presences", {
 export const plotPointEnvironmentPresences = pgTable(
   "plot_point_environment_presences",
   {
-    plotPointId: integer("plot_point_id").notNull(),
-    userEnvironmentPresenceId: integer(
-      "user_environment_presence_id",
-    ).notNull(),
+    plotPointId: integer("plot_point_id")
+      .notNull()
+      .references(() => plotPoints.id),
+    userEnvironmentPresenceId: integer("user_environment_presence_id")
+      .notNull()
+      .references(() => userEnvironmentPresences.id),
   },
-  (table) => [
-    foreignKey({
-      columns: [table.plotPointId],
-      foreignColumns: [plotPoints.id],
-      name: "fk_plot_env_pres_plot",
-    }),
-    foreignKey({
-      columns: [table.userEnvironmentPresenceId],
-      foreignColumns: [userEnvironmentPresences.id],
-      name: "fk_plot_env_pres_user_env",
-    }),
-  ],
 );
