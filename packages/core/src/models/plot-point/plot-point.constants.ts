@@ -6,10 +6,3 @@ export const PLOT_POINT_TYPES = [
   "EVALUATION",
   "AUTH_EMAIL_SENT",
 ] as const;
-
-export const EVALUATABLE_PLOT_POINT_TYPES = [
-  "HUMAN_USER_MESSAGE",
-  "AI_USER_MESSAGE",
-  "EVALUATION",
-  "AUTH_EMAIL_SENT",
-] as const;

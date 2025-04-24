@@ -12,16 +12,12 @@ export async function seed(db: DBService) {
 
   // Environments
   const [universe] = await Promise.all([
-    db.environments.insert({
-      type: "WORLD_ROOM",
-      id: "UNIVERSE",
-    }),
+    db.worldRoomEnvironments.create({ id: "UNIVERSE" }),
   ]);
 
   // Ai Users
   const [niko] = await Promise.all([
-    db.users.insert({
-      type: "AI",
+    db.aiUsers.create({
       id: "NIKO",
       tag: "niko",
       bio: txt(<>Niko is our host.</>),
@@ -31,16 +27,15 @@ export async function seed(db: DBService) {
   // Environment Presences
   await Promise.all([
     db.userEnvironmentPresences.insert({
-      environmentId: universe.data.environment.id,
+      environmentId: universe.environmentId,
       userId: niko.userId,
     }),
   ]);
 
   // Plot Points
-  await db.plotPoints.insert({
-    type: "AI_USER_MESSAGE",
+  await db.aiMessages.create({
     userId: niko.userId,
-    environmentId: universe.data.environment.id,
+    environmentId: universe.environmentId,
     content: "Welcome to 2PM",
     state: "COMPLETE",
   });

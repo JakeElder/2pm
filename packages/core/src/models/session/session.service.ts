@@ -1,39 +1,43 @@
-import { inArray, SQL, and, eq } from "drizzle-orm";
-import { users, sessions } from "../../db/schema";
+import { eq } from "drizzle-orm";
+import { users, sessions, humanUsers } from "../../db/schema";
 import { DBServiceModule } from "../../db/db-service-module";
-import { CreateSessionDto, FindSessionsQueryDto, SessionDto } from ".";
+import { CreateSessionDto, SessionDto } from "./session.dto";
+import { Session } from "./session.types";
 
 export default class Sessions extends DBServiceModule {
   public async insert<T extends CreateSessionDto>(dto: T): Promise<SessionDto> {
     const { userId } = dto;
 
-    const [user] = await this.drizzle
+    const [humanUser] = await this.drizzle
       .select()
-      .from(users)
-      .where(eq(users.id, userId))
+      .from(humanUsers)
+      .where(eq(humanUsers.userId, userId))
       .limit(1);
 
     const [session] = await this.drizzle
       .insert(sessions)
-      .values({ userId: user.id })
+      .values({ userId: humanUser.userId })
       .returning();
 
-    return { session, user };
+    return { session, humanUser };
   }
 
-  async find({ limit, ids }: FindSessionsQueryDto): Promise<SessionDto[]> {
-    const filters: SQL[] = [];
+  async find(id: Session["id"]): Promise<SessionDto | null> {
+    const res = await this.drizzle
+      .select({
+        session: sessions,
+        humanUser: humanUsers,
+      })
+      .from(sessions)
+      .where(eq(sessions.id, id))
+      .innerJoin(users, eq(users.id, sessions.userId))
+      .innerJoin(humanUsers, eq(humanUsers.userId, users.id))
+      .limit(1);
 
-    if (ids) {
-      filters.push(inArray(sessions.id, ids));
+    if (res.length === 0) {
+      return null;
     }
 
-    const builder = this.drizzle
-      .select({ session: sessions, user: users })
-      .from(sessions)
-      .innerJoin(users, eq(users.id, sessions.userId))
-      .where(and(...filters));
-
-    return await (limit ? builder.limit(limit) : builder);
+    return res[0];
   }
 }

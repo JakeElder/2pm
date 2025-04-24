@@ -3,14 +3,12 @@ import {
   Controller,
   Get,
   Inject,
-  ParseArrayPipe,
-  ParseIntPipe,
+  Param,
   Post,
-  Query,
   UsePipes,
 } from '@nestjs/common';
-import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { CreateSessionDto, FindSessionsQueryDto, SessionDto } from '@2pm/core';
+import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { CreateSessionDto, type Session, SessionDto } from '@2pm/core';
 import { DBService } from '@2pm/core/db';
 import { ZodValidationPipe } from '@anatine/zod-nestjs';
 
@@ -19,35 +17,24 @@ import { ZodValidationPipe } from '@anatine/zod-nestjs';
 export class SessionsController {
   constructor(@Inject('DB') private readonly db: DBService) {}
 
-  @Get()
+  @Get(':id')
   @UsePipes(ZodValidationPipe)
   @ApiOperation({
     summary: 'Get',
-    operationId: 'getSessions',
+    operationId: 'getSession',
   })
   @ApiResponse({
     status: 200,
-    description: 'The array of sessions',
-    type: [SessionDto],
+    description: 'Get a session by Id',
+    type: SessionDto,
   })
-  @ApiQuery({
-    name: 'ids',
-    required: false,
-    isArray: true,
-    type: [String],
+  @ApiParam({
+    name: 'id',
+    description: 'The users id',
+    type: String,
   })
-  @ApiQuery({
-    name: 'limit',
-    type: Number,
-    required: false,
-  })
-  async find(
-    @Query('ids', new ParseArrayPipe({ optional: true }))
-    ids: FindSessionsQueryDto['ids'],
-    @Query('limit', new ParseIntPipe({ optional: true }))
-    limit: FindSessionsQueryDto['limit'],
-  ) {
-    const res = this.db.sessions.find({ ids, limit });
+  async findOne(@Param('id') id: Session['id']) {
+    const res = this.db.sessions.find(id);
     return res;
   }
 

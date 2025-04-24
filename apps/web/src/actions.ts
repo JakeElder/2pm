@@ -40,15 +40,13 @@ export async function getSession() {
   const sid = store.get("sid");
 
   if (sid) {
-    const { data } = await api.sessions.getSessions({
-      ids: [sid.value],
-    });
+    const { data } = await api.sessions.findOneSession(sid.value);
 
-    if (!data[0]) {
+    if (!data) {
       throw new Error();
     }
 
-    return data[0];
+    return data;
   }
 
   throw new Error();

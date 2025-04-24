@@ -10,7 +10,6 @@ import {
 
 export const UserEnvironmentPresenceDtoSchema = z.object({
   plotPoint: createSelectSchema(plotPoints),
-  environment: createSelectSchema(environments),
   userEnvironmentPresence: createSelectSchema(userEnvironmentPresences),
 });
 

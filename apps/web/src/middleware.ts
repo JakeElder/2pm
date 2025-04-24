@@ -8,34 +8,33 @@ export async function middleware(request: NextRequest) {
   const sid = request.cookies.get("sid");
 
   if (sid) {
-    const { data } = await api.sessions.getSessions({
-      ids: [sid.value],
-    });
+    const { data } = await api.sessions.getSession(sid.value);
 
     if (data[0]) {
       return response;
     }
   }
 
-  const userRes = await api.users.createHumanUser({
-    type: "HUMAN",
-  });
-
-  if (!userRes.ok) {
-    console.dir(userRes, { depth: null, colors: true });
-    throw new Error();
-  }
-
-  const { data: sessionRes } = await api.sessions.createSession({
-    userId: userRes.data.data.user.id,
-  });
-
-  response.cookies.set({
-    name: "sid",
-    httpOnly: true,
-    value: sessionRes.session.id,
-    path: "/",
-  });
-
   return response;
+  // const userRes = await api.users.createHumanUser({
+  //   type: "HUMAN",
+  // });
+  //
+  // if (!userRes.ok) {
+  //   console.dir(userRes, { depth: null, colors: true });
+  //   throw new Error();
+  // }
+  //
+  // const { data: sessionRes } = await api.sessions.createSession({
+  //   userId: userRes.data.data.user.id,
+  // });
+  //
+  // response.cookies.set({
+  //   name: "sid",
+  //   httpOnly: true,
+  //   value: sessionRes.session.id,
+  //   path: "/",
+  // });
+  //
+  // return response;
 }

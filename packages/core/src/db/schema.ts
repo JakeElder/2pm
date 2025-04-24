@@ -1,6 +1,4 @@
-import OpenAI from "openai";
 import {
-  foreignKey,
   integer,
   jsonb,
   pgEnum,
@@ -12,14 +10,12 @@ import {
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 import { Content } from "@tiptap/core";
-import { AI_USER_CODES, USER_TYPES } from "../models/user/user.constants";
+import { USER_TYPES } from "../models/user/user.constants";
+import { AI_USER_CODES } from "../models/ai-user/ai-user.constants";
 import { PLOT_POINT_TYPES } from "../models/plot-point/plot-point.constants";
-import { TOOL_CODES } from "../models/tool/tool.constants";
 import { MESSAGE_TYPES } from "../models/message/message.constants";
-import {
-  ENVIRONMENT_TYPE_CODES,
-  WORLD_ROOM_CODES,
-} from "../models/environment/environment.constants";
+import { ENVIRONMENT_TYPE_CODES } from "../models/environment/environment.constants";
+import { WORLD_ROOM_CODES } from "../models/world-room-environment/world-room-environment.constants";
 
 export const userTypeEnum = pgEnum("UserType", USER_TYPES);
 export const messageTypeEnum = pgEnum("MessageType", MESSAGE_TYPES);
@@ -29,7 +25,6 @@ export const environmentTypeEnum = pgEnum(
   ENVIRONMENT_TYPE_CODES,
 );
 export const worldRoomCodeEnum = pgEnum("WorldRoomCodeEnum", WORLD_ROOM_CODES);
-export const toolCodeEnum = pgEnum("ToolCodeEnum", TOOL_CODES);
 export const aiUserCodeEnum = pgEnum("AiUserCodeEnum", AI_USER_CODES);
 export const aiUserMessageStateEnum = pgEnum("AiUserMessageStateEnum", [
   "OUTPUTTING",
@@ -48,7 +43,9 @@ export const users = pgTable("users", {
 export const humanUsers = pgTable("human_users", {
   id: uuid("id").primaryKey().defaultRandom(),
   tag: text("tag"),
-  userId: integer("user_id").references(() => users.id),
+  userId: integer("user_id")
+    .notNull()
+    .references(() => users.id),
   locationEnvironmentId: integer("location_environment_id")
     .notNull()
     .references(() => environments.id),
@@ -57,7 +54,9 @@ export const humanUsers = pgTable("human_users", {
 export const aiUsers = pgTable("ai_users", {
   id: aiUserCodeEnum("id").primaryKey(),
   tag: text("tag").notNull(),
-  userId: integer("user_id").references(() => users.id),
+  userId: integer("user_id")
+    .notNull()
+    .references(() => users.id),
   bio: text("bio").notNull(),
 });
 
@@ -108,7 +107,7 @@ export const messages = pgTable("messages", {
     .references(() => environments.id),
 });
 
-export const humanUserMessages = pgTable("human_user_messages", {
+export const humanMessages = pgTable("human_messages", {
   id: serial("id").primaryKey(),
   content: jsonb("content").notNull().$type<Content>(),
   messageId: integer("message_id")
@@ -116,7 +115,7 @@ export const humanUserMessages = pgTable("human_user_messages", {
     .references(() => messages.id),
 });
 
-export const aiUserMessages = pgTable("ai_user_messages", {
+export const aiMessages = pgTable("ai_messages", {
   id: serial("id").primaryKey(),
   content: text("content").notNull(),
   messageId: integer("message_id")
@@ -152,38 +151,6 @@ export const companionEnvironments = pgTable("companion_environments", {
   companionUserId: integer("companion_user_id")
     .notNull()
     .references(() => users.id),
-});
-
-/**
- * Tools
- */
-
-export const tools = pgTable("tools", {
-  id: toolCodeEnum("id").primaryKey(),
-  definition: jsonb("definition")
-    .$type<OpenAI.Chat.Completions.ChatCompletionTool>()
-    .notNull(),
-});
-
-/**
- * Evaluations
- */
-
-export const evaluations = pgTable("evaluations", {
-  id: serial("id").primaryKey(),
-  userId: integer("user_id")
-    .notNull()
-    .references(() => users.id),
-  plotPointId: integer("plot_point_id")
-    .notNull()
-    .references(() => plotPoints.id),
-  triggerId: integer("trigger_id")
-    .notNull()
-    .references(() => plotPoints.id),
-  toolId: toolCodeEnum("tool_id")
-    .notNull()
-    .references(() => tools.id),
-  args: jsonb("args").$type<any>(),
 });
 
 /**
