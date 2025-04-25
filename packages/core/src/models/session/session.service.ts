@@ -5,7 +5,7 @@ import { CreateSessionDto, SessionDto } from "./session.dto";
 import { Session } from "./session.types";
 
 export default class Sessions extends DBServiceModule {
-  public async insert<T extends CreateSessionDto>(dto: T): Promise<SessionDto> {
+  public async create<T extends CreateSessionDto>(dto: T): Promise<SessionDto> {
     const { userId } = dto;
 
     const [humanUser] = await this.drizzle

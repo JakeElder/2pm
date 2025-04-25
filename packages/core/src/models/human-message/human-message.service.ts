@@ -1,28 +1,27 @@
 import { eq, desc, and, SQL } from "drizzle-orm";
 import { DBServiceModule } from "../../db/db-service-module";
 import {
-  aiMessages,
-  aiUsers,
+  humanUsers,
   environments,
   messages,
   plotPoints,
   users,
+  humanMessages,
 } from "../../db/schema";
 import {
-  AiMessageDto,
-  CreateAiMessageDto,
-  FilterAiMessagesDto,
-  FilterAiMessagesDtoSchema,
-} from "./ai-message.dto";
+  HumanMessageDto,
+  CreateHumanMessageDto,
+  FilterHumanMessagesDto,
+  FilterHumanMessagesDtoSchema,
+} from "./human-message.dto";
 
-export default class AiMessages extends DBServiceModule {
+export default class HumanMessages extends DBServiceModule {
   public async create({
     userId,
     environmentId,
     content,
-    state,
-  }: CreateAiMessageDto): Promise<AiMessageDto> {
-    const [[environment], [aiUser]] = await Promise.all([
+  }: CreateHumanMessageDto): Promise<HumanMessageDto> {
+    const [[environment], [humanUser]] = await Promise.all([
       this.drizzle
         .select()
         .from(environments)
@@ -30,70 +29,73 @@ export default class AiMessages extends DBServiceModule {
         .limit(1),
       this.drizzle
         .select()
-        .from(aiUsers)
-        .where(eq(aiUsers.userId, userId))
+        .from(humanUsers)
+        .where(eq(humanUsers.userId, userId))
         .limit(1),
     ]);
 
-    if (!environment || !aiUser) {
+    if (!environment || !humanUser) {
       throw new Error();
     }
 
     const [plotPoint] = await this.drizzle
       .insert(plotPoints)
-      .values({ type: "AI_MESSAGE", environmentId, userId })
+      .values({ type: "HUMAN_MESSAGE", environmentId, userId })
       .returning();
 
     const [message] = await this.drizzle
       .insert(messages)
       .values({
-        type: "AI",
+        type: "HUMAN",
         environmentId,
         userId,
         plotPointId: plotPoint.id,
       })
       .returning();
 
-    const [aiMessage] = await this.drizzle
-      .insert(aiMessages)
-      .values({ messageId: message.id, content, state })
+    const [humanMessage] = await this.drizzle
+      .insert(humanMessages)
+      .values({
+        messageId: message.id,
+        content,
+      })
       .returning();
 
     return {
       plotPoint,
-      aiMessage,
+      humanMessage,
       environment,
-      aiUser,
+      humanUser,
     };
   }
 
   public async findAll(
-    filter: FilterAiMessagesDto = {},
-  ): Promise<AiMessageDto[]> {
-    const { id, limit } = FilterAiMessagesDtoSchema.parse(filter);
+    filter: FilterHumanMessagesDto = {},
+  ): Promise<HumanMessageDto[]> {
+    const { id, limit } = FilterHumanMessagesDtoSchema.parse(filter);
 
     const filters: SQL[] = [];
 
     if (id) {
-      filters.push(eq(aiMessages.id, id));
+      filters.push(eq(humanMessages.id, id));
     }
 
     const res = await this.drizzle
       .select({
         plotPoint: plotPoints,
-        aiMessage: aiMessages,
-        aiUser: aiUsers,
+        humanMessage: humanMessages,
+        humanUser: humanUsers,
         environment: environments,
       })
       .from(messages)
       .innerJoin(plotPoints, eq(messages.plotPointId, plotPoints.id))
       .innerJoin(users, eq(messages.userId, users.id))
       .innerJoin(environments, eq(messages.environmentId, environments.id))
-      .innerJoin(aiMessages, eq(messages.id, aiMessages.messageId))
-      .innerJoin(aiUsers, eq(users.id, aiUsers.userId))
+      .innerJoin(humanMessages, eq(messages.id, humanMessages.messageId))
+      .innerJoin(humanUsers, eq(users.id, humanUsers.userId))
       .where(and(...filters))
       .limit(limit ? limit : Number.MAX_SAFE_INTEGER)
-      .orderBy(desc(aiMessages.id));
+      .orderBy(desc(humanMessages.id));
 
     return res;
   }

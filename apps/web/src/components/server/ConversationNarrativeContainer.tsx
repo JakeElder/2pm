@@ -9,7 +9,7 @@ type Props = {
 
 const ConversationNarrativeContainer = async ({ environmentId }: Props) => {
   const plotPoints = await getPlotPointsByEnvironmentId(environmentId, {
-    types: ["AI_USER_MESSAGE", "HUMAN_USER_MESSAGE"],
+    types: ["AI_MESSAGE", "HUMAN_MESSAGE"],
   });
 
   return (

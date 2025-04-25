@@ -10,31 +10,28 @@ export async function middleware(request: NextRequest) {
   if (sid) {
     const { data } = await api.sessions.getSession(sid.value);
 
-    if (data[0]) {
+    if (data) {
       return response;
     }
   }
 
+  const userRes = await api.humanUsers.createHumanUser();
+
+  if (!userRes.ok) {
+    console.dir(userRes, { depth: null, colors: true });
+    throw new Error();
+  }
+
+  const { data: sessionRes } = await api.sessions.createSession({
+    userId: userRes.data.userId,
+  });
+
+  response.cookies.set({
+    name: "sid",
+    httpOnly: true,
+    value: sessionRes.session.id,
+    path: "/",
+  });
+
   return response;
-  // const userRes = await api.users.createHumanUser({
-  //   type: "HUMAN",
-  // });
-  //
-  // if (!userRes.ok) {
-  //   console.dir(userRes, { depth: null, colors: true });
-  //   throw new Error();
-  // }
-  //
-  // const { data: sessionRes } = await api.sessions.createSession({
-  //   userId: userRes.data.data.user.id,
-  // });
-  //
-  // response.cookies.set({
-  //   name: "sid",
-  //   httpOnly: true,
-  //   value: sessionRes.session.id,
-  //   path: "/",
-  // });
-  //
-  // return response;
 }

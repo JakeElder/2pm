@@ -7,7 +7,7 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @ApiExcludeEndpoint()
-  @Get('docs(/**)?')
+  @Get(['docs', 'docs/*path'])
   @Render('docs.html.ejs')
   async renderHtml() {
     return this.appService.getDocsParams();

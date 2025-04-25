@@ -9,7 +9,7 @@ import {
   uuid,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
-import { Content } from "@tiptap/core";
+import { JSONContent } from "@tiptap/core";
 import { USER_TYPES } from "../models/user/user.constants";
 import { AI_USER_CODES } from "../models/ai-user/ai-user.constants";
 import { PLOT_POINT_TYPES } from "../models/plot-point/plot-point.constants";
@@ -109,7 +109,7 @@ export const messages = pgTable("messages", {
 
 export const humanMessages = pgTable("human_messages", {
   id: serial("id").primaryKey(),
-  content: jsonb("content").notNull().$type<Content>(),
+  content: jsonb("content").notNull().$type<JSONContent>(),
   messageId: integer("message_id")
     .notNull()
     .references(() => messages.id),

@@ -32,7 +32,7 @@ type Props = {};
 const TiptapEditor = ({}: Props) => {
   const handleSubmit = useCallback((editor: Editor) => {
     const json = editor.getJSON();
-    console.log(json);
+    console.log(JSON.stringify(json));
   }, []);
 
   const editor = useEditor({

@@ -24,11 +24,23 @@ export async function seed(db: DBService) {
     }),
   ]);
 
+  // Human Users
+  const [jake] = await Promise.all([
+    db.humanUsers.create({
+      tag: "jake",
+      locationEnvironmentId: universe.environmentId,
+    }),
+  ]);
+
   // Environment Presences
   await Promise.all([
     db.userEnvironmentPresences.insert({
       environmentId: universe.environmentId,
       userId: niko.userId,
+    }),
+    db.userEnvironmentPresences.insert({
+      environmentId: universe.environmentId,
+      userId: jake.userId,
     }),
   ]);
 
@@ -36,7 +48,21 @@ export async function seed(db: DBService) {
   await db.aiMessages.create({
     userId: niko.userId,
     environmentId: universe.environmentId,
-    content: "Welcome to 2PM",
+    content: "Welcome to the 2pm universe",
     state: "COMPLETE",
+  });
+
+  await db.humanMessages.create({
+    userId: jake.userId,
+    environmentId: universe.environmentId,
+    content: {
+      type: "doc",
+      content: [
+        {
+          type: "paragraph",
+          content: [{ type: "text", text: "thank you sir" }],
+        },
+      ],
+    },
   });
 }

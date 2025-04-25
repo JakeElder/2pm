@@ -1,8 +1,11 @@
-// export * from "./environment";
-// export * from "./message";
-// export * from "./plot-point";
-// export * from "./user";
 export * from "./ai-message";
+export * from "./ai-user";
+export * from "./auth-email";
+export * from "./environment";
+export * from "./human-message";
+export * from "./human-user";
+export * from "./message";
+export * from "./plot-point";
 export * from "./session";
-export * from "./theme";
 export * from "./user-environment-presence";
+export * from "./world-room-environment";

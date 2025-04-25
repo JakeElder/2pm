@@ -28,11 +28,11 @@ export class WorldRoomEnvironmentDto extends createZodDto(
 /**
  * Filters
  */
-export const FilterAiMessagesDtoSchema = z.object({
-  id: createSelectSchema(schema.aiMessages).shape.id.optional(),
+export const FilterWorldRoomEnvironmentDtoSchema = z.object({
+  id: createSelectSchema(schema.worldRoomEnvironments).shape.id.optional(),
   limit: z.number().optional(),
 });
 
-export class FilterAiMessagesDto extends createZodDto(
-  FilterAiMessagesDtoSchema,
+export class FilterWorldRoomEnvironmentDto extends createZodDto(
+  FilterWorldRoomEnvironmentDtoSchema,
 ) {}

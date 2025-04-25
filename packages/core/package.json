@@ -4,6 +4,7 @@
     "./db": "./src/db/index.ts",
     "./schema": "./src/db/schema.ts",
     "./utils": "./src/utils/index.ts",
+    "./config": "./src/config/index.ts",
     ".": "./src/index.ts"
   },
   "scripts": {

@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { AiMessagesController } from './ai-messages.controller';
+import { HumanUsersController } from './human-users.controller';
 import { DatabaseModule } from '../database/database.module';
 
 @Module({
   imports: [DatabaseModule],
-  controllers: [AiMessagesController],
+  controllers: [HumanUsersController],
 })
-export class AiMessagesModule {}
+export class HumanUsersModule {}

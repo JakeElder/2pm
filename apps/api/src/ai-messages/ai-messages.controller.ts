@@ -50,7 +50,7 @@ export class AiMessagesController {
     type: Number,
   })
   @ApiOkResponse({
-    description: 'A list of plot points for the specified environment',
+    description: 'The Ai message',
   })
   async findOne(@Param('id', ParseIntPipe) id: number) {
     const [message] = await this.db.aiMessages.findAll({ id, limit: 1 });

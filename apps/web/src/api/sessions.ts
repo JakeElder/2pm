@@ -1,5 +1,5 @@
 import api from ".";
 
-const { findOneSession } = api.sessions;
+const { getSession } = api.sessions;
 
-export { findOneSession };
+export { getSession };

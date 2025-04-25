@@ -2,40 +2,40 @@
 
 import { messagesSocket } from "@/socket";
 import {
-  AiUserMessagePlotPointDto,
-  HumanUserMessagePlotPointDto,
+  AiMessagePlotPointDto,
+  HumanMessagePlotPointDto,
 } from "@2pm/api/client";
-import { MessagesRoomJoinedEventDto } from "@2pm/core";
+// import { MessagesRoomJoinedEventDto } from "@2pm/core";
 import { Message } from "@2pm/ui/plot-points";
 import { useEffect, useState } from "react";
 
 /**
- * AiUserMessage
+ * AiMessage
  */
 
-type AiUserMessageProps = AiUserMessagePlotPointDto;
+type AiMessageProps = AiMessagePlotPointDto;
 
-export const AiUserMessage = (props: AiUserMessageProps) => {
-  const [content, setContent] = useState(props.data.aiUserMessage.content);
+export const AiMessage = (props: AiMessageProps) => {
+  const [content, setContent] = useState(props.data.aiMessage.content);
 
-  useEffect(() => {
-    const e: MessagesRoomJoinedEventDto = {
-      messageId: props.data.message.id,
-    };
-
-    messagesSocket
-      .emit("join", e)
-      .on("messages.ai.updated", async ({ aiUserMessage }) => {
-        if (props.data.aiUserMessage.id === aiUserMessage.id) {
-          setContent(aiUserMessage.content);
-        }
-      });
-
-    return () => {
-      messagesSocket.off("messages.ai.updated");
-      messagesSocket.emit("leave", e);
-    };
-  }, []);
+  // useEffect(() => {
+  //   const e: MessagesRoomJoinedEventDto = {
+  //     messageId: props.data.message.id,
+  //   };
+  //
+  //   messagesSocket
+  //     .emit("join", e)
+  //     .on("messages.ai.updated", async ({ aiMessage }) => {
+  //       if (props.data.aiMessage.id === aiMessage.id) {
+  //         setContent(aiMessage.content);
+  //       }
+  //     });
+  //
+  //   return () => {
+  //     messagesSocket.off("messages.ai.updated");
+  //     messagesSocket.emit("leave", e);
+  //   };
+  // }, []);
 
   return (
     <Message type="AI" user={props.data.aiUser.tag}>
@@ -45,15 +45,15 @@ export const AiUserMessage = (props: AiUserMessageProps) => {
 };
 
 /**
- * HumanUserMessage
+ * HumanMessage
  */
 
-type HumanUserMessageProps = HumanUserMessagePlotPointDto;
+type HumanMessageProps = HumanMessagePlotPointDto;
 
-export const HumanUserMessage = (props: HumanUserMessageProps) => {
+export const HumanMessage = (props: HumanMessageProps) => {
   return (
-    <Message type="HUMAN" user={props.data.humanUser.id}>
-      {JSON.stringify(props.data.humanUserMessage.content)}
+    <Message type="HUMAN" user={props.data.humanUser.tag || "anon"}>
+      {JSON.stringify(props.data.humanMessage.content)}
     </Message>
   );
 };
@@ -62,15 +62,15 @@ export const HumanUserMessage = (props: HumanUserMessageProps) => {
  * MessageContainer
  */
 
-type Props = AiUserMessagePlotPointDto | HumanUserMessagePlotPointDto;
+type Props = AiMessagePlotPointDto | HumanMessagePlotPointDto;
 
 const MessagePlotPointViewContainer = (plotPoint: Props) => {
-  if (plotPoint.type === "AI_USER_MESSAGE") {
-    return <AiUserMessage {...plotPoint} />;
+  if (plotPoint.type === "AI_MESSAGE") {
+    return <AiMessage {...plotPoint} />;
   }
 
-  if (plotPoint.type === "HUMAN_USER_MESSAGE") {
-    return <HumanUserMessage {...plotPoint} />;
+  if (plotPoint.type === "HUMAN_MESSAGE") {
+    return <HumanMessage {...plotPoint} />;
   }
 };
 

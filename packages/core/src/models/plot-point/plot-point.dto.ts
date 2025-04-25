@@ -1,32 +1,74 @@
-import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { createZodDto } from "@anatine/zod-nestjs";
 import { z } from "zod";
-import * as schema from "../../db/schema";
+import { HumanMessageDtoSchema } from "../human-message/human-message.dto";
+import { AiMessageDtoSchema } from "../ai-message/ai-message.dto";
+import { createSelectSchema } from "drizzle-zod";
+import { aiUsers, environments, humanUsers, users } from "../../db/schema";
+import { PLOT_POINT_TYPES } from "./plot-point.constants";
 
 /**
- * Create
+ * Human Message
  */
-export const CreatePlotPointDtoSchema = createInsertSchema(schema.plotPoints);
+export const HumanMessagePlotPointDtoSchema = z.object({
+  type: z.literal("HUMAN_MESSAGE"),
+  data: HumanMessageDtoSchema,
+});
 
-export class CreatePlotPointDto extends createZodDto(
-  CreatePlotPointDtoSchema,
+export class HumanMessagePlotPointDto extends createZodDto(
+  HumanMessagePlotPointDtoSchema,
 ) {}
 
 /**
- * Read
+ * Ai Message
  */
-export const PlotPointDtoSchema = createSelectSchema(schema.plotPoints);
+export const AiMessagePlotPointDtoSchema = z.object({
+  type: z.literal("AI_MESSAGE"),
+  data: AiMessageDtoSchema,
+});
+
+export class AiMessagePlotPointDto extends createZodDto(
+  AiMessagePlotPointDtoSchema,
+) {}
+
+/**
+ * Environment Entered
+ */
+export const EnvironmentEnteredPlotPointDtoSchema = z.object({
+  type: z.literal("ENVIRONMENT_ENTERED"),
+  data: z.object({
+    environment: createSelectSchema(environments),
+    user: createSelectSchema(users),
+    humanUser: createSelectSchema(humanUsers).nullable(),
+    aiUser: createSelectSchema(aiUsers).nullable(),
+  }),
+});
+
+export class EnvironmentEnteredPlotPointDto extends createZodDto(
+  EnvironmentEnteredPlotPointDtoSchema,
+) {}
+
+/**
+ * Union
+ */
+export const PlotPointDtoSchema = z.discriminatedUnion("type", [
+  HumanMessagePlotPointDtoSchema,
+  AiMessagePlotPointDtoSchema,
+  EnvironmentEnteredPlotPointDtoSchema,
+]);
 
 export class PlotPointDto extends createZodDto(PlotPointDtoSchema) {}
 
 /**
  * Filters
  */
-export const FilterAiMessagesDtoSchema = z.object({
-  id: createSelectSchema(schema.aiMessages).shape.id.optional(),
-  limit: z.number().optional(),
+export const FilterPlotPointsDtoSchema = z.object({
+  limit: z.coerce.number().optional(),
+  types: z.preprocess(
+    (val) => (val ? (Array.isArray(val) ? val : [val]) : undefined),
+    z.array(z.enum(PLOT_POINT_TYPES)).optional(),
+  ),
 });
 
-export class FilterAiMessagesDto extends createZodDto(
-  FilterAiMessagesDtoSchema,
+export class FilterPlotPointsDto extends createZodDto(
+  FilterPlotPointsDtoSchema,
 ) {}

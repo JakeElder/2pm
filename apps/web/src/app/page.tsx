@@ -1,3 +1,4 @@
+import { getOneWorldRoomEnvironment } from "@/api/world-room-environments";
 import ConversationNarrativeContainer from "@/components/server/ConversationNarrativeContainer";
 import InfoBarUserContainer from "@/components/server/InfoBarUserContainer";
 import {
@@ -12,6 +13,8 @@ import { StandardLayout } from "@2pm/ui/layouts";
 import { BibleVerse, EmailSent } from "@2pm/ui/plot-points";
 
 export default async function Home() {
+  const universe = await getOneWorldRoomEnvironment("UNIVERSE");
+
   return (
     <Theme>
       <StandardLayout.Root>
@@ -37,7 +40,9 @@ export default async function Home() {
             </StandardLayout.PlotPoint>
           </StandardLayout.ReferenceNarrative>
           <StandardLayout.Conversation>
-            <ConversationNarrativeContainer environmentId={1} />
+            <ConversationNarrativeContainer
+              environmentId={universe.data.environmentId}
+            />
             <StandardLayout.InputBar>
               <TiptapEditor />
             </StandardLayout.InputBar>
