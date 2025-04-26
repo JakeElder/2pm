@@ -1,6 +1,6 @@
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
-import { authEmails } from "../../db/schema";
+import { authEmails } from "../../db/core/core.schema";
 
 export const AuthEmailDtoSchema = createSelectSchema(authEmails);
 export const CreateAuthEmailDtoSchema = createInsertSchema(authEmails);

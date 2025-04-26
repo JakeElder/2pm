@@ -5,7 +5,7 @@ import {
   HumanMessagePlotPointDto,
   PLOT_POINT_TYPES,
 } from '@2pm/core';
-import { DBService } from '@2pm/core/db';
+import { type DBService } from '@2pm/core/db';
 import {
   Controller,
   Get,
@@ -71,6 +71,6 @@ export class PlotPointsController {
     @Query() query: FilterPlotPointsDto,
   ) {
     const q = FilterPlotPointsDtoSchema.parse(query);
-    return this.db.plotPoints.findByEnvironmentId(id, q);
+    return this.db.core.plotPoints.findByEnvironmentId(id, q);
   }
 }

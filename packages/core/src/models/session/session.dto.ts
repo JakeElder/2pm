@@ -1,7 +1,7 @@
 import { createSelectSchema } from "drizzle-zod";
 import { createZodDto } from "@anatine/zod-nestjs";
 import { z } from "zod";
-import { humanUsers, sessions, users } from "../../db/schema";
+import { humanUsers, sessions, users } from "../../db/core/core.schema";
 
 /**
  * Session

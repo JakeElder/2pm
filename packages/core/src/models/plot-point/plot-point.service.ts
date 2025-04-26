@@ -1,5 +1,5 @@
 import { desc, eq, and, inArray } from "drizzle-orm";
-import { DBServiceModule } from "../../db/db-service-module";
+import { CoreDBServiceModule } from "../../db/core/core-db-service-module";
 import {
   aiMessages,
   aiUsers,
@@ -9,7 +9,7 @@ import {
   messages,
   plotPoints,
   users,
-} from "../../db/schema";
+} from "../../db/core/core.schema";
 import {
   AiMessagePlotPointDto,
   EnvironmentEnteredPlotPointDto,
@@ -20,7 +20,7 @@ import {
 import { HumanMessageDtoSchema } from "../human-message/human-message.dto";
 import { AiMessageDtoSchema } from "../ai-message/ai-message.dto";
 
-export default class PlotPoints extends DBServiceModule {
+export default class PlotPoints extends CoreDBServiceModule {
   async findByEnvironmentId(id: number, { types, limit }: FilterPlotPointsDto) {
     const query = this.drizzle
       .select({

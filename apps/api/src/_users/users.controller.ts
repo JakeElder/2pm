@@ -7,7 +7,7 @@ import {
   getSchemaPath,
 } from '@nestjs/swagger';
 import { AiUserDto, HumanUserDto } from '@2pm/core';
-import { DBService } from '@2pm/core/db';
+import { type DBService } from '@2pm/core/db';
 
 @ApiExtraModels(HumanUserDto)
 @ApiExtraModels(AiUserDto)
@@ -34,6 +34,6 @@ export class UsersController {
     },
   })
   findAll() {
-    return this.db.users.findAll();
+    return this.db.core.users.findAll();
   }
 }

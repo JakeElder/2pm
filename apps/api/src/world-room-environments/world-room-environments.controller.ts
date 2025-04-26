@@ -3,7 +3,7 @@ import {
   WorldRoomEnvironmentDto,
   type WorldRoomEnvironmentId,
 } from '@2pm/core';
-import { DBService } from '@2pm/core/db';
+import { type DBService } from '@2pm/core/db';
 import {
   Controller,
   Get,
@@ -39,7 +39,7 @@ export class WorldRoomEnvironmentsController {
     required: false,
   })
   findAll() {
-    return this.db.worldRoomEnvironments.findAll();
+    return this.db.core.worldRoomEnvironments.findAll();
   }
 
   @Get(':id')
@@ -57,7 +57,7 @@ export class WorldRoomEnvironmentsController {
     type: WorldRoomEnvironmentDto,
   })
   async findOne(@Param('id') id: WorldRoomEnvironmentId) {
-    const [environment] = await this.db.worldRoomEnvironments.findAll({
+    const [environment] = await this.db.core.worldRoomEnvironments.findAll({
       id,
       limit: 1,
     });

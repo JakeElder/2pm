@@ -6,7 +6,7 @@ import {
   plotPoints,
   userEnvironmentPresences,
   users,
-} from "../../db/schema";
+} from "../../db/core/core.schema";
 
 export const UserEnvironmentPresenceDtoSchema = z.object({
   plotPoint: createSelectSchema(plotPoints),

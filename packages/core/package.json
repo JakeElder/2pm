@@ -9,6 +9,8 @@
   },
   "scripts": {
     "studio": "drizzle-kit studio",
+    "drizzle:core": "drizzle-kit --config=drizzle-core.config.ts",
+    "drizzle:library": "drizzle-kit --config=drizzle-library.config.ts",
     "generate": "drizzle-kit generate",
     "migrate": "drizzle-kit migrate",
     "typecheck": "tsc --noEmit",

@@ -4,14 +4,14 @@ import {
   plotPointEnvironmentPresences,
   plotPoints,
   userEnvironmentPresences,
-} from "../../db/schema";
-import { DBServiceModule } from "../../db/db-service-module";
+} from "../../db/core/core.schema";
+import { CoreDBServiceModule } from "../../db/core/core-db-service-module";
 import {
   CreateUserEnvironmentPresenceDto,
   UserEnvironmentPresenceDto,
 } from ".";
 
-export default class UserEnvironmentPresences extends DBServiceModule {
+export default class UserEnvironmentPresences extends CoreDBServiceModule {
   public async insert({
     userId,
     environmentId,
@@ -56,7 +56,6 @@ export default class UserEnvironmentPresences extends DBServiceModule {
 
     return {
       plotPoint,
-      environment,
       userEnvironmentPresence,
     };
   }

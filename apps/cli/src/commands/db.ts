@@ -1,6 +1,12 @@
 import { Command } from "commander";
 import ora from "ora";
-import { DBService, clear, seed } from "@2pm/core/db";
+import { CoreDBService } from "@2pm/core/db";
+import postgres from "postgres";
+
+const { CORE_DATABASE_URL } = process.env as {
+  CORE_DATABASE_URL: string;
+  LIBRARY_DATABASE_URL: string;
+};
 
 const db = new Command("db");
 
@@ -13,15 +19,16 @@ db.command("drop")
       const url = new URL(process.env.DATABASE_URL!);
       url.pathname = "/";
 
-      const db = new DBService(url.toString());
-      await db.pg`
+      const pg = postgres(url.toString());
+
+      await pg`
         SELECT pg_terminate_backend(pg_stat_activity.pid)
         FROM pg_stat_activity
         WHERE pg_stat_activity.datname = '2pm'
         AND pid <> pg_backend_pid();
       `;
-      await db.pg`DROP DATABASE IF EXISTS "2pm"`;
-      await db.end();
+      await pg`DROP DATABASE IF EXISTS "2pm"`;
+      await pg.end();
 
       spinner.succeed(`Dropped database`);
     } catch (e) {
@@ -40,9 +47,10 @@ db.command("create")
       const url = new URL(process.env.DATABASE_URL!);
       url.pathname = "/";
 
-      const db = new DBService(url.toString());
-      await db.pg`CREATE DATABASE "2pm"`;
-      await db.end();
+      const pg = postgres(url.toString());
+
+      await pg`CREATE DATABASE "2pm"`;
+      await pg.end();
 
       spinner.succeed(`Created database`);
     } catch (e) {
@@ -58,8 +66,8 @@ db.command("seed")
     const spinner = ora("Seeding database").start();
 
     try {
-      const db = new DBService(process.env.DATABASE_URL!);
-      await seed(db);
+      const db = new CoreDBService(CORE_DATABASE_URL);
+      await db.seed();
       await db.end();
       spinner.succeed(`Seeded database`);
     } catch (e) {
@@ -75,8 +83,8 @@ db.command("clear")
     const spinner = ora("Clearing DB").start();
 
     try {
-      const db = new DBService(process.env.DATABASE_URL!);
-      await clear(db);
+      const db = new CoreDBService(CORE_DATABASE_URL);
+      await db.clear();
       await db.end();
       spinner.succeed(`Cleared DB`);
     } catch (e) {

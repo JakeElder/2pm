@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Inject,
+  NotFoundException,
   Param,
   Post,
   UsePipes,
@@ -15,7 +16,7 @@ import {
   getSchemaPath,
 } from '@nestjs/swagger';
 import { CreateSessionDto, type Session, SessionDto } from '@2pm/core';
-import { DBService } from '@2pm/core/db';
+import { type DBService } from '@2pm/core/db';
 import { ZodValidationPipe } from '@anatine/zod-nestjs';
 
 @ApiTags('Sessions')
@@ -43,7 +44,10 @@ export class SessionsController {
     type: String,
   })
   async findOne(@Param('id') id: Session['id']) {
-    const res = this.db.sessions.find(id);
+    const res = await this.db.core.sessions.find(id);
+    if (!res) {
+      throw new NotFoundException(`Session ${id} not found`);
+    }
     return res;
   }
 
@@ -55,7 +59,7 @@ export class SessionsController {
   })
   @ApiResponse({ status: 201, type: SessionDto })
   async create(@Body() createDto: CreateSessionDto) {
-    const dto = await this.db.sessions.create(createDto);
+    const dto = await this.db.core.sessions.create(createDto);
     return dto;
   }
 }

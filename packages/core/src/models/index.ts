@@ -4,7 +4,6 @@ export * from "./auth-email";
 export * from "./environment";
 export * from "./human-message";
 export * from "./human-user";
-export * from "./message";
 export * from "./plot-point";
 export * from "./session";
 export * from "./user-environment-presence";

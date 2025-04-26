@@ -11,7 +11,7 @@ import {
 import { ZodValidationPipe } from '@anatine/zod-nestjs';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { HumanUserDto, CreateHumanUserDto } from '@2pm/core';
-import { DBService } from '@2pm/core/db';
+import { type DBService } from '@2pm/core/db';
 
 @ApiTags('Users')
 @Controller('users/human')
@@ -29,7 +29,7 @@ export class HumanUsersController {
     type: [HumanUserDto],
   })
   findUsersByEnvironment() {
-    return this.db.users.findHumanUsers();
+    return this.db.core.users.findHumanUsers();
   }
 
   @Get(':id')
@@ -52,7 +52,7 @@ export class HumanUsersController {
     description: 'User not found',
   })
   async findUserById(@Param('id') id: HumanUserDto['data']['user']['id']) {
-    const user = await this.db.users.findHumanUserById(id);
+    const user = await this.db.core.users.findHumanUserById(id);
     if (!user) {
       throw new NotFoundException(`User with Id ${id} not found`);
     }
@@ -67,7 +67,7 @@ export class HumanUsersController {
   })
   @ApiResponse({ status: 201, type: HumanUserDto })
   async create(@Body() createDto: CreateHumanUserDto) {
-    const dto = await this.db.users.insert(createDto);
+    const dto = await this.db.core.users.insert(createDto);
     return dto;
   }
 }

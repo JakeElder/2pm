@@ -10,12 +10,12 @@ import {
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 import { JSONContent } from "@tiptap/core";
-import { USER_TYPES } from "../models/user/user.constants";
-import { AI_USER_CODES } from "../models/ai-user/ai-user.constants";
-import { PLOT_POINT_TYPES } from "../models/plot-point/plot-point.constants";
-import { MESSAGE_TYPES } from "../models/message/message.constants";
-import { ENVIRONMENT_TYPE_CODES } from "../models/environment/environment.constants";
-import { WORLD_ROOM_CODES } from "../models/world-room-environment/world-room-environment.constants";
+import { USER_TYPES } from "../../models/user/user.constants";
+import { AI_USER_CODES } from "../../models/ai-user/ai-user.constants";
+import { PLOT_POINT_TYPES } from "../../models/plot-point/plot-point.constants";
+import { MESSAGE_TYPES } from "../../models/message/message.constants";
+import { ENVIRONMENT_TYPE_CODES } from "../../models/environment/environment.constants";
+import { WORLD_ROOM_CODES } from "../../models/world-room-environment/world-room-environment.constants";
 
 export const userTypeEnum = pgEnum("UserType", USER_TYPES);
 export const messageTypeEnum = pgEnum("MessageType", MESSAGE_TYPES);

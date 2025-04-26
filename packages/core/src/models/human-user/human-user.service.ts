@@ -1,15 +1,15 @@
 import { eq } from "drizzle-orm";
-import { DBServiceModule } from "../../db/db-service-module";
+import { CoreDBServiceModule } from "../../db/core/core-db-service-module";
 import {
   users,
   humanUsers,
   environments,
   worldRoomEnvironments,
-} from "../../db/schema";
+} from "../../db/core/core.schema";
 import { CreateHumanUserDto, HumanUserDto } from "./human-user.dto";
 import { HumanUser } from "./human-user.types";
 
-export default class HumanUsers extends DBServiceModule {
+export default class HumanUsers extends CoreDBServiceModule {
   async create(dto: CreateHumanUserDto = {}): Promise<HumanUserDto> {
     const locationEnvironmentId =
       dto.locationEnvironmentId ||

@@ -1,5 +1,5 @@
 import { eq, desc, and, SQL } from "drizzle-orm";
-import { DBServiceModule } from "../../db/db-service-module";
+import { CoreDBServiceModule } from "../../db/core/core-db-service-module";
 import {
   humanUsers,
   environments,
@@ -7,7 +7,7 @@ import {
   plotPoints,
   users,
   humanMessages,
-} from "../../db/schema";
+} from "../../db/core/core.schema";
 import {
   HumanMessageDto,
   CreateHumanMessageDto,
@@ -15,7 +15,7 @@ import {
   FilterHumanMessagesDtoSchema,
 } from "./human-message.dto";
 
-export default class HumanMessages extends DBServiceModule {
+export default class HumanMessages extends CoreDBServiceModule {
   public async create({
     userId,
     environmentId,

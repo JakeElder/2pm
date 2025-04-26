@@ -1,5 +1,5 @@
 import { AiMessageDto } from '@2pm/core';
-import { DBService } from '@2pm/core/db';
+import { type DBService } from '@2pm/core/db';
 import {
   Controller,
   Get,
@@ -36,7 +36,7 @@ export class AiMessagesController {
     required: false,
   })
   findAll() {
-    return this.db.aiMessages.findAll();
+    return this.db.core.aiMessages.findAll();
   }
 
   @Get(':id')
@@ -53,7 +53,7 @@ export class AiMessagesController {
     description: 'The Ai message',
   })
   async findOne(@Param('id', ParseIntPipe) id: number) {
-    const [message] = await this.db.aiMessages.findAll({ id, limit: 1 });
+    const [message] = await this.db.core.aiMessages.findAll({ id, limit: 1 });
 
     if (!message) {
       throw new NotFoundException(`Message with Id ${id} not found`);

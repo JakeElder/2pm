@@ -1,6 +1,6 @@
 import { eq, desc, and, SQL } from "drizzle-orm";
-import { DBServiceModule } from "../../db/db-service-module";
-import { environments, worldRoomEnvironments } from "../../db/schema";
+import { CoreDBServiceModule } from "../../db/core/core-db-service-module";
+import { environments, worldRoomEnvironments } from "../../db/core/core.schema";
 import {
   CreateWorldRoomEnvironmentDto,
   FilterWorldRoomEnvironmentDto,
@@ -8,7 +8,7 @@ import {
   WorldRoomEnvironmentDto,
 } from "./world-room-environment.dto";
 
-export default class WorldRoomEnvironments extends DBServiceModule {
+export default class WorldRoomEnvironments extends CoreDBServiceModule {
   async create(
     dto: CreateWorldRoomEnvironmentDto,
   ): Promise<WorldRoomEnvironmentDto> {

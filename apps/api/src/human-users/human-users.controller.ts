@@ -16,7 +16,7 @@ import {
   getSchemaPath,
 } from '@nestjs/swagger';
 import { CreateHumanUserDto, type HumanUser, HumanUserDto } from '@2pm/core';
-import { DBService } from '@2pm/core/db';
+import { type DBService } from '@2pm/core/db';
 import { ZodValidationPipe } from '@anatine/zod-nestjs';
 
 @ApiTags('Human Users')
@@ -43,7 +43,7 @@ export class HumanUsersController {
     type: String,
   })
   async findOne(@Param('id') id: HumanUser['id']) {
-    const res = this.db.humanUsers.find(id);
+    const res = this.db.core.humanUsers.find(id);
     return res;
   }
 
@@ -56,7 +56,7 @@ export class HumanUsersController {
   @ApiBody({ type: CreateHumanUserDto, required: false })
   @ApiResponse({ status: 201, type: HumanUserDto })
   async create(@Body() createDto?: CreateHumanUserDto) {
-    const dto = await this.db.humanUsers.create(createDto);
+    const dto = await this.db.core.humanUsers.create(createDto);
     return dto;
   }
 }

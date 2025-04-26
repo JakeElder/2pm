@@ -3,7 +3,12 @@ import { z } from "zod";
 import { HumanMessageDtoSchema } from "../human-message/human-message.dto";
 import { AiMessageDtoSchema } from "../ai-message/ai-message.dto";
 import { createSelectSchema } from "drizzle-zod";
-import { aiUsers, environments, humanUsers, users } from "../../db/schema";
+import {
+  aiUsers,
+  environments,
+  humanUsers,
+  users,
+} from "../../db/core/core.schema";
 import { PLOT_POINT_TYPES } from "./plot-point.constants";
 
 /**

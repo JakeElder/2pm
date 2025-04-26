@@ -6,7 +6,7 @@ import { AppEventEmitter } from '../event-emitter';
 import { EnvironmentGateway } from './environments.gateway';
 import { environments, evaluations, plotPoints } from '@2pm/core/schema';
 import { PlotPoint, PlotPointDto, PlotPointType } from '@2pm/core';
-import { DBService } from '@2pm/core/db';
+import { type DBService } from '@2pm/core/db';
 import { gt, desc, eq } from 'drizzle-orm';
 
 @Controller()
@@ -23,7 +23,7 @@ export class EnvironmentsController implements OnModuleInit {
   ) {}
 
   async onModuleInit() {
-    const envs = await this.db.drizzle.select().from(environments);
+    const envs = await this.db.core.drizzle.select().from(environments);
     await Promise.all(envs.map((env) => this.redis.del(`env:${env.id}:job`)));
 
     this.events.on('plot-points.created', (e) => {
@@ -65,7 +65,7 @@ export class EnvironmentsController implements OnModuleInit {
     this.logger.log('Completed', job.data.trigger.id);
     await this.redis.del(`env:${job.data.trigger.environmentId}:job`);
 
-    const [{ nextTrigger, evaluation }] = await this.db.drizzle
+    const [{ nextTrigger, evaluation }] = await this.db.core.drizzle
       .select({
         nextTrigger: plotPoints,
         evaluation: evaluations,
