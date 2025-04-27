@@ -5,6 +5,8 @@ export * from "./environment";
 export * from "./human-message";
 export * from "./human-user";
 export * from "./plot-point";
+export * from "./prose";
 export * from "./session";
+export * from "./theme";
 export * from "./user-environment-presence";
 export * from "./world-room-environment";

@@ -1,0 +1,14 @@
+.header {
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid var(--surface1);
+}
+
+.tag {
+  font-weight: 400;
+  color: var(--sapphire);
+}
+
+.body {
+  line-height: 1.4;
+}

@@ -5,18 +5,23 @@ import {
   AiMessagePlotPointDto,
   HumanMessagePlotPointDto,
 } from "@2pm/api/client";
+import {
+  AiMessageDto,
+  AiMessageDtoSchema,
+  HumanMessageDto,
+  HumanMessageDtoSchema,
+  ProseSchema,
+} from "@2pm/core";
 // import { MessagesRoomJoinedEventDto } from "@2pm/core";
-import { Message } from "@2pm/ui/plot-points";
-import { useEffect, useState } from "react";
+import { AiMessage, HumanMessage } from "@2pm/ui/plot-points";
+import { useState } from "react";
 
 /**
- * AiMessage
+ * AiMessageViewContainer
  */
 
-type AiMessageProps = AiMessagePlotPointDto;
-
-export const AiMessage = (props: AiMessageProps) => {
-  const [content, setContent] = useState(props.data.aiMessage.content);
+export const AiMessageViewContainer = ({ aiMessage, aiUser }: AiMessageDto) => {
+  const [content, setContent] = useState(aiMessage.content);
 
   // useEffect(() => {
   //   const e: MessagesRoomJoinedEventDto = {
@@ -37,40 +42,36 @@ export const AiMessage = (props: AiMessageProps) => {
   //   };
   // }, []);
 
-  return (
-    <Message type="AI" user={props.data.aiUser.tag}>
-      {content}
-    </Message>
-  );
+  return <AiMessage tag={aiUser.tag}>{content}</AiMessage>;
 };
 
 /**
- * HumanMessage
+ * HumanMessageViewContainer
  */
 
-type HumanMessageProps = HumanMessagePlotPointDto;
-
-export const HumanMessage = (props: HumanMessageProps) => {
-  return (
-    <Message type="HUMAN" user={props.data.humanUser.tag || "anon"}>
-      {JSON.stringify(props.data.humanMessage.content)}
-    </Message>
-  );
+export const HumanMessageViewContainer = ({
+  humanMessage,
+  humanUser,
+}: HumanMessageDto) => {
+  const content = ProseSchema.parse(humanMessage.content);
+  return <HumanMessage tag={humanUser.tag || "anon"} content={content} />;
 };
 
 /**
- * MessageContainer
+ * MessagePlotPointViewContainer
  */
 
 type Props = AiMessagePlotPointDto | HumanMessagePlotPointDto;
 
 const MessagePlotPointViewContainer = (plotPoint: Props) => {
   if (plotPoint.type === "AI_MESSAGE") {
-    return <AiMessage {...plotPoint} />;
+    const props = AiMessageDtoSchema.parse(plotPoint.data);
+    return <AiMessageViewContainer {...props} />;
   }
 
   if (plotPoint.type === "HUMAN_MESSAGE") {
-    return <HumanMessage {...plotPoint} />;
+    const props = HumanMessageDtoSchema.parse(plotPoint.data);
+    return <HumanMessageViewContainer {...props} />;
   }
 };
 

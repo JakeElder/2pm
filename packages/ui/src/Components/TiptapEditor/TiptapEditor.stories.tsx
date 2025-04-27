@@ -21,7 +21,40 @@ const meta: Meta<typeof TiptapEditor> = {
 type Story = StoryObj<typeof TiptapEditor>;
 
 export const Default: Story = {
-  args: {},
+  args: {
+    content: {
+      type: "doc",
+      content: [
+        {
+          type: "paragraph",
+          content: [
+            { type: "text", text: "thank " },
+            { type: "text", marks: [{ type: "bold" }], text: "you" },
+            { type: "text", text: " sir" },
+          ],
+        },
+      ],
+    },
+  },
+};
+
+export const ReadOnly: Story = {
+  args: {
+    content: {
+      type: "doc",
+      content: [
+        {
+          type: "paragraph",
+          content: [
+            { type: "text", text: "thank " },
+            { type: "text", marks: [{ type: "bold" }], text: "you" },
+            { type: "text", text: " sir" },
+          ],
+        },
+      ],
+    },
+    editable: false,
+  },
 };
 
 export default meta;

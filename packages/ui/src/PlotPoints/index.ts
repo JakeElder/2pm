@@ -1,3 +1,4 @@
 export { default as BibleVerse } from "./BibleVerse";
 export { default as EmailSent } from "./EmailSent";
-export { default as Message } from "./Message";
+export { default as AiMessage } from "./AiMessage";
+export { default as HumanMessage } from "./HumanMessage";

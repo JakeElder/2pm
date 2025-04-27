@@ -6,14 +6,7 @@
 
 .tag {
   font-weight: 400;
-}
-
-.ai-tag {
   color: var(--peach);
-}
-
-.human-tag {
-  color: var(--sapphire);
 }
 
 .body {

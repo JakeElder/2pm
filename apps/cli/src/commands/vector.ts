@@ -16,9 +16,11 @@ vector
       console.log(`Searching for: "${query}"...`);
 
       // Get database URL from environment variable
-      const databaseUrl = process.env.DATABASE_URL;
+      const databaseUrl = process.env.LIBRARY_DATABASE_URL;
       if (!databaseUrl) {
-        throw new Error("DATABASE_URL environment variable is required");
+        throw new Error(
+          "LIBRARY_DATABASE_URL environment variable is required",
+        );
       }
 
       const embeddingModel =
@@ -81,9 +83,11 @@ vector
       console.log("Starting vector embedding process for Bible verses...");
 
       // Get database URL from environment variable
-      const databaseUrl = process.env.DATABASE_URL;
+      const databaseUrl = process.env.LIBRARY_DATABASE_URL;
       if (!databaseUrl) {
-        throw new Error("DATABASE_URL environment variable is required");
+        throw new Error(
+          "LIBRARY_DATABASE_URL environment variable is required",
+        );
       }
 
       const embeddingModel =

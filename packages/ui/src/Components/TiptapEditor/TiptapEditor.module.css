@@ -1,6 +1,4 @@
 .input {
-  font: var(--font-family-1);
-  color: var(--text);
   background: var(--mantle);
   appearance: none;
   border: 0;
@@ -10,23 +8,23 @@
   box-sizing: border-box;
 }
 
-.input p:not(:last-of-type) {
+.root p:not(:last-of-type) {
   margin-bottom: 10px;
 }
 
-.input strong {
+.root strong {
   font-weight: 600;
 }
 
-.input u {
+.root u {
   text-decoration: underline;
 }
 
-.input em {
+.root em {
   font-style: italic;
 }
 
-.input code {
+.root code {
   background: var(--surface0);
   padding: 3px 5px;
   border-radius: 1px;

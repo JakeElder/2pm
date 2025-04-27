@@ -7,15 +7,12 @@ import { ConfigService } from '@nestjs/config';
     {
       inject: [ConfigService],
       provide: 'DB',
-      useFactory: (configService: ConfigService) => {
-        const coreDatabaseUrl = configService.get<string>('CORE_DATABASE_URL');
-
-        const libraryDatabaseUrl = configService.get<string>(
-          'LIBRARY_DATABASE_URL',
-        );
+      useFactory: (config: ConfigService) => {
+        const coreDatabaseUrl = config.get<string>('CORE_DATABASE_URL');
+        const libraryDatabaseUrl = config.get<string>('LIBRARY_DATABASE_URL');
 
         if (!coreDatabaseUrl) {
-          throw new Error('DATABASE_URL not set');
+          throw new Error('CORE_DATABASE_URL not set');
         }
 
         if (!libraryDatabaseUrl) {

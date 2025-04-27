@@ -16,7 +16,7 @@ db.command("drop")
     const spinner = ora("Dropping database").start();
 
     try {
-      const url = new URL(process.env.DATABASE_URL!);
+      const url = new URL(CORE_DATABASE_URL);
       url.pathname = "/";
 
       const pg = postgres(url.toString());
@@ -44,7 +44,7 @@ db.command("create")
     const spinner = ora("Creating database").start();
 
     try {
-      const url = new URL(process.env.DATABASE_URL!);
+      const url = new URL(CORE_DATABASE_URL);
       url.pathname = "/";
 
       const pg = postgres(url.toString());

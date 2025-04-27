@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import Message from "./Message";
+import AiMessage from "./AiMessage";
 import * as Frame from "../../Components/Frame";
 
-const meta: Meta<typeof Message> = {
-  title: "Plot Points/Message",
-  component: Message,
+const meta: Meta<typeof AiMessage> = {
+  title: "Plot Points/AiMessage",
+  component: AiMessage,
   decorators: [
     (Story) => {
       return (
@@ -16,12 +16,11 @@ const meta: Meta<typeof Message> = {
   ],
 };
 
-type Story = StoryObj<typeof Message>;
+type Story = StoryObj<typeof AiMessage>;
 
 export const Default: Story = {
   args: {
-    type: "AI",
-    user: "niko",
+    tag: "niko",
     children: (
       <>
         Lorem ipsum dolor sit amet, [1] adipiscing elit, sed do eiusmod tempor

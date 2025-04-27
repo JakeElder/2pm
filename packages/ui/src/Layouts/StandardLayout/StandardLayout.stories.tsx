@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import * as StandardLayout from "./StandardLayout";
-import { EmailSent, BibleVerse, Message } from "../../PlotPoints";
+import { EmailSent, BibleVerse, AiMessage } from "../../PlotPoints";
 import {
   PaneHeader,
   SpaceList,
@@ -47,14 +47,14 @@ export const Default: Story = {
           </StandardLayout.ReferenceNarrative>
           <StandardLayout.Conversation>
             <StandardLayout.ConversationNarrative>
-              <Message type="HUMAN" user="jake">
+              {/* <AiMessage type="HUMAN" user="jake"> */}
+              {/*   Ut enim ad minim veniam, quis nostrud exercitation ullamco */}
+              {/*   laboris nisi ut aliquip ex ea commodo consequat. */}
+              {/* </AiMessage> */}
+              <AiMessage tag="niko">
                 Ut enim ad minim veniam, quis nostrud exercitation ullamco
                 laboris nisi ut aliquip ex ea commodo consequat.
-              </Message>
-              <Message type="AI" user="niko">
-                Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                laboris nisi ut aliquip ex ea commodo consequat.
-              </Message>
+              </AiMessage>
             </StandardLayout.ConversationNarrative>
             <StandardLayout.InputBar>
               <TiptapEditor />
