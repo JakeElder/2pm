@@ -1,4 +1,4 @@
-import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import { createSelectSchema } from "drizzle-zod";
 import { createZodDto } from "@anatine/zod-nestjs";
 import { z } from "zod";
 import * as schema from "../../db/core/core.schema";
@@ -10,7 +10,7 @@ import { ProseDtoSchema } from "../prose/prose.dto";
 export const CreateHumanMessageDtoSchema = z.object({
   userId: createSelectSchema(schema.users).shape.id,
   environmentId: createSelectSchema(schema.environments).shape.id,
-  content: createInsertSchema(schema.humanMessages).shape.content,
+  content: ProseDtoSchema,
 });
 
 export class CreateHumanMessageDto extends createZodDto(

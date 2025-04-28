@@ -1,4 +1,5 @@
 import { getOneWorldRoomEnvironment } from "@/api/world-room-environments";
+import ProseViewContainer from "@/components/client/ProseViewContainer";
 import ConversationNarrativeContainer from "@/components/server/ConversationNarrativeContainer";
 import InfoBarUserContainer from "@/components/server/InfoBarUserContainer";
 import {
@@ -7,13 +8,13 @@ import {
   PaneHeader,
   SpaceList,
   Theme,
-  Prose,
 } from "@2pm/ui/components";
 import { StandardLayout } from "@2pm/ui/layouts";
 import { BibleVerse, EmailSent } from "@2pm/ui/plot-points";
 
 export default async function Home() {
   const universe = await getOneWorldRoomEnvironment("UNIVERSE");
+  const { environmentId } = universe.data;
 
   return (
     <Theme>
@@ -40,11 +41,9 @@ export default async function Home() {
             </StandardLayout.PlotPoint>
           </StandardLayout.ReferenceNarrative>
           <StandardLayout.Conversation>
-            <ConversationNarrativeContainer
-              environmentId={universe.data.environmentId}
-            />
+            <ConversationNarrativeContainer environmentId={environmentId} />
             <StandardLayout.InputBar>
-              <Prose />
+              <ProseViewContainer />
             </StandardLayout.InputBar>
           </StandardLayout.Conversation>
         </StandardLayout.Main>

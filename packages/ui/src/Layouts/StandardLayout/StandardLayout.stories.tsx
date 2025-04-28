@@ -70,7 +70,7 @@ export const Default: Story = {
               </AiMessage>
             </StandardLayout.ConversationNarrative>
             <StandardLayout.InputBar>
-              <Prose />
+              <Prose onSubmit={(editor) => console.log(editor.getJSON())} />
             </StandardLayout.InputBar>
           </StandardLayout.Conversation>
         </StandardLayout.Main>

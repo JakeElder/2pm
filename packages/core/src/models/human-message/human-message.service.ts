@@ -14,6 +14,7 @@ import {
   FilterHumanMessagesDto,
   FilterHumanMessagesDtoSchema,
 } from "./human-message.dto";
+import { HumanMessage } from "./human-message.types";
 
 export default class HumanMessages extends CoreDBServiceModule {
   public async create({
@@ -98,5 +99,31 @@ export default class HumanMessages extends CoreDBServiceModule {
       .orderBy(desc(humanMessages.id));
 
     return res;
+  }
+
+  public async delete(id: HumanMessage["id"]) {
+    const res = await this.drizzle
+      .select({
+        message: messages,
+        humanMessage: humanMessages,
+        plotPoint: plotPoints,
+      })
+      .from(humanMessages)
+      .where(eq(humanMessages.id, id))
+      .innerJoin(messages, eq(humanMessages.messageId, messages.id))
+      .innerJoin(plotPoints, eq(messages.plotPointId, plotPoints.id))
+      .limit(1);
+
+    if (res.length === 0) {
+      throw new Error();
+    }
+
+    const { message, humanMessage } = res[0];
+
+    await this.drizzle.transaction(async (tx) => {
+      await tx.delete(humanMessages).where(eq(humanMessages.id, id));
+      await tx.delete(messages).where(eq(messages.id, humanMessage.messageId));
+      await tx.delete(plotPoints).where(eq(plotPoints.id, message.plotPointId));
+    });
   }
 }

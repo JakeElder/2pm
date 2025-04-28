@@ -2,18 +2,18 @@
 
 import { cookies } from "next/headers";
 import api from "@/api";
-// import { CreateHumanUserMessagePlotPointDto } from "@2pm/core";
+import { CreateHumanMessageDto } from "@2pm/core";
 
-// export const submitMessage = async (
-//   dto: CreateHumanUserMessagePlotPointDto,
-// ) => {
-//   if (dto.type === "HUMAN_USER_MESSAGE") {
-//     const res = await api.plotPoints.createHumanUserMessagePlotPoint(dto);
-//     return res.data;
-//   }
-//
-//   throw new Error();
-// };
+export const submitMessage = async ({
+  content,
+  environmentId,
+}: Omit<CreateHumanMessageDto, "userId">) => {
+  console.log(content);
+  console.log(await getSession());
+  // const res = await api.plotPoints.createHumanUserMessagePlotPoint(dto);
+  // return res.data;
+  // throw new Error();
+};
 
 // export const createHumanSession = async () => {
 //   const { data: userRes } = await api.users.createHumanUser({

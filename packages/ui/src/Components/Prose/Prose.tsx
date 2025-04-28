@@ -34,13 +34,14 @@ const SubmitShortcut = Extension.create<SubmitShortcutExtensionOptions>({
 type Props = {
   content?: ProseDto;
   editable?: UseEditorOptions["editable"];
+  onSubmit?: (editor: Editor) => void;
 };
 
-const Prose = ({ content, editable = true }: Props) => {
-  const handleSubmit = useCallback((editor: Editor) => {
-    const json = editor.getJSON();
-    console.log(JSON.stringify(json));
-  }, []);
+const Prose = ({ content, editable = true, onSubmit }: Props) => {
+  const handleSubmit = useCallback(
+    (editor: Editor) => onSubmit?.(editor),
+    [onSubmit],
+  );
 
   const extensions: Extensions = [
     Document,
