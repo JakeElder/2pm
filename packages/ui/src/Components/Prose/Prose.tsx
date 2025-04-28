@@ -2,7 +2,8 @@
 
 import React, { useCallback } from "react";
 import { useEditor, EditorContent, UseEditorOptions } from "@tiptap/react";
-import { Editor, Extension, JSONContent } from "@tiptap/core";
+import { Editor, Extension, Extensions } from "@tiptap/core";
+import { generateHTML } from "@tiptap/html";
 import Document from "@tiptap/extension-document";
 import Paragraph from "@tiptap/extension-paragraph";
 import Text from "@tiptap/extension-text";
@@ -11,8 +12,8 @@ import Italic from "@tiptap/extension-italic";
 import Underline from "@tiptap/extension-underline";
 import Code from "@tiptap/extension-code";
 import History from "@tiptap/extension-history";
-import css from "./TiptapEditor.module.css";
-import classNames from "classnames";
+import css from "./Prose.module.css";
+import { ProseDto } from "@2pm/core";
 
 type SubmitShortcutExtensionOptions = {
   onSubmit: (editor: Editor) => void;
@@ -31,47 +32,68 @@ const SubmitShortcut = Extension.create<SubmitShortcutExtensionOptions>({
 });
 
 type Props = {
-  content: JSONContent | undefined;
-  editable: UseEditorOptions["editable"];
+  content?: ProseDto;
+  editable?: UseEditorOptions["editable"];
 };
 
-const TiptapEditor = ({ content, editable = true }: Props) => {
+const Prose = ({ content, editable = true }: Props) => {
   const handleSubmit = useCallback((editor: Editor) => {
     const json = editor.getJSON();
     console.log(JSON.stringify(json));
   }, []);
 
+  const extensions: Extensions = [
+    Document,
+    Paragraph,
+    Text,
+    Bold,
+    Underline,
+    Italic,
+    Code,
+    History,
+    SubmitShortcut.configure({
+      onSubmit: handleSubmit,
+    }),
+  ];
+
   const editor = useEditor({
     immediatelyRender: false,
     content,
     editable,
-    extensions: [
-      Document,
-      Paragraph,
-      Text,
-      Bold,
-      Underline,
-      Italic,
-      Code,
-      History,
-      SubmitShortcut.configure({
-        onSubmit: handleSubmit,
-      }),
-    ],
+    extensions,
   });
+
+  const __html = generateHTML(
+    content || { type: "doc", content: [] },
+    extensions,
+  );
+
+  if (!editable) {
+    return (
+      <div className={css["root"]}>
+        <div className={css["view"]} dangerouslySetInnerHTML={{ __html }} />
+      </div>
+    );
+  }
+
+  if (!editor) {
+    return (
+      <div className={css["root"]}>
+        <div
+          className={css["input"]}
+          dangerouslySetInnerHTML={{ __html: __html || "&nbsp;" }}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className={css["root"]}>
-      <div
-        className={classNames({
-          [css["input"]]: editable,
-          [css["view"]]: !editable,
-        })}
-      >
-        {editor ? <EditorContent editor={editor} /> : <>&nbsp;</>}
+      <div className={css["input"]}>
+        <EditorContent editor={editor} />
       </div>
     </div>
   );
 };
 
-export default TiptapEditor;
+export default Prose;

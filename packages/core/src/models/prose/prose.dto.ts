@@ -1,3 +1,4 @@
+import { createZodDto } from "@anatine/zod-nestjs";
 import { z } from "zod";
 
 interface Mark {
@@ -33,7 +34,9 @@ const NodeSchema: z.ZodType<Node> = z.lazy(() =>
   }),
 );
 
-export const ProseSchema: z.ZodType<Prose> = z.object({
+export const ProseDtoSchema: z.ZodType<Prose> = z.object({
   type: z.literal("doc"),
   content: z.array(NodeSchema),
 });
+
+export class ProseDto extends createZodDto(ProseDtoSchema) {}

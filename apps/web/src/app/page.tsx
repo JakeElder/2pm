@@ -7,7 +7,7 @@ import {
   PaneHeader,
   SpaceList,
   Theme,
-  TiptapEditor,
+  Prose,
 } from "@2pm/ui/components";
 import { StandardLayout } from "@2pm/ui/layouts";
 import { BibleVerse, EmailSent } from "@2pm/ui/plot-points";
@@ -44,7 +44,7 @@ export default async function Home() {
               environmentId={universe.data.environmentId}
             />
             <StandardLayout.InputBar>
-              <TiptapEditor />
+              <Prose />
             </StandardLayout.InputBar>
           </StandardLayout.Conversation>
         </StandardLayout.Main>

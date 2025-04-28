@@ -1,9 +1,10 @@
 import React from "react";
 import css from "./HumanMessage.module.css";
-import { Prose } from "@2pm/core";
+import { Prose } from "../../Components";
+import { ProseDto } from "@2pm/core";
 
 type Props = {
-  content: Prose;
+  content: ProseDto;
   tag: string;
 };
 
@@ -15,7 +16,7 @@ const HumanMessage = ({ content, tag }: Props) => {
           <div className={css["tag"]}>@{tag}</div>
         </div>
       </div>
-      <div className={css["body"]}>{JSON.stringify(content)}</div>
+      <Prose editable={false} content={content} />
     </div>
   );
 };

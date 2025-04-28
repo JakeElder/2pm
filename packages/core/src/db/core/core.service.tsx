@@ -101,7 +101,17 @@ export class CoreDBService {
         content: [
           {
             type: "paragraph",
-            content: [{ type: "text", text: "thank you sir" }],
+            content: [
+              {
+                type: "text",
+                text: "thank you ",
+              },
+              {
+                type: "text",
+                marks: [{ type: "bold" }],
+                text: "sir",
+              },
+            ],
           },
         ],
       },

@@ -2,7 +2,7 @@ import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { createZodDto } from "@anatine/zod-nestjs";
 import { z } from "zod";
 import * as schema from "../../db/core/core.schema";
-import { ProseSchema } from "../prose";
+import { ProseDtoSchema } from "../prose/prose.dto";
 
 /**
  * Create
@@ -25,7 +25,7 @@ export const HumanMessageDtoSchema = z.object({
     createdAt: z.coerce.date(),
   }),
   humanMessage: createSelectSchema(schema.humanMessages).extend({
-    content: ProseSchema,
+    content: ProseDtoSchema,
   }),
   environment: createSelectSchema(schema.environments),
   humanUser: createSelectSchema(schema.humanUsers),

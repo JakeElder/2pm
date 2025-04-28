@@ -14,6 +14,7 @@ const nextConfig = {
       "@2pm/ui/layouts": resolve(__ui, "Layouts"),
       "@2pm/ui/plot-points": resolve(__ui, "PlotPoints"),
     };
+    config.module.exprContextCritical = false;
     return config;
   },
 };

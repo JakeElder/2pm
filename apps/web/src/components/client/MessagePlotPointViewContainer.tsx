@@ -10,7 +10,7 @@ import {
   AiMessageDtoSchema,
   HumanMessageDto,
   HumanMessageDtoSchema,
-  ProseSchema,
+  ProseDtoSchema,
 } from "@2pm/core";
 // import { MessagesRoomJoinedEventDto } from "@2pm/core";
 import { AiMessage, HumanMessage } from "@2pm/ui/plot-points";
@@ -50,11 +50,10 @@ export const AiMessageViewContainer = ({ aiMessage, aiUser }: AiMessageDto) => {
  */
 
 export const HumanMessageViewContainer = ({
-  humanMessage,
-  humanUser,
+  humanMessage: { content },
+  humanUser: { tag },
 }: HumanMessageDto) => {
-  const content = ProseSchema.parse(humanMessage.content);
-  return <HumanMessage tag={humanUser.tag || "anon"} content={content} />;
+  return <HumanMessage tag={tag || "anon"} content={content} />;
 };
 
 /**

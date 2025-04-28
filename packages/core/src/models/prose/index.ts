@@ -1,1 +1,1 @@
-export * from "./prose.schema";
+export * from "./prose.dto";

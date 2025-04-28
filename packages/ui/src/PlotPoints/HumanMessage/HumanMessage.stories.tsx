@@ -26,7 +26,10 @@ export const Default: Story = {
       content: [
         {
           type: "paragraph",
-          content: [{ type: "text", text: "thank you sir" }],
+          content: [
+            { type: "text", text: "thank you" },
+            { type: "text", text: " sir", marks: [{ type: "bold" }] },
+          ],
         },
       ],
     },

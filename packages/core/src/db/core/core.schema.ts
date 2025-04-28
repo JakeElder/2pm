@@ -15,7 +15,7 @@ import { PLOT_POINT_TYPES } from "../../models/plot-point/plot-point.constants";
 import { MESSAGE_TYPES } from "../../models/message/message.constants";
 import { ENVIRONMENT_TYPE_CODES } from "../../models/environment/environment.constants";
 import { WORLD_ROOM_CODES } from "../../models/world-room-environment/world-room-environment.constants";
-import { Prose } from "../../models/prose/prose.schema";
+import { Prose } from "../../models/prose/prose.dto";
 
 export const userTypeEnum = pgEnum("UserType", USER_TYPES);
 export const messageTypeEnum = pgEnum("MessageType", MESSAGE_TYPES);
