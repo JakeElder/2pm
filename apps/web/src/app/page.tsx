@@ -43,7 +43,7 @@ export default async function Home() {
           <StandardLayout.Conversation>
             <ConversationNarrativeContainer environmentId={environmentId} />
             <StandardLayout.InputBar>
-              <ProseViewContainer />
+              <ProseViewContainer environmentId={environmentId} />
             </StandardLayout.InputBar>
           </StandardLayout.Conversation>
         </StandardLayout.Main>

@@ -1,7 +1,7 @@
 .header {
   padding-bottom: 10px;
   margin-bottom: 10px;
-  border-bottom: 1px solid var(--surface1);
+  border-bottom: 1px solid var(--surface0);
 }
 
 .tag {

@@ -39,35 +39,36 @@ export default class HumanMessages extends CoreDBServiceModule {
       throw new Error();
     }
 
-    const [plotPoint] = await this.drizzle
-      .insert(plotPoints)
-      .values({ type: "HUMAN_MESSAGE", environmentId, userId })
-      .returning();
+    const res: HumanMessageDto = await this.drizzle.transaction(async (tx) => {
+      const [plotPoint] = await tx
+        .insert(plotPoints)
+        .values({ type: "HUMAN_MESSAGE", environmentId, userId })
+        .returning();
 
-    const [message] = await this.drizzle
-      .insert(messages)
-      .values({
-        type: "HUMAN",
-        environmentId,
-        userId,
-        plotPointId: plotPoint.id,
-      })
-      .returning();
+      const [message] = await tx
+        .insert(messages)
+        .values({
+          type: "HUMAN",
+          environmentId,
+          userId,
+          plotPointId: plotPoint.id,
+        })
+        .returning();
 
-    const [humanMessage] = await this.drizzle
-      .insert(humanMessages)
-      .values({
-        messageId: message.id,
-        content,
-      })
-      .returning();
+      const [humanMessage] = await tx
+        .insert(humanMessages)
+        .values({ messageId: message.id, content })
+        .returning();
 
-    return {
-      plotPoint,
-      humanMessage,
-      environment,
-      humanUser,
-    };
+      return {
+        plotPoint,
+        humanMessage,
+        environment,
+        humanUser,
+      };
+    });
+
+    return res;
   }
 
   public async findAll(
