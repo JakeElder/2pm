@@ -1,10 +1,6 @@
-import { EnvironmentsClientSocket, MessagesClientSocket } from "@2pm/core";
+import { EnvironmentsClientSocket } from "@2pm/core";
 import { io } from "socket.io-client";
 
 export const environmentsSocket: EnvironmentsClientSocket = io(
-  "http://localhost:3002/environments",
-);
-
-export const messagesSocket: MessagesClientSocket = io(
-  "http://localhost:3002/messages",
+  `${process.env.NEXT_PUBLIC_SOCKET_BASE_URL}/environments`,
 );

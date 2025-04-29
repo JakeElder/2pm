@@ -1,3 +1,4 @@
+import { EnvironmentGateway } from '../environments/environments.gateway';
 import {
   Body,
   Controller,
@@ -19,7 +20,10 @@ import {
 @ApiTags('Human Messages')
 @Controller('human-messages')
 export class HumanMessagesController {
-  constructor(@Inject('DB') private readonly db: DBService) {}
+  constructor(
+    @Inject('DB') private readonly db: DBService,
+    private readonly gateway: EnvironmentGateway,
+  ) {}
 
   @Post()
   @UsePipes(ZodValidationPipe)
@@ -30,6 +34,12 @@ export class HumanMessagesController {
   @ApiResponse({ status: 201, type: HumanMessageDto })
   async create(@Body() createDto: CreateHumanMessageDto) {
     const dto = await this.db.core.humanMessages.create(createDto);
+    this.gateway.server
+      .to(`${dto.environment.id}`)
+      .emit('plot-points.created', {
+        type: 'HUMAN_MESSAGE',
+        data: dto,
+      });
     return dto;
   }
 

@@ -1,7 +1,6 @@
 import type {
   EnvironmentsServerSocket,
   EnvironmentsServer,
-  PlotPointDto,
   EnvironmentsRoomJoinedEventDto,
   EnvironmentsRoomLeftEventDto,
 } from '@2pm/core';
@@ -28,30 +27,24 @@ export class EnvironmentGateway {
 
   @SubscribeMessage('join')
   handleJoinRoom(
-    @MessageBody() { environment, user }: EnvironmentsRoomJoinedEventDto,
+    @MessageBody() { environmentId, userId }: EnvironmentsRoomJoinedEventDto,
     @ConnectedSocket() socket: EnvironmentsServerSocket,
   ) {
-    if (!socket.rooms.has(`${environment.data.environment.id}`)) {
-      socket.join(`${environment.data.environment.id}`);
+    if (!socket.rooms.has(`${environmentId}`)) {
+      socket.join(`${environmentId}`);
       this.logger.debug(`joined: ${socket.id}`);
-      this.events.emit('environments.joined', { environment, user });
+      this.events.emit('environments.joined', { environmentId, userId });
     }
   }
 
   @SubscribeMessage('leave')
   handleLeaveRoom(
-    @MessageBody() { environment }: EnvironmentsRoomLeftEventDto,
+    @MessageBody() { environmentId }: EnvironmentsRoomLeftEventDto,
     @ConnectedSocket() socket: EnvironmentsServerSocket,
   ) {
-    if (socket.rooms.has(`${environment.data.environment.id}`)) {
-      socket.leave(`${environment.data.environment.id}`);
+    if (socket.rooms.has(`${environmentId}`)) {
+      socket.leave(`${environmentId}`);
       this.logger.debug(`left: ${socket.id}`);
     }
-  }
-
-  sendPlotPointCreatedEvent(dto: PlotPointDto) {
-    this.server
-      .to(`${dto.data.environment.id}`)
-      .emit('plot-points.created', dto);
   }
 }

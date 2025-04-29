@@ -7,12 +7,14 @@
   font-weight: 300;
   width: 100dvw;
   height: 100dvh;
+  overflow: hidden;
 }
 
 .main {
   flex: 1;
   display: flex;
   align-items: stretch;
+  min-height: 0;
 }
 
 .spaces,
@@ -27,6 +29,7 @@
 .status-bar {
   height: 18px;
   background: var(--separator);
+  flex-shrink: 0;
 }
 
 .spaces,
@@ -40,6 +43,7 @@
 
 .reference-narrative,
 .conversation-narrative {
+  overflow-y: auto;
   display: flex;
   flex-direction: column-reverse;
 }
@@ -62,4 +66,5 @@
 
 .input-bar {
   padding: 30px;
+  flex-shrink: 0;
 }
