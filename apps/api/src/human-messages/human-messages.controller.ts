@@ -33,14 +33,13 @@ export class HumanMessagesController {
   })
   @ApiResponse({ status: 201, type: HumanMessageDto })
   async create(@Body() createDto: CreateHumanMessageDto) {
-    const dto = await this.db.core.humanMessages.create(createDto);
+    const data = await this.db.core.humanMessages.create(createDto);
+
     this.gateway.server
-      .to(`${dto.environment.id}`)
-      .emit('plot-points.created', {
-        type: 'HUMAN_MESSAGE',
-        data: dto,
-      });
-    return dto;
+      .to(`${data.environment.id}`)
+      .emit('plot-points.created', { type: 'HUMAN_MESSAGE', data });
+
+    return data;
   }
 
   @Delete(':id')

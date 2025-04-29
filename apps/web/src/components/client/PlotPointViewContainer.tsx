@@ -1,7 +1,11 @@
 "use client";
 
 import { PlotPointDto } from "@2pm/core";
-import { AiMessage, HumanMessage } from "@2pm/ui/plot-points";
+import {
+  AiMessage,
+  HumanMessage,
+  RoomPresenceChange,
+} from "@2pm/ui/plot-points";
 
 type Props = PlotPointDto;
 
@@ -21,7 +25,13 @@ const PlotPointViewContainer = ({ type, data }: Props) => {
     );
   }
 
-  return null;
+  if (type === "ENVIRONMENT_ENTERED") {
+    const { user, humanUser, aiUser } = data;
+    const tag = user.type === "HUMAN" ? humanUser!.tag || "anon" : aiUser!.tag;
+    return <RoomPresenceChange userType={user.type} type="ENTRACE" tag={tag} />;
+  }
+
+  throw new Error();
 };
 
 export default PlotPointViewContainer;

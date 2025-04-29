@@ -2,7 +2,15 @@
   margin-right: 6px;
 }
 
-.tag {
-  color: var(--sapphire);
+.ai-tag,
+.human-tag {
   font-weight: 400;
+}
+
+.ai-tag {
+  color: var(--peach);
+}
+
+.human-tag {
+  color: var(--sapphire);
 }

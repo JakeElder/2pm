@@ -5,16 +5,20 @@ import css from "./RoomPresenceChange.module.css";
 type Props = {
   type: "ENTRACE" | "EXIT";
   tag: string;
+  userType: "HUMAN" | "AI";
 };
 
-const RoomPresenceChange = ({ type, tag }: Props) => {
+const RoomPresenceChange = ({ type, tag, userType }: Props) => {
   const icon = type === "ENTRACE" ? "" : "󰩈";
   const verb = type === "ENTRACE" ? "entered" : "left";
 
   return (
     <StandardPlotPoint.Root>
       <span className={css["icon"]}>{icon}</span>&nbsp;
-      <span className={css["tag"]}>@{tag}</span>&nbsp;
+      <span className={css[userType === "AI" ? "ai-tag" : "human-tag"]}>
+        @{tag}
+      </span>
+      &nbsp;
       <span className={css["action"]}>{verb} the room</span>
     </StandardPlotPoint.Root>
   );

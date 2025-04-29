@@ -5,6 +5,7 @@ import {
   Environment,
   EnvironmentsRoomJoinedEventDto,
   PlotPointDto,
+  PlotPointType,
   SessionDto,
 } from "@2pm/core";
 import PlotPointViewContainer from "./PlotPointViewContainer";
@@ -14,12 +15,16 @@ type Props = {
   environmentId: Environment["id"];
   plotPoints: PlotPointDto[];
   session: SessionDto;
+  types?: PlotPointType[];
+  filter?: PlotPointType[];
 };
 
 const NarrativeViewContainer = ({
   environmentId,
   plotPoints,
   session,
+  types,
+  filter,
 }: Props) => {
   const [data, setPlotPoints] = useState<PlotPointDto[]>(plotPoints);
 
@@ -32,6 +37,12 @@ const NarrativeViewContainer = ({
     environmentsSocket
       .emit("join", e)
       .on("plot-points.created", async (plotPoint: PlotPointDto) => {
+        if (types && !types.includes(plotPoint.type)) {
+          return;
+        }
+        if (filter && filter.includes(plotPoint.type)) {
+          return;
+        }
         setPlotPoints((data) => [plotPoint, ...data]);
       });
 

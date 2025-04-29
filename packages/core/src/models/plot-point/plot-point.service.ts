@@ -1,4 +1,4 @@
-import { desc, eq, and, inArray } from "drizzle-orm";
+import { desc, eq, and, inArray, not } from "drizzle-orm";
 import { CoreDBServiceModule } from "../../db/core/core-db-service-module";
 import {
   aiMessages,
@@ -21,7 +21,8 @@ import { HumanMessageDtoSchema } from "../human-message/human-message.dto";
 import { AiMessageDtoSchema } from "../ai-message/ai-message.dto";
 
 export default class PlotPoints extends CoreDBServiceModule {
-  async findByEnvironmentId(id: number, { types, limit }: FilterPlotPointsDto) {
+  async findByEnvironmentId(id: number, options: FilterPlotPointsDto) {
+    const { limit, types, filter } = options;
     const query = this.drizzle
       .select({
         plotPoint: plotPoints,
@@ -46,6 +47,9 @@ export default class PlotPoints extends CoreDBServiceModule {
           eq(plotPoints.environmentId, id),
           types && types.length > 0
             ? inArray(plotPoints.type, types)
+            : undefined,
+          filter && filter.length > 0
+            ? not(inArray(plotPoints.type, filter))
             : undefined,
         ),
       )
@@ -92,7 +96,6 @@ export default class PlotPoints extends CoreDBServiceModule {
         const { user, environment } = row;
 
         if (!user || !environment) {
-          console.dir(row);
           throw new Error();
         }
 

@@ -49,6 +49,13 @@ export class PlotPointsController {
     isArray: true,
   })
   @ApiQuery({
+    name: 'filter',
+    required: false,
+    description: 'Exclude plot points by type',
+    enum: PLOT_POINT_TYPES,
+    isArray: true,
+  })
+  @ApiQuery({
     name: 'limit',
     required: false,
     type: Number,

@@ -42,7 +42,9 @@ export class AiMessagePlotPointDto extends createZodDto(
 export const EnvironmentEnteredPlotPointDtoSchema = z.object({
   type: z.literal("ENVIRONMENT_ENTERED"),
   data: z.object({
-    plotPoint: createSelectSchema(plotPoints),
+    plotPoint: createSelectSchema(plotPoints).extend({
+      createdAt: z.coerce.date(),
+    }),
     environment: createSelectSchema(environments),
     user: createSelectSchema(users),
     humanUser: createSelectSchema(humanUsers).nullable(),
@@ -68,12 +70,16 @@ export type PlotPointDto = z.infer<typeof PlotPointDtoSchema>;
 /**
  * Filters
  */
+
+const TypesArraySchema = z.preprocess(
+  (val) => (val ? (Array.isArray(val) ? val : [val]) : undefined),
+  z.array(z.enum(PLOT_POINT_TYPES)),
+);
+
 export const FilterPlotPointsDtoSchema = z.object({
   limit: z.coerce.number().optional(),
-  types: z.preprocess(
-    (val) => (val ? (Array.isArray(val) ? val : [val]) : undefined),
-    z.array(z.enum(PLOT_POINT_TYPES)).optional(),
-  ),
+  types: TypesArraySchema.optional(),
+  filter: TypesArraySchema.optional(),
 });
 
 export class FilterPlotPointsDto extends createZodDto(
