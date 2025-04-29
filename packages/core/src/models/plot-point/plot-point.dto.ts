@@ -7,6 +7,7 @@ import {
   aiUsers,
   environments,
   humanUsers,
+  plotPoints,
   users,
 } from "../../db/core/core.schema";
 import { PLOT_POINT_TYPES } from "./plot-point.constants";
@@ -41,6 +42,7 @@ export class AiMessagePlotPointDto extends createZodDto(
 export const EnvironmentEnteredPlotPointDtoSchema = z.object({
   type: z.literal("ENVIRONMENT_ENTERED"),
   data: z.object({
+    plotPoint: createSelectSchema(plotPoints),
     environment: createSelectSchema(environments),
     user: createSelectSchema(users),
     humanUser: createSelectSchema(humanUsers).nullable(),
@@ -61,7 +63,7 @@ export const PlotPointDtoSchema = z.discriminatedUnion("type", [
   EnvironmentEnteredPlotPointDtoSchema,
 ]);
 
-export class PlotPointDto extends createZodDto(PlotPointDtoSchema) {}
+export type PlotPointDto = z.infer<typeof PlotPointDtoSchema>;
 
 /**
  * Filters

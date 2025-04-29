@@ -89,7 +89,7 @@ export default class PlotPoints extends CoreDBServiceModule {
       }
 
       if (row.plotPoint.type === "ENVIRONMENT_ENTERED") {
-        const { user, aiUser, humanUser, environment } = row;
+        const { user, environment } = row;
 
         if (!user || !environment) {
           console.dir(row);
@@ -98,12 +98,7 @@ export default class PlotPoints extends CoreDBServiceModule {
 
         const res: EnvironmentEnteredPlotPointDto = {
           type: "ENVIRONMENT_ENTERED",
-          data: {
-            environment: row.environment,
-            user,
-            humanUser,
-            aiUser,
-          },
+          data: row,
         };
 
         return res;
