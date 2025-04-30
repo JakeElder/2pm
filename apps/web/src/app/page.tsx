@@ -5,6 +5,7 @@ import InfoBarUserContainer from "@/components/server/InfoBarUserContainer";
 import ReferenceNarrativeContainer from "@/components/server/ReferenceNarrativeContainer";
 import {
   InfoBar,
+  InfoBarAiState,
   InfoBarLogo,
   PaneHeader,
   SpaceList,
@@ -26,6 +27,8 @@ export default async function Home() {
             <SpaceList.Root>
               <SpaceList.Channel active slug="universe" userCount={12} />
               <SpaceList.Channel slug="about-2pm" userCount={2} />
+              <SpaceList.Channel slug="dev-log" userCount={9} />
+              <SpaceList.Channel slug="supporters" userCount={5} />
             </SpaceList.Root>
           </StandardLayout.Spaces>
           <ReferenceNarrativeContainer environmentId={environmentId} />
@@ -48,13 +51,18 @@ export default async function Home() {
         <StandardLayout.StatusBar />
         <StandardLayout.InfoBar>
           <InfoBar.Root>
-            <InfoBar.Logo>
-              <InfoBarLogo />
-            </InfoBar.Logo>
-            <InfoBar.Separator />
-            <InfoBar.User>
-              <InfoBarUserContainer />
-            </InfoBar.User>
+            <InfoBar.LogoAndUser>
+              <InfoBar.Logo>
+                <InfoBarLogo />
+              </InfoBar.Logo>
+              <InfoBar.Separator />
+              <InfoBar.User>
+                <InfoBarUserContainer />
+              </InfoBar.User>
+            </InfoBar.LogoAndUser>
+            <InfoBar.AiState>
+              <InfoBarAiState.Idle />
+            </InfoBar.AiState>
           </InfoBar.Root>
         </StandardLayout.InfoBar>
       </StandardLayout.Root>

@@ -1,0 +1,72 @@
+.root {
+  display: flex;
+  align-items: center;
+  font-weight: 400;
+  font-size: 12px;
+}
+
+.tag {
+  margin-right: 6px;
+  color: var(--overlay1);
+}
+
+.label {
+  margin-right: 8px;
+}
+
+.icon {
+  width: 20px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.roby {
+  position: relative;
+  left: -2px;
+}
+
+/* IDLE */
+
+.idle .label {
+  color: var(--surface0);
+}
+
+.idle .icon {
+  background: var(--surface0);
+  color: var(--mantle);
+}
+
+/* THINKING */
+
+.thinking .label {
+  color: var(--overlay2);
+}
+
+.thinking .icon {
+  background: var(--overlay2);
+  color: var(--mantle);
+}
+
+/* ACTING */
+
+.acting .label {
+  color: var(--mauve);
+}
+
+.acting .icon {
+  background: var(--mauve);
+  color: var(--mantle);
+}
+
+/* RESPONDING */
+
+.responding .label {
+  color: var(--green);
+}
+
+.responding .icon {
+  background: var(--green);
+  color: var(--mantle);
+}

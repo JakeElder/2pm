@@ -1,4 +1,5 @@
 export * as InfoBar from "./InfoBar";
+export * as InfoBarAiState from "./InfoBarAiState";
 export * as SpaceList from "./SpaceList";
 export * as UserList from "./UserList";
 

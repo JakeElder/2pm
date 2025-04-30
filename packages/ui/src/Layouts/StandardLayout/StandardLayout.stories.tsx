@@ -14,6 +14,7 @@ import {
   InfoBarLogo,
   InfoBarUser,
   UserList,
+  InfoBarAiState,
 } from "../../Components";
 
 const meta: Meta<typeof StandardLayout.Root> = {
@@ -36,6 +37,7 @@ export const Default: Story = {
             <SpaceList.Root>
               <SpaceList.Channel active slug="universe" userCount={12} />
               <SpaceList.Channel slug="about-2pm" userCount={2} />
+              <SpaceList.Channel slug="dev-log" userCount={15} />
             </SpaceList.Root>
           </StandardLayout.Spaces>
           <StandardLayout.ReferenceNarrative>
@@ -86,13 +88,23 @@ export const Default: Story = {
         <StandardLayout.StatusBar />
         <StandardLayout.InfoBar>
           <InfoBar.Root>
-            <InfoBar.Logo>
-              <InfoBarLogo />
-            </InfoBar.Logo>
-            <InfoBar.Separator />
-            <InfoBar.User>
-              <InfoBarUser name="anon" hash="uf4DyTAVLKBfDe6ky7mSoz" />
-            </InfoBar.User>
+            <InfoBar.LogoAndUser>
+              <InfoBar.Logo>
+                <InfoBarLogo />
+              </InfoBar.Logo>
+              <InfoBar.Separator />
+              <InfoBar.User>
+                <InfoBarUser name="anon" hash="uf4DyTAVLKBfDe6ky7mSoz" />
+              </InfoBar.User>
+            </InfoBar.LogoAndUser>
+            <InfoBar.AiState>
+              <div style={{ display: "flex", gap: 18 }}>
+                <InfoBarAiState.Active tag="niko" state="RESPONDING" />
+                <InfoBarAiState.Active tag="niko" state="ACTING" />
+                <InfoBarAiState.Active tag="niko" state="THINKING" />
+                <InfoBarAiState.Idle />
+              </div>
+            </InfoBar.AiState>
           </InfoBar.Root>
         </StandardLayout.InfoBar>
       </StandardLayout.Root>

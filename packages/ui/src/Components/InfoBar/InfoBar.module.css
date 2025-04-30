@@ -2,7 +2,12 @@
   height: 48px;
   display: flex;
   align-items: center;
-  padding-left: 20px;
+  justify-content: space-between;
+  padding: 0 20px;
+}
+
+.logo-and-user {
+  display: flex;
 }
 
 .logo {
