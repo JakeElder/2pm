@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import SpaceList from "./SpaceList";
+import * as SpaceList from "./SpaceList";
 import * as Frame from "../../Components/Frame";
 
-const meta: Meta<typeof SpaceList> = {
+const meta: Meta<typeof SpaceList.Root> = {
   title: "Components/SpaceList",
-  component: SpaceList,
+  component: SpaceList.Root,
   decorators: [
     (Story) => {
       return (
@@ -21,7 +21,14 @@ const meta: Meta<typeof SpaceList> = {
 type Story = StoryObj<typeof SpaceList>;
 
 export const Default: Story = {
-  args: {},
+  render() {
+    return (
+      <SpaceList.Root>
+        <SpaceList.Channel active slug="universe" userCount={12} />
+        <SpaceList.Channel slug="about-2pm" userCount={2} />
+      </SpaceList.Root>
+    );
+  },
 };
 
 export default meta;

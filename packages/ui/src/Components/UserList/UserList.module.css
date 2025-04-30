@@ -1,0 +1,31 @@
+.user {
+  font-size: 12px;
+  padding: 0 20px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.meta {
+  margin-right: 6px;
+}
+
+.placeholder {
+  width: 12px;
+  height: 12px;
+  background: var(--surface0);
+  border-radius: 2px;
+}
+
+.name {
+  flex: 1;
+}
+
+.ai {
+  color: var(--peach);
+}
+
+.human {
+  color: var(--sapphire);
+}

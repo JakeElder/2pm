@@ -15,17 +15,15 @@
 }
 
 .heading {
-  font-weight: 500;
   flex: 1;
 }
 
 .reference {
-  color: var(--pink);
+  color: var(--overlay1);
 }
 
 .translation {
   margin-bottom: 4px;
-  font-weight: 500;
 }
 
 .verse {

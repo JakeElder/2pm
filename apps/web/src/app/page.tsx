@@ -9,6 +9,7 @@ import {
   PaneHeader,
   SpaceList,
   Theme,
+  UserList,
 } from "@2pm/ui/components";
 import { StandardLayout } from "@2pm/ui/layouts";
 
@@ -22,17 +23,27 @@ export default async function Home() {
         <StandardLayout.Main>
           <StandardLayout.Spaces>
             <PaneHeader> Spaces</PaneHeader>
-            <SpaceList />
+            <SpaceList.Root>
+              <SpaceList.Channel active slug="universe" userCount={12} />
+              <SpaceList.Channel slug="about-2pm" userCount={2} />
+            </SpaceList.Root>
           </StandardLayout.Spaces>
-          <StandardLayout.ReferenceNarrative>
-            <ReferenceNarrativeContainer environmentId={environmentId} />
-          </StandardLayout.ReferenceNarrative>
+          <ReferenceNarrativeContainer environmentId={environmentId} />
           <StandardLayout.Conversation>
             <ConversationNarrativeContainer environmentId={environmentId} />
             <StandardLayout.InputBar>
               <ProseViewContainer environmentId={environmentId} />
             </StandardLayout.InputBar>
           </StandardLayout.Conversation>
+          <StandardLayout.Users>
+            <PaneHeader>
+              <span style={{ fontSize: 10, marginRight: 10 }}></span> Users
+            </PaneHeader>
+            <UserList.Root>
+              <UserList.User type="AI" tag="niko" />
+              <UserList.User type="HUMAN" tag="jake" />
+            </UserList.Root>
+          </StandardLayout.Users>
         </StandardLayout.Main>
         <StandardLayout.StatusBar />
         <StandardLayout.InfoBar>

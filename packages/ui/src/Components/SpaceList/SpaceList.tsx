@@ -4,46 +4,41 @@ import classNames from "classnames";
 
 type Props = {};
 
-const SpaceList = ({}: Props) => {
-  return (
-    <ul className={css["root"]}>
-      <li className={classNames(css["channel"], css["active-channel"])}>
-        <div className={css["name"]}>#universe</div>
-        <div className={css["users"]}>
-          <span className={css["user-icon"]}></span>
-          <span className={css["user-count"]}>12</span>
-        </div>
-      </li>
-      <li className={css["channel"]}>
-        <div className={css["name"]}>#mini-mart</div>
-        <div className={css["users"]}>
-          <span className={css["user-icon"]}></span>
-          <span className={css["user-count"]}>22</span>
-        </div>
-      </li>
-      <li className={css["channel"]}>
-        <div className={css["name"]}>#lobby</div>
-        <div className={css["users"]}>
-          <span className={css["user-icon"]}></span>
-          <span className={css["user-count"]}>172</span>
-        </div>
-      </li>
-      <li className={css["channel"]}>
-        <div className={css["name"]}>#the-middle</div>
-        <div className={css["users"]}>
-          <span className={css["user-icon"]}></span>
-          <span className={css["user-count"]}>114</span>
-        </div>
-      </li>
-      <li className={css["channel"]}>
-        <div className={css["name"]}>#meditations</div>
-        <div className={css["users"]}>
-          <span className={css["user-icon"]}></span>
-          <span className={css["user-count"]}>190</span>
-        </div>
-      </li>
-    </ul>
-  );
+/*
+ * Root
+ */
+
+type RootProps = {
+  children: React.ReactNode;
 };
 
-export default SpaceList;
+export const Root = ({ children }: RootProps) => {
+  return <ul className={css["root"]}>{children}</ul>;
+};
+
+/*
+ * Channel
+ */
+
+type ChannelProps = {
+  slug: React.ReactNode;
+  userCount: number;
+  active?: boolean;
+};
+
+export const Channel = ({ slug, active, userCount }: ChannelProps) => {
+  return (
+    <li
+      className={classNames({
+        [css["channel"]]: true,
+        [css["active-channel"]]: active,
+      })}
+    >
+      <div className={css["name"]}>#{slug}</div>
+      <div className={css["users"]}>
+        <span className={css["user-icon"]}></span>
+        <span className={css["user-count"]}>{userCount}</span>
+      </div>
+    </li>
+  );
+};

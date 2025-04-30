@@ -8,12 +8,12 @@ type Props = {
 
 const ReferenceNarrativeContainer = async ({ environmentId }: Props) => {
   return (
-    <StandardLayout.ConversationNarrative>
+    <StandardLayout.ReferenceNarrative>
       <NarrativeContainer
         filter={["AI_MESSAGE", "HUMAN_MESSAGE"]}
         environmentId={environmentId}
       />
-    </StandardLayout.ConversationNarrative>
+    </StandardLayout.ReferenceNarrative>
   );
 };
 

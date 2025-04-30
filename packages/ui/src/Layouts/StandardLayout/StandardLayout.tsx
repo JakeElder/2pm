@@ -90,6 +90,18 @@ export const ConversationNarrative = ({
 };
 
 /*
+ * Users
+ */
+
+type UsersProps = {
+  children: React.ReactNode;
+};
+
+export const Users = ({ children }: UsersProps) => {
+  return <div className={css["users"]}>{children}</div>;
+};
+
+/*
  * InputBar
  */
 
