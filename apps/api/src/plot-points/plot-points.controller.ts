@@ -77,7 +77,7 @@ export class PlotPointsController {
     @Param('id', ParseIntPipe) id: number,
     @Query() query: FilterPlotPointsDto,
   ) {
-    const q = FilterPlotPointsDtoSchema.parse(query);
-    return this.db.core.plotPoints.findByEnvironmentId(id, q);
+    const filter = FilterPlotPointsDtoSchema.parse(query);
+    return this.db.core.plotPoints.findByEnvironmentId(id, filter);
   }
 }

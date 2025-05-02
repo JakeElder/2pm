@@ -7,6 +7,7 @@ import {
   text,
   timestamp,
   uuid,
+  varchar,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 import { USER_TYPES } from "../../models/user/user.constants";
@@ -138,6 +139,7 @@ export const worldRoomEnvironments = pgTable("world_room_environments", {
   environmentId: integer("environment_id")
     .notNull()
     .references(() => environments.id),
+  slug: varchar("slug").notNull().unique(),
 });
 
 export const companionEnvironments = pgTable("companion_environments", {

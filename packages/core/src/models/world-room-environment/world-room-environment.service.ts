@@ -9,9 +9,10 @@ import {
 } from "./world-room-environment.dto";
 
 export default class WorldRoomEnvironments extends CoreDBServiceModule {
-  async create(
-    dto: CreateWorldRoomEnvironmentDto,
-  ): Promise<WorldRoomEnvironmentDto> {
+  async create({
+    id,
+    slug,
+  }: CreateWorldRoomEnvironmentDto): Promise<WorldRoomEnvironmentDto> {
     const [environment] = await this.drizzle
       .insert(environments)
       .values({ type: "WORLD_ROOM" })
@@ -19,10 +20,7 @@ export default class WorldRoomEnvironments extends CoreDBServiceModule {
 
     const [worldRoomEnvironment] = await this.drizzle
       .insert(worldRoomEnvironments)
-      .values({
-        environmentId: environment.id,
-        id: dto.id,
-      })
+      .values({ environmentId: environment.id, id, slug })
       .returning();
 
     return worldRoomEnvironment;
@@ -31,12 +29,17 @@ export default class WorldRoomEnvironments extends CoreDBServiceModule {
   public async findAll(
     filter: FilterWorldRoomEnvironmentDto = {},
   ): Promise<WorldRoomEnvironmentDto[]> {
-    const { id, limit } = FilterWorldRoomEnvironmentDtoSchema.parse(filter);
+    const { id, slug, limit } =
+      FilterWorldRoomEnvironmentDtoSchema.parse(filter);
 
     const filters: SQL[] = [];
 
     if (id) {
       filters.push(eq(worldRoomEnvironments.id, id));
+    }
+
+    if (slug) {
+      filters.push(eq(worldRoomEnvironments.slug, slug));
     }
 
     const res = await this.drizzle

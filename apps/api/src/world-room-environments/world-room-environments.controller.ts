@@ -1,4 +1,6 @@
 import {
+  FilterWorldRoomEnvironmentDto,
+  FilterWorldRoomEnvironmentDtoSchema,
   WORLD_ROOM_CODES,
   WorldRoomEnvironmentDto,
   type WorldRoomEnvironmentId,
@@ -10,6 +12,7 @@ import {
   Inject,
   NotFoundException,
   Param,
+  Query,
 } from '@nestjs/common';
 import {
   ApiOkResponse,
@@ -32,14 +35,22 @@ export class WorldRoomEnvironmentsController {
   })
   @ApiResponse({
     status: 200,
-    type: [WorldRoomEnvironmentsController],
+    type: [WorldRoomEnvironmentDto],
   })
   @ApiQuery({
     name: 'limit',
     required: false,
+    type: Number,
   })
-  findAll() {
-    return this.db.core.worldRoomEnvironments.findAll();
+  @ApiQuery({
+    name: 'slug',
+    required: false,
+    description: 'Exclude plot points by type',
+    type: String,
+  })
+  findAll(@Query() query: FilterWorldRoomEnvironmentDto) {
+    const filter = FilterWorldRoomEnvironmentDtoSchema.parse(query);
+    return this.db.core.worldRoomEnvironments.findAll(filter);
   }
 
   @Get(':id')

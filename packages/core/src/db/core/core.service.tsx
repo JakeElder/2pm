@@ -53,7 +53,9 @@ export class CoreDBService {
 
     // Environments
     const [universe] = await Promise.all([
-      this.worldRoomEnvironments.create({ id: "UNIVERSE" }),
+      this.worldRoomEnvironments.create({ id: "UNIVERSE", slug: "universe" }),
+      this.worldRoomEnvironments.create({ id: "CAMPFIRE", slug: "campfire" }),
+      this.worldRoomEnvironments.create({ id: "ABOUT", slug: "about-2pm" }),
     ]);
 
     // Ai Users

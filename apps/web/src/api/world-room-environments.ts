@@ -1,3 +1,4 @@
 import api from ".";
 
-export const { getOneWorldRoomEnvironment } = api.worldRoomEnvironments;
+export const { getWorldRoomEnvironments, getOneWorldRoomEnvironment } =
+  api.worldRoomEnvironments;

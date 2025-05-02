@@ -1,8 +1,12 @@
-import { getOneWorldRoomEnvironment } from "@/api/world-room-environments";
+import {
+  getOneWorldRoomEnvironment,
+  getWorldRoomEnvironments,
+} from "@/api/world-room-environments";
 import ProseViewContainer from "@/components/client/ProseViewContainer";
 import ConversationNarrativeContainer from "@/components/server/ConversationNarrativeContainer";
 import InfoBarUserContainer from "@/components/server/InfoBarUserContainer";
 import ReferenceNarrativeContainer from "@/components/server/ReferenceNarrativeContainer";
+import { WorldRoomEnvironmentDto } from "@2pm/core";
 import {
   InfoBar,
   InfoBarAiState,
@@ -13,10 +17,49 @@ import {
   UserList,
 } from "@2pm/ui/components";
 import { StandardLayout } from "@2pm/ui/layouts";
+import { redirect } from "next/navigation";
 
-export default async function Home() {
-  const universe = await getOneWorldRoomEnvironment("UNIVERSE");
-  const { environmentId } = universe.data;
+type Params = Promise<{
+  path?: string[];
+}>;
+
+type Props = {
+  params: Params;
+};
+
+async function getDefaultEnvironment() {
+  const res = await getOneWorldRoomEnvironment("UNIVERSE");
+  return res.data;
+}
+
+async function getEnvironment(
+  path: Awaited<Params>["path"],
+): Promise<WorldRoomEnvironmentDto | null> {
+  if (!path) {
+    return getDefaultEnvironment();
+  }
+
+  if (path.length > 1) {
+    return null;
+  }
+
+  const res = await getWorldRoomEnvironments({
+    slug: path[0],
+  });
+
+  return res.data[0] || null;
+}
+
+export default async function Home({ params }: Props) {
+  const { path } = await params;
+
+  const environment = await getEnvironment(path);
+
+  if (!environment) {
+    redirect("/");
+  }
+
+  const { environmentId } = environment;
 
   return (
     <Theme>

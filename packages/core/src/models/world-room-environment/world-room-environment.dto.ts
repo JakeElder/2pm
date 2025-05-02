@@ -6,8 +6,11 @@ import * as schema from "../../db/core/core.schema";
 /**
  * Create
  */
-export const CreateWorldRoomEnvironmentDtoSchema = z.object({
-  id: createInsertSchema(schema.worldRoomEnvironments).shape.id,
+export const CreateWorldRoomEnvironmentDtoSchema = createInsertSchema(
+  schema.worldRoomEnvironments,
+).pick({
+  id: true,
+  slug: true,
 });
 
 export class CreateWorldRoomEnvironmentDto extends createZodDto(
@@ -30,7 +33,8 @@ export class WorldRoomEnvironmentDto extends createZodDto(
  */
 export const FilterWorldRoomEnvironmentDtoSchema = z.object({
   id: createSelectSchema(schema.worldRoomEnvironments).shape.id.optional(),
-  limit: z.number().optional(),
+  slug: createSelectSchema(schema.worldRoomEnvironments).shape.slug.optional(),
+  limit: z.coerce.number().optional(),
 });
 
 export class FilterWorldRoomEnvironmentDto extends createZodDto(
