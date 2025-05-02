@@ -1,4 +1,4 @@
-import { eq, desc, and, SQL } from "drizzle-orm";
+import { eq, asc, and, SQL } from "drizzle-orm";
 import { CoreDBServiceModule } from "../../db/core/core-db-service-module";
 import { environments, worldRoomEnvironments } from "../../db/core/core.schema";
 import {
@@ -9,10 +9,9 @@ import {
 } from "./world-room-environment.dto";
 
 export default class WorldRoomEnvironments extends CoreDBServiceModule {
-  async create({
-    id,
-    slug,
-  }: CreateWorldRoomEnvironmentDto): Promise<WorldRoomEnvironmentDto> {
+  async create(
+    dto: CreateWorldRoomEnvironmentDto,
+  ): Promise<WorldRoomEnvironmentDto> {
     const [environment] = await this.drizzle
       .insert(environments)
       .values({ type: "WORLD_ROOM" })
@@ -20,7 +19,10 @@ export default class WorldRoomEnvironments extends CoreDBServiceModule {
 
     const [worldRoomEnvironment] = await this.drizzle
       .insert(worldRoomEnvironments)
-      .values({ environmentId: environment.id, id, slug })
+      .values({
+        environmentId: environment.id,
+        ...dto,
+      })
       .returning();
 
     return worldRoomEnvironment;
@@ -47,7 +49,7 @@ export default class WorldRoomEnvironments extends CoreDBServiceModule {
       .from(worldRoomEnvironments)
       .where(and(...filters))
       .limit(limit ? limit : Number.MAX_SAFE_INTEGER)
-      .orderBy(desc(worldRoomEnvironments.id));
+      .orderBy(asc(worldRoomEnvironments.order));
 
     return res;
   }

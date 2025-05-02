@@ -140,6 +140,7 @@ export const worldRoomEnvironments = pgTable("world_room_environments", {
     .notNull()
     .references(() => environments.id),
   slug: varchar("slug").notNull().unique(),
+  order: integer("order").notNull(),
 });
 
 export const companionEnvironments = pgTable("companion_environments", {

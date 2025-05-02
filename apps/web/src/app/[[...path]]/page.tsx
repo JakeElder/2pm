@@ -6,13 +6,13 @@ import ProseViewContainer from "@/components/client/ProseViewContainer";
 import ConversationNarrativeContainer from "@/components/server/ConversationNarrativeContainer";
 import InfoBarUserContainer from "@/components/server/InfoBarUserContainer";
 import ReferenceNarrativeContainer from "@/components/server/ReferenceNarrativeContainer";
+import SpaceListContainer from "@/components/server/SpaceListContainer";
 import { WorldRoomEnvironmentDto } from "@2pm/core";
 import {
   InfoBar,
   InfoBarAiState,
   InfoBarLogo,
   PaneHeader,
-  SpaceList,
   Theme,
   UserList,
 } from "@2pm/ui/components";
@@ -67,12 +67,7 @@ export default async function Home({ params }: Props) {
         <StandardLayout.Main>
           <StandardLayout.Spaces>
             <PaneHeader> Spaces</PaneHeader>
-            <SpaceList.Root>
-              <SpaceList.Channel active slug="universe" userCount={12} />
-              <SpaceList.Channel slug="about-2pm" userCount={2} />
-              <SpaceList.Channel slug="dev-log" userCount={9} />
-              <SpaceList.Channel slug="supporters" userCount={5} />
-            </SpaceList.Root>
+            <SpaceListContainer activeEnvironmentId={environmentId} />
           </StandardLayout.Spaces>
           <ReferenceNarrativeContainer environmentId={environmentId} />
           <StandardLayout.Conversation>

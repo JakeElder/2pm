@@ -7,6 +7,7 @@ const __ui = resolve(__dirname, "../../packages/ui/src");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  devIndicators: false,
   webpack: (config) => {
     config.resolve.alias = {
       ...config.resolve.alias,

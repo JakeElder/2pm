@@ -11,6 +11,7 @@ export const CreateWorldRoomEnvironmentDtoSchema = createInsertSchema(
 ).pick({
   id: true,
   slug: true,
+  order: true,
 });
 
 export class CreateWorldRoomEnvironmentDto extends createZodDto(
