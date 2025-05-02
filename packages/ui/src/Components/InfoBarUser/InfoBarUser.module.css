@@ -1,7 +1,7 @@
 .icon,
 .at,
 .name {
-  color: var(--green);
+  color: var(--anonymous);
 }
 
 .hash-symbol,
@@ -11,7 +11,6 @@
 
 .icon {
   margin-right: 6px;
-  font-size: 12px;
 }
 
 .name {

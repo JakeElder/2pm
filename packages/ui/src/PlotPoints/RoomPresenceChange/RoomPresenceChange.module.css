@@ -8,9 +8,9 @@
 }
 
 .ai-tag {
-  color: var(--peach);
+  color: var(--ai);
 }
 
 .human-tag {
-  color: var(--sapphire);
+  color: var(--authenticated);
 }

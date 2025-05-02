@@ -1,11 +1,11 @@
 .header {
-  padding-bottom: 10px;
+  padding-bottom: 8px;
   margin-bottom: 10px;
   border-bottom: 1px solid var(--surface0);
 }
 
 .tag {
-  color: var(--sapphire);
+  color: var(--authenticated);
 }
 
 .body {

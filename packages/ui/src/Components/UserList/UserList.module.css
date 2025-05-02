@@ -1,5 +1,4 @@
 .user {
-  font-size: 12px;
   padding: 0 20px;
   height: 26px;
   display: flex;
@@ -23,9 +22,9 @@
 }
 
 .ai {
-  color: var(--peach);
+  color: var(--ai);
 }
 
 .human {
-  color: var(--sapphire);
+  color: var(--authenticated);
 }

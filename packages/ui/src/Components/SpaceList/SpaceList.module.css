@@ -1,7 +1,3 @@
-.root {
-  font-size: 12px;
-}
-
 .channel {
   padding: 0 20px;
   height: 26px;
@@ -12,7 +8,7 @@
 
 .active-channel,
 .active-channel .user-icon {
-  color: var(--teal);
+  color: var(--sapphire);
 }
 
 .user-icon {
