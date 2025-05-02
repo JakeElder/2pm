@@ -21,10 +21,6 @@
   },
   "dependencies": {
     "@2pm/core": "workspace:*",
-    "@bull-board/api": "^6.3.0",
-    "@bull-board/express": "^6.3.0",
-    "@bull-board/nestjs": "^6.3.0",
-    "@nestjs/bull": "^11.0.2",
     "@nestjs/common": "^11.1.0",
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.1.0",
@@ -33,7 +29,6 @@
     "@nestjs/platform-socket.io": "^11.1.0",
     "@nestjs/swagger": "^11.1.5",
     "@nestjs/websockets": "^11.1.0",
-    "bull": "^4.16.3",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "ejs": "^3.1.10",

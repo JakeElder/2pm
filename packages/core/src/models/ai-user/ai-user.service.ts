@@ -1,6 +1,7 @@
 import { CoreDBServiceModule } from "../../db/core/core-db-service-module";
 import { users, aiUsers } from "../../db/core/core.schema";
-import { CreateAiUserDto, AiUserDto } from "./ai-user.dto";
+import { AiUserDto } from "../user/user.dto";
+import { CreateAiUserDto } from "./ai-user.dto";
 
 export default class AiUsers extends CoreDBServiceModule {
   async create(dto: CreateAiUserDto): Promise<AiUserDto> {
@@ -14,6 +15,6 @@ export default class AiUsers extends CoreDBServiceModule {
       .values({ userId: user.id, ...dto })
       .returning();
 
-    return aiUser;
+    return { type: "AI", data: aiUser };
   }
 }

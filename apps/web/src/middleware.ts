@@ -15,15 +15,15 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  const userRes = await api.humanUsers.createHumanUser();
+  const { ok, error, data: user } = await api.humanUsers.createHumanUser();
 
-  if (!userRes.ok) {
-    console.dir(userRes, { depth: null, colors: true });
+  if (!ok) {
+    console.dir(error, { depth: null, colors: true });
     throw new Error();
   }
 
   const { data: sessionRes } = await api.sessions.createSession({
-    userId: userRes.data.userId,
+    userId: user.data.userId,
   });
 
   response.cookies.set({

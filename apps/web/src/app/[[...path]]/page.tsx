@@ -7,6 +7,7 @@ import ConversationNarrativeContainer from "@/components/server/ConversationNarr
 import InfoBarUserContainer from "@/components/server/InfoBarUserContainer";
 import ReferenceNarrativeContainer from "@/components/server/ReferenceNarrativeContainer";
 import SpaceListContainer from "@/components/server/SpaceListContainer";
+import UserListContainer from "@/components/server/UserListContainer";
 import { WorldRoomEnvironmentDto } from "@2pm/core";
 import {
   InfoBar,
@@ -14,7 +15,6 @@ import {
   InfoBarLogo,
   PaneHeader,
   Theme,
-  UserList,
 } from "@2pm/ui/components";
 import { StandardLayout } from "@2pm/ui/layouts";
 import { redirect } from "next/navigation";
@@ -80,10 +80,7 @@ export default async function Home({ params }: Props) {
             <PaneHeader>
               <span style={{ fontSize: 10, marginRight: 10 }}></span> Users
             </PaneHeader>
-            <UserList.Root>
-              <UserList.User type="AI" tag="niko" />
-              <UserList.User type="HUMAN" tag="jake" />
-            </UserList.Root>
+            <UserListContainer environmentId={environmentId} />
           </StandardLayout.Users>
         </StandardLayout.Main>
         <StandardLayout.StatusBar />

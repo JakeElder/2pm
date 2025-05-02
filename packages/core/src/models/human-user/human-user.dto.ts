@@ -1,4 +1,4 @@
-import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import { createInsertSchema } from "drizzle-zod";
 import { createZodDto } from "@anatine/zod-nestjs";
 import * as schema from "../../db/core/core.schema";
 
@@ -12,10 +12,3 @@ export const CreateHumanUserDtoSchema = createInsertSchema(schema.humanUsers)
 export class CreateHumanUserDto extends createZodDto(
   CreateHumanUserDtoSchema,
 ) {}
-
-/**
- * Read
- */
-export const HumanUserDtoSchema = createSelectSchema(schema.humanUsers);
-
-export class HumanUserDto extends createZodDto(HumanUserDtoSchema) {}

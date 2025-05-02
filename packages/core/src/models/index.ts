@@ -8,5 +8,6 @@ export * from "./plot-point";
 export * from "./prose";
 export * from "./session";
 export * from "./theme";
+export * from "./user";
 export * from "./user-environment-presence";
 export * from "./world-room-environment";

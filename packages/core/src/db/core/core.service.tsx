@@ -1,24 +1,24 @@
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres, { Sql } from "postgres";
 import { reset } from "drizzle-seed";
-import AiMessages from "../../models/ai-message/ai-message.service";
-import AiUsers from "../../models/ai-user/ai-user.service";
-import AuthEmails from "../../models/auth-email/auth-email.service";
-import HumanUsers from "../../models/human-user/human-user.service";
-import Sessions from "../../models/session/session.service";
-import UserEnvironmentPresences from "../../models/user-environment-presence/user-environment-presence.service";
-import WorldRoomEnvironments from "../../models/world-room-environment/world-room-environment.service";
-import HumanMessages from "../../models/human-message/human-message.service";
-import PlotPoints from "../../models/plot-point/plot-point.service";
 import * as schema from "./core.schema";
 import { CoreDrizzle } from "./core.types";
 import { txt } from "../../utils";
+import AiMessages from "../../models/ai-message/ai-message.service";
+import AiUsers from "../../models/ai-user/ai-user.service";
+import AuthEmails from "../../models/auth-email/auth-email.service";
+import HumanMessages from "../../models/human-message/human-message.service";
+import HumanUsers from "../../models/human-user/human-user.service";
+import PlotPoints from "../../models/plot-point/plot-point.service";
+import Sessions from "../../models/session/session.service";
+import UserEnvironmentPresences from "../../models/user-environment-presence/user-environment-presence.service";
+import Users from "../../models/user/user.service";
+import WorldRoomEnvironments from "../../models/world-room-environment/world-room-environment.service";
 
 export class CoreDBService {
   public pg: Sql;
-  public libraryPg: Sql;
-
   public drizzle: CoreDrizzle;
+
   public aiMessages: AiMessages;
   public aiUsers: AiUsers;
   public authEmails: AuthEmails;
@@ -27,6 +27,7 @@ export class CoreDBService {
   public plotPoints: PlotPoints;
   public sessions: Sessions;
   public userEnvironmentPresences: UserEnvironmentPresences;
+  public users: Users;
   public worldRoomEnvironments: WorldRoomEnvironments;
 
   constructor(databaseUrl: string) {
@@ -40,6 +41,7 @@ export class CoreDBService {
     this.humanUsers = new HumanUsers(this.pg);
     this.plotPoints = new PlotPoints(this.pg);
     this.sessions = new Sessions(this.pg);
+    this.users = new Users(this.pg);
     this.userEnvironmentPresences = new UserEnvironmentPresences(this.pg);
     this.worldRoomEnvironments = new WorldRoomEnvironments(this.pg);
   }
@@ -91,24 +93,24 @@ export class CoreDBService {
     await Promise.all([
       this.userEnvironmentPresences.insert({
         environmentId: universe.environmentId,
-        userId: niko.userId,
+        userId: niko.data.userId,
       }),
       this.userEnvironmentPresences.insert({
         environmentId: universe.environmentId,
-        userId: jake.userId,
+        userId: jake.data.userId,
       }),
     ]);
 
     // Plot Points
     await this.aiMessages.create({
-      userId: niko.userId,
+      userId: niko.data.userId,
       environmentId: universe.environmentId,
       content: "Welcome to the 2pm universe",
       state: "COMPLETE",
     });
 
     await this.humanMessages.create({
-      userId: jake.userId,
+      userId: jake.data.userId,
       environmentId: universe.environmentId,
       content: {
         type: "doc",

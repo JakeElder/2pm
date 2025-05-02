@@ -6,11 +6,14 @@ import {
   environments,
   worldRoomEnvironments,
 } from "../../db/core/core.schema";
-import { CreateHumanUserDto, HumanUserDto } from "./human-user.dto";
-import { HumanUser } from "./human-user.types";
+import { CreateHumanUserDto } from "./human-user.dto";
+import { AnonymousUserDto, AuthenticatedUserDto } from "../user/user.dto";
+import { shorten } from "../../utils";
 
 export default class HumanUsers extends CoreDBServiceModule {
-  async create(dto: CreateHumanUserDto = {}): Promise<HumanUserDto> {
+  async create(
+    dto: CreateHumanUserDto = {},
+  ): Promise<AnonymousUserDto | AuthenticatedUserDto> {
     const locationEnvironmentId =
       dto.locationEnvironmentId ||
       (await this.getDefaultLocationEnvironmentId());
@@ -29,21 +32,10 @@ export default class HumanUsers extends CoreDBServiceModule {
       })
       .returning();
 
-    return humanUser;
-  }
-
-  async find(id: HumanUser["id"]): Promise<HumanUserDto | null> {
-    const res = await this.drizzle
-      .select()
-      .from(humanUsers)
-      .where(eq(humanUsers.id, id))
-      .limit(1);
-
-    if (res.length === 0) {
-      return null;
-    }
-
-    return res[0];
+    return {
+      type: dto.tag ? "AUTHENTICATED" : "ANONYMOUS",
+      data: { ...humanUser, hash: shorten(humanUser.id) },
+    };
   }
 
   private async getDefaultLocationEnvironmentId() {
