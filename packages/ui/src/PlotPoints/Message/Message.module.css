@@ -1,11 +1,7 @@
 .header {
-  padding-bottom: 6px;
+  padding-bottom: 8px;
   margin-bottom: 10px;
   border-bottom: 1px solid var(--surface0);
-}
-
-.tag {
-  color: var(--ai);
 }
 
 .body {

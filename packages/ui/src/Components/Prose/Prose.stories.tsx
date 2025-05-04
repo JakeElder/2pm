@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import Prose from "./Prose";
 import * as Frame from "../Frame";
+import * as prose from "../../fixtures/prose";
 
 const meta: Meta<typeof Prose> = {
   title: "Components/Prose",
@@ -22,37 +23,13 @@ type Story = StoryObj<typeof Prose>;
 
 export const Default: Story = {
   args: {
-    content: {
-      type: "doc",
-      content: [
-        {
-          type: "paragraph",
-          content: [
-            { type: "text", text: "thank " },
-            { type: "text", marks: [{ type: "bold" }], text: "you" },
-            { type: "text", text: " sir" },
-          ],
-        },
-      ],
-    },
+    content: prose.WITH_BOLD,
   },
 };
 
 export const ReadOnly: Story = {
   args: {
-    content: {
-      type: "doc",
-      content: [
-        {
-          type: "paragraph",
-          content: [
-            { type: "text", text: "thank " },
-            { type: "text", marks: [{ type: "bold" }], text: "you" },
-            { type: "text", text: " sir" },
-          ],
-        },
-      ],
-    },
+    content: prose.WITH_BOLD,
     editable: false,
   },
 };

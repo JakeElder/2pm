@@ -8,16 +8,11 @@ import {
   Post,
   UsePipes,
 } from '@nestjs/common';
-import {
-  ApiOperation,
-  ApiParam,
-  ApiResponse,
-  ApiTags,
-  getSchemaPath,
-} from '@nestjs/swagger';
-import { CreateSessionDto, type Session, SessionDto } from '@2pm/core';
+import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { CreateSessionDto, type Session, SessionDtoSchema } from '@2pm/core';
 import { type DBService } from '@2pm/core/db';
 import { ZodValidationPipe } from '@anatine/zod-nestjs';
+import { zodToOpenAPI } from 'nestjs-zod';
 
 @ApiTags('Sessions')
 @Controller('sessions')
@@ -33,9 +28,8 @@ export class SessionsController {
   @ApiResponse({
     status: 200,
     description: 'Get a session by Id',
-    isArray: false,
     schema: {
-      oneOf: [{ $ref: getSchemaPath(SessionDto) }, { type: 'null' }],
+      oneOf: [zodToOpenAPI(SessionDtoSchema), { type: 'null' }],
     },
   })
   @ApiParam({
@@ -57,7 +51,10 @@ export class SessionsController {
     summary: 'Create',
     operationId: 'createSession',
   })
-  @ApiResponse({ status: 201, type: SessionDto })
+  @ApiResponse({
+    status: 201,
+    schema: zodToOpenAPI(SessionDtoSchema),
+  })
   async create(@Body() createDto: CreateSessionDto) {
     const dto = await this.db.core.sessions.create(createDto);
     return dto;

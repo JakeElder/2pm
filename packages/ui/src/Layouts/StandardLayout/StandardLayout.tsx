@@ -28,15 +28,15 @@ export const Main = ({ children }: MainProps) => {
 };
 
 /*
- * Spaces
+ * SiteMap
  */
 
-type SpacesProps = {
+type SiteMapProps = {
   children: React.ReactNode;
 };
 
-export const Spaces = ({ children }: SpacesProps) => {
-  return <div className={css["spaces"]}>{children}</div>;
+export const SiteMap = ({ children }: SiteMapProps) => {
+  return <div className={css["site-map"]}>{children}</div>;
 };
 
 /*

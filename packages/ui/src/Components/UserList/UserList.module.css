@@ -17,8 +17,9 @@
   border-radius: 2px;
 }
 
-.name {
+.tag {
   flex: 1;
+  overflow: hidden;
 }
 
 .ai {

@@ -1,0 +1,40 @@
+.root {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--surface2);
+}
+
+.name {
+  margin-right: 1px;
+  font-weight: 100;
+}
+
+.hash-symbol {
+  margin-right: 1px;
+}
+
+/**
+ * Anonymous
+ */
+
+.anonymous .at,
+.anonymous .name {
+  color: var(--anonymous);
+}
+
+/**
+ * Authenticated
+ */
+.authenticated .at,
+.authenticated .name {
+  color: var(--authenticated);
+}
+
+/**
+ * Ai
+ */
+.ai .at,
+.ai .name {
+  color: var(--ai);
+}

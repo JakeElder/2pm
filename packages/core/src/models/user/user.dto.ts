@@ -40,11 +40,15 @@ export class AuthenticatedUserDto extends createZodDto(
 ) {}
 
 /**
- * Union
+ * Unions
  */
-
 export const UserDtoSchema = z.discriminatedUnion("type", [
   AiUserDtoSchema,
+  AnonymousUserDtoSchema,
+  AuthenticatedUserDtoSchema,
+]);
+
+export const HumanUserDtoSchema = z.discriminatedUnion("type", [
   AnonymousUserDtoSchema,
   AuthenticatedUserDtoSchema,
 ]);

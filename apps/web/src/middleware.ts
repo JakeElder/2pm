@@ -22,14 +22,14 @@ export async function middleware(request: NextRequest) {
     throw new Error();
   }
 
-  const { data: sessionRes } = await api.sessions.createSession({
-    userId: user.data.userId,
+  const { data: session } = await api.sessions.createSession({
+    humanUserId: user.data.id,
   });
 
   response.cookies.set({
     name: "sid",
     httpOnly: true,
-    value: sessionRes.session.id,
+    value: session.id,
     path: "/",
   });
 

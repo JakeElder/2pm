@@ -15,6 +15,7 @@ import {
   FilterHumanMessagesDtoSchema,
 } from "./human-message.dto";
 import { HumanMessage } from "./human-message.types";
+import HumanUsers from "../human-user/human-user.service";
 
 export default class HumanMessages extends CoreDBServiceModule {
   public async create({
@@ -64,7 +65,7 @@ export default class HumanMessages extends CoreDBServiceModule {
         plotPoint,
         humanMessage,
         environment,
-        humanUser,
+        user: HumanUsers.discriminate(humanUser),
       };
     });
 
@@ -99,7 +100,12 @@ export default class HumanMessages extends CoreDBServiceModule {
       .limit(limit ? limit : Number.MAX_SAFE_INTEGER)
       .orderBy(desc(humanMessages.id));
 
-    return res;
+    return res.map((r) => {
+      return {
+        ...r,
+        user: HumanUsers.discriminate(r.humanUser),
+      };
+    });
   }
 
   public async delete(id: HumanMessage["id"]) {

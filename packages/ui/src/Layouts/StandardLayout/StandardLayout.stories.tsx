@@ -1,21 +1,18 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import * as StandardLayout from "./StandardLayout";
-import {
-  EmailSent,
-  BibleVerse,
-  AiMessage,
-  HumanMessage,
-} from "../../PlotPoints";
+import { EmailSent, BibleVerse, Message } from "../../PlotPoints";
 import {
   PaneHeader,
   SpaceList,
   Prose,
   InfoBar,
   InfoBarLogo,
-  InfoBarUser,
   UserList,
   InfoBarAiState,
+  UserTag,
 } from "../../Components";
+import * as users from "../../fixtures/users";
+import * as prose from "../../fixtures/prose";
 
 const meta: Meta<typeof StandardLayout.Root> = {
   title: "Layouts/StandardLayout",
@@ -32,14 +29,14 @@ export const Default: Story = {
     return (
       <StandardLayout.Root>
         <StandardLayout.Main>
-          <StandardLayout.Spaces>
+          <StandardLayout.SiteMap>
             <PaneHeader> Spaces</PaneHeader>
             <SpaceList.Root>
               <SpaceList.Channel active slug="universe" userCount={12} />
               <SpaceList.Channel slug="about-2pm" userCount={2} />
               <SpaceList.Channel slug="dev-log" userCount={15} />
             </SpaceList.Root>
-          </StandardLayout.Spaces>
+          </StandardLayout.SiteMap>
           <StandardLayout.ReferenceNarrative>
             <EmailSent email="jake@2pm.io" reference={2} />
             <BibleVerse verse="Ecclesiastes 3:6" reference={1}>
@@ -54,22 +51,25 @@ export const Default: Story = {
           </StandardLayout.ReferenceNarrative>
           <StandardLayout.Conversation>
             <StandardLayout.ConversationNarrative>
-              <HumanMessage
-                tag="jake"
-                content={{
-                  type: "doc",
-                  content: [
-                    {
-                      type: "paragraph",
-                      content: [{ type: "text", text: "thank you sir" }],
-                    },
-                  ],
-                }}
-              />
-              <AiMessage tag="niko">
-                Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                laboris nisi ut aliquip ex ea commodo consequat.
-              </AiMessage>
+              <Message.Root>
+                <Message.Header>
+                  <UserTag {...users.AUTHENTICATED} showHash />
+                </Message.Header>
+                <Message.Body>
+                  <Prose editable={false} content={prose.WITH_BOLD} />
+                </Message.Body>
+              </Message.Root>
+              <Message.Root>
+                <Message.Header>
+                  <UserTag {...users.AI} />
+                </Message.Header>
+                <Message.Body>
+                  Lorem ipsum dolor sit amet, [1] adipiscing elit, sed do
+                  eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+                  enim ad minim veniam, quis nostrud exercitation ullamco
+                  laboris nisi ut aliquip ex ea commodo consequat.
+                </Message.Body>
+              </Message.Root>
             </StandardLayout.ConversationNarrative>
             <StandardLayout.InputBar>
               <Prose onSubmit={(editor) => console.log(editor.getJSON())} />
@@ -80,8 +80,9 @@ export const Default: Story = {
               <span style={{ fontSize: 10, marginRight: 10 }}></span> Users
             </PaneHeader>
             <UserList.Root>
-              <UserList.User type="AI" tag="niko" />
-              <UserList.User type="HUMAN" tag="jake" />
+              <UserList.User {...users.AI} />
+              <UserList.User {...users.AUTHENTICATED} showHash />
+              <UserList.User {...users.ANONYMOUS} showHash />
             </UserList.Root>
           </StandardLayout.Users>
         </StandardLayout.Main>
@@ -94,7 +95,7 @@ export const Default: Story = {
               </InfoBar.Logo>
               <InfoBar.Separator />
               <InfoBar.User>
-                <InfoBarUser name="anon" hash="uf4DyTAVLKBfDe6ky7mSoz" />
+                <UserTag {...users.AUTHENTICATED} showHash />
               </InfoBar.User>
             </InfoBar.LogoAndUser>
             <InfoBar.AiState>

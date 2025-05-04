@@ -14,7 +14,7 @@ export const submitMessage = async ({
   const data: CreateHumanMessageDto = {
     content,
     environmentId,
-    userId: session.humanUser.userId,
+    userId: session.user.data.userId,
   };
 
   const res = await createHumanMessage(data);

@@ -7,9 +7,17 @@ import {
   users,
   userEnvironmentPresences,
 } from "../../db/core/core.schema";
-import { AiUserDto, AnonymousUserDto, AuthenticatedUserDto } from "./user.dto";
-import { shorten } from "../../utils";
-import { UserDto } from "./user.types";
+import { AiUserDto } from "./user.dto";
+import { User, UserDto } from "./user.types";
+import HumanUsers from "../human-user/human-user.service";
+import { AiUser } from "../ai-user/ai-user.types";
+import { HumanUser } from "../human-user/human-user.types";
+
+type DiscriminateData = {
+  user: User;
+  aiUser: AiUser | null;
+  humanUser: HumanUser | null;
+};
 
 export default class Users extends CoreDBServiceModule {
   async findByEnvironmentId(id: number): Promise<UserDto[]> {
@@ -31,47 +39,27 @@ export default class Users extends CoreDBServiceModule {
       .where(eq(userEnvironmentPresences.environmentId, id))
       .orderBy(users.type);
 
-    const data = res.map(({ user, aiUser, humanUser }) => {
-      if (user.type === "HUMAN") {
-        if (!humanUser) {
-          throw new Error();
-        }
-
-        const hash = shorten(humanUser.id);
-
-        if (humanUser.tag) {
-          const dto: AuthenticatedUserDto = {
-            type: "AUTHENTICATED",
-            data: { ...humanUser, hash },
-          };
-
-          return dto;
-        }
-
-        const dto: AnonymousUserDto = {
-          type: "ANONYMOUS",
-          data: { ...humanUser, hash },
-        };
-
-        return dto;
-      }
-
-      if (user.type === "AI") {
-        if (!aiUser) {
-          throw new Error();
-        }
-
-        const dto: AiUserDto = {
-          type: "AI",
-          data: aiUser,
-        };
-
-        return dto;
-      }
-
-      throw new Error();
-    });
+    const data = res.map((row) => Users.discriminate(row));
 
     return data;
+  }
+
+  static discriminate({ user, humanUser, aiUser }: DiscriminateData): UserDto {
+    if (user.type === "HUMAN") {
+      if (!humanUser) {
+        throw new Error();
+      }
+      return HumanUsers.discriminate(humanUser);
+    }
+
+    if (user.type === "AI") {
+      if (!aiUser) {
+        throw new Error();
+      }
+      const dto: AiUserDto = { type: "AI", data: aiUser };
+      return dto;
+    }
+
+    throw new Error();
   }
 }

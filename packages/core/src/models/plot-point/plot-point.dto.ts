@@ -11,6 +11,7 @@ import {
   users,
 } from "../../db/core/core.schema";
 import { PLOT_POINT_TYPES } from "./plot-point.constants";
+import { UserDtoSchema } from "../user/user.dto";
 
 /**
  * Human Message
@@ -46,9 +47,7 @@ export const EnvironmentEnteredPlotPointDtoSchema = z.object({
       createdAt: z.coerce.date(),
     }),
     environment: createSelectSchema(environments),
-    user: createSelectSchema(users),
-    humanUser: createSelectSchema(humanUsers).nullable(),
-    aiUser: createSelectSchema(aiUsers).nullable(),
+    user: UserDtoSchema,
   }),
 });
 

@@ -1,25 +1,29 @@
 import { eq } from "drizzle-orm";
-import { users, sessions, humanUsers } from "../../db/core/core.schema";
+import { sessions, humanUsers } from "../../db/core/core.schema";
 import { CoreDBServiceModule } from "../../db/core/core-db-service-module";
 import { CreateSessionDto, SessionDto } from "./session.dto";
 import { Session } from "./session.types";
+import HumanUsers from "../human-user/human-user.service";
 
 export default class Sessions extends CoreDBServiceModule {
   public async create<T extends CreateSessionDto>(dto: T): Promise<SessionDto> {
-    const { userId } = dto;
+    const { humanUserId } = dto;
 
     const [humanUser] = await this.drizzle
       .select()
       .from(humanUsers)
-      .where(eq(humanUsers.userId, userId))
+      .where(eq(humanUsers.id, humanUserId))
       .limit(1);
 
     const [session] = await this.drizzle
       .insert(sessions)
-      .values({ userId: humanUser.userId })
+      .values({ humanUserId: humanUser.id })
       .returning();
 
-    return { session, humanUser };
+    return {
+      ...session,
+      user: HumanUsers.discriminate(humanUser),
+    };
   }
 
   async find(id: Session["id"]): Promise<SessionDto | null> {
@@ -30,14 +34,15 @@ export default class Sessions extends CoreDBServiceModule {
       })
       .from(sessions)
       .where(eq(sessions.id, id))
-      .innerJoin(users, eq(users.id, sessions.userId))
-      .innerJoin(humanUsers, eq(humanUsers.userId, users.id))
+      .innerJoin(humanUsers, eq(humanUsers.id, sessions.humanUserId))
       .limit(1);
 
     if (res.length === 0) {
       return null;
     }
 
-    return res[0];
+    const { session, humanUser } = res[0];
+
+    return { ...session, user: HumanUsers.discriminate(humanUser) };
   }
 }

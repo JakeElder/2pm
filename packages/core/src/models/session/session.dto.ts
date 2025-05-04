@@ -1,19 +1,19 @@
 import { createSelectSchema } from "drizzle-zod";
 import { createZodDto } from "@anatine/zod-nestjs";
 import { z } from "zod";
-import { humanUsers, sessions, users } from "../../db/core/core.schema";
+import { humanUsers, sessions } from "../../db/core/core.schema";
+import { HumanUserDtoSchema } from "../user/user.dto";
 
 /**
  * Session
  */
 
-export const SessionDtoSchema = z.object({
-  session: createSelectSchema(sessions),
-  humanUser: createSelectSchema(humanUsers),
+export const SessionDtoSchema = createSelectSchema(sessions).extend({
+  user: HumanUserDtoSchema,
 });
 
 export const CreateSessionDtoSchema = z.object({
-  userId: createSelectSchema(users).shape.id,
+  humanUserId: createSelectSchema(humanUsers).shape.id,
 });
 
 export class SessionDto extends createZodDto(SessionDtoSchema) {}

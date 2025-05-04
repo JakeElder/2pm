@@ -1,4 +1,4 @@
-import { Controller, Get, Inject } from '@nestjs/common';
+import { Controller, Get, Inject, Param, ParseIntPipe } from '@nestjs/common';
 import {
   ApiExtraModels,
   ApiOperation,
@@ -42,7 +42,7 @@ export class UsersController {
       },
     },
   })
-  findAll() {
-    return this.db.core.users.findByEnvironmentId(19);
+  findAll(@Param('id', ParseIntPipe) id: number) {
+    return this.db.core.users.findByEnvironmentId(id);
   }
 }

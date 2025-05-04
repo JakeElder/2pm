@@ -11,11 +11,12 @@ type Props = {
 const ProseViewContainer = ({ environmentId }: Props) => {
   return (
     <Prose
-      onSubmit={(editor) => {
-        submitMessage({
+      onSubmit={async (editor) => {
+        await submitMessage({
           environmentId,
           content: ProseDtoSchema.parse(editor.getJSON()),
         });
+        editor.commands.clearContent();
       }}
     />
   );

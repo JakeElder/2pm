@@ -1,5 +1,5 @@
-export { default as AiMessage } from "./AiMessage";
+export * as Message from "./Message";
+export * as RoomPresenceChange from "./RoomPresenceChange";
+
 export { default as BibleVerse } from "./BibleVerse";
 export { default as EmailSent } from "./EmailSent";
-export { default as HumanMessage } from "./HumanMessage";
-export { default as RoomPresenceChange } from "./RoomPresenceChange";

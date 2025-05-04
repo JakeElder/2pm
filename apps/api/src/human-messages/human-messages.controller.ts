@@ -13,9 +13,10 @@ import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ZodValidationPipe } from '@anatine/zod-nestjs';
 import {
   CreateHumanMessageDto,
-  HumanMessageDto,
+  HumanMessageDtoSchema,
   type HumanMessage,
 } from '@2pm/core';
+import { zodToOpenAPI } from 'nestjs-zod';
 
 @ApiTags('Human Messages')
 @Controller('human-messages')
@@ -31,13 +32,19 @@ export class HumanMessagesController {
     summary: 'Create',
     operationId: 'createHumanMessage',
   })
-  @ApiResponse({ status: 201, type: HumanMessageDto })
+  @ApiResponse({
+    status: 201,
+    schema: zodToOpenAPI(HumanMessageDtoSchema),
+  })
   async create(@Body() createDto: CreateHumanMessageDto) {
     const data = await this.db.core.humanMessages.create(createDto);
 
     this.gateway.server
       .to(`${data.environment.id}`)
-      .emit('plot-points.created', { type: 'HUMAN_MESSAGE', data });
+      .emit('plot-points.created', {
+        type: 'HUMAN_MESSAGE',
+        data,
+      });
 
     return data;
   }

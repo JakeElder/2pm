@@ -1,27 +1,74 @@
 import React from "react";
 import * as StandardPlotPoint from "../../Components/StandardPlotPoint";
 import css from "./RoomPresenceChange.module.css";
+import classNames from "classnames";
 
 type Props = {
   type: "ENTRACE" | "EXIT";
-  tag: string;
-  userType: "HUMAN" | "AI";
 };
 
-const RoomPresenceChange = ({ type, tag, userType }: Props) => {
-  const icon = type === "ENTRACE" ? "" : "󰩈";
-  const verb = type === "ENTRACE" ? "entered" : "left";
+/*
+ * Root
+ */
 
+type RootProps = {
+  children: React.ReactNode;
+};
+
+export const Root = ({ children }: RootProps) => {
   return (
     <StandardPlotPoint.Root>
-      <span className={css["icon"]}>{icon}</span>&nbsp;
-      <span className={css[userType === "AI" ? "ai-tag" : "human-tag"]}>
-        @{tag}
-      </span>
-      &nbsp;
-      <span className={css["action"]}>{verb} the room</span>
+      <div className={css["root"]}>{children}</div>
     </StandardPlotPoint.Root>
   );
 };
 
-export default RoomPresenceChange;
+/*
+ * Icon
+ */
+
+type IconProps = Props;
+
+export const Icon = ({ type }: IconProps) => {
+  return (
+    <>
+      <span
+        className={classNames({
+          [css["icon"]]: true,
+          [css["reverse"]]: type === "EXIT",
+        })}
+      >
+        
+      </span>
+      &nbsp;
+    </>
+  );
+};
+
+/*
+ * Tag
+ */
+
+type TagProps = {
+  children: React.ReactNode;
+};
+
+export const Tag = ({ children }: TagProps) => {
+  return (
+    <>
+      <span className={css["tag"]}>{children}</span>
+      &nbsp;
+    </>
+  );
+};
+
+/*
+ * Action
+ */
+
+type ActionProps = Props;
+
+export const Action = ({ type }: ActionProps) => {
+  const verb = type === "ENTRACE" ? "entered" : "left";
+  return <span className={css["action"]}>{verb} the room</span>;
+};

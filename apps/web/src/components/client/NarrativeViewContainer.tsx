@@ -30,7 +30,7 @@ const NarrativeViewContainer = ({
 
   useEffect(() => {
     const e: EnvironmentsRoomJoinedEventDto = {
-      userId: session.humanUser.userId,
+      userId: session.user.data.userId,
       environmentId,
     };
 

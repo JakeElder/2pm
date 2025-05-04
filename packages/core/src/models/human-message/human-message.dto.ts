@@ -3,7 +3,7 @@ import { createZodDto } from "@anatine/zod-nestjs";
 import { z } from "zod";
 import * as schema from "../../db/core/core.schema";
 import { ProseDtoSchema } from "../prose/prose.dto";
-
+import { HumanUserDtoSchema } from "../user";
 /**
  * Create
  */
@@ -28,7 +28,7 @@ export const HumanMessageDtoSchema = z.object({
     content: ProseDtoSchema,
   }),
   environment: createSelectSchema(schema.environments),
-  humanUser: createSelectSchema(schema.humanUsers),
+  user: HumanUserDtoSchema,
 });
 
 export class HumanMessageDto extends createZodDto(HumanMessageDtoSchema) {}

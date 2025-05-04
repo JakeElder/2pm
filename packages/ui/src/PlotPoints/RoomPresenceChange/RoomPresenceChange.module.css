@@ -1,16 +1,11 @@
+.root {
+  display: flex;
+}
+
 .icon {
-  margin-right: 6px;
+  margin-right: 2px;
 }
 
-.ai-tag,
-.human-tag {
-  font-weight: 400;
-}
-
-.ai-tag {
-  color: var(--ai);
-}
-
-.human-tag {
-  color: var(--authenticated);
+.reverse {
+  transform: scaleX(-1);
 }

@@ -1,6 +1,7 @@
 import React from "react";
 import css from "./UserList.module.css";
-import classNames from "classnames";
+import { UserDto } from "@2pm/core";
+import UserTag from "../UserTag/UserTag";
 
 /*
  * Root
@@ -15,27 +16,20 @@ export const Root = ({ children }: RootProps) => {
 };
 
 /*
- * Channel
+ * User
  */
 
-type ChannelProps = {
-  type: "HUMAN" | "AI";
-  authenticated?: boolean;
-  tag: string;
-};
+type UserProps = UserDto & { showHash?: boolean };
 
-export const User = ({ type, authenticated, tag }: ChannelProps) => {
+export const User = (props: UserProps) => {
   return (
-    <li
-      className={classNames(css["user"], {
-        [css["human"]]: type === "HUMAN",
-        [css["ai"]]: type === "AI",
-      })}
-    >
+    <li className={css["user"]}>
       <div className={css["meta"]}>
-        <div className={css["placeholder"]}></div>
+        <div className={css["placeholder"]} />
       </div>
-      <div className={css["name"]}>@{tag}</div>
+      <div className={css["tag"]}>
+        <UserTag {...props} />
+      </div>
     </li>
   );
 };

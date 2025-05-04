@@ -8,11 +8,11 @@ type Props = {
 
 const UserListContainer = async ({ environmentId }: Props) => {
   const users = await getUsersByEnvironmentId(environmentId);
-
   return (
     <UserList.Root>
-      <UserList.User type="AI" tag="niko" />
-      <UserList.User type="HUMAN" tag="jake" />
+      {users.data.map((user) => (
+        <UserList.User key={user.data.id} {...user} />
+      ))}
     </UserList.Root>
   );
 };

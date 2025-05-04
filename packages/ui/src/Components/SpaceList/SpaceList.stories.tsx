@@ -8,8 +8,8 @@ const meta: Meta<typeof SpaceList.Root> = {
   decorators: [
     (Story) => {
       return (
-        <Frame.Generic fill>
-          <div style={{ maxWidth: 200 }}>
+        <Frame.Generic fill center>
+          <div style={{ width: 240 }}>
             <Story />
           </div>
         </Frame.Generic>

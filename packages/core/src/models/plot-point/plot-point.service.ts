@@ -19,6 +19,8 @@ import {
 } from "./plot-point.dto";
 import { HumanMessageDtoSchema } from "../human-message/human-message.dto";
 import { AiMessageDtoSchema } from "../ai-message/ai-message.dto";
+import Users from "../user/user.service";
+import HumanUsers from "../human-user/human-user.service";
 
 export default class PlotPoints extends CoreDBServiceModule {
   async findByEnvironmentId(id: number, options: FilterPlotPointsDto) {
@@ -61,26 +63,29 @@ export default class PlotPoints extends CoreDBServiceModule {
 
     const res = await query;
 
-    const data: (PlotPointDto | null)[] = res.map((row) => {
+    const data: PlotPointDto[] = res.map((row) => {
       if (row.plotPoint.type === "HUMAN_MESSAGE") {
-        const { user, humanUser, humanMessage, message } = row;
+        const { humanUser, humanMessage, message } = row;
 
-        if (!user || !humanUser || !humanMessage || !message) {
+        if (!humanUser || !humanMessage || !message) {
           throw new Error();
         }
 
         const res: HumanMessagePlotPointDto = {
           type: "HUMAN_MESSAGE",
-          data: HumanMessageDtoSchema.parse(row),
+          data: HumanMessageDtoSchema.parse({
+            ...row,
+            user: HumanUsers.discriminate(humanUser),
+          }),
         };
 
         return res;
       }
 
       if (row.plotPoint.type === "AI_MESSAGE") {
-        const { user, aiUser, aiMessage, message } = row;
+        const { aiUser, aiMessage, message } = row;
 
-        if (!user || !aiUser || !aiMessage || !message) {
+        if (!aiUser || !aiMessage || !message) {
           throw new Error();
         }
 
@@ -93,15 +98,9 @@ export default class PlotPoints extends CoreDBServiceModule {
       }
 
       if (row.plotPoint.type === "ENVIRONMENT_ENTERED") {
-        const { user, environment } = row;
-
-        if (!user || !environment) {
-          throw new Error();
-        }
-
         const res: EnvironmentEnteredPlotPointDto = {
           type: "ENVIRONMENT_ENTERED",
-          data: row,
+          data: { ...row, user: Users.discriminate(row) },
         };
 
         return res;

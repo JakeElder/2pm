@@ -66,10 +66,10 @@ export const aiUsers = pgTable("ai_users", {
  */
 
 export const sessions = pgTable("sessions", {
-  id: uuid("id").notNull().defaultRandom(),
-  userId: integer("user_id")
-    .primaryKey()
-    .references(() => users.id),
+  id: uuid("id").primaryKey().defaultRandom(),
+  humanUserId: uuid("human_user_id")
+    .notNull()
+    .references(() => humanUsers.id),
 });
 
 /**

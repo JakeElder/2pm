@@ -15,10 +15,12 @@
   min-height: 0;
 }
 
-.spaces,
+.site-map,
 .users {
   flex: 0;
   flex-basis: 220px;
+  flex-grow: 0;
+  overflow-x: hidden;
 }
 
 .reference-narrative {
@@ -35,7 +37,7 @@
   flex-shrink: 0;
 }
 
-.spaces,
+.site-map,
 .reference-narrative,
 .conversation {
   border-right: 1px solid var(--separator);

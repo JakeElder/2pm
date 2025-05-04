@@ -4,7 +4,7 @@ import {
 } from "@/api/world-room-environments";
 import ProseViewContainer from "@/components/client/ProseViewContainer";
 import ConversationNarrativeContainer from "@/components/server/ConversationNarrativeContainer";
-import InfoBarUserContainer from "@/components/server/InfoBarUserContainer";
+import InfoBarUserTagContainer from "@/components/server/InfoBarUserTagContainer";
 import ReferenceNarrativeContainer from "@/components/server/ReferenceNarrativeContainer";
 import SpaceListContainer from "@/components/server/SpaceListContainer";
 import UserListContainer from "@/components/server/UserListContainer";
@@ -65,10 +65,10 @@ export default async function Home({ params }: Props) {
     <Theme>
       <StandardLayout.Root>
         <StandardLayout.Main>
-          <StandardLayout.Spaces>
+          <StandardLayout.SiteMap>
             <PaneHeader> Spaces</PaneHeader>
             <SpaceListContainer activeEnvironmentId={environmentId} />
-          </StandardLayout.Spaces>
+          </StandardLayout.SiteMap>
           <ReferenceNarrativeContainer environmentId={environmentId} />
           <StandardLayout.Conversation>
             <ConversationNarrativeContainer environmentId={environmentId} />
@@ -92,7 +92,7 @@ export default async function Home({ params }: Props) {
               </InfoBar.Logo>
               <InfoBar.Separator />
               <InfoBar.User>
-                <InfoBarUserContainer />
+                <InfoBarUserTagContainer />
               </InfoBar.User>
             </InfoBar.LogoAndUser>
             <InfoBar.AiState>

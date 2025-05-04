@@ -2,7 +2,9 @@ import type { Meta, StoryObj } from "@storybook/react";
 import * as InfoBar from "./InfoBar";
 import * as Frame from "../../Components/Frame";
 import InfoBarLogo from "../InfoBarLogo/InfoBarLogo";
-import InfoBarUser from "../InfoBarUser/InfoBarUser";
+import { InfoBarAiState } from "..";
+import UserTag from "../UserTag";
+import * as users from "../../fixtures/users";
 
 const meta: Meta<typeof InfoBar.Root> = {
   title: "Components/InfoBar",
@@ -42,13 +44,23 @@ export const Default: Story = {
   render() {
     return (
       <InfoBar.Root>
-        <InfoBar.Logo>
-          <InfoBarLogo />
-        </InfoBar.Logo>
-        <InfoBar.Separator />
-        <InfoBar.User>
-          <InfoBarUser name="anon" hash="uf4DyTAVLKBfDe6ky7mSoz" />
-        </InfoBar.User>
+        <InfoBar.LogoAndUser>
+          <InfoBar.Logo>
+            <InfoBarLogo />
+          </InfoBar.Logo>
+          <InfoBar.Separator />
+          <InfoBar.User>
+            <UserTag {...users.ANONYMOUS} />
+          </InfoBar.User>
+        </InfoBar.LogoAndUser>
+        <InfoBar.AiState>
+          <div style={{ display: "flex", gap: 18 }}>
+            <InfoBarAiState.Active tag="niko" state="RESPONDING" />
+            <InfoBarAiState.Active tag="niko" state="ACTING" />
+            <InfoBarAiState.Active tag="niko" state="THINKING" />
+            <InfoBarAiState.Idle />
+          </div>
+        </InfoBar.AiState>
       </InfoBar.Root>
     );
   },
