@@ -1,7 +1,12 @@
+.root {
+  background: rgb(from var(--surface0) r g b / 10%);
+  border: 1px solid rgb(from var(--surface0) r g b / 30%);
+  padding: 12px 14px;
+  border-radius: 14px;
+}
+
 .header {
-  padding-bottom: 8px;
-  margin-bottom: 8px;
-  border-bottom: 1px solid var(--surface0);
+  margin-bottom: 4px;
 }
 
 .body {

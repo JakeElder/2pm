@@ -77,11 +77,11 @@ export default async function Home({ params }: Props) {
             <StandardLayout.Library>
               <PaneHeader> Library</PaneHeader>
               <LibraryList.Root>
-                <LibraryList.Resource>*[the-pali-canon]</LibraryList.Resource>
-                <LibraryList.Resource>*[the-bible]</LibraryList.Resource>
-                <LibraryList.Resource>*[meditations]</LibraryList.Resource>
+                <LibraryList.Resource>~[the-pali-canon]</LibraryList.Resource>
+                <LibraryList.Resource>~[the-bible]</LibraryList.Resource>
+                <LibraryList.Resource>~[meditations]</LibraryList.Resource>
                 <LibraryList.Resource>
-                  *[the-us-constitution]
+                  ~[the-us-constitution]
                 </LibraryList.Resource>
               </LibraryList.Root>
             </StandardLayout.Library>
@@ -99,6 +99,7 @@ export default async function Home({ params }: Props) {
                   <UserSpaceList.Channel updates>#food</UserSpaceList.Channel>
                   <UserSpaceList.Channel>#bike-vids</UserSpaceList.Channel>
                   <UserSpaceList.Channel>#fitness</UserSpaceList.Channel>
+                  <UserSpaceList.Channel>#chiang-mai</UserSpaceList.Channel>
                 </UserSpaceList.Channels>
               </UserSpaceList.Root>
               <UserSpaceList.Root>

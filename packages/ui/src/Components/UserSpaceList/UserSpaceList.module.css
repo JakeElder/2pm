@@ -23,8 +23,8 @@
 }
 
 .updates-channel {
-  border-left: 1px solid var(--yellow);
-  color: var(--yellow);
+  border-left: 1px solid var(--green);
+  color: var(--green);
 }
 
 .tag {

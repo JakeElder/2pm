@@ -68,7 +68,7 @@
 
 .reference-narrative {
   padding: 30px;
-  gap: 20px;
+  gap: 14px;
 }
 
 .conversation {
@@ -78,7 +78,7 @@
 
 .conversation-narrative {
   flex: 1;
-  gap: 24px;
+  gap: 8px;
   padding: 30px 30px 0 30px;
 }
 
