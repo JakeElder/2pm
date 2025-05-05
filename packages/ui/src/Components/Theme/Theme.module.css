@@ -35,7 +35,7 @@
 
   --separator: var(--mantle);
   --ai: var(--pink);
-  --authenticated: var(--sky);
+  --authenticated: var(--sapphire);
   --anonymous: var(--maroon);
 }
 
@@ -67,7 +67,7 @@
   --blue: #1e66f5;
   --lavender: #7287fd;
 
-  --separator: var(--mantle);
+  --separator: var(--crust);
   --ai: var(--pink);
   --authenticated: var(--sky);
   --anonymous: var(--maroon);

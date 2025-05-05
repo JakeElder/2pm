@@ -4,6 +4,7 @@
     "": {
       "name": "@2pm/workspace",
       "dependencies": {
+        "@anatine/zod-nestjs": "^2.0.12",
         "@tiptap/core": "^2.11.7",
         "@tiptap/extension-bold": "^2.11.7",
         "@tiptap/extension-code": "^2.11.7",
@@ -126,7 +127,6 @@
     "packages/core": {
       "name": "@2pm/core",
       "dependencies": {
-        "@anatine/zod-nestjs": "^2.0.12",
         "node-html-markdown": "^1.3.0",
         "react-element-to-jsx-string": "^15.0.0",
         "short-uuid": "^5.2.0",

@@ -1,0 +1,47 @@
+.root:not(:last-child) {
+  margin-bottom: 16px;
+}
+
+.tag,
+.channel {
+  display: flex;
+  align-items: center;
+  height: 12px;
+  font-size: 12px;
+  padding: 6px 20px;
+}
+
+.channel {
+  margin-left: calc(20px + 0.5ch);
+  padding-left: 8px;
+  border-left: 1px solid var(--surface2);
+}
+
+.disabled-channel {
+  color: var(--surface2);
+  border-left: 1px solid var(--surface0);
+}
+
+.updates-channel {
+  border-left: 1px solid var(--yellow);
+  color: var(--yellow);
+}
+
+.tag {
+  margin-bottom: 8px;
+}
+
+.channel:first-child {
+  padding-top: 2px;
+}
+
+.channel:last-child {
+  padding-bottom: 2px;
+}
+
+.new {
+  margin-left: 6px;
+  color: var(--surface1);
+  position: relative;
+  top: 1px;
+}

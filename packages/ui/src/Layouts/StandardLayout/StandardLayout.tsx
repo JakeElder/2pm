@@ -2,6 +2,9 @@
 
 import React from "react";
 import css from "./StandardLayout.module.css";
+import { PaneHeader, UserTag } from "../../Components";
+import * as users from "../../fixtures/users";
+import classNames from "classnames";
 
 /*
  * Root
@@ -61,6 +64,18 @@ type LibraryProps = {
 
 export const Library = ({ children }: LibraryProps) => {
   return <div className={css["library"]}>{children}</div>;
+};
+
+/*
+ * User Spaces
+ */
+
+type UserSpaces = {
+  children: React.ReactNode;
+};
+
+export const UserSpaces = ({ children }: UserSpaces) => {
+  return <div className={css["user-spaces"]}>{children}</div>;
 };
 
 /*

@@ -16,9 +16,12 @@ import {
   LibraryList,
   PaneHeader,
   Theme,
+  UserSpaceList,
+  UserTag,
 } from "@2pm/ui/components";
 import { StandardLayout } from "@2pm/ui/layouts";
 import { redirect } from "next/navigation";
+import * as users from "../../fixtures/users";
 
 type Params = Promise<{
   path?: string[];
@@ -82,6 +85,31 @@ export default async function Home({ params }: Props) {
                 </LibraryList.Resource>
               </LibraryList.Root>
             </StandardLayout.Library>
+            <StandardLayout.UserSpaces>
+              <PaneHeader>󱕭 User Spaces</PaneHeader>
+              <UserSpaceList.Root>
+                <UserSpaceList.Tag>
+                  <UserTag {...users.AUTHENTICATED} />
+                </UserSpaceList.Tag>
+                <UserSpaceList.Channels>
+                  <UserSpaceList.Channel>#home</UserSpaceList.Channel>
+                  <UserSpaceList.Channel>
+                    #street-photography
+                  </UserSpaceList.Channel>
+                  <UserSpaceList.Channel updates>#food</UserSpaceList.Channel>
+                  <UserSpaceList.Channel>#bike-vids</UserSpaceList.Channel>
+                  <UserSpaceList.Channel>#fitness</UserSpaceList.Channel>
+                </UserSpaceList.Channels>
+              </UserSpaceList.Root>
+              <UserSpaceList.Root>
+                <UserSpaceList.Tag>
+                  <UserTag {...users.ANONYMOUS} showHash />
+                </UserSpaceList.Tag>
+                <UserSpaceList.Channels>
+                  <UserSpaceList.Channel disabled>#home</UserSpaceList.Channel>
+                </UserSpaceList.Channels>
+              </UserSpaceList.Root>
+            </StandardLayout.UserSpaces>
           </StandardLayout.SiteMap>
           <ReferenceNarrativeContainer environmentId={environmentId} />
           <StandardLayout.Conversation>

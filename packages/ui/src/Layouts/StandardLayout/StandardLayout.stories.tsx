@@ -11,6 +11,7 @@ import {
   InfoBarAiState,
   UserTag,
   LibraryList,
+  UserSpaceList,
 } from "../../Components";
 import * as users from "../../fixtures/users";
 import * as prose from "../../fixtures/prose";
@@ -50,6 +51,26 @@ export const Default: Story = {
                 </LibraryList.Resource>
               </LibraryList.Root>
             </StandardLayout.Library>
+            <StandardLayout.UserSpaces>
+              <PaneHeader>󱕭 User Spaces</PaneHeader>
+              <UserSpaceList.Root>
+                <UserSpaceList.Tag>
+                  <UserTag {...users.AUTHENTICATED} />
+                </UserSpaceList.Tag>
+                <UserSpaceList.Channels>
+                  <UserSpaceList.Channel>#home</UserSpaceList.Channel>
+                  <UserSpaceList.Channel updates>#bytes</UserSpaceList.Channel>
+                </UserSpaceList.Channels>
+              </UserSpaceList.Root>
+              <UserSpaceList.Root>
+                <UserSpaceList.Tag>
+                  <UserTag {...users.ANONYMOUS} showHash />
+                </UserSpaceList.Tag>
+                <UserSpaceList.Channels>
+                  <UserSpaceList.Channel disabled>#home</UserSpaceList.Channel>
+                </UserSpaceList.Channels>
+              </UserSpaceList.Root>
+            </StandardLayout.UserSpaces>
           </StandardLayout.SiteMap>
           <StandardLayout.ReferenceNarrative>
             <EmailSent email="jake@2pm.io" reference={2} />
