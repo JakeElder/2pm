@@ -40,6 +40,30 @@ export const SiteMap = ({ children }: SiteMapProps) => {
 };
 
 /*
+ * Spaces
+ */
+
+type SpacesProps = {
+  children: React.ReactNode;
+};
+
+export const Spaces = ({ children }: SpacesProps) => {
+  return <div className={css["spaces"]}>{children}</div>;
+};
+
+/*
+ * Library
+ */
+
+type LibraryProps = {
+  children: React.ReactNode;
+};
+
+export const Library = ({ children }: LibraryProps) => {
+  return <div className={css["library"]}>{children}</div>;
+};
+
+/*
  * ReferenceNarrative
  */
 

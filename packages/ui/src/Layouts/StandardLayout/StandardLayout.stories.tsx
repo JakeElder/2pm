@@ -10,6 +10,7 @@ import {
   UserList,
   InfoBarAiState,
   UserTag,
+  LibraryList,
 } from "../../Components";
 import * as users from "../../fixtures/users";
 import * as prose from "../../fixtures/prose";
@@ -30,12 +31,25 @@ export const Default: Story = {
       <StandardLayout.Root>
         <StandardLayout.Main>
           <StandardLayout.SiteMap>
-            <PaneHeader> Spaces</PaneHeader>
-            <SpaceList.Root>
-              <SpaceList.Channel active slug="universe" userCount={12} />
-              <SpaceList.Channel slug="about-2pm" userCount={2} />
-              <SpaceList.Channel slug="dev-log" userCount={15} />
-            </SpaceList.Root>
+            <StandardLayout.Spaces>
+              <PaneHeader> Spaces</PaneHeader>
+              <SpaceList.Root>
+                <SpaceList.Channel active slug="universe" userCount={12} />
+                <SpaceList.Channel slug="about-2pm" userCount={2} />
+                <SpaceList.Channel slug="dev-log" userCount={15} />
+              </SpaceList.Root>
+            </StandardLayout.Spaces>
+            <StandardLayout.Library>
+              <PaneHeader> Library</PaneHeader>
+              <LibraryList.Root>
+                <LibraryList.Resource>*[the-pali-canon]</LibraryList.Resource>
+                <LibraryList.Resource>*[the-bible]</LibraryList.Resource>
+                <LibraryList.Resource>*[meditations]</LibraryList.Resource>
+                <LibraryList.Resource>
+                  *[the-us-constitution]
+                </LibraryList.Resource>
+              </LibraryList.Root>
+            </StandardLayout.Library>
           </StandardLayout.SiteMap>
           <StandardLayout.ReferenceNarrative>
             <EmailSent email="jake@2pm.io" reference={2} />

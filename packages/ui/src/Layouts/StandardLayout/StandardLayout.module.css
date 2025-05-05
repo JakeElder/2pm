@@ -23,6 +23,20 @@
   overflow-x: hidden;
 }
 
+.spaces {
+  margin-bottom: 26px;
+}
+
+.library {
+  border-top: 1px solid var(--separator);
+}
+
+.resource {
+  padding: 0 20px;
+  height: 26px;
+  color: var(--overlay2);
+}
+
 .reference-narrative {
   flex: 4;
 }

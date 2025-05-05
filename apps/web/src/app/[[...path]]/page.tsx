@@ -13,6 +13,7 @@ import {
   InfoBar,
   InfoBarAiState,
   InfoBarLogo,
+  LibraryList,
   PaneHeader,
   Theme,
 } from "@2pm/ui/components";
@@ -66,8 +67,21 @@ export default async function Home({ params }: Props) {
       <StandardLayout.Root>
         <StandardLayout.Main>
           <StandardLayout.SiteMap>
-            <PaneHeader> Spaces</PaneHeader>
-            <SpaceListContainer activeEnvironmentId={environmentId} />
+            <StandardLayout.Spaces>
+              <PaneHeader> Spaces</PaneHeader>
+              <SpaceListContainer activeEnvironmentId={environmentId} />
+            </StandardLayout.Spaces>
+            <StandardLayout.Library>
+              <PaneHeader> Library</PaneHeader>
+              <LibraryList.Root>
+                <LibraryList.Resource>*[the-pali-canon]</LibraryList.Resource>
+                <LibraryList.Resource>*[the-bible]</LibraryList.Resource>
+                <LibraryList.Resource>*[meditations]</LibraryList.Resource>
+                <LibraryList.Resource>
+                  *[the-us-constitution]
+                </LibraryList.Resource>
+              </LibraryList.Root>
+            </StandardLayout.Library>
           </StandardLayout.SiteMap>
           <ReferenceNarrativeContainer environmentId={environmentId} />
           <StandardLayout.Conversation>
