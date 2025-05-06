@@ -14,8 +14,12 @@ import { USER_TYPES } from "../../models/user/user.constants";
 import { AI_USER_CODES } from "../../models/ai-user/ai-user.constants";
 import { PLOT_POINT_TYPES } from "../../models/plot-point/plot-point.constants";
 import { MESSAGE_TYPES } from "../../models/message/message.constants";
-import { ENVIRONMENT_TYPE_CODES } from "../../models/environment/environment.constants";
+import {
+  ENVIRONMENT_AI_TASK_STATE,
+  ENVIRONMENT_TYPE_CODES,
+} from "../../models/environment/environment.constants";
 import { WORLD_ROOM_CODES } from "../../models/world-room-environment/world-room-environment.constants";
+import { AI_MESSAGE_STATES } from "../../models/ai-message/ai-message.constants";
 import { Prose } from "../../models/prose/prose.dto";
 
 export const userTypeEnum = pgEnum("UserType", USER_TYPES);
@@ -27,10 +31,14 @@ export const environmentTypeEnum = pgEnum(
 );
 export const worldRoomCodeEnum = pgEnum("WorldRoomCodeEnum", WORLD_ROOM_CODES);
 export const aiUserCodeEnum = pgEnum("AiUserCodeEnum", AI_USER_CODES);
-export const aiUserMessageStateEnum = pgEnum("AiUserMessageStateEnum", [
-  "OUTPUTTING",
-  "COMPLETE",
-]);
+export const aiMessageStateEnum = pgEnum(
+  "AiMessageStateEnum",
+  AI_MESSAGE_STATES,
+);
+export const environmentAiTaskState = pgEnum(
+  "EnvironmentAiTaskState",
+  ENVIRONMENT_AI_TASK_STATE,
+);
 
 /*
  * Users
@@ -67,9 +75,7 @@ export const aiUsers = pgTable("ai_users", {
 
 export const sessions = pgTable("sessions", {
   id: uuid("id").primaryKey().defaultRandom(),
-  humanUserId: uuid("human_user_id")
-    .notNull()
-    .references(() => humanUsers.id),
+  humanUserId: uuid().references(() => humanUsers.id),
 });
 
 /**
@@ -122,7 +128,7 @@ export const aiMessages = pgTable("ai_messages", {
   messageId: integer("message_id")
     .notNull()
     .references(() => messages.id),
-  state: aiUserMessageStateEnum("state").notNull().default("OUTPUTTING"),
+  state: aiMessageStateEnum("state").notNull(),
 });
 
 /**
@@ -132,6 +138,21 @@ export const aiMessages = pgTable("ai_messages", {
 export const environments = pgTable("environments", {
   id: serial("id").primaryKey(),
   type: environmentTypeEnum("type").notNull(),
+});
+
+export const environmentAiTasks = pgTable("environment_ai_tasks", {
+  id: serial("id").primaryKey(),
+  environmentId: integer("environment_id")
+    .notNull()
+    .references(() => environments.id),
+  aiUserId: aiUserCodeEnum("id")
+    .notNull()
+    .references(() => aiUsers.id)
+    .unique(),
+  state: environmentAiTaskState("state").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true, precision: 3 })
+    .defaultNow()
+    .notNull(),
 });
 
 export const worldRoomEnvironments = pgTable("world_room_environments", {
