@@ -1,5 +1,8 @@
 import { Module } from '@nestjs/common';
+import { BullBoardModule } from '@bull-board/nestjs';
 import { ConfigModule } from '@nestjs/config';
+import { ExpressAdapter } from '@bull-board/express';
+import { BullModule } from '@nestjs/bull';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { EventEmitterModule } from './event-emitter/event-emitter.module';
@@ -31,6 +34,14 @@ import { WorldRoomEnvironmentsModule } from './world-room-environments/world-roo
     SessionsModule,
     UsersModule,
     WorldRoomEnvironmentsModule,
+    BullModule.forRoot({
+      redis: { host: 'localhost', port: 6379 },
+    }),
+    BullBoardModule.forRoot({
+      route: '/queues',
+      adapter: ExpressAdapter,
+    }),
+    SessionsModule,
   ],
   controllers: [AppController],
   providers: [AppService, EnvironmentGateway],

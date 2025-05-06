@@ -21,6 +21,10 @@
   },
   "dependencies": {
     "@2pm/core": "workspace:*",
+    "@bull-board/api": "^6.9.5",
+    "@bull-board/express": "^6.9.5",
+    "@bull-board/nestjs": "^6.9.5",
+    "@nestjs/bull": "^11.0.2",
     "@nestjs/common": "^11.1.0",
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.1.0",

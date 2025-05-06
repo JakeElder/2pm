@@ -75,7 +75,7 @@ export const aiUsers = pgTable("ai_users", {
 
 export const sessions = pgTable("sessions", {
   id: uuid("id").primaryKey().defaultRandom(),
-  humanUserId: uuid().references(() => humanUsers.id),
+  humanUserId: uuid("human_user_id").references(() => humanUsers.id),
 });
 
 /**

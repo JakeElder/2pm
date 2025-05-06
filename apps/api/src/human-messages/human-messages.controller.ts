@@ -17,11 +17,13 @@ import {
   type HumanMessage,
 } from '@2pm/core';
 import { zodToOpenAPI } from 'nestjs-zod';
+import { AppEventEmitter } from '../event-emitter';
 
 @ApiTags('Human Messages')
 @Controller('human-messages')
 export class HumanMessagesController {
   constructor(
+    @Inject('E') private events: AppEventEmitter,
     @Inject('DB') private readonly db: DBService,
     private readonly gateway: EnvironmentGateway,
   ) {}
@@ -38,14 +40,7 @@ export class HumanMessagesController {
   })
   async create(@Body() createDto: CreateHumanMessageDto) {
     const data = await this.db.core.humanMessages.create(createDto);
-
-    this.gateway.server
-      .to(`${data.environment.id}`)
-      .emit('plot-points.created', {
-        type: 'HUMAN_MESSAGE',
-        data,
-      });
-
+    this.events.emit('plot-points.created', { type: 'HUMAN_MESSAGE', data });
     return data;
   }
 
