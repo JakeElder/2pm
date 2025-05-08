@@ -5,9 +5,9 @@ import * as schema from "../../db/core/core.schema";
 /**
  * Create
  */
-export const CreateHumanUserDtoSchema = createInsertSchema(schema.humanUsers)
-  .omit({ id: true, userId: true })
-  .partial({ locationEnvironmentId: true });
+export const CreateHumanUserDtoSchema = createInsertSchema(
+  schema.humanUsers,
+).omit({ id: true, userId: true });
 
 export class CreateHumanUserDto extends createZodDto(
   CreateHumanUserDtoSchema,

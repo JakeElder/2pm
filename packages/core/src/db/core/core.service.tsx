@@ -89,7 +89,6 @@ export class CoreDBService {
     const [jake] = await Promise.all([
       this.humanUsers.create({
         tag: "jake",
-        locationEnvironmentId: universe.environmentId,
       }),
     ]);
 

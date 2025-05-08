@@ -5,7 +5,6 @@ export const ANONYMOUS: AnonymousUserDto = {
   data: {
     id: "b08ca226-a153-4349-940d-3aa534dde0a8",
     hash: "nNsMDHZqkoJvW9VKvNsDoG",
-    locationEnvironmentId: 1,
     userId: 1,
   },
 };
@@ -16,7 +15,6 @@ export const AUTHENTICATED: AuthenticatedUserDto = {
     id: "5a0831c6-7340-4df8-b0a8-2993a8e87020",
     hash: "fFy6QZqQ8RpfR9vQ7tXYo7",
     tag: "jake",
-    locationEnvironmentId: 1,
     userId: 1,
   },
 };

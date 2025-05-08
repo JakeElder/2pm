@@ -55,9 +55,6 @@ export const humanUsers = pgTable("human_users", {
   userId: integer("user_id")
     .notNull()
     .references(() => users.id),
-  locationEnvironmentId: integer("location_environment_id")
-    .notNull()
-    .references(() => environments.id),
 });
 
 export const aiUsers = pgTable("ai_users", {

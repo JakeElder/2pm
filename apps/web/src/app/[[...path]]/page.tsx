@@ -11,7 +11,6 @@ import UserListContainer from "@/components/server/UserListContainer";
 import { WorldRoomEnvironmentDto } from "@2pm/core";
 import {
   InfoBar,
-  InfoBarAiState,
   InfoBarLogo,
   LibraryList,
   PaneHeader,

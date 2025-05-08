@@ -1,11 +1,6 @@
 import { eq } from "drizzle-orm";
 import { CoreDBServiceModule } from "../../db/core/core-db-service-module";
-import {
-  users,
-  humanUsers,
-  environments,
-  worldRoomEnvironments,
-} from "../../db/core/core.schema";
+import { users, humanUsers } from "../../db/core/core.schema";
 import { CreateHumanUserDto } from "./human-user.dto";
 import { AnonymousUserDto, AuthenticatedUserDto } from "../user/user.dto";
 import { shorten } from "../../utils";
@@ -15,10 +10,6 @@ export default class HumanUsers extends CoreDBServiceModule {
   async create(
     dto: CreateHumanUserDto = {},
   ): Promise<AnonymousUserDto | AuthenticatedUserDto> {
-    const locationEnvironmentId =
-      dto.locationEnvironmentId ||
-      (await this.getDefaultLocationEnvironmentId());
-
     const [user] = await this.drizzle
       .insert(users)
       .values({ type: "HUMAN" })
@@ -29,7 +20,6 @@ export default class HumanUsers extends CoreDBServiceModule {
       .values({
         userId: user.id,
         ...dto,
-        locationEnvironmentId,
       })
       .returning();
 
@@ -50,19 +40,6 @@ export default class HumanUsers extends CoreDBServiceModule {
     }
 
     return HumanUsers.discriminate(res[0]);
-  }
-
-  private async getDefaultLocationEnvironmentId() {
-    const [{ id }] = await this.drizzle
-      .select({ id: environments.id })
-      .from(worldRoomEnvironments)
-      .innerJoin(
-        environments,
-        eq(environments.id, worldRoomEnvironments.environmentId),
-      )
-      .where(eq(worldRoomEnvironments.id, "UNIVERSE"));
-
-    return id;
   }
 
   static discriminate(user: HumanUser): HumanUserDto {
