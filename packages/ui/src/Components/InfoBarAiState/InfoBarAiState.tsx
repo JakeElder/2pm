@@ -1,6 +1,7 @@
 import React from "react";
 import css from "./InfoBarAiState.module.css";
 import classNames from "classnames";
+import { ActiveEnvironmentAiTaskState } from "@2pm/core";
 
 /*
  * Idle
@@ -25,7 +26,7 @@ export const Idle = ({}: IdleProps) => {
 
 type ActiveProps = {
   tag: string;
-  state: "THINKING" | "ACTING" | "RESPONDING";
+  state: ActiveEnvironmentAiTaskState;
 };
 
 export const Active = ({ tag, state }: ActiveProps) => {

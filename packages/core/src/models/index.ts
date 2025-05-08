@@ -2,6 +2,7 @@ export * from "./ai-message";
 export * from "./ai-user";
 export * from "./auth-email";
 export * from "./environment";
+export * from "./environment-ai-task";
 export * from "./human-message";
 export * from "./human-user";
 export * from "./plot-point";

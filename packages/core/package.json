@@ -2,7 +2,7 @@
   "name": "@2pm/core",
   "exports": {
     "./db": "./src/db/index.ts",
-    "./schema": "./src/db/schema.ts",
+    "./schema": "./src/db/core/core.schema.ts",
     "./utils": "./src/utils/index.ts",
     ".": "./src/index.ts"
   },

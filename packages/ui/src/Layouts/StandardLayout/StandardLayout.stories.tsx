@@ -136,7 +136,7 @@ export const Default: Story = {
             <InfoBar.AiState>
               <div style={{ display: "flex", gap: 18 }}>
                 <InfoBarAiState.Active tag="niko" state="RESPONDING" />
-                <InfoBarAiState.Active tag="niko" state="ACTING" />
+                <InfoBarAiState.Active tag="niko" state="WORKING" />
                 <InfoBarAiState.Active tag="niko" state="THINKING" />
                 <InfoBarAiState.Idle />
               </div>

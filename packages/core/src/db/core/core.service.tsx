@@ -4,9 +4,11 @@ import { reset } from "drizzle-seed";
 import * as schema from "./core.schema";
 import { CoreDrizzle } from "./core.types";
 import { txt } from "../../utils";
+
 import AiMessages from "../../models/ai-message/ai-message.service";
 import AiUsers from "../../models/ai-user/ai-user.service";
 import AuthEmails from "../../models/auth-email/auth-email.service";
+import EnvironmentAiTasks from "../../models/environment-ai-task/environment-ai-task.service";
 import HumanMessages from "../../models/human-message/human-message.service";
 import HumanUsers from "../../models/human-user/human-user.service";
 import PlotPoints from "../../models/plot-point/plot-point.service";
@@ -22,6 +24,7 @@ export class CoreDBService {
   public aiMessages: AiMessages;
   public aiUsers: AiUsers;
   public authEmails: AuthEmails;
+  public environmentAiTasks: EnvironmentAiTasks;
   public humanUsers: HumanUsers;
   public humanMessages: HumanMessages;
   public plotPoints: PlotPoints;
@@ -37,6 +40,7 @@ export class CoreDBService {
     this.aiMessages = new AiMessages(this.pg);
     this.aiUsers = new AiUsers(this.pg);
     this.authEmails = new AuthEmails(this.pg);
+    this.environmentAiTasks = new EnvironmentAiTasks(this.pg);
     this.humanMessages = new HumanMessages(this.pg);
     this.humanUsers = new HumanUsers(this.pg);
     this.plotPoints = new PlotPoints(this.pg);

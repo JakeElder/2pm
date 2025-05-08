@@ -145,7 +145,7 @@ export const environmentAiTasks = pgTable("environment_ai_tasks", {
   environmentId: integer("environment_id")
     .notNull()
     .references(() => environments.id),
-  aiUserId: aiUserCodeEnum("id")
+  aiUserId: aiUserCodeEnum("ai_user_id")
     .notNull()
     .references(() => aiUsers.id)
     .unique(),

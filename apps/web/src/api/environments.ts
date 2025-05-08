@@ -1,4 +1,7 @@
 import api from ".";
 
-export const { getPlotPointsByEnvironmentId, getUsersByEnvironmentId } =
-  api.environments;
+export const {
+  getPlotPointsByEnvironmentId,
+  getUsersByEnvironmentId,
+  getEnvironmentAiTask,
+} = api.environments;

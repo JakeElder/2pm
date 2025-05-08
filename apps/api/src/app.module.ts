@@ -17,6 +17,7 @@ import { PlotPointsModule } from './plot-points/plot-points.module';
 import { SessionsModule } from './sessions/sessions.module';
 import { UsersModule } from './users/users.module';
 import { WorldRoomEnvironmentsModule } from './world-room-environments/world-room-environments.module';
+import { EnvironmentAiTasksModule } from './environment-ai-tasks/environment-ai-tasks.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { WorldRoomEnvironmentsModule } from './world-room-environments/world-roo
       adapter: ExpressAdapter,
     }),
     SessionsModule,
+    EnvironmentAiTasksModule,
   ],
   controllers: [AppController],
   providers: [AppService, EnvironmentGateway],

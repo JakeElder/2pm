@@ -1,7 +1,9 @@
 import { Controller, Inject, OnModuleInit } from '@nestjs/common';
-import { Job, type Queue } from 'bull';
-import { PlotPointDto } from '@2pm/core';
-import { InjectQueue } from '@nestjs/bull';
+import {
+  EnviromentAiTaskCompletedEventDto,
+  EnviromentAiTaskUpdatedEventDto,
+  PlotPointDto,
+} from '@2pm/core';
 import { AppEventEmitter } from '../event-emitter';
 import { EnvironmentGateway } from './environments.gateway';
 
@@ -9,8 +11,6 @@ import { EnvironmentGateway } from './environments.gateway';
 export class EnvironmentsController implements OnModuleInit {
   constructor(
     @Inject('E') private readonly events: AppEventEmitter,
-    @InjectQueue('environments')
-    private readonly queue: Queue<{ trigger: PlotPointDto }>,
     private readonly gateway: EnvironmentGateway,
   ) {}
 
@@ -23,16 +23,30 @@ export class EnvironmentsController implements OnModuleInit {
       // console.log(e);
     });
 
-    this.queue.on('completed', (job: Job<{ trigger: PlotPointDto }>) => {});
+    this.events.on('environment-ai-tasks.updated', (e) => {
+      this.handleAiTaskUpdated(e);
+    });
+
+    this.events.on('environment-ai-tasks.completed', (e) => {
+      this.handleAiTaskCompleted(e);
+    });
   }
 
   async handlePlotPointCreated(dto: PlotPointDto) {
     this.gateway.server
       .to(`${dto.data.environment.id}`)
       .emit('plot-points.created', dto);
+  }
 
-    if (dto.type === 'HUMAN_MESSAGE') {
-      this.queue.add({ trigger: dto });
-    }
+  async handleAiTaskUpdated(dto: EnviromentAiTaskUpdatedEventDto) {
+    this.gateway.server
+      .to(`${dto.environmentId}`)
+      .emit('ai-tasks.updated', dto);
+  }
+
+  async handleAiTaskCompleted(dto: EnviromentAiTaskCompletedEventDto) {
+    this.gateway.server
+      .to(`${dto.environmentId}`)
+      .emit('ai-tasks.completed', dto);
   }
 }

@@ -22,6 +22,7 @@ import {
 import { StandardLayout } from "@2pm/ui/layouts";
 import { redirect } from "next/navigation";
 import * as users from "../../fixtures/users";
+import EnvironmentAiTaskStateContainer from "@/components/server/EnvironmentAiTaskStateContainer";
 
 type Params = Promise<{
   path?: string[];
@@ -81,6 +82,9 @@ export default async function Home({ params }: Props) {
                 <LibraryList.Resource>~[the-bible]</LibraryList.Resource>
                 <LibraryList.Resource>~[meditations]</LibraryList.Resource>
                 <LibraryList.Resource>
+                  ~[nicomachean-ethics]
+                </LibraryList.Resource>
+                <LibraryList.Resource>
                   ~[the-us-constitution]
                 </LibraryList.Resource>
               </LibraryList.Root>
@@ -139,7 +143,7 @@ export default async function Home({ params }: Props) {
               </InfoBar.User>
             </InfoBar.LogoAndUser>
             <InfoBar.AiState>
-              <InfoBarAiState.Idle />
+              <EnvironmentAiTaskStateContainer environmentId={environmentId} />
             </InfoBar.AiState>
           </InfoBar.Root>
         </StandardLayout.InfoBar>
