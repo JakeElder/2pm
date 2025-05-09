@@ -3,6 +3,10 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export async function middleware(request: NextRequest) {
+  if (request.nextUrl.pathname.startsWith("/.well-known")) {
+    return Response.json({}, { status: 200 });
+  }
+
   const response = NextResponse.next();
 
   const sid = request.cookies.get("sid");

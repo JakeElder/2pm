@@ -25,13 +25,8 @@ import EnvironmentAiTaskStateContainer from "@/components/server/EnvironmentAiTa
 import { getSession } from "@/actions";
 import { createUserEnvironmentPresence } from "@/api/user-environment-presences";
 
-type Params = Promise<{
-  path?: string[];
-}>;
-
-type Props = {
-  params: Params;
-};
+type Params = Promise<{ path?: string[] }>;
+type Props = { params: Params };
 
 async function getDefaultEnvironment() {
   const res = await getOneWorldRoomEnvironment("UNIVERSE");
@@ -62,7 +57,7 @@ export default async function Home({ params }: Props) {
   const environment = await getEnvironment(path);
 
   if (!environment) {
-    redirect("/");
+    return redirect("/");
   }
 
   const { environmentId } = environment;

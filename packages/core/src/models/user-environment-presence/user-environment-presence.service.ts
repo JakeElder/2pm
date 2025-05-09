@@ -15,7 +15,7 @@ export default class UserEnvironmentPresences extends CoreDBServiceModule {
   public async create({
     userId,
     environmentId,
-  }: CreateUserEnvironmentPresenceDto): Promise<UserEnvironmentPresenceDto> {
+  }: CreateUserEnvironmentPresenceDto): Promise<UserEnvironmentPresenceDto | null> {
     const [environment] = await this.drizzle
       .select()
       .from(environments)
@@ -26,8 +26,8 @@ export default class UserEnvironmentPresences extends CoreDBServiceModule {
       throw new Error();
     }
 
-    const res: UserEnvironmentPresenceDto = await this.drizzle.transaction(
-      async (tx) => {
+    const res: UserEnvironmentPresenceDto | null =
+      await this.drizzle.transaction(async (tx) => {
         const [current] = await tx
           .select()
           .from(userEnvironmentPresences)
@@ -41,6 +41,10 @@ export default class UserEnvironmentPresences extends CoreDBServiceModule {
         let previous: UserEnvironmentPresenceDto["previous"] = null;
 
         if (current) {
+          if (current.environmentId === environmentId) {
+            return null;
+          }
+
           const [previousUserEnvironmentPresence] = await tx
             .update(userEnvironmentPresences)
             .set({ expired: sql`NOW()` })
@@ -84,8 +88,7 @@ export default class UserEnvironmentPresences extends CoreDBServiceModule {
             userEnvironmentPresence,
           },
         };
-      },
-    );
+      });
 
     return res;
   }

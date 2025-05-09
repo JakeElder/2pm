@@ -1,5 +1,4 @@
 import React, { createContext, useContext } from "react";
-import * as StandardPlotPoint from "../../Components/StandardPlotPoint";
 import css from "./RoomPresenceChange.module.css";
 import classNames from "classnames";
 
@@ -20,9 +19,7 @@ type RootProps = {
 export const Root = ({ children, type }: RootProps) => {
   return (
     <RoomPresenceContext.Provider value={type}>
-      <StandardPlotPoint.Root>
-        <div className={css["root"]}>{children}</div>
-      </StandardPlotPoint.Root>
+      <div className={css["root"]}>{children}</div>
     </RoomPresenceContext.Provider>
   );
 };

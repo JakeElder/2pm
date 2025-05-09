@@ -1,5 +1,4 @@
 .root {
-  display: block;
   overflow: hidden;
   text-overflow: ellipsis;
   color: var(--surface2);

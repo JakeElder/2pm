@@ -11,7 +11,11 @@ const UserListContainer = async ({ environmentId }: Props) => {
   return (
     <UserList.Root>
       {users.data.map((user) => (
-        <UserList.User key={user.data.id} {...user} />
+        <UserList.User
+          key={user.data.id}
+          {...user}
+          showHash={user.type === "ANONYMOUS"}
+        />
       ))}
     </UserList.Root>
   );
