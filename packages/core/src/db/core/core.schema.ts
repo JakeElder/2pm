@@ -6,6 +6,7 @@ import {
   serial,
   text,
   timestamp,
+  uniqueIndex,
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
@@ -194,18 +195,24 @@ export const authEmails = pgTable("auth_emails", {
  * Join Tables
  */
 
-export const userEnvironmentPresences = pgTable("user_environment_presences", {
-  id: serial("id").primaryKey(),
-  userId: integer("user_id")
-    .notNull()
-    .references(() => users.id),
-  environmentId: integer("environment_id")
-    .notNull()
-    .references(() => environments.id),
-  expired: timestamp("expired")
-    .default(sql`null`)
-    .$type<Date | null>(),
-});
+export const userEnvironmentPresences = pgTable(
+  "user_environment_presences",
+  {
+    id: serial("id").primaryKey(),
+    userId: integer("user_id")
+      .notNull()
+      .references(() => users.id),
+    environmentId: integer("environment_id")
+      .notNull()
+      .references(() => environments.id),
+    expired: timestamp("expired").$type<Date | null>(),
+  },
+  (table) => [
+    uniqueIndex("user_presence_idx")
+      .on(table.userId)
+      .where(sql`${table.expired} IS NULL`),
+  ],
+);
 
 export const plotPointEnvironmentPresences = pgTable(
   "plot_point_environment_presences",

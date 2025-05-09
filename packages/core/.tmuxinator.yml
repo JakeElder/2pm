@@ -1,5 +1,6 @@
 name: "Core"
 tmux_options: -L 2pm
+pre_window: nvm use
 attach: false
 
 windows:

@@ -18,6 +18,7 @@ import { SessionsModule } from './sessions/sessions.module';
 import { UsersModule } from './users/users.module';
 import { WorldRoomEnvironmentsModule } from './world-room-environments/world-room-environments.module';
 import { EnvironmentAiTasksModule } from './environment-ai-tasks/environment-ai-tasks.module';
+import { UserEnvironmentPresencesModule } from './user-environment-presences/user-environment-presences.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { EnvironmentAiTasksModule } from './environment-ai-tasks/environment-ai-
     }),
     SessionsModule,
     EnvironmentAiTasksModule,
+    UserEnvironmentPresencesModule,
   ],
   controllers: [AppController],
   providers: [AppService, EnvironmentGateway],

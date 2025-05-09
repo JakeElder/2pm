@@ -35,12 +35,24 @@ const PlotPointViewContainer = ({ type, data }: Props) => {
 
   if (type === "ENVIRONMENT_ENTERED") {
     return (
-      <RoomPresenceChange.Root>
-        <RoomPresenceChange.Icon type="ENTRACE" />
+      <RoomPresenceChange.Root type="ENTRACE">
+        <RoomPresenceChange.Icon />
         <RoomPresenceChange.Tag>
-          <UserTag {...data.user} />
+          <UserTag {...data.user} showHash={data.user.type === "ANONYMOUS"} />
         </RoomPresenceChange.Tag>
-        <RoomPresenceChange.Action type="ENTRACE" />
+        <RoomPresenceChange.Action />
+      </RoomPresenceChange.Root>
+    );
+  }
+
+  if (type === "ENVIRONMENT_LEFT") {
+    return (
+      <RoomPresenceChange.Root type="EXIT">
+        <RoomPresenceChange.Icon />
+        <RoomPresenceChange.Tag>
+          <UserTag {...data.user} showHash={data.user.type === "ANONYMOUS"} />
+        </RoomPresenceChange.Tag>
+        <RoomPresenceChange.Action />
       </RoomPresenceChange.Root>
     );
   }

@@ -13,6 +13,7 @@ import {
 import {
   AiMessagePlotPointDto,
   EnvironmentEnteredPlotPointDto,
+  EnvironmentLeftPlotPointDto,
   FilterPlotPointsDto,
   HumanMessagePlotPointDto,
   PlotPointDto,
@@ -100,6 +101,15 @@ export default class PlotPoints extends CoreDBServiceModule {
       if (row.plotPoint.type === "ENVIRONMENT_ENTERED") {
         const res: EnvironmentEnteredPlotPointDto = {
           type: "ENVIRONMENT_ENTERED",
+          data: { ...row, user: Users.discriminate(row) },
+        };
+
+        return res;
+      }
+
+      if (row.plotPoint.type === "ENVIRONMENT_LEFT") {
+        const res: EnvironmentLeftPlotPointDto = {
+          type: "ENVIRONMENT_LEFT",
           data: { ...row, user: Users.discriminate(row) },
         };
 

@@ -1,11 +1,12 @@
-import React from "react";
+import React, { createContext, useContext } from "react";
 import * as StandardPlotPoint from "../../Components/StandardPlotPoint";
 import css from "./RoomPresenceChange.module.css";
 import classNames from "classnames";
 
-type Props = {
-  type: "ENTRACE" | "EXIT";
-};
+type RoomPresenceType = "ENTRACE" | "EXIT";
+
+const RoomPresenceContext = createContext<RoomPresenceType | null>(null);
+const useRoomPresenceContext = () => useContext(RoomPresenceContext)!;
 
 /*
  * Root
@@ -13,13 +14,16 @@ type Props = {
 
 type RootProps = {
   children: React.ReactNode;
+  type: RoomPresenceType;
 };
 
-export const Root = ({ children }: RootProps) => {
+export const Root = ({ children, type }: RootProps) => {
   return (
-    <StandardPlotPoint.Root>
-      <div className={css["root"]}>{children}</div>
-    </StandardPlotPoint.Root>
+    <RoomPresenceContext.Provider value={type}>
+      <StandardPlotPoint.Root>
+        <div className={css["root"]}>{children}</div>
+      </StandardPlotPoint.Root>
+    </RoomPresenceContext.Provider>
   );
 };
 
@@ -27,9 +31,10 @@ export const Root = ({ children }: RootProps) => {
  * Icon
  */
 
-type IconProps = Props;
+type IconProps = {};
 
-export const Icon = ({ type }: IconProps) => {
+export const Icon = ({}: IconProps) => {
+  const type = useRoomPresenceContext();
   return (
     <>
       <span
@@ -66,9 +71,10 @@ export const Tag = ({ children }: TagProps) => {
  * Action
  */
 
-type ActionProps = Props;
+type ActionProps = {};
 
-export const Action = ({ type }: ActionProps) => {
+export const Action = ({}: ActionProps) => {
+  const type = useRoomPresenceContext();
   const verb = type === "ENTRACE" ? "entered" : "left";
   return <span className={css["action"]}>{verb} the room</span>;
 };

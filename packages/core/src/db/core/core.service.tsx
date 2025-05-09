@@ -94,11 +94,11 @@ export class CoreDBService {
 
     // Environment Presences
     await Promise.all([
-      this.userEnvironmentPresences.insert({
+      this.userEnvironmentPresences.create({
         environmentId: universe.environmentId,
         userId: niko.data.userId,
       }),
-      this.userEnvironmentPresences.insert({
+      this.userEnvironmentPresences.create({
         environmentId: universe.environmentId,
         userId: jake.data.userId,
       }),

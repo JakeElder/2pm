@@ -9,8 +9,16 @@ import {
 } from "../../db/core/core.schema";
 
 export const UserEnvironmentPresenceDtoSchema = z.object({
-  plotPoint: createSelectSchema(plotPoints),
-  userEnvironmentPresence: createSelectSchema(userEnvironmentPresences),
+  previous: z
+    .object({
+      plotPoint: createSelectSchema(plotPoints),
+      userEnvironmentPresence: createSelectSchema(userEnvironmentPresences),
+    })
+    .nullable(),
+  next: z.object({
+    plotPoint: createSelectSchema(plotPoints),
+    userEnvironmentPresence: createSelectSchema(userEnvironmentPresences),
+  }),
 });
 
 export const CreateUserEnvironmentPresenceDtoSchema = z.object({

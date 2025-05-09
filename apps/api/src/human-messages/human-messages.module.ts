@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { HumanMessagesController } from './human-messages.controller';
 import { DatabaseModule } from '../database/database.module';
-import { EnvironmentsModule } from 'src/environments/environments.module';
+import { EnvironmentsModule } from '../environments/environments.module';
 
 @Module({
   imports: [DatabaseModule, EnvironmentsModule],

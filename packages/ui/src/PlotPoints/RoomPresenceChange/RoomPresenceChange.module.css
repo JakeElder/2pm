@@ -1,5 +1,6 @@
 .root {
   display: flex;
+  overflow: hidden;
 }
 
 .icon {
@@ -8,4 +9,12 @@
 
 .reverse {
   transform: scaleX(-1);
+}
+
+.tag {
+  min-width: 0;
+}
+
+.action {
+  flex-shrink: 0;
 }

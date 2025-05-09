@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { eq, and, isNull } from "drizzle-orm";
 import { CoreDBServiceModule } from "../../db/core/core-db-service-module";
 import {
   humanUsers,
@@ -36,7 +36,12 @@ export default class Users extends CoreDBServiceModule {
       .innerJoin(users, eq(userEnvironmentPresences.userId, users.id))
       .leftJoin(humanUsers, eq(users.id, humanUsers.userId))
       .leftJoin(aiUsers, eq(users.id, aiUsers.userId))
-      .where(eq(userEnvironmentPresences.environmentId, id))
+      .where(
+        and(
+          eq(userEnvironmentPresences.environmentId, id),
+          isNull(userEnvironmentPresences.expired),
+        ),
+      )
       .orderBy(users.type);
 
     const data = res.map((row) => Users.discriminate(row));

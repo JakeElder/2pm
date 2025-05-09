@@ -22,6 +22,8 @@ import { StandardLayout } from "@2pm/ui/layouts";
 import { redirect } from "next/navigation";
 import * as users from "../../fixtures/users";
 import EnvironmentAiTaskStateContainer from "@/components/server/EnvironmentAiTaskStateContainer";
+import { getSession } from "@/actions";
+import { createUserEnvironmentPresence } from "@/api/user-environment-presences";
 
 type Params = Promise<{
   path?: string[];
@@ -64,6 +66,12 @@ export default async function Home({ params }: Props) {
   }
 
   const { environmentId } = environment;
+  const session = await getSession();
+
+  await createUserEnvironmentPresence({
+    environmentId,
+    userId: session.user.data.userId,
+  });
 
   return (
     <Theme>

@@ -56,12 +56,31 @@ export class EnvironmentEnteredPlotPointDto extends createZodDto(
 ) {}
 
 /**
+ * Environment Left
+ */
+export const EnvironmentLeftPlotPointDtoSchema = z.object({
+  type: z.literal("ENVIRONMENT_LEFT"),
+  data: z.object({
+    plotPoint: createSelectSchema(plotPoints).extend({
+      createdAt: z.coerce.date(),
+    }),
+    environment: createSelectSchema(environments),
+    user: UserDtoSchema,
+  }),
+});
+
+export class EnvironmentLeftPlotPointDto extends createZodDto(
+  EnvironmentLeftPlotPointDtoSchema,
+) {}
+
+/**
  * Union
  */
 export const PlotPointDtoSchema = z.discriminatedUnion("type", [
   HumanMessagePlotPointDtoSchema,
   AiMessagePlotPointDtoSchema,
   EnvironmentEnteredPlotPointDtoSchema,
+  EnvironmentLeftPlotPointDtoSchema,
 ]);
 
 export type PlotPointDto = z.infer<typeof PlotPointDtoSchema>;

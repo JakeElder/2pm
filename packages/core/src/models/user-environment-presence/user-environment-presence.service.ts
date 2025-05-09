@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { eq, and, isNull, sql } from "drizzle-orm";
 import {
   environments,
   plotPointEnvironmentPresences,
@@ -12,7 +12,7 @@ import {
 } from ".";
 
 export default class UserEnvironmentPresences extends CoreDBServiceModule {
-  public async insert({
+  public async create({
     userId,
     environmentId,
   }: CreateUserEnvironmentPresenceDto): Promise<UserEnvironmentPresenceDto> {
@@ -26,37 +26,67 @@ export default class UserEnvironmentPresences extends CoreDBServiceModule {
       throw new Error();
     }
 
-    const { userEnvironmentPresence, plotPoint } =
-      await this.drizzle.transaction(async (tx) => {
+    const res: UserEnvironmentPresenceDto = await this.drizzle.transaction(
+      async (tx) => {
+        const [current] = await tx
+          .select()
+          .from(userEnvironmentPresences)
+          .where(
+            and(
+              eq(userEnvironmentPresences.userId, userId),
+              isNull(userEnvironmentPresences.expired),
+            ),
+          );
+
+        let previous: UserEnvironmentPresenceDto["previous"] = null;
+
+        if (current) {
+          const [previousUserEnvironmentPresence] = await tx
+            .update(userEnvironmentPresences)
+            .set({ expired: sql`NOW()` })
+            .where(eq(userEnvironmentPresences.id, current.id))
+            .returning();
+
+          const [leftPlotPoint] = await tx
+            .insert(plotPoints)
+            .values({
+              type: "ENVIRONMENT_LEFT",
+              userId,
+              environmentId: previousUserEnvironmentPresence.environmentId,
+            })
+            .returning();
+
+          previous = {
+            userEnvironmentPresence: previousUserEnvironmentPresence,
+            plotPoint: leftPlotPoint,
+          };
+        }
+
         const [plotPoint] = await tx
           .insert(plotPoints)
           .values({ type: "ENVIRONMENT_ENTERED", userId, environmentId })
           .returning();
 
-        const [userEnvironmentPresence] = await this.drizzle
+        const [userEnvironmentPresence] = await tx
           .insert(userEnvironmentPresences)
           .values({ userId, environmentId })
           .returning();
 
-        const [plotPointEnvironmentPresence] = await tx
-          .insert(plotPointEnvironmentPresences)
-          .values({
-            plotPointId: plotPoint.id,
-            userEnvironmentPresenceId: userEnvironmentPresence.id,
-          })
-          .returning();
+        await tx.insert(plotPointEnvironmentPresences).values({
+          plotPointId: plotPoint.id,
+          userEnvironmentPresenceId: userEnvironmentPresence.id,
+        });
 
         return {
-          plotPoint,
-          plotPointEnvironmentPresence,
-          environment,
-          userEnvironmentPresence,
+          previous,
+          next: {
+            plotPoint,
+            userEnvironmentPresence,
+          },
         };
-      });
+      },
+    );
 
-    return {
-      plotPoint,
-      userEnvironmentPresence,
-    };
+    return res;
   }
 }
