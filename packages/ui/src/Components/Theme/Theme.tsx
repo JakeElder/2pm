@@ -15,11 +15,13 @@ const Theme = ({ children, defaultThemeId = "frappe" }: Props) => {
   const [themeId, setThemeId] = useState<ThemeId>(defaultThemeId);
 
   useHotkeys(
-    ["c"],
-    () =>
+    ["c", "shift+c"],
+    (e) =>
       setThemeId((current) => {
-        const index = (THEMES.indexOf(current) + 1) % THEMES.length;
-        return THEMES[index];
+        const offset = e.shiftKey ? -1 : 1;
+        const nextIndex =
+          (THEMES.indexOf(current) + offset + THEMES.length) % THEMES.length;
+        return THEMES[nextIndex];
       }),
     [themeId],
   );

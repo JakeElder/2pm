@@ -2,6 +2,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   color: var(--surface2);
+  line-height: 1.02em;
 }
 
 .name {

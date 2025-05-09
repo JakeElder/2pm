@@ -35,7 +35,7 @@
 
   --separator: var(--mantle);
   --ai: var(--pink);
-  --authenticated: var(--sapphire);
+  --authenticated: var(--yellow);
   --anonymous: var(--maroon);
 }
 
@@ -69,7 +69,7 @@
 
   --separator: var(--crust);
   --ai: var(--pink);
-  --authenticated: var(--sky);
+  --authenticated: var(--yellow);
   --anonymous: var(--maroon);
 }
 
@@ -101,9 +101,9 @@
   --blue: #8aadf4;
   --lavender: #b7bdf8;
 
-  --separator: var(--mantle);
+  --separator: var(--crust);
   --ai: var(--pink);
-  --authenticated: var(--sky);
+  --authenticated: var(--yellow);
   --anonymous: var(--maroon);
 }
 
@@ -135,8 +135,43 @@
   --blue: #89b4fa;
   --lavender: #b4befe;
 
-  --separator: var(--mantle);
+  --separator: var(--crust);
   --ai: var(--pink);
-  --authenticated: var(--sky);
+  --authenticated: var(--yellow);
   --anonymous: var(--maroon);
+}
+
+.newspaper {
+  --crust: #f8f8f8;
+  --mantle: #f0f0f0;
+  --base: #eaeaea;
+  --text: #202020;
+  --subtext1: #404040;
+  --subtext0: #606060;
+  --surface0: #dcdcdc;
+  --surface1: #d0d0d0;
+  --surface2: #c4c4c4;
+  --overlay0: #b8b8b8;
+  --overlay1: #acacac;
+  --overlay2: #a0a0a0;
+
+  --rosewater: #d87060;
+  --flamingo: #e08060;
+  --pink: #c870a0;
+  --mauve: #a078c0;
+  --red: #c85050;
+  --maroon: #984848;
+  --peach: #e8a868;
+  --yellow: #c8c068;
+  --green: #78b078;
+  --teal: #68b0b0;
+  --sky: #78a8c8;
+  --sapphire: #6090b8;
+  --blue: #5088b0;
+  --lavender: #9878c8;
+
+  --separator: var(--surface0);
+  --ai: var(--blue);
+  --authenticated: var(--green);
+  --anonymous: var(--peach);
 }
