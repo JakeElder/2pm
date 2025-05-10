@@ -8,6 +8,7 @@ export * from "./human-user";
 export * from "./plot-point";
 export * from "./prose";
 export * from "./session";
+export * from "./space-list";
 export * from "./theme";
 export * from "./user";
 export * from "./user-environment-presence";

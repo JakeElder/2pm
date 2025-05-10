@@ -7,7 +7,7 @@ import { environments, humanUsers } from "../../db/core/core.schema";
 import { ActiveEnvironmentAiTaskDtoSchema } from "./environment-ai-task.dto";
 
 /**
- * Subscribe
+ * Presence
  */
 export const EnvironmentAiTasksRoomJoinedEventDtoSchema = z.object({
   humanUserId: createSelectSchema(humanUsers).shape.id,

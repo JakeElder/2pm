@@ -20,6 +20,7 @@ import { WorldRoomEnvironmentsModule } from './world-room-environments/world-roo
 import { EnvironmentAiTasksModule } from './environment-ai-tasks/environment-ai-tasks.module';
 import { UserEnvironmentPresencesModule } from './user-environment-presences/user-environment-presences.module';
 import { EnvironmentAiTasksGateway } from './environment-ai-tasks/environment-ai-tasks.gateway';
+import { SpaceListsModule } from './space-lists/space-lists.module';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { EnvironmentAiTasksGateway } from './environment-ai-tasks/environment-ai
     SessionsModule,
     EnvironmentAiTasksModule,
     UserEnvironmentPresencesModule,
+    SpaceListsModule,
   ],
   controllers: [AppController],
   providers: [AppService, EnvironmentsGateway, EnvironmentAiTasksGateway],

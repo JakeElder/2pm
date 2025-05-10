@@ -24,7 +24,8 @@ import {
   type HumanUser,
 } from '@2pm/core';
 import { type DBService } from '@2pm/core/db';
-import { zodToOpenAPI, ZodValidationPipe } from 'nestjs-zod';
+import { zodToOpenAPI } from 'nestjs-zod';
+import { ZodValidationPipe } from '@anatine/zod-nestjs';
 
 @ApiExtraModels(AnonymousUserDto)
 @ApiExtraModels(AuthenticatedUserDto)

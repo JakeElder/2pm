@@ -3,6 +3,7 @@ import {
   EnviromentAiTaskUpdatedEventDto,
   EnvironmentsRoomJoinedEventDto,
   PlotPointDto,
+  UserEnvironmentPresenceDto,
 } from '@2pm/core';
 
 export type AppEvents = {
@@ -19,5 +20,10 @@ export type AppEvents = {
 
   'environment-ai-tasks.completed': (
     body: EnviromentAiTaskCompletedEventDto,
+  ) => void;
+
+  /* User Environment Presences */
+  'user-environment-presences.created': (
+    body: UserEnvironmentPresenceDto,
   ) => void;
 };

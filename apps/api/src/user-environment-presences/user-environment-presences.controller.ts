@@ -34,12 +34,8 @@ export class UserEnvironmentPresencesController {
       return null;
     }
 
-    if (dto.previous) {
-      // this.events.emit('plot-points.created', {
-      //   type: 'ENVIRONMENT_LEFT',
-      //   data: dto.previous,
-      // });
-    }
+    this.events.emit('user-environment-presences.created', dto);
+
     return dto;
   }
 }

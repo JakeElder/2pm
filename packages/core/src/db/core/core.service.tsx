@@ -16,6 +16,7 @@ import Sessions from "../../models/session/session.service";
 import UserEnvironmentPresences from "../../models/user-environment-presence/user-environment-presence.service";
 import Users from "../../models/user/user.service";
 import WorldRoomEnvironments from "../../models/world-room-environment/world-room-environment.service";
+import SpaceLists from "../../models/space-list/space-list.service";
 
 export class CoreDBService {
   public pg: Sql;
@@ -29,6 +30,7 @@ export class CoreDBService {
   public humanMessages: HumanMessages;
   public plotPoints: PlotPoints;
   public sessions: Sessions;
+  public spaceLists: SpaceLists;
   public userEnvironmentPresences: UserEnvironmentPresences;
   public users: Users;
   public worldRoomEnvironments: WorldRoomEnvironments;
@@ -45,6 +47,7 @@ export class CoreDBService {
     this.humanUsers = new HumanUsers(this.pg);
     this.plotPoints = new PlotPoints(this.pg);
     this.sessions = new Sessions(this.pg);
+    this.spaceLists = new SpaceLists(this.pg);
     this.users = new Users(this.pg);
     this.userEnvironmentPresences = new UserEnvironmentPresences(this.pg);
     this.worldRoomEnvironments = new WorldRoomEnvironments(this.pg);
