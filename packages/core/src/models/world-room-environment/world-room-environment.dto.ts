@@ -23,7 +23,9 @@ export class CreateWorldRoomEnvironmentDto extends createZodDto(
  */
 export const WorldRoomEnvironmentDtoSchema = createSelectSchema(
   schema.worldRoomEnvironments,
-);
+).extend({
+  presentUsers: z.number(),
+});
 
 export class WorldRoomEnvironmentDto extends createZodDto(
   WorldRoomEnvironmentDtoSchema,

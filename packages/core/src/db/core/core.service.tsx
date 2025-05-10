@@ -77,11 +77,21 @@ export class CoreDBService {
     ]);
 
     // Ai Users
-    const [niko] = await Promise.all([
+    const [niko, note, why] = await Promise.all([
       this.aiUsers.create({
         id: "NIKO",
         tag: "niko",
         bio: txt(<>Niko is our host.</>),
+      }),
+      this.aiUsers.create({
+        id: "NOTE",
+        tag: "note",
+        bio: txt(<>Note is an expert on Buddhist teachings.</>),
+      }),
+      this.aiUsers.create({
+        id: "WHY",
+        tag: "why",
+        bio: txt(<>Why is a general knowledge expert.</>),
       }),
     ]);
 
@@ -97,6 +107,14 @@ export class CoreDBService {
       this.userEnvironmentPresences.create({
         environmentId: universe.environmentId,
         userId: niko.data.userId,
+      }),
+      this.userEnvironmentPresences.create({
+        environmentId: universe.environmentId,
+        userId: note.data.userId,
+      }),
+      this.userEnvironmentPresences.create({
+        environmentId: universe.environmentId,
+        userId: why.data.userId,
       }),
       this.userEnvironmentPresences.create({
         environmentId: universe.environmentId,

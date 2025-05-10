@@ -7,7 +7,9 @@ import {
   humanMessages,
   humanUsers,
   messages,
+  plotPointEnvironmentPresences,
   plotPoints,
+  userEnvironmentPresences,
   users,
 } from "../../db/core/core.schema";
 import {
@@ -36,6 +38,8 @@ export default class PlotPoints extends CoreDBServiceModule {
         humanUser: humanUsers,
         aiUser: aiUsers,
         environment: environments,
+        plotPointEnvironmentPresence: plotPointEnvironmentPresences,
+        userEnvironmentPresence: userEnvironmentPresences,
       })
       .from(plotPoints)
       .innerJoin(users, eq(plotPoints.userId, users.id))
@@ -45,6 +49,17 @@ export default class PlotPoints extends CoreDBServiceModule {
       .leftJoin(aiMessages, eq(messages.id, aiMessages.messageId))
       .leftJoin(humanUsers, eq(users.id, humanUsers.userId))
       .leftJoin(aiUsers, eq(users.id, aiUsers.userId))
+      .leftJoin(
+        plotPointEnvironmentPresences,
+        eq(plotPoints.id, plotPointEnvironmentPresences.plotPointId),
+      )
+      .leftJoin(
+        userEnvironmentPresences,
+        eq(
+          plotPointEnvironmentPresences.userEnvironmentPresenceId,
+          userEnvironmentPresences.id,
+        ),
+      )
       .where(
         and(
           eq(plotPoints.environmentId, id),
@@ -99,18 +114,38 @@ export default class PlotPoints extends CoreDBServiceModule {
       }
 
       if (row.plotPoint.type === "ENVIRONMENT_ENTERED") {
+        const { userEnvironmentPresence } = row;
+
+        if (!userEnvironmentPresence) {
+          throw new Error();
+        }
+
         const res: EnvironmentEnteredPlotPointDto = {
           type: "ENVIRONMENT_ENTERED",
-          data: { ...row, user: Users.discriminate(row) },
+          data: {
+            ...row,
+            userEnvironmentPresence,
+            user: Users.discriminate(row),
+          },
         };
 
         return res;
       }
 
       if (row.plotPoint.type === "ENVIRONMENT_LEFT") {
+        const { userEnvironmentPresence } = row;
+
+        if (!userEnvironmentPresence) {
+          throw new Error();
+        }
+
         const res: EnvironmentLeftPlotPointDto = {
           type: "ENVIRONMENT_LEFT",
-          data: { ...row, user: Users.discriminate(row) },
+          data: {
+            ...row,
+            userEnvironmentPresence,
+            user: Users.discriminate(row),
+          },
         };
 
         return res;

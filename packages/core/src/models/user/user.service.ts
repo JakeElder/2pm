@@ -1,4 +1,4 @@
-import { eq, and, isNull } from "drizzle-orm";
+import { eq, and, isNull, desc } from "drizzle-orm";
 import { CoreDBServiceModule } from "../../db/core/core-db-service-module";
 import {
   humanUsers,
@@ -42,7 +42,7 @@ export default class Users extends CoreDBServiceModule {
           isNull(userEnvironmentPresences.expired),
         ),
       )
-      .orderBy(users.type);
+      .orderBy(desc(users.type));
 
     const data = res.map((row) => Users.discriminate(row));
 

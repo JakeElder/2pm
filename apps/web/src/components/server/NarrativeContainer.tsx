@@ -15,9 +15,8 @@ const NarrativeContainer = async ({ environmentId, types, filter }: Props) => {
     types,
     filter,
   });
-  const plotPoints = res.data.map((pp) => {
-    return PlotPointDtoSchema.parse(pp);
-  });
+
+  const plotPoints = res.data.map((pp) => PlotPointDtoSchema.parse(pp));
 
   return (
     <NarrativeViewContainer

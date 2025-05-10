@@ -18,7 +18,7 @@ const SpaceListContainer = async ({ activeEnvironmentId }: Props) => {
             <SpaceList.Channel
               active={e.environmentId === activeEnvironmentId}
               slug={e.slug}
-              userCount={0}
+              userCount={e.presentUsers}
             />
           </Link>
         );

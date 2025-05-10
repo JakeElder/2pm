@@ -6,11 +6,15 @@ import {
   CreateUserEnvironmentPresenceDto,
   UserEnvironmentPresenceDto,
 } from '@2pm/core';
+import { AppEventEmitter } from '../event-emitter';
 
 @ApiTags('User Environment Presences')
 @Controller('user-environment-presences')
 export class UserEnvironmentPresencesController {
-  constructor(@Inject('DB') private readonly db: DBService) {}
+  constructor(
+    @Inject('E') private events: AppEventEmitter,
+    @Inject('DB') private readonly db: DBService,
+  ) {}
 
   @Post()
   @UsePipes(ZodValidationPipe)
@@ -25,6 +29,17 @@ export class UserEnvironmentPresencesController {
   })
   async create(@Body() createDto: CreateUserEnvironmentPresenceDto) {
     const dto = await this.db.core.userEnvironmentPresences.create(createDto);
+
+    if (!dto) {
+      return null;
+    }
+
+    if (dto.previous) {
+      // this.events.emit('plot-points.created', {
+      //   type: 'ENVIRONMENT_LEFT',
+      //   data: dto.previous,
+      // });
+    }
     return dto;
   }
 }

@@ -83,9 +83,7 @@ export default async function Home({ params }: Props) {
                 <LibraryList.Resource>~[the-pali-canon]</LibraryList.Resource>
                 <LibraryList.Resource>~[the-bible]</LibraryList.Resource>
                 <LibraryList.Resource>~[meditations]</LibraryList.Resource>
-                <LibraryList.Resource>
-                  ~[nicomachean-ethics]
-                </LibraryList.Resource>
+                <LibraryList.Resource>~[the-art-of-war]</LibraryList.Resource>
                 <LibraryList.Resource>
                   ~[the-us-constitution]
                 </LibraryList.Resource>

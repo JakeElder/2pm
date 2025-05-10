@@ -61,6 +61,7 @@
 
 .reference-narrative,
 .conversation-narrative {
+  scrollbar-color: var(--mantle) transparent;
   overflow-y: auto;
   display: flex;
   flex-direction: column-reverse;

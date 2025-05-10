@@ -1,28 +1,45 @@
 import { eq, and, isNull, sql } from "drizzle-orm";
 import {
+  aiUsers,
   environments,
+  humanUsers,
   plotPointEnvironmentPresences,
   plotPoints,
   userEnvironmentPresences,
+  users,
 } from "../../db/core/core.schema";
 import { CoreDBServiceModule } from "../../db/core/core-db-service-module";
 import {
   CreateUserEnvironmentPresenceDto,
   UserEnvironmentPresenceDto,
 } from ".";
+import Users from "../user/user.service";
 
 export default class UserEnvironmentPresences extends CoreDBServiceModule {
   public async create({
     userId,
     environmentId,
   }: CreateUserEnvironmentPresenceDto): Promise<UserEnvironmentPresenceDto | null> {
-    const [environment] = await this.drizzle
-      .select()
-      .from(environments)
-      .where(eq(environments.id, environmentId))
-      .limit(1);
+    const [[environment], [{ user, humanUser, aiUser }]] = await Promise.all([
+      this.drizzle
+        .select()
+        .from(environments)
+        .where(eq(environments.id, environmentId))
+        .limit(1),
+      this.drizzle
+        .select({
+          user: users,
+          humanUser: humanUsers,
+          aiUser: aiUsers,
+        })
+        .from(users)
+        .leftJoin(humanUsers, eq(humanUsers.userId, users.id))
+        .leftJoin(aiUsers, eq(aiUsers.userId, users.id))
+        .where(eq(users.id, userId))
+        .limit(1),
+    ]);
 
-    if (!environment) {
+    if (!environment || !user) {
       throw new Error();
     }
 
@@ -60,9 +77,16 @@ export default class UserEnvironmentPresences extends CoreDBServiceModule {
             })
             .returning();
 
+          await tx.insert(plotPointEnvironmentPresences).values({
+            plotPointId: leftPlotPoint.id,
+            userEnvironmentPresenceId: previousUserEnvironmentPresence.id,
+          });
+
           previous = {
             userEnvironmentPresence: previousUserEnvironmentPresence,
+            environment,
             plotPoint: leftPlotPoint,
+            user: Users.discriminate({ user, humanUser, aiUser }),
           };
         }
 
@@ -85,7 +109,9 @@ export default class UserEnvironmentPresences extends CoreDBServiceModule {
           previous,
           next: {
             plotPoint,
+            environment,
             userEnvironmentPresence,
+            user: Users.discriminate({ user, humanUser, aiUser }),
           },
         };
       });

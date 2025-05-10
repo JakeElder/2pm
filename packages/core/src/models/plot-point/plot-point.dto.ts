@@ -12,6 +12,7 @@ import {
 } from "../../db/core/core.schema";
 import { PLOT_POINT_TYPES } from "./plot-point.constants";
 import { UserDtoSchema } from "../user/user.dto";
+import { UserEnvironmentPresenceStateSchema } from "../user-environment-presence";
 
 /**
  * Human Message
@@ -42,13 +43,7 @@ export class AiMessagePlotPointDto extends createZodDto(
  */
 export const EnvironmentEnteredPlotPointDtoSchema = z.object({
   type: z.literal("ENVIRONMENT_ENTERED"),
-  data: z.object({
-    plotPoint: createSelectSchema(plotPoints).extend({
-      createdAt: z.coerce.date(),
-    }),
-    environment: createSelectSchema(environments),
-    user: UserDtoSchema,
-  }),
+  data: UserEnvironmentPresenceStateSchema,
 });
 
 export class EnvironmentEnteredPlotPointDto extends createZodDto(
@@ -60,13 +55,7 @@ export class EnvironmentEnteredPlotPointDto extends createZodDto(
  */
 export const EnvironmentLeftPlotPointDtoSchema = z.object({
   type: z.literal("ENVIRONMENT_LEFT"),
-  data: z.object({
-    plotPoint: createSelectSchema(plotPoints).extend({
-      createdAt: z.coerce.date(),
-    }),
-    environment: createSelectSchema(environments),
-    user: UserDtoSchema,
-  }),
+  data: UserEnvironmentPresenceStateSchema,
 });
 
 export class EnvironmentLeftPlotPointDto extends createZodDto(

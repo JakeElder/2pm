@@ -1,6 +1,10 @@
-import { eq, asc, and, SQL } from "drizzle-orm";
+import { eq, asc, and, SQL, count, isNull, not } from "drizzle-orm";
 import { CoreDBServiceModule } from "../../db/core/core-db-service-module";
-import { environments, worldRoomEnvironments } from "../../db/core/core.schema";
+import {
+  environments,
+  userEnvironmentPresences,
+  worldRoomEnvironments,
+} from "../../db/core/core.schema";
 import {
   CreateWorldRoomEnvironmentDto,
   FilterWorldRoomEnvironmentDto,
@@ -25,7 +29,10 @@ export default class WorldRoomEnvironments extends CoreDBServiceModule {
       })
       .returning();
 
-    return worldRoomEnvironment;
+    return {
+      ...worldRoomEnvironment,
+      presentUsers: 0,
+    };
   }
 
   public async findAll(
@@ -45,12 +52,29 @@ export default class WorldRoomEnvironments extends CoreDBServiceModule {
     }
 
     const res = await this.drizzle
-      .select()
+      .select({
+        worldRoomEnvironment: worldRoomEnvironments,
+        presentUsers: count(userEnvironmentPresences.id),
+      })
       .from(worldRoomEnvironments)
+      .leftJoin(
+        userEnvironmentPresences,
+        and(
+          eq(
+            userEnvironmentPresences.environmentId,
+            worldRoomEnvironments.environmentId,
+          ),
+          isNull(userEnvironmentPresences.expired),
+        ),
+      )
       .where(and(...filters))
+      .groupBy(worldRoomEnvironments.id)
       .limit(limit ? limit : Number.MAX_SAFE_INTEGER)
       .orderBy(asc(worldRoomEnvironments.order));
 
-    return res;
+    return res.map((r) => ({
+      ...r.worldRoomEnvironment,
+      presentUsers: r.presentUsers,
+    }));
   }
 }

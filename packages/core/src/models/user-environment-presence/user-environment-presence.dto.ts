@@ -7,18 +7,22 @@ import {
   userEnvironmentPresences,
   users,
 } from "../../db/core/core.schema";
+import { UserDtoSchema } from "../user/user.dto";
+
+export const UserEnvironmentPresenceStateSchema = z.object({
+  plotPoint: createSelectSchema(plotPoints).extend({
+    createdAt: z.coerce.date(),
+  }),
+  environment: createSelectSchema(environments),
+  userEnvironmentPresence: createSelectSchema(userEnvironmentPresences).extend({
+    expired: z.coerce.date().nullable(),
+  }),
+  user: UserDtoSchema,
+});
 
 export const UserEnvironmentPresenceDtoSchema = z.object({
-  previous: z
-    .object({
-      plotPoint: createSelectSchema(plotPoints),
-      userEnvironmentPresence: createSelectSchema(userEnvironmentPresences),
-    })
-    .nullable(),
-  next: z.object({
-    plotPoint: createSelectSchema(plotPoints),
-    userEnvironmentPresence: createSelectSchema(userEnvironmentPresences),
-  }),
+  previous: UserEnvironmentPresenceStateSchema.nullable(),
+  next: UserEnvironmentPresenceStateSchema,
 });
 
 export const CreateUserEnvironmentPresenceDtoSchema = z.object({

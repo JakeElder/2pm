@@ -3,6 +3,7 @@
 }
 
 .icon {
+  color: var(--overlay0);
   margin-right: 2px;
 }
 
