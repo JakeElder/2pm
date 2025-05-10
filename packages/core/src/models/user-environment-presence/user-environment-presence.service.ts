@@ -46,8 +46,15 @@ export default class UserEnvironmentPresences extends CoreDBServiceModule {
     const res: UserEnvironmentPresenceDto | null =
       await this.drizzle.transaction(async (tx) => {
         const [current] = await tx
-          .select()
+          .select({
+            userEnvironmentPresence: userEnvironmentPresences,
+            environment: environments,
+          })
           .from(userEnvironmentPresences)
+          .innerJoin(
+            environments,
+            eq(environments.id, userEnvironmentPresences.environmentId),
+          )
           .where(
             and(
               eq(userEnvironmentPresences.userId, userId),
@@ -58,14 +65,19 @@ export default class UserEnvironmentPresences extends CoreDBServiceModule {
         let previous: UserEnvironmentPresenceDto["previous"] = null;
 
         if (current) {
-          if (current.environmentId === environmentId) {
+          if (current.environment.id === environmentId) {
             return null;
           }
 
           const [previousUserEnvironmentPresence] = await tx
             .update(userEnvironmentPresences)
             .set({ expired: sql`NOW()` })
-            .where(eq(userEnvironmentPresences.id, current.id))
+            .where(
+              eq(
+                userEnvironmentPresences.id,
+                current.userEnvironmentPresence.id,
+              ),
+            )
             .returning();
 
           const [leftPlotPoint] = await tx
@@ -84,7 +96,7 @@ export default class UserEnvironmentPresences extends CoreDBServiceModule {
 
           previous = {
             userEnvironmentPresence: previousUserEnvironmentPresence,
-            environment,
+            environment: current.environment,
             plotPoint: leftPlotPoint,
             user: Users.discriminate({ user, humanUser, aiUser }),
           };

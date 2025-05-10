@@ -1,5 +1,5 @@
 import React from "react";
-import css from "./UserList.module.css";
+import css from "./EnvironmentUserList.module.css";
 import { UserDto } from "@2pm/core";
 import UserTag from "../UserTag/UserTag";
 

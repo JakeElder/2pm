@@ -10,17 +10,16 @@ import { RedisModule } from './redis/redis.module';
 import { DatabaseModule } from './database/database.module';
 
 import { AiMessagesModule } from './ai-messages/ai-messages.module';
-import { EnvironmentsGateway } from './environments/environments.gateway';
+import { EnvironmentAiTasksModule } from './environment-ai-tasks/environment-ai-tasks.module';
+import { EnvironmentUserListsModule } from './environment-user-lists/environment-user-lists.module';
 import { HumanMessagesModule } from './human-messages/human-messages.module';
 import { HumanUsersModule } from './human-users/human-users.module';
 import { PlotPointsModule } from './plot-points/plot-points.module';
 import { SessionsModule } from './sessions/sessions.module';
+import { SpaceListsModule } from './space-lists/space-lists.module';
+import { UserEnvironmentPresencesModule } from './user-environment-presences/user-environment-presences.module';
 import { UsersModule } from './users/users.module';
 import { WorldRoomEnvironmentsModule } from './world-room-environments/world-room-environments.module';
-import { EnvironmentAiTasksModule } from './environment-ai-tasks/environment-ai-tasks.module';
-import { UserEnvironmentPresencesModule } from './user-environment-presences/user-environment-presences.module';
-import { EnvironmentAiTasksGateway } from './environment-ai-tasks/environment-ai-tasks.gateway';
-import { SpaceListsModule } from './space-lists/space-lists.module';
 
 @Module({
   imports: [
@@ -49,8 +48,9 @@ import { SpaceListsModule } from './space-lists/space-lists.module';
     EnvironmentAiTasksModule,
     UserEnvironmentPresencesModule,
     SpaceListsModule,
+    EnvironmentUserListsModule,
   ],
   controllers: [AppController],
-  providers: [AppService, EnvironmentsGateway, EnvironmentAiTasksGateway],
+  providers: [AppService],
 })
 export class AppModule {}

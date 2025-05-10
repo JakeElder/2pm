@@ -7,7 +7,7 @@ import {
   Prose,
   InfoBar,
   InfoBarLogo,
-  UserList,
+  EnvironmentUserList,
   InfoBarAiState,
   UserTag,
   LibraryList,
@@ -114,11 +114,11 @@ export const Default: Story = {
             <PaneHeader>
               <span style={{ fontSize: 10, marginRight: 10 }}></span> Users
             </PaneHeader>
-            <UserList.Root>
-              <UserList.User {...users.AI} />
-              <UserList.User {...users.AUTHENTICATED} showHash />
-              <UserList.User {...users.ANONYMOUS} showHash />
-            </UserList.Root>
+            <EnvironmentUserList.Root>
+              <EnvironmentUserList.User {...users.AI} />
+              <EnvironmentUserList.User {...users.AUTHENTICATED} showHash />
+              <EnvironmentUserList.User {...users.ANONYMOUS} showHash />
+            </EnvironmentUserList.Root>
           </StandardLayout.Users>
         </StandardLayout.Main>
         <StandardLayout.StatusBar />

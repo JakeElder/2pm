@@ -7,7 +7,7 @@ import ConversationNarrativeContainer from "@/components/server/ConversationNarr
 import InfoBarUserTagContainer from "@/components/server/InfoBarUserTagContainer";
 import ReferenceNarrativeContainer from "@/components/server/ReferenceNarrativeContainer";
 import SpaceListContainer from "@/components/server/SpaceListContainer";
-import UserListContainer from "@/components/server/UserListContainer";
+import EnvironmentUserListContainer from "@/components/server/EnvironmentUserListContainer";
 import { WorldRoomEnvironmentDto } from "@2pm/core";
 import {
   InfoBar,
@@ -104,6 +104,7 @@ export default async function Home({ params }: Props) {
                   <UserSpaceList.Channel>#bike-vids</UserSpaceList.Channel>
                   <UserSpaceList.Channel>#fitness</UserSpaceList.Channel>
                   <UserSpaceList.Channel>#chiang-mai</UserSpaceList.Channel>
+                  <UserSpaceList.Channel>#music</UserSpaceList.Channel>
                 </UserSpaceList.Channels>
               </UserSpaceList.Root>
               <UserSpaceList.Root>
@@ -127,7 +128,7 @@ export default async function Home({ params }: Props) {
             <PaneHeader>
               <span style={{ fontSize: 10, marginRight: 10 }}></span> Users
             </PaneHeader>
-            <UserListContainer environmentId={environmentId} />
+            <EnvironmentUserListContainer environmentId={environmentId} />
           </StandardLayout.Users>
         </StandardLayout.Main>
         <StandardLayout.StatusBar />

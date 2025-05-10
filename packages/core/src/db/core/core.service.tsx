@@ -9,14 +9,15 @@ import AiMessages from "../../models/ai-message/ai-message.service";
 import AiUsers from "../../models/ai-user/ai-user.service";
 import AuthEmails from "../../models/auth-email/auth-email.service";
 import EnvironmentAiTasks from "../../models/environment-ai-task/environment-ai-task.service";
+import EnvironmentUserLists from "../../models/environment-user-list/environment-user-list.service";
 import HumanMessages from "../../models/human-message/human-message.service";
 import HumanUsers from "../../models/human-user/human-user.service";
 import PlotPoints from "../../models/plot-point/plot-point.service";
 import Sessions from "../../models/session/session.service";
+import SpaceLists from "../../models/space-list/space-list.service";
 import UserEnvironmentPresences from "../../models/user-environment-presence/user-environment-presence.service";
 import Users from "../../models/user/user.service";
 import WorldRoomEnvironments from "../../models/world-room-environment/world-room-environment.service";
-import SpaceLists from "../../models/space-list/space-list.service";
 
 export class CoreDBService {
   public pg: Sql;
@@ -26,8 +27,9 @@ export class CoreDBService {
   public aiUsers: AiUsers;
   public authEmails: AuthEmails;
   public environmentAiTasks: EnvironmentAiTasks;
-  public humanUsers: HumanUsers;
+  public environmentUserLists: EnvironmentUserLists;
   public humanMessages: HumanMessages;
+  public humanUsers: HumanUsers;
   public plotPoints: PlotPoints;
   public sessions: Sessions;
   public spaceLists: SpaceLists;
@@ -43,13 +45,14 @@ export class CoreDBService {
     this.aiUsers = new AiUsers(this.pg);
     this.authEmails = new AuthEmails(this.pg);
     this.environmentAiTasks = new EnvironmentAiTasks(this.pg);
+    this.environmentUserLists = new EnvironmentUserLists(this.pg);
     this.humanMessages = new HumanMessages(this.pg);
     this.humanUsers = new HumanUsers(this.pg);
     this.plotPoints = new PlotPoints(this.pg);
     this.sessions = new Sessions(this.pg);
     this.spaceLists = new SpaceLists(this.pg);
-    this.users = new Users(this.pg);
     this.userEnvironmentPresences = new UserEnvironmentPresences(this.pg);
+    this.users = new Users(this.pg);
     this.worldRoomEnvironments = new WorldRoomEnvironments(this.pg);
   }
 
