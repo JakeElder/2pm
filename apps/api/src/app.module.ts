@@ -10,7 +10,7 @@ import { RedisModule } from './redis/redis.module';
 import { DatabaseModule } from './database/database.module';
 
 import { AiMessagesModule } from './ai-messages/ai-messages.module';
-import { EnvironmentGateway } from './environments/environments.gateway';
+import { EnvironmentsGateway } from './environments/environments.gateway';
 import { HumanMessagesModule } from './human-messages/human-messages.module';
 import { HumanUsersModule } from './human-users/human-users.module';
 import { PlotPointsModule } from './plot-points/plot-points.module';
@@ -19,6 +19,7 @@ import { UsersModule } from './users/users.module';
 import { WorldRoomEnvironmentsModule } from './world-room-environments/world-room-environments.module';
 import { EnvironmentAiTasksModule } from './environment-ai-tasks/environment-ai-tasks.module';
 import { UserEnvironmentPresencesModule } from './user-environment-presences/user-environment-presences.module';
+import { EnvironmentAiTasksGateway } from './environment-ai-tasks/environment-ai-tasks.gateway';
 
 @Module({
   imports: [
@@ -48,6 +49,6 @@ import { UserEnvironmentPresencesModule } from './user-environment-presences/use
     UserEnvironmentPresencesModule,
   ],
   controllers: [AppController],
-  providers: [AppService, EnvironmentGateway],
+  providers: [AppService, EnvironmentsGateway, EnvironmentAiTasksGateway],
 })
 export class AppModule {}

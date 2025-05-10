@@ -5,6 +5,7 @@ import { BullBoardModule } from '@bull-board/nestjs';
 import { BullAdapter } from '@bull-board/api/bullAdapter';
 import { EnvironmentAiTasksProcessor } from './environment-ai-tasks.processor';
 import { DatabaseModule } from '../database/database.module';
+import { EnvironmentAiTasksGateway } from './environment-ai-tasks.gateway';
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { DatabaseModule } from '../database/database.module';
       adapter: BullAdapter,
     }),
   ],
-  providers: [EnvironmentAiTasksProcessor],
+  providers: [EnvironmentAiTasksProcessor, EnvironmentAiTasksGateway],
   controllers: [EnvironmentAiTasksController],
 })
 export class EnvironmentAiTasksModule {}

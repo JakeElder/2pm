@@ -1,4 +1,4 @@
-import { EnvironmentGateway } from '../environments/environments.gateway';
+import { EnvironmentsGateway } from '../environments/environments.gateway';
 import {
   Body,
   Controller,
@@ -25,7 +25,7 @@ export class HumanMessagesController {
   constructor(
     @Inject('E') private events: AppEventEmitter,
     @Inject('DB') private readonly db: DBService,
-    private readonly gateway: EnvironmentGateway,
+    private readonly gateway: EnvironmentsGateway,
   ) {}
 
   @Post()

@@ -1,14 +1,7 @@
-import {
-  Controller,
-  Get,
-  Inject,
-  Param,
-  ParseIntPipe,
-  Post,
-} from '@nestjs/common';
+import { Controller, Get, Inject, Param, ParseIntPipe } from '@nestjs/common';
 import { AppEventEmitter } from '../event-emitter';
 import { InjectQueue } from '@nestjs/bull';
-import { Job, type Queue } from 'bull';
+import { type Queue } from 'bull';
 import { ActiveEnvironmentAiTaskDto, PlotPointDto } from '@2pm/core';
 import {
   ApiExtraModels,
@@ -19,6 +12,7 @@ import {
   getSchemaPath,
 } from '@nestjs/swagger';
 import { type DBService } from '@2pm/core/db';
+import { EnvironmentAiTasksGateway } from './environment-ai-tasks.gateway';
 
 @ApiExtraModels(ActiveEnvironmentAiTaskDto)
 @ApiTags('Evironment Ai Tasks')
@@ -29,14 +23,25 @@ export class EnvironmentAiTasksController {
     @Inject('E') private readonly events: AppEventEmitter,
     @InjectQueue('environment-ai-tasks')
     private readonly queue: Queue<{ trigger: PlotPointDto }>,
+    private readonly gateway: EnvironmentAiTasksGateway,
   ) {}
 
   async onModuleInit() {
+    this.events.on('environment-ai-tasks.updated', (e) => {
+      this.gateway.server.to(`${e.environmentId}`).emit('updated', e);
+    });
+
+    this.events.on('environment-ai-tasks.completed', (e) => {
+      this.gateway.server.to(`${e.environmentId}`).emit('completed', e);
+    });
+
     this.events.on('plot-points.created', (e) => {
       this.handlePlotPointCreated(e);
     });
 
-    this.queue.on('completed', (job: Job<{ trigger: PlotPointDto }>) => {});
+    // this.queue.on('completed', (job: Job<{ trigger: PlotPointDto }>) => {
+    //   console.log(job);
+    // });
   }
 
   async handlePlotPointCreated(dto: PlotPointDto) {

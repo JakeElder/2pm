@@ -1,8 +1,8 @@
 import type {
-  EnvironmentsServerSocket,
-  EnvironmentsServer,
-  EnvironmentsRoomJoinedEventDto,
-  EnvironmentsRoomLeftEventDto,
+  EnvironmentAiTasksServerSocket,
+  EnvironmentAiTasksServer,
+  EnvironmentAiTasksRoomJoinedEventDto,
+  EnvironmentAiTasksRoomLeftEventDto,
 } from '@2pm/core';
 import {
   ConnectedSocket,
@@ -12,28 +12,25 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Inject, Logger } from '@nestjs/common';
-import { AppEventEmitter } from '../event-emitter';
 import { type DBService } from '@2pm/core/db';
 
 @WebSocketGateway({
-  namespace: '/environments',
+  namespace: '/environment-ai-tasks',
   cors: { origin: '*' },
 })
-export class EnvironmentsGateway {
-  constructor(
-    @Inject('E') private events: AppEventEmitter,
-    @Inject('DB') private readonly db: DBService,
-  ) {}
-  private readonly logger = new Logger(EnvironmentsGateway.name);
+export class EnvironmentAiTasksGateway {
+  constructor(@Inject('DB') private readonly db: DBService) {}
+
+  private readonly logger = new Logger(EnvironmentAiTasksGateway.name);
 
   @WebSocketServer()
-  server: EnvironmentsServer;
+  server: EnvironmentAiTasksServer;
 
   @SubscribeMessage('join')
   async handleJoinRoom(
     @MessageBody()
-    { environmentId, humanUserId }: EnvironmentsRoomJoinedEventDto,
-    @ConnectedSocket() socket: EnvironmentsServerSocket,
+    { environmentId, humanUserId }: EnvironmentAiTasksRoomJoinedEventDto,
+    @ConnectedSocket() socket: EnvironmentAiTasksServerSocket,
   ) {
     if (!socket.rooms.has(`${environmentId}`)) {
       const user = await this.db.core.humanUsers.find(humanUserId);
@@ -47,16 +44,16 @@ export class EnvironmentsGateway {
           ? `@anon#${user.data.hash}`
           : `@${user.data.tag}`;
 
-      this.logger.debug(`joined: ${name}`);
       socket.join(`${environmentId}`);
-      this.events.emit('environments.joined', { environmentId, humanUserId });
+      this.logger.debug(`joined: ${name}`);
     }
   }
 
   @SubscribeMessage('leave')
   async handleLeaveRoom(
-    @MessageBody() { environmentId, humanUserId }: EnvironmentsRoomLeftEventDto,
-    @ConnectedSocket() socket: EnvironmentsServerSocket,
+    @MessageBody()
+    { environmentId, humanUserId }: EnvironmentAiTasksRoomLeftEventDto,
+    @ConnectedSocket() socket: EnvironmentAiTasksServerSocket,
   ) {
     if (socket.rooms.has(`${environmentId}`)) {
       const user = await this.db.core.humanUsers.find(humanUserId);

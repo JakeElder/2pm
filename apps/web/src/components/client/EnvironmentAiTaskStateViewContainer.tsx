@@ -1,10 +1,10 @@
 "use client";
 
-import { environmentsSocket } from "@/socket";
+import { environmentAiTasksSocket } from "@/socket";
 import {
   ActiveEnvironmentAiTaskDto,
   Environment,
-  EnvironmentsRoomJoinedEventDto,
+  EnvironmentAiTasksRoomJoinedEventDto,
   SessionDto,
 } from "@2pm/core";
 import { InfoBarAiState } from "@2pm/ui/components";
@@ -24,33 +24,30 @@ const EnvironmentAiTaskStateViewContainer = ({
   const [aiTask, setAiTask] = useState(rest.aiTask);
 
   useEffect(() => {
-    const e: EnvironmentsRoomJoinedEventDto = {
-      userId: session.user.data.userId,
+    const e: EnvironmentAiTasksRoomJoinedEventDto = {
+      humanUserId: session.user.data.id,
       environmentId,
     };
 
-    environmentsSocket
+    environmentAiTasksSocket
       .emit("join", e)
-      .on("ai-tasks.updated", async (nextAiTask) => {
+      .on("updated", async (nextAiTask) => {
         setAiTask(nextAiTask);
       })
-      .on("ai-tasks.completed", () => {
+      .on("completed", () => {
         setAiTask(null);
       });
 
     return () => {
-      environmentsSocket.off("ai-tasks.updated");
-      environmentsSocket.emit("leave", e);
+      environmentAiTasksSocket.removeAllListeners();
+      environmentAiTasksSocket.emit("leave", e);
     };
   }, []);
-  return (
-    <div style={{ display: "flex" }}>
-      {aiTask === null ? (
-        <InfoBarAiState.Idle />
-      ) : (
-        <InfoBarAiState.Active state={aiTask.state} tag={aiTask.aiUser.tag} />
-      )}
-    </div>
+
+  return aiTask === null ? (
+    <InfoBarAiState.Idle />
+  ) : (
+    <InfoBarAiState.Active state={aiTask.state} tag={aiTask.aiUser.tag} />
   );
 };
 
