@@ -33,7 +33,7 @@ export class EnvironmentAiTasksGateway {
     @ConnectedSocket() socket: EnvironmentAiTasksServerSocket,
   ) {
     if (!socket.rooms.has(`${environmentId}`)) {
-      const user = await this.db.core.humanUsers.find(humanUserId);
+      const user = await this.db.app.humanUsers.find(humanUserId);
 
       if (!user) {
         return;
@@ -56,7 +56,7 @@ export class EnvironmentAiTasksGateway {
     @ConnectedSocket() socket: EnvironmentAiTasksServerSocket,
   ) {
     if (socket.rooms.has(`${environmentId}`)) {
-      const user = await this.db.core.humanUsers.find(humanUserId);
+      const user = await this.db.app.humanUsers.find(humanUserId);
 
       if (!user) {
         return;

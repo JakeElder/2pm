@@ -1,9 +1,9 @@
 import { drizzle } from "drizzle-orm/postgres-js";
 import { Sql } from "postgres";
-import { CoreDrizzle } from "./core.types";
+import { AppDrizzle } from "./app.types";
 
-export class CoreDBServiceModule {
-  protected drizzle: CoreDrizzle;
+export class AppDBServiceModule {
+  protected drizzle: AppDrizzle;
   constructor(protected pg: Sql) {
     this.drizzle = drizzle(this.pg);
     this.drizzle.delete = this.drizzle.delete.bind(this.drizzle);

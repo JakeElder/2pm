@@ -82,7 +82,7 @@ export class NikoService {
           </>,
         ),
       ),
-      ...this.db.core.plotPoints.toChain(narrative),
+      ...this.db.app.plotPoints.toChain(narrative),
     ];
 
     const res = await this.qwen.invoke(messages, {

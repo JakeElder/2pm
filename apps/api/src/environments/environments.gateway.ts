@@ -36,7 +36,7 @@ export class EnvironmentsGateway {
     @ConnectedSocket() socket: EnvironmentsServerSocket,
   ) {
     if (!socket.rooms.has(`${environmentId}`)) {
-      const user = await this.db.core.humanUsers.find(humanUserId);
+      const user = await this.db.app.humanUsers.find(humanUserId);
 
       if (!user) {
         return;
@@ -59,7 +59,7 @@ export class EnvironmentsGateway {
     @ConnectedSocket() socket: EnvironmentsServerSocket,
   ) {
     if (socket.rooms.has(`${environmentId}`)) {
-      const user = await this.db.core.humanUsers.find(humanUserId);
+      const user = await this.db.app.humanUsers.find(humanUserId);
 
       if (!user) {
         return;

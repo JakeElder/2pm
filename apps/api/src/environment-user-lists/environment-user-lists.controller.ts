@@ -18,7 +18,7 @@ export class EnvironmentUserListsController {
   async onModuleInit() {
     this.events.on('user-environment-presences.created', async (dto) => {
       if (dto.previous) {
-        const list = await this.db.core.environmentUserLists.find(
+        const list = await this.db.app.environmentUserLists.find(
           dto.previous.environment.id,
         );
         this.gateway.server
@@ -26,7 +26,7 @@ export class EnvironmentUserListsController {
           .emit('updated', list);
       }
 
-      const list = await this.db.core.environmentUserLists.find(
+      const list = await this.db.app.environmentUserLists.find(
         dto.next.environment.id,
       );
 
@@ -52,6 +52,6 @@ export class EnvironmentUserListsController {
     schema: zodToOpenAPI(EnvironmentUserListDtoSchema),
   })
   findAll(@Param('id', ParseIntPipe) id: number) {
-    return this.db.core.environmentUserLists.find(id);
+    return this.db.app.environmentUserLists.find(id);
   }
 }

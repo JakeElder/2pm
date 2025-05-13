@@ -50,7 +50,7 @@ export class WorldRoomEnvironmentsController {
   })
   findAll(@Query() query: FilterWorldRoomEnvironmentDto) {
     const filter = FilterWorldRoomEnvironmentDtoSchema.parse(query);
-    return this.db.core.worldRoomEnvironments.findAll(filter);
+    return this.db.app.worldRoomEnvironments.findAll(filter);
   }
 
   @Get(':id')
@@ -68,7 +68,7 @@ export class WorldRoomEnvironmentsController {
     type: WorldRoomEnvironmentDto,
   })
   async findOne(@Param('id') id: WorldRoomEnvironmentId) {
-    const [environment] = await this.db.core.worldRoomEnvironments.findAll({
+    const [environment] = await this.db.app.worldRoomEnvironments.findAll({
       id,
       limit: 1,
     });

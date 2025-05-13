@@ -1,13 +1,13 @@
 import { not, eq, and } from "drizzle-orm";
-import { CoreDBServiceModule } from "../../db/core/core-db-service-module";
-import { aiUsers, environmentAiTasks } from "../../db/core/core.schema";
+import { AppDBServiceModule } from "../../db/app/app-db-service-module";
+import { aiUsers, environmentAiTasks } from "../../db/app/app.schema";
 import {
   CreateEnvironmentAiTaskDto,
   EnvironmentAiTaskDto,
   UpdateEnvironmentAiTaskDto,
 } from "./environment-ai-task.dto";
 
-export default class EnvironmentAiTasks extends CoreDBServiceModule {
+export default class EnvironmentAiTasks extends AppDBServiceModule {
   async create(dto: CreateEnvironmentAiTaskDto): Promise<EnvironmentAiTaskDto> {
     const [aiUser] = await this.drizzle
       .select()

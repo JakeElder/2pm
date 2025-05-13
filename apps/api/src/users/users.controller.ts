@@ -43,6 +43,6 @@ export class UsersController {
     },
   })
   findAll(@Param('id', ParseIntPipe) id: number) {
-    return this.db.core.users.findByEnvironmentId(id);
+    return this.db.app.users.findByEnvironmentId(id);
   }
 }

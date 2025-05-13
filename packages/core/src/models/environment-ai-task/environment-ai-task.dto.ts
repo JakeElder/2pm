@@ -1,7 +1,7 @@
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { createZodDto } from "@anatine/zod-nestjs";
 import { z } from "zod";
-import { environmentAiTasks } from "../../db/core/core.schema";
+import { environmentAiTasks } from "../../db/app/app.schema";
 import { AiUserDtoSchema } from "../ai-user/ai-user.dto";
 
 /**
@@ -32,7 +32,7 @@ export class EnvironmentAiTaskDto extends createZodDto(
  * Update
  */
 export const UpdateEnvironmentAiTaskDtoSchema = z.object({
-  id: createInsertSchema(environmentAiTasks).shape.id,
+  id: createSelectSchema(environmentAiTasks).shape.id,
   state: createInsertSchema(environmentAiTasks).shape.state,
 });
 

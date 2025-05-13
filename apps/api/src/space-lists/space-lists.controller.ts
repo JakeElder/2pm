@@ -17,7 +17,7 @@ export class SpaceListsController {
 
   async onModuleInit() {
     this.events.on('user-environment-presences.created', async () => {
-      const list = await this.db.core.spaceLists.find();
+      const list = await this.db.app.spaceLists.find();
       this.gateway.server.to('main').emit('updated', list);
     });
   }
@@ -32,7 +32,7 @@ export class SpaceListsController {
     schema: zodToOpenAPI(SpaceListDtoSchema),
   })
   async findOne() {
-    const spaceList = await this.db.core.spaceLists.find();
+    const spaceList = await this.db.app.spaceLists.find();
     return spaceList;
   }
 }

@@ -7,15 +7,15 @@ import {
   plotPoints,
   userEnvironmentPresences,
   users,
-} from "../../db/core/core.schema";
-import { CoreDBServiceModule } from "../../db/core/core-db-service-module";
+} from "../../db/app/app.schema";
+import { AppDBServiceModule } from "../../db/app/app-db-service-module";
 import {
   CreateUserEnvironmentPresenceDto,
   UserEnvironmentPresenceDto,
 } from ".";
 import Users from "../user/user.service";
 
-export default class UserEnvironmentPresences extends CoreDBServiceModule {
+export default class UserEnvironmentPresences extends AppDBServiceModule {
   public async create({
     userId,
     environmentId,

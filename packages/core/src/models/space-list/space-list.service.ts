@@ -1,12 +1,12 @@
 import { eq, asc, and, count, isNull } from "drizzle-orm";
-import { CoreDBServiceModule } from "../../db/core/core-db-service-module";
+import { AppDBServiceModule } from "../../db/app/app-db-service-module";
 import {
   userEnvironmentPresences,
   worldRoomEnvironments,
-} from "../../db/core/core.schema";
+} from "../../db/app/app.schema";
 import { SpaceListDto } from "./space-list.dto";
 
-export default class SpaceLists extends CoreDBServiceModule {
+export default class SpaceLists extends AppDBServiceModule {
   public async find(): Promise<SpaceListDto> {
     const res = await this.drizzle
       .select({

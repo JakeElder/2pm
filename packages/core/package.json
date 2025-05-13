@@ -2,13 +2,13 @@
   "name": "@2pm/core",
   "exports": {
     "./db": "./src/db/index.ts",
-    "./schema": "./src/db/core/core.schema.ts",
+    "./schema/app": "./src/db/app/app.schema.ts",
     "./utils": "./src/utils/index.ts",
     ".": "./src/index.ts"
   },
   "scripts": {
     "studio": "drizzle-kit studio",
-    "drizzle:core": "drizzle-kit --config=drizzle-core.config.ts",
+    "drizzle:app": "drizzle-kit --config=drizzle-app.config.ts",
     "drizzle:library": "drizzle-kit --config=drizzle-library.config.ts",
     "generate": "drizzle-kit generate",
     "migrate": "drizzle-kit migrate",

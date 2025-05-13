@@ -48,7 +48,7 @@ export class AiMessagesController {
     required: false,
   })
   findAll() {
-    return this.db.core.aiMessages.findAll();
+    return this.db.app.aiMessages.findAll();
   }
 
   @Get(':id')
@@ -65,7 +65,7 @@ export class AiMessagesController {
     description: 'The Ai message',
   })
   async findOne(@Param('id', ParseIntPipe) id: number) {
-    const [message] = await this.db.core.aiMessages.findAll({ id, limit: 1 });
+    const [message] = await this.db.app.aiMessages.findAll({ id, limit: 1 });
 
     if (!message) {
       throw new NotFoundException(`Message with Id ${id} not found`);

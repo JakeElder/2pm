@@ -1,6 +1,6 @@
 import { createInsertSchema } from "drizzle-zod";
 import { createZodDto } from "@anatine/zod-nestjs";
-import * as schema from "../../db/core/core.schema";
+import * as schema from "../../db/app/app.schema";
 
 /**
  * Create

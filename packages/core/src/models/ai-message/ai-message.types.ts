@@ -1,4 +1,4 @@
 import { InferSelectModel } from "drizzle-orm";
-import { aiMessages } from "../../db/core/core.schema";
+import { aiMessages } from "../../db/app/app.schema";
 
 export type AiMessage = InferSelectModel<typeof aiMessages>;

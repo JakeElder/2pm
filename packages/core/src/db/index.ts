@@ -1,9 +1,9 @@
-import { CoreDBService } from "./core/core.service";
+import { AppDBService } from "./app/app.service";
 import { LibraryDBService } from "./library/library.service";
 
 export type DBService = {
-  core: CoreDBService;
+  app: AppDBService;
   library: LibraryDBService;
 };
 
-export { CoreDBService, LibraryDBService };
+export { AppDBService, LibraryDBService };

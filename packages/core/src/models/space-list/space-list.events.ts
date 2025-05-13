@@ -3,7 +3,7 @@ import type { Socket as ClientSocket } from "socket.io-client";
 import { createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
 import { createZodDto } from "@anatine/zod-nestjs";
-import { humanUsers } from "../../db/core/core.schema";
+import { humanUsers } from "../../db/app/app.schema";
 import { SpaceListDtoSchema } from "./space-list.dto";
 
 /**

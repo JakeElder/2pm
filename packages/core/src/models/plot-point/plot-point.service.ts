@@ -1,5 +1,5 @@
 import { asc, desc, eq, and, inArray, not } from "drizzle-orm";
-import { CoreDBServiceModule } from "../../db/core/core-db-service-module";
+import { AppDBServiceModule } from "../../db/app/app-db-service-module";
 import {
   aiMessages,
   aiUsers,
@@ -11,7 +11,7 @@ import {
   plotPoints,
   userEnvironmentPresences,
   users,
-} from "../../db/core/core.schema";
+} from "../../db/app/app.schema";
 import {
   AiMessagePlotPointDto,
   AiMessagePlotPointDtoSchema,
@@ -36,7 +36,7 @@ import {
   SystemMessage,
 } from "@langchain/core/messages";
 
-export default class PlotPoints extends CoreDBServiceModule {
+export default class PlotPoints extends AppDBServiceModule {
   async findByEnvironmentId(id: number, options: FilterPlotPointsDto = {}) {
     const { limit, types, filter, reverse } = options;
 

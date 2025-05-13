@@ -17,7 +17,7 @@ import { type DBService } from '@2pm/core/db';
 import { Processor, Process } from '@nestjs/bull';
 import { Inject } from '@nestjs/common';
 import { AppEventEmitter } from '../event-emitter';
-import { aiUsers } from '@2pm/core/schema';
+import { aiUsers } from '@2pm/core/schema/app';
 import { NikoService } from '../niko/niko.service';
 
 type LoadingAiTaskProcess = {
@@ -88,12 +88,12 @@ export class EnvironmentAiTasksProcessor {
       state: 'LOADING',
     });
 
-    const narrative = await this.db.core.plotPoints.findByEnvironmentId(
+    const narrative = await this.db.app.plotPoints.findByEnvironmentId(
       job.data.message.environment.id,
       { reverse: true },
     );
 
-    const [aiUser] = await this.db.core.drizzle
+    const [aiUser] = await this.db.app.drizzle
       .select()
       .from(aiUsers)
       .where(eq(aiUsers.id, job.data.aiUserId));
@@ -153,7 +153,7 @@ export class EnvironmentAiTasksProcessor {
       throw new Error();
     }
 
-    const task = await this.db.core.environmentAiTasks.create({
+    const task = await this.db.app.environmentAiTasks.create({
       aiUserId: process.aiUser.id,
       environmentId: process.environment.id,
       state: 'THINKING',
@@ -181,7 +181,7 @@ export class EnvironmentAiTasksProcessor {
       throw new Error();
     }
 
-    const task = await this.db.core.environmentAiTasks.update({
+    const task = await this.db.app.environmentAiTasks.update({
       id: process.task.id,
       state: 'RESPONDING',
     });
@@ -214,7 +214,7 @@ export class EnvironmentAiTasksProcessor {
       throw new Error();
     }
 
-    const message = await this.db.core.aiMessages.update({
+    const message = await this.db.app.aiMessages.update({
       id: process.aiMessage.aiMessage.id,
       content: process.response + event.chunk,
     });
@@ -237,7 +237,7 @@ export class EnvironmentAiTasksProcessor {
       return;
     }
 
-    const aiMessage = await this.db.core.aiMessages.create({
+    const aiMessage = await this.db.app.aiMessages.create({
       content: event.chunk,
       environmentId: process.environment.id,
       state: 'STREAMING',
@@ -267,7 +267,7 @@ export class EnvironmentAiTasksProcessor {
       throw new Error();
     }
 
-    await this.db.core.environmentAiTasks.update({
+    await this.db.app.environmentAiTasks.update({
       id: process.task.id,
       state: 'COMPLETE',
     });

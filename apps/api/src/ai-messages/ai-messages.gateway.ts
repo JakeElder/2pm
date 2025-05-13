@@ -33,7 +33,7 @@ export class AiMessagesGateway {
     @ConnectedSocket() socket: AiMessagesServerSocket,
   ) {
     if (!socket.rooms.has(`${aiMessageId}`)) {
-      const user = await this.db.core.humanUsers.find(humanUserId);
+      const user = await this.db.app.humanUsers.find(humanUserId);
 
       if (!user) {
         return;
@@ -56,7 +56,7 @@ export class AiMessagesGateway {
     @ConnectedSocket() socket: AiMessagesServerSocket,
   ) {
     if (socket.rooms.has(`${aiMessageId}`)) {
-      const user = await this.db.core.humanUsers.find(humanUserId);
+      const user = await this.db.app.humanUsers.find(humanUserId);
 
       if (!user) {
         return;

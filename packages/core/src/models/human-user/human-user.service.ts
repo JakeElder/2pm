@@ -1,12 +1,12 @@
 import { eq } from "drizzle-orm";
-import { CoreDBServiceModule } from "../../db/core/core-db-service-module";
-import { users, humanUsers } from "../../db/core/core.schema";
+import { AppDBServiceModule } from "../../db/app/app-db-service-module";
+import { users, humanUsers } from "../../db/app/app.schema";
 import { CreateHumanUserDto } from "./human-user.dto";
 import { AnonymousUserDto, AuthenticatedUserDto } from "../user/user.dto";
 import { shorten } from "../../utils";
 import { HumanUser, HumanUserDto } from "./human-user.types";
 
-export default class HumanUsers extends CoreDBServiceModule {
+export default class HumanUsers extends AppDBServiceModule {
   async create(
     dto: CreateHumanUserDto = {},
   ): Promise<AnonymousUserDto | AuthenticatedUserDto> {

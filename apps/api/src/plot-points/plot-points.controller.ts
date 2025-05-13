@@ -83,6 +83,6 @@ export class PlotPointsController {
     @Query() query: FilterPlotPointsDto,
   ) {
     const filter = FilterPlotPointsDtoSchema.parse(query);
-    return this.db.core.plotPoints.findByEnvironmentId(id, filter);
+    return this.db.app.plotPoints.findByEnvironmentId(id, filter);
   }
 }

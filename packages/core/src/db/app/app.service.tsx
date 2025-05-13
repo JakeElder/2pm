@@ -1,8 +1,8 @@
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres, { Sql } from "postgres";
 import { reset } from "drizzle-seed";
-import * as schema from "./core.schema";
-import { CoreDrizzle } from "./core.types";
+import * as schema from "./app.schema";
+import { AppDrizzle } from "./app.types";
 import { txt } from "../../utils";
 
 import AiMessages from "../../models/ai-message/ai-message.service";
@@ -19,9 +19,9 @@ import UserEnvironmentPresences from "../../models/user-environment-presence/use
 import Users from "../../models/user/user.service";
 import WorldRoomEnvironments from "../../models/world-room-environment/world-room-environment.service";
 
-export class CoreDBService {
+export class AppDBService {
   public pg: Sql;
-  public drizzle: CoreDrizzle;
+  public drizzle: AppDrizzle;
 
   public aiMessages: AiMessages;
   public aiUsers: AiUsers;

@@ -87,6 +87,6 @@ export class EnvironmentAiTasksController {
     },
   })
   findByEnvironmentId(@Param('id', ParseIntPipe) id: number) {
-    return this.db.core.environmentAiTasks.findByEnvironmentId(id);
+    return this.db.app.environmentAiTasks.findByEnvironmentId(id);
   }
 }

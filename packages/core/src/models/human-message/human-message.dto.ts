@@ -8,7 +8,7 @@ import {
   humanMessages,
   plotPoints,
   users,
-} from "../../db/core/core.schema";
+} from "../../db/app/app.schema";
 
 /**
  * Create

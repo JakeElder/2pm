@@ -1,11 +1,11 @@
 import { eq } from "drizzle-orm";
-import { sessions, humanUsers } from "../../db/core/core.schema";
-import { CoreDBServiceModule } from "../../db/core/core-db-service-module";
+import { sessions, humanUsers } from "../../db/app/app.schema";
+import { AppDBServiceModule } from "../../db/app/app-db-service-module";
 import { CreateSessionDto, SessionDto } from "./session.dto";
 import { Session } from "./session.types";
 import HumanUsers from "../human-user/human-user.service";
 
-export default class Sessions extends CoreDBServiceModule {
+export default class Sessions extends AppDBServiceModule {
   public async create<T extends CreateSessionDto>(dto: T): Promise<SessionDto> {
     const { humanUserId } = dto;
 

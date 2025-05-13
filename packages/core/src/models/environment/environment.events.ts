@@ -4,7 +4,7 @@ import { createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
 import { createZodDto } from "@anatine/zod-nestjs";
 import { PlotPointDto } from "../plot-point";
-import { environments, humanUsers } from "../../db/core/core.schema";
+import { environments, humanUsers } from "../../db/app/app.schema";
 
 /**
  * Room Presence

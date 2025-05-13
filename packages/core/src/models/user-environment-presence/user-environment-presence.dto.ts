@@ -6,7 +6,7 @@ import {
   plotPoints,
   userEnvironmentPresences,
   users,
-} from "../../db/core/core.schema";
+} from "../../db/app/app.schema";
 import { UserDtoSchema } from "../user/user.dto";
 
 export const UserEnvironmentPresenceStateSchema = z.object({

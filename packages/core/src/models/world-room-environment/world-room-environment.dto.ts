@@ -1,7 +1,7 @@
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { createZodDto } from "@anatine/zod-nestjs";
 import { z } from "zod";
-import { worldRoomEnvironments } from "../../db/core/core.schema";
+import { worldRoomEnvironments } from "../../db/app/app.schema";
 
 /**
  * Create

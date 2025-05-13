@@ -1,5 +1,5 @@
 import { InferSelectModel } from "drizzle-orm";
-import { aiUsers } from "../../db/core/core.schema";
+import { aiUsers } from "../../db/app/app.schema";
 import { AI_USER_CODES } from "./ai-user.constants";
 
 export type AiUser = InferSelectModel<typeof aiUsers>;

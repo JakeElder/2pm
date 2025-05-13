@@ -1,12 +1,12 @@
 import { eq, and, isNull, desc } from "drizzle-orm";
-import { CoreDBServiceModule } from "../../db/core/core-db-service-module";
+import { AppDBServiceModule } from "../../db/app/app-db-service-module";
 import {
   humanUsers,
   environments,
   aiUsers,
   users,
   userEnvironmentPresences,
-} from "../../db/core/core.schema";
+} from "../../db/app/app.schema";
 import { User, UserDto } from "./user.types";
 import HumanUsers from "../human-user/human-user.service";
 import { AiUser } from "../ai-user/ai-user.types";
@@ -18,7 +18,7 @@ type DiscriminateData = {
   humanUser: HumanUser | null;
 };
 
-export default class Users extends CoreDBServiceModule {
+export default class Users extends AppDBServiceModule {
   async findByEnvironmentId(id: number): Promise<UserDto[]> {
     const res = await this.drizzle
       .select({

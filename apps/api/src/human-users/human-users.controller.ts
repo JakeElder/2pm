@@ -50,7 +50,7 @@ export class HumanUsersController {
     type: String,
   })
   async findOne(@Param('id') id: HumanUser['id']) {
-    const res = await this.db.core.humanUsers.find(id);
+    const res = await this.db.app.humanUsers.find(id);
     if (!res) {
       throw new NotFoundException(`User ${id} not found`);
     }
@@ -69,7 +69,7 @@ export class HumanUsersController {
     schema: zodToOpenAPI(HumanUserDtoSchema),
   })
   async create(@Body() createDto?: CreateHumanUserDto) {
-    const dto = await this.db.core.humanUsers.create(createDto);
+    const dto = await this.db.app.humanUsers.create(createDto);
     return dto;
   }
 }

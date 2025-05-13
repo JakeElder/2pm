@@ -1,8 +1,8 @@
-import { CoreDBServiceModule } from "../../db/core/core-db-service-module";
-import { users, aiUsers } from "../../db/core/core.schema";
+import { AppDBServiceModule } from "../../db/app/app-db-service-module";
+import { users, aiUsers } from "../../db/app/app.schema";
 import { AiUserDto, CreateAiUserDto } from "./ai-user.dto";
 
-export default class AiUsers extends CoreDBServiceModule {
+export default class AiUsers extends AppDBServiceModule {
   async create(dto: CreateAiUserDto): Promise<AiUserDto> {
     const [user] = await this.drizzle
       .insert(users)

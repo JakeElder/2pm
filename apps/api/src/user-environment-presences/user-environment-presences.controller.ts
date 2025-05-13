@@ -28,7 +28,7 @@ export class UserEnvironmentPresencesController {
     type: UserEnvironmentPresenceDto,
   })
   async create(@Body() createDto: CreateUserEnvironmentPresenceDto) {
-    const dto = await this.db.core.userEnvironmentPresences.create(createDto);
+    const dto = await this.db.app.userEnvironmentPresences.create(createDto);
 
     if (!dto) {
       return null;

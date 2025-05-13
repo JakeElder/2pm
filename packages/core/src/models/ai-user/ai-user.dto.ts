@@ -1,6 +1,6 @@
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { createZodDto } from "@anatine/zod-nestjs";
-import { aiUsers } from "../../db/core/core.schema";
+import { aiUsers } from "../../db/app/app.schema";
 
 /**
  * Create

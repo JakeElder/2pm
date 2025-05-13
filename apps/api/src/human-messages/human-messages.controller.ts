@@ -39,7 +39,7 @@ export class HumanMessagesController {
     schema: zodToOpenAPI(HumanMessageDtoSchema),
   })
   async create(@Body() createDto: CreateHumanMessageDto) {
-    const data = await this.db.core.humanMessages.create(createDto);
+    const data = await this.db.app.humanMessages.create(createDto);
     this.events.emit('plot-points.created', { type: 'HUMAN_MESSAGE', data });
     return data;
   }
@@ -57,6 +57,6 @@ export class HumanMessagesController {
     type: String,
   })
   async delete(@Param('id') id: HumanMessage['id']) {
-    await this.db.core.humanMessages.delete(id);
+    await this.db.app.humanMessages.delete(id);
   }
 }

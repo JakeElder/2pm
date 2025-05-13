@@ -1,17 +1,17 @@
 import { eq, and, isNull, desc } from "drizzle-orm";
-import { CoreDBServiceModule } from "../../db/core/core-db-service-module";
+import { AppDBServiceModule } from "../../db/app/app-db-service-module";
 import {
   aiUsers,
   environments,
   humanUsers,
   userEnvironmentPresences,
   users,
-} from "../../db/core/core.schema";
+} from "../../db/app/app.schema";
 import { EnvironmentUserListDto } from "./environment-user-list.dto";
 import { Environment } from "../environment/environment.types";
 import Users from "../user/user.service";
 
-export default class EnvironmentUserLists extends CoreDBServiceModule {
+export default class EnvironmentUserLists extends AppDBServiceModule {
   async find(id: Environment["id"]): Promise<EnvironmentUserListDto> {
     const res = await this.drizzle
       .select({

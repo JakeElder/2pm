@@ -38,7 +38,7 @@ export class SessionsController {
     type: String,
   })
   async findOne(@Param('id') id: Session['id']) {
-    const res = await this.db.core.sessions.find(id);
+    const res = await this.db.app.sessions.find(id);
     if (!res) {
       throw new NotFoundException(`Session ${id} not found`);
     }
@@ -56,7 +56,7 @@ export class SessionsController {
     schema: zodToOpenAPI(SessionDtoSchema),
   })
   async create(@Body() createDto: CreateSessionDto) {
-    const dto = await this.db.core.sessions.create(createDto);
+    const dto = await this.db.app.sessions.create(createDto);
     return dto;
   }
 }

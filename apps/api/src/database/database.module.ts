@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { CoreDBService } from '@2pm/core/db';
+import { AppDBService } from '@2pm/core/db';
 import { ConfigService } from '@nestjs/config';
 
 @Module({
@@ -8,11 +8,11 @@ import { ConfigService } from '@nestjs/config';
       inject: [ConfigService],
       provide: 'DB',
       useFactory: (config: ConfigService) => {
-        const coreDatabaseUrl = config.get<string>('CORE_DATABASE_URL');
+        const appDatabaseUrl = config.get<string>('APP_DATABASE_URL');
         const libraryDatabaseUrl = config.get<string>('LIBRARY_DATABASE_URL');
 
-        if (!coreDatabaseUrl) {
-          throw new Error('CORE_DATABASE_URL not set');
+        if (!appDatabaseUrl) {
+          throw new Error('APP_DATABASE_URL not set');
         }
 
         if (!libraryDatabaseUrl) {
@@ -20,7 +20,7 @@ import { ConfigService } from '@nestjs/config';
         }
 
         return {
-          core: new CoreDBService(coreDatabaseUrl),
+          app: new AppDBService(appDatabaseUrl),
         };
       },
     },

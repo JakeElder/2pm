@@ -26,6 +26,6 @@ export class AiUsersController {
     type: [AiUserDto],
   })
   findAll() {
-    return this.db.core.aiUsers.findAll();
+    return this.db.app.aiUsers.findAll();
   }
 }
