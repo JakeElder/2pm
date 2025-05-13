@@ -1,10 +1,10 @@
 import { Command } from "commander";
 import ora from "ora";
-import { CoreDBService } from "@2pm/core/db";
+import { AppDBService } from "@2pm/core/db";
 import postgres from "postgres";
 
-const { CORE_DATABASE_URL } = process.env as {
-  CORE_DATABASE_URL: string;
+const { APP_DATABASE_URL } = process.env as {
+  APP_DATABASE_URL: string;
   LIBRARY_DATABASE_URL: string;
 };
 
@@ -16,7 +16,7 @@ db.command("drop")
     const spinner = ora("Dropping database").start();
 
     try {
-      const url = new URL(CORE_DATABASE_URL);
+      const url = new URL(APP_DATABASE_URL);
       url.pathname = "/";
 
       const pg = postgres(url.toString());
@@ -44,7 +44,7 @@ db.command("create")
     const spinner = ora("Creating database").start();
 
     try {
-      const url = new URL(CORE_DATABASE_URL);
+      const url = new URL(APP_DATABASE_URL);
       url.pathname = "/";
 
       const pg = postgres(url.toString());
@@ -66,7 +66,7 @@ db.command("seed")
     const spinner = ora("Seeding database").start();
 
     try {
-      const db = new CoreDBService(CORE_DATABASE_URL);
+      const db = new AppDBService(APP_DATABASE_URL);
       await db.seed();
       await db.end();
       spinner.succeed(`Seeded database`);
@@ -83,7 +83,7 @@ db.command("clear")
     const spinner = ora("Clearing DB").start();
 
     try {
-      const db = new CoreDBService(CORE_DATABASE_URL);
+      const db = new AppDBService(APP_DATABASE_URL);
       await db.clear();
       await db.end();
       spinner.succeed(`Cleared DB`);

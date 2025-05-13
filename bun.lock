@@ -72,6 +72,7 @@
         "reflect-metadata": "^0.2.0",
         "traverse": "^0.6.11",
         "typed-emitter": "^2.1.0",
+        "zod-to-json-schema": "^3.24.5",
       },
       "devDependencies": {
         "@nestjs/cli": "^11.0.7",

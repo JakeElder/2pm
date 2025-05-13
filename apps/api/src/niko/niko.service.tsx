@@ -1,11 +1,10 @@
-import { ChatTogetherAI } from '@langchain/community/chat_models/togetherai';
 import { type CharacterResponseEvent, PlotPointDto } from '@2pm/core';
-import { SystemMessage } from '@langchain/core/messages';
+import { BaseMessage, SystemMessage } from '@langchain/core/messages';
 import { Inject, Injectable } from '@nestjs/common';
 import { z } from 'zod';
 import { txt } from '@2pm/core/utils';
-import { ChatDeepSeek } from '@langchain/deepseek';
 import { type DBService } from '@2pm/core/db';
+import { BaseCharacterService } from 'src/base-character-service/base-character-service';
 
 const politeDecline = {
   name: 'politeDecline',
@@ -47,41 +46,21 @@ const findBibleVerse = {
 };
 
 @Injectable()
-export class NikoService {
-  private qwen: ChatTogetherAI;
-  private deepSeek: ChatDeepSeek;
-
+export class NikoService extends BaseCharacterService {
   constructor(@Inject('DB') private readonly db: DBService) {
-    this.deepSeek = new ChatDeepSeek({
-      modelName: 'deepseek-chat',
-      streaming: true,
-    });
-
-    this.qwen = new ChatTogetherAI({
-      model: 'Qwen/Qwen2.5-7B-Instruct-Turbo',
-      streaming: true,
-    });
+    super(db);
   }
+
+  private static SYSTEM_PROMPT = txt(
+    <>
+      {super.BASE_SYSTEM_PROMPT}
+      <p>You are @niko an honourable, helpful bot</p>
+    </>,
+  );
 
   async react(narrative: PlotPointDto[]) {
     const messages = [
-      new SystemMessage(
-        txt(
-          <>
-            <p>
-              You are @niko an honourable, helpful bot. A series of "plot
-              points" and surrounding messages will follow. You should be able
-              to identify your response based on the data. Pick the appropriate
-              tool to progress the narrative. Try to consider the interface that
-              is produced as a result of the plot points
-            </p>
-            <p>
-              AI and Human messages will be prefixed with context in the format
-              [[*]][message], where * represents a JSON object
-            </p>
-          </>,
-        ),
-      ),
+      new SystemMessage(NikoService.SYSTEM_PROMPT),
       ...this.db.app.plotPoints.toChain(narrative),
     ];
 
@@ -98,28 +77,17 @@ export class NikoService {
   async *respond(
     narrative: PlotPointDto[],
   ): AsyncGenerator<CharacterResponseEvent> {
-    yield { type: 'THINKING' };
-
-    const stream = await this.deepSeek.stream([
+    const messages: BaseMessage[] = [
+      new SystemMessage(NikoService.SYSTEM_PROMPT),
       new SystemMessage(
         txt(
           <>
-            You are @niko. A series of "plot points" will follow. You should be
-            able to identify your response based on the data. do NOT respond
-            with JSON data. respond in natural language as though you can
-            visualise the user interface resulting from the plot points.
+            Respond in natural language. Do NOT include JSON in your response
           </>,
         ),
       ),
-      ...narrative.map((p) => new SystemMessage(JSON.stringify(p, null, 2))),
-    ]);
-
-    yield { type: 'RESPONDING' };
-
-    for await (const chunk of stream) {
-      yield { type: 'CHUNK', chunk: `${chunk.content}` };
-    }
-
-    yield { type: 'COMPLETE' };
+      ...this.db.app.plotPoints.toChain(narrative),
+    ];
+    yield* super.baseRespond(messages);
   }
 }

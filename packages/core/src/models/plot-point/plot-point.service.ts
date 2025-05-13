@@ -31,7 +31,7 @@ import HumanUsers from "../human-user/human-user.service";
 import { UserDto } from "../user/user.types";
 import {
   AIMessage,
-  BaseMessageLike,
+  BaseMessage,
   HumanMessage,
   SystemMessage,
 } from "@langchain/core/messages";
@@ -173,7 +173,7 @@ export default class PlotPoints extends AppDBServiceModule {
     return data;
   }
 
-  toChain(plotPoints: PlotPointDto[]): BaseMessageLike[] {
+  toChain(plotPoints: PlotPointDto[]): BaseMessage[] {
     const user = (dto: UserDto) => {
       if (dto.type === "AI") {
         return {
@@ -203,39 +203,41 @@ export default class PlotPoints extends AppDBServiceModule {
     };
 
     return plotPoints.map(({ type, data }) => {
-      if (type === "AI_MESSAGE") {
-        const context = user({ type: "AI", data: data.aiUser });
-        return new AIMessage(
-          `[[${JSON.stringify(context)}]][${data.aiMessage.content}]`,
-        );
-      }
-
-      if (type === "HUMAN_MESSAGE") {
-        const context = user(data.user);
-        return new HumanMessage(
-          `[[${JSON.stringify(context)}]][${data.humanMessage.text}]`,
-        );
-      }
-
-      if (type === "ENVIRONMENT_ENTERED") {
-        const summary = {
-          type,
-          time: data.plotPoint.createdAt,
-          user: user(data.user),
-        };
-        return new SystemMessage(`PLOT_POINT: ${JSON.stringify(summary)}`);
-      }
-
-      if (type === "ENVIRONMENT_LEFT") {
-        const summary = {
-          type,
-          time: data.plotPoint.createdAt,
-          user: user(data.user),
-        };
-        return new SystemMessage(`PLOT_POINT: ${JSON.stringify(summary)}`);
-      }
-
-      throw new Error();
+      return new SystemMessage(JSON.stringify({ type, data }));
+      //   if (type === "AI_MESSAGE") {
+      //     const context = user({ type: "AI", data: data.aiUser });
+      //     return new SystemMessage({
+      //       content: JSON.stringify({ type, data }),
+      //     });
+      //   }
+      //
+      //   if (type === "HUMAN_MESSAGE") {
+      //     const context = user(data.user);
+      //     return new SystemMessage({
+      //       content: data.humanMessage.text,
+      //       additional_kwargs: { sender: context },
+      //     });
+      //   }
+      //
+      //   if (type === "ENVIRONMENT_ENTERED") {
+      //     const summary = {
+      //       type,
+      //       time: data.plotPoint.createdAt,
+      //       user: user(data.user),
+      //     };
+      //     return new SystemMessage(`PLOT_POINT: ${JSON.stringify(summary)}`);
+      //   }
+      //
+      //   if (type === "ENVIRONMENT_LEFT") {
+      //     const summary = {
+      //       type,
+      //       time: data.plotPoint.createdAt,
+      //       user: user(data.user),
+      //     };
+      //     return new SystemMessage(`PLOT_POINT: ${JSON.stringify(summary)}`);
+      //   }
+      //
+      //   throw new Error();
     });
   }
 }
