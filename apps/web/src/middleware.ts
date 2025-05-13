@@ -7,6 +7,12 @@ export async function middleware(request: NextRequest) {
     return Response.json({}, { status: 200 });
   }
 
+  if (request.nextUrl.pathname.startsWith("/@")) {
+    const [_, tag, channel] = request.nextUrl.pathname.split("/");
+    request.nextUrl.pathname = `/user/${tag.slice(1)}/${channel}`;
+    return NextResponse.rewrite(request.nextUrl);
+  }
+
   const response = NextResponse.next();
 
   const sid = request.cookies.get("sid");
