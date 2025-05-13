@@ -56,6 +56,11 @@ export class PlotPointsController {
     isArray: true,
   })
   @ApiQuery({
+    name: 'reverse',
+    required: false,
+    type: Boolean,
+  })
+  @ApiQuery({
     name: 'limit',
     required: false,
     type: Number,

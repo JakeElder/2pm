@@ -114,7 +114,8 @@ export const messages = pgTable("messages", {
 
 export const humanMessages = pgTable("human_messages", {
   id: serial("id").primaryKey(),
-  content: jsonb("content").notNull().$type<Prose>(),
+  json: jsonb("json").notNull().$type<Prose>(),
+  text: text("text").notNull(),
   messageId: integer("message_id")
     .notNull()
     .references(() => messages.id),
@@ -138,20 +139,27 @@ export const environments = pgTable("environments", {
   type: environmentTypeEnum("type").notNull(),
 });
 
-export const environmentAiTasks = pgTable("environment_ai_tasks", {
-  id: serial("id").primaryKey(),
-  environmentId: integer("environment_id")
-    .notNull()
-    .references(() => environments.id),
-  aiUserId: aiUserCodeEnum("ai_user_id")
-    .notNull()
-    .references(() => aiUsers.id)
-    .unique(),
-  state: environmentAiTaskState("state").notNull(),
-  createdAt: timestamp("created_at", { withTimezone: true, precision: 3 })
-    .defaultNow()
-    .notNull(),
-});
+export const environmentAiTasks = pgTable(
+  "environment_ai_tasks",
+  {
+    id: serial("id").primaryKey(),
+    environmentId: integer("environment_id")
+      .notNull()
+      .references(() => environments.id),
+    aiUserId: aiUserCodeEnum("ai_user_id")
+      .notNull()
+      .references(() => aiUsers.id),
+    state: environmentAiTaskState("state").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true, precision: 3 })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    uniqueIndex("unique_active_task_per_environment_idx")
+      .on(table.environmentId)
+      .where(sql`${table.state} != 'COMPLETE'`),
+  ],
+);
 
 export const worldRoomEnvironments = pgTable("world_room_environments", {
   id: worldRoomCodeEnum("id").primaryKey(),

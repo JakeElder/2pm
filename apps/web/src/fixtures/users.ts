@@ -1,6 +1,6 @@
-import { AiUserDto, AnonymousUserDto, AuthenticatedUserDto } from "@2pm/core";
+import { UserDto } from "@2pm/core";
 
-export const ANONYMOUS: AnonymousUserDto = {
+export const ANONYMOUS: UserDto = {
   type: "ANONYMOUS",
   data: {
     id: "b08ca226-a153-4349-940d-3aa534dde0a8",
@@ -9,7 +9,7 @@ export const ANONYMOUS: AnonymousUserDto = {
   },
 };
 
-export const AUTHENTICATED: AuthenticatedUserDto = {
+export const AUTHENTICATED: UserDto = {
   type: "AUTHENTICATED",
   data: {
     id: "5a0831c6-7340-4df8-b0a8-2993a8e87020",
@@ -19,7 +19,7 @@ export const AUTHENTICATED: AuthenticatedUserDto = {
   },
 };
 
-export const AI: AiUserDto = {
+export const AI: UserDto = {
   type: "AI",
   data: {
     id: "NIKO",

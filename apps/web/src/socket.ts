@@ -1,4 +1,5 @@
 import {
+  AiMessagesClientSocket,
   EnvironmentAiTasksClientSocket,
   EnvironmentsClientSocket,
   EnvironmentUserListsClientSocket,
@@ -20,4 +21,8 @@ export const spaceListsSocket: SpaceListsClientSocket = io(
 
 export const environmentUserListsSocket: EnvironmentUserListsClientSocket = io(
   `${process.env.NEXT_PUBLIC_SOCKET_BASE_URL}/environment-user-lists`,
+);
+
+export const aiMessagesSocket: AiMessagesClientSocket = io(
+  `${process.env.NEXT_PUBLIC_SOCKET_BASE_URL}/ai-messages`,
 );

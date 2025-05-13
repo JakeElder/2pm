@@ -88,7 +88,7 @@ export const AuthenticatedUserTag = ({
  * AiTag
  */
 
-type AiTagProps = AiUserDto["data"];
+type AiTagProps = AiUserDto;
 
 export const AiUserTag = ({ tag }: AiTagProps) => {
   return (

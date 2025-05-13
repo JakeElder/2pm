@@ -23,12 +23,12 @@ export const Entered: Story = {
   args: {},
   render() {
     return (
-      <RoomPresenceChange.Root>
-        <RoomPresenceChange.Icon type="ENTRACE" />
+      <RoomPresenceChange.Root type="ENTRACE">
+        <RoomPresenceChange.Icon />
         <RoomPresenceChange.Tag>
           <UserTag {...users.AUTHENTICATED} />
         </RoomPresenceChange.Tag>
-        <RoomPresenceChange.Action type="ENTRACE" />
+        <RoomPresenceChange.Action />
       </RoomPresenceChange.Root>
     );
   },
@@ -38,12 +38,12 @@ export const Left: Story = {
   args: {},
   render() {
     return (
-      <RoomPresenceChange.Root>
-        <RoomPresenceChange.Icon type="EXIT" />
+      <RoomPresenceChange.Root type="EXIT">
+        <RoomPresenceChange.Icon />
         <RoomPresenceChange.Tag>
           <UserTag {...users.AUTHENTICATED} />
         </RoomPresenceChange.Tag>
-        <RoomPresenceChange.Action type="EXIT" />
+        <RoomPresenceChange.Action />
       </RoomPresenceChange.Root>
     );
   },

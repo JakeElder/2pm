@@ -1,5 +1,6 @@
 import React from "react";
 import css from "./Message.module.css";
+import { default as ReactMarkdown } from "react-markdown";
 
 /*
  * Root
@@ -47,4 +48,20 @@ type BodyProps = {
 
 export const Body = ({ children }: BodyProps) => {
   return <div className={css["body"]}>{children}</div>;
+};
+
+/*
+ * Markdown
+ */
+
+type MarkdownProps = {
+  children: React.ComponentProps<typeof ReactMarkdown>["children"];
+};
+
+export const Markdown = ({ children }: MarkdownProps) => {
+  return (
+    <div className={css["markdown"]}>
+      <ReactMarkdown>{children}</ReactMarkdown>
+    </div>
+  );
 };

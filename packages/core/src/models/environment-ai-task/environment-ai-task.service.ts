@@ -4,6 +4,7 @@ import { aiUsers, environmentAiTasks } from "../../db/core/core.schema";
 import {
   CreateEnvironmentAiTaskDto,
   EnvironmentAiTaskDto,
+  UpdateEnvironmentAiTaskDto,
 } from "./environment-ai-task.dto";
 
 export default class EnvironmentAiTasks extends CoreDBServiceModule {
@@ -22,6 +23,28 @@ export default class EnvironmentAiTasks extends CoreDBServiceModule {
       .insert(environmentAiTasks)
       .values(dto)
       .returning();
+
+    return {
+      ...environmentAiTask,
+      aiUser,
+    };
+  }
+
+  async update({
+    id,
+    ...rest
+  }: UpdateEnvironmentAiTaskDto): Promise<EnvironmentAiTaskDto> {
+    const [environmentAiTask] = await this.drizzle
+      .update(environmentAiTasks)
+      .set({ ...rest })
+      .where(eq(environmentAiTasks.id, id))
+      .returning();
+
+    const [aiUser] = await this.drizzle
+      .select()
+      .from(aiUsers)
+      .where(eq(aiUsers.id, environmentAiTask.aiUserId))
+      .limit(1);
 
     return {
       ...environmentAiTask,

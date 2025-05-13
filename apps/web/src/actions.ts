@@ -6,13 +6,15 @@ import { CreateHumanMessageDto } from "@2pm/core";
 import { createHumanMessage } from "@/api/human-messages";
 
 export const submitMessage = async ({
-  content,
+  json,
+  text,
   environmentId,
 }: Omit<CreateHumanMessageDto, "userId">) => {
   const session = await getSession();
 
   const data: CreateHumanMessageDto = {
-    content,
+    json,
+    text,
     environmentId,
     userId: session.user.data.userId,
   };
@@ -37,4 +39,9 @@ export async function getSession() {
   }
 
   throw new Error();
+}
+
+export async function getAiUsers() {
+  const users = await api.aiUsers.getAiUsers();
+  return users.data;
 }

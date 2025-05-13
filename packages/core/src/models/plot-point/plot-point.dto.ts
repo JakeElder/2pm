@@ -2,16 +2,7 @@ import { createZodDto } from "@anatine/zod-nestjs";
 import { z } from "zod";
 import { HumanMessageDtoSchema } from "../human-message/human-message.dto";
 import { AiMessageDtoSchema } from "../ai-message/ai-message.dto";
-import { createSelectSchema } from "drizzle-zod";
-import {
-  aiUsers,
-  environments,
-  humanUsers,
-  plotPoints,
-  users,
-} from "../../db/core/core.schema";
 import { PLOT_POINT_TYPES } from "./plot-point.constants";
-import { UserDtoSchema } from "../user/user.dto";
 import { UserEnvironmentPresenceStateSchema } from "../user-environment-presence";
 
 /**
@@ -87,6 +78,7 @@ export const FilterPlotPointsDtoSchema = z.object({
   limit: z.coerce.number().optional(),
   types: TypesArraySchema.optional(),
   filter: TypesArraySchema.optional(),
+  reverse: z.coerce.boolean().optional(),
 });
 
 export class FilterPlotPointsDto extends createZodDto(

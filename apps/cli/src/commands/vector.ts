@@ -42,7 +42,7 @@ vector
         postgresConnectionOptions: {
           connectionString: databaseUrl,
         },
-        tableName: "book_chunks",
+        tableName: "kjv_chunks",
         columns: {
           idColumnName: "id",
           vectorColumnName: "embedding",
@@ -114,14 +114,14 @@ vector
   });
 
 async function setupVectorTable(pool: Pool) {
-  console.log("Setting up vector extension and book_chunks table...");
+  console.log("Setting up vector extension and kjv_chunks table...");
 
   await pool.query(/* sql */ `
     -- Enable the vector extension
     CREATE EXTENSION IF NOT EXISTS vector;
     
     -- Create table for book chunks with vector embeddings
-    CREATE TABLE IF NOT EXISTS book_chunks (
+    CREATE TABLE IF NOT EXISTS kjv_chunks (
       id SERIAL PRIMARY KEY,
       content TEXT NOT NULL,
       metadata JSONB NOT NULL,
@@ -129,8 +129,8 @@ async function setupVectorTable(pool: Pool) {
     );
     
     -- Create an index for faster vector similarity search
-    CREATE INDEX IF NOT EXISTS book_chunks_embedding_idx 
-    ON book_chunks USING ivfflat (embedding vector_l2_ops) 
+    CREATE INDEX IF NOT EXISTS kjv_chunks_embedding_idx 
+    ON kjv_chunks USING ivfflat (embedding vector_l2_ops) 
     WITH (lists = 100);
     
     -- Create a function for vector similarity search
@@ -150,13 +150,13 @@ async function setupVectorTable(pool: Pool) {
     BEGIN
       RETURN QUERY
       SELECT
-        book_chunks.id,
-        book_chunks.content,
-        book_chunks.metadata,
-        1 - (book_chunks.embedding <-> query_embedding) AS similarity
-      FROM book_chunks
-      WHERE 1 - (book_chunks.embedding <-> query_embedding) > match_threshold
-      ORDER BY book_chunks.embedding <-> query_embedding
+        kjv_chunks.id,
+        kjv_chunks.content,
+        kjv_chunks.metadata,
+        1 - (kjv_chunks.embedding <-> query_embedding) AS similarity
+      FROM kjv_chunks
+      WHERE 1 - (kjv_chunks.embedding <-> query_embedding) > match_threshold
+      ORDER BY kjv_chunks.embedding <-> query_embedding
       LIMIT match_count;
     END;
     $$;
@@ -248,7 +248,7 @@ async function processVerses(pool: Pool, embeddings: OllamaEmbeddings) {
 
         await client.query(
           /* sql */
-          `INSERT INTO book_chunks (content, metadata, embedding) VALUES ($1, $2, $3)`,
+          `INSERT INTO kjv_chunks (content, metadata, embedding) VALUES ($1, $2, $3)`,
           [doc.pageContent, doc.metadata, `[${embedding.join(",")}]`],
         );
       }

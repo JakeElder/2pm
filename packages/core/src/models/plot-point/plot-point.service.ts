@@ -1,4 +1,4 @@
-import { desc, eq, and, inArray, not } from "drizzle-orm";
+import { asc, desc, eq, and, inArray, not } from "drizzle-orm";
 import { CoreDBServiceModule } from "../../db/core/core-db-service-module";
 import {
   aiMessages,
@@ -14,20 +14,36 @@ import {
 } from "../../db/core/core.schema";
 import {
   AiMessagePlotPointDto,
+  AiMessagePlotPointDtoSchema,
   EnvironmentEnteredPlotPointDto,
+  EnvironmentEnteredPlotPointDtoSchema,
   EnvironmentLeftPlotPointDto,
+  EnvironmentLeftPlotPointDtoSchema,
   FilterPlotPointsDto,
   HumanMessagePlotPointDto,
+  HumanMessagePlotPointDtoSchema,
   PlotPointDto,
 } from "./plot-point.dto";
 import { HumanMessageDtoSchema } from "../human-message/human-message.dto";
 import { AiMessageDtoSchema } from "../ai-message/ai-message.dto";
 import Users from "../user/user.service";
 import HumanUsers from "../human-user/human-user.service";
+import { UserDto } from "../user/user.types";
+import {
+  AIMessage,
+  BaseMessageLike,
+  HumanMessage,
+  SystemMessage,
+} from "@langchain/core/messages";
 
 export default class PlotPoints extends CoreDBServiceModule {
-  async findByEnvironmentId(id: number, options: FilterPlotPointsDto) {
-    const { limit, types, filter } = options;
+  async findByEnvironmentId(id: number, options: FilterPlotPointsDto = {}) {
+    const { limit, types, filter, reverse } = options;
+
+    const order = reverse
+      ? asc(plotPoints.createdAt)
+      : desc(plotPoints.createdAt);
+
     const query = this.drizzle
       .select({
         plotPoint: plotPoints,
@@ -71,7 +87,7 @@ export default class PlotPoints extends CoreDBServiceModule {
             : undefined,
         ),
       )
-      .orderBy(desc(plotPoints.id));
+      .orderBy(order);
 
     if (limit) {
       query.limit(limit);
@@ -95,7 +111,7 @@ export default class PlotPoints extends CoreDBServiceModule {
           }),
         };
 
-        return res;
+        return HumanMessagePlotPointDtoSchema.parse(res);
       }
 
       if (row.plotPoint.type === "AI_MESSAGE") {
@@ -110,7 +126,7 @@ export default class PlotPoints extends CoreDBServiceModule {
           data: AiMessageDtoSchema.parse(row),
         };
 
-        return res;
+        return AiMessagePlotPointDtoSchema.parse(res);
       }
 
       if (row.plotPoint.type === "ENVIRONMENT_ENTERED") {
@@ -129,7 +145,7 @@ export default class PlotPoints extends CoreDBServiceModule {
           },
         };
 
-        return res;
+        return EnvironmentEnteredPlotPointDtoSchema.parse(res);
       }
 
       if (row.plotPoint.type === "ENVIRONMENT_LEFT") {
@@ -148,12 +164,78 @@ export default class PlotPoints extends CoreDBServiceModule {
           },
         };
 
-        return res;
+        return EnvironmentLeftPlotPointDtoSchema.parse(res);
       }
 
       throw new Error(`${row.plotPoint.type} not implemented`);
     });
 
     return data;
+  }
+
+  toChain(plotPoints: PlotPointDto[]): BaseMessageLike[] {
+    const user = (dto: UserDto) => {
+      if (dto.type === "AI") {
+        return {
+          type: "AI",
+          id: dto.data.userId,
+          tag: dto.data.tag,
+        };
+      }
+
+      if (dto.type === "AUTHENTICATED") {
+        return {
+          type: "AUTHENTICATED",
+          id: dto.data.userId,
+          tag: dto.data.tag,
+        };
+      }
+
+      if (dto.type === "ANONYMOUS") {
+        return {
+          type: "AUTHENTICATED",
+          id: dto.data.userId,
+          tag: `anon#${dto.data.hash}`,
+        };
+      }
+
+      throw new Error();
+    };
+
+    return plotPoints.map(({ type, data }) => {
+      if (type === "AI_MESSAGE") {
+        const context = user({ type: "AI", data: data.aiUser });
+        return new AIMessage(
+          `[[${JSON.stringify(context)}]][${data.aiMessage.content}]`,
+        );
+      }
+
+      if (type === "HUMAN_MESSAGE") {
+        const context = user(data.user);
+        return new HumanMessage(
+          `[[${JSON.stringify(context)}]][${data.humanMessage.text}]`,
+        );
+      }
+
+      if (type === "ENVIRONMENT_ENTERED") {
+        const summary = {
+          type,
+          time: data.plotPoint.createdAt,
+          user: user(data.user),
+        };
+        return new SystemMessage(`PLOT_POINT: ${JSON.stringify(summary)}`);
+      }
+
+      if (type === "ENVIRONMENT_LEFT") {
+        const summary = {
+          type,
+          time: data.plotPoint.createdAt,
+          user: user(data.user),
+        };
+        return new SystemMessage(`PLOT_POINT: ${JSON.stringify(summary)}`);
+      }
+
+      throw new Error();
+    });
   }
 }

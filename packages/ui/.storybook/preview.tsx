@@ -17,7 +17,9 @@ const preview: Preview = {
     (Story) => {
       return (
         <Theme>
-          <Story />
+          <div data-root>
+            <Story />
+          </div>
         </Theme>
       );
     },

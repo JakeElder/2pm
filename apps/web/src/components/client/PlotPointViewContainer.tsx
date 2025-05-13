@@ -1,22 +1,20 @@
 "use client";
 
-import { PlotPointDto } from "@2pm/core";
+import { PlotPointDto, SessionDto } from "@2pm/core";
 import { Prose, UserTag } from "@2pm/ui/components";
 import { RoomPresenceChange, Message } from "@2pm/ui/plot-points";
+import AiMessageViewContainer from "./AiMessageViewContainer";
 
-type Props = PlotPointDto;
+type Props = {
+  session: SessionDto;
+  plotPoint: PlotPointDto;
+};
 
-const PlotPointViewContainer = ({ type, data }: Props) => {
+const PlotPointViewContainer = ({ plotPoint, session }: Props) => {
+  const { type, data } = plotPoint;
+
   if (type === "AI_MESSAGE") {
-    const { aiUser, aiMessage } = data;
-    return (
-      <Message.Root>
-        <Message.Header>
-          <UserTag type="AI" data={aiUser} />
-        </Message.Header>
-        <Message.Body>{aiMessage.content}</Message.Body>
-      </Message.Root>
-    );
+    return <AiMessageViewContainer session={session} message={data} />;
   }
 
   if (type === "HUMAN_MESSAGE") {
@@ -27,7 +25,7 @@ const PlotPointViewContainer = ({ type, data }: Props) => {
           <UserTag {...user} showHash />
         </Message.Header>
         <Message.Body>
-          <Prose editable={false} content={humanMessage.content} />
+          <Prose editable={false} content={humanMessage.json} />
         </Message.Body>
       </Message.Root>
     );

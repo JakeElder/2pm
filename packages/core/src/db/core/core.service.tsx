@@ -112,15 +112,15 @@ export class CoreDBService {
     await Promise.all([
       this.userEnvironmentPresences.create({
         environmentId: universe.environmentId,
-        userId: niko.data.userId,
+        userId: niko.userId,
       }),
       this.userEnvironmentPresences.create({
         environmentId: universe.environmentId,
-        userId: note.data.userId,
+        userId: note.userId,
       }),
       this.userEnvironmentPresences.create({
         environmentId: universe.environmentId,
-        userId: why.data.userId,
+        userId: why.userId,
       }),
       this.userEnvironmentPresences.create({
         environmentId: universe.environmentId,
@@ -130,7 +130,7 @@ export class CoreDBService {
 
     // Plot Points
     await this.aiMessages.create({
-      userId: niko.data.userId,
+      userId: niko.userId,
       environmentId: universe.environmentId,
       content: "Welcome to the 2pm universe",
       state: "COMPLETE",
@@ -139,7 +139,8 @@ export class CoreDBService {
     await this.humanMessages.create({
       userId: jake.data.userId,
       environmentId: universe.environmentId,
-      content: {
+      text: "thank you sir",
+      json: {
         type: "doc",
         content: [
           {

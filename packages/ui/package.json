@@ -17,8 +17,11 @@
   },
   "dependencies": {
     "@2pm/core": "workspace:*",
+    "@tiptap/extension-mention": "^2.12.0",
     "classnames": "^2.5.1",
-    "react-hotkeys-hook": "^5.0.1"
+    "react-hotkeys-hook": "^5.0.1",
+    "react-markdown": "^10.1.0",
+    "tippy.js": "^6.3.7"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^3.2.6",

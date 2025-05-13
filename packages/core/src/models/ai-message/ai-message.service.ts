@@ -13,6 +13,7 @@ import {
   CreateAiMessageDto,
   FilterAiMessagesDto,
   FilterAiMessagesDtoSchema,
+  UpdateAiMessageDto,
 } from "./ai-message.dto";
 
 export default class AiMessages extends CoreDBServiceModule {
@@ -67,9 +68,40 @@ export default class AiMessages extends CoreDBServiceModule {
     };
   }
 
-  public async findAll(
-    filter: FilterAiMessagesDto = {},
-  ): Promise<AiMessageDto[]> {
+  async update({ id, ...rest }: UpdateAiMessageDto): Promise<AiMessageDto> {
+    const r = this.drizzle
+      .update(aiMessages)
+      .set({ ...rest })
+      .where(eq(aiMessages.id, id))
+      .returning();
+
+    const [aiMessage] = await r;
+
+    const res = this.drizzle
+      .select({
+        plotPoint: plotPoints,
+        environment: environments,
+        aiUser: aiUsers,
+      })
+      .from(aiMessages)
+      .innerJoin(messages, eq(messages.id, aiMessages.messageId))
+      .innerJoin(users, eq(users.id, messages.userId))
+      .innerJoin(aiUsers, eq(aiUsers.userId, users.id))
+      .innerJoin(environments, eq(environments.id, messages.environmentId))
+      .innerJoin(plotPoints, eq(plotPoints.id, messages.plotPointId))
+      .where(eq(aiMessages.id, aiMessage.id));
+
+    const [{ aiUser, environment, plotPoint }] = await res;
+
+    return {
+      aiMessage,
+      aiUser,
+      environment,
+      plotPoint,
+    };
+  }
+
+  async findAll(filter: FilterAiMessagesDto = {}): Promise<AiMessageDto[]> {
     const { id, limit } = FilterAiMessagesDtoSchema.parse(filter);
 
     const filters: SQL[] = [];

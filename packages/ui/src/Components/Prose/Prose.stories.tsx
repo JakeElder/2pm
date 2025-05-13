@@ -24,6 +24,11 @@ type Story = StoryObj<typeof Prose>;
 export const Default: Story = {
   args: {
     content: prose.WITH_BOLD,
+    suggestionItems: async ({ query }) => {
+      return ["niko", "note", "why"]
+        .filter((item) => item.toLowerCase().startsWith(query.toLowerCase()))
+        .slice(0, 5);
+    },
   },
 };
 

@@ -21,7 +21,8 @@ export default class HumanMessages extends CoreDBServiceModule {
   public async create({
     userId,
     environmentId,
-    content,
+    json,
+    text,
   }: CreateHumanMessageDto): Promise<HumanMessageDto> {
     const [[environment], [humanUser]] = await Promise.all([
       this.drizzle
@@ -58,7 +59,11 @@ export default class HumanMessages extends CoreDBServiceModule {
 
       const [humanMessage] = await tx
         .insert(humanMessages)
-        .values({ messageId: message.id, content })
+        .values({
+          messageId: message.id,
+          json,
+          text,
+        })
         .returning();
 
       return {

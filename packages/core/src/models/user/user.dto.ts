@@ -1,17 +1,8 @@
 import { z } from "zod";
 import { createZodDto } from "@anatine/zod-nestjs";
 import { createSelectSchema } from "drizzle-zod";
-import { aiUsers, humanUsers } from "../../db/core/core.schema";
-
-/**
- * Ai
- */
-export const AiUserDtoSchema = z.object({
-  type: z.literal("AI"),
-  data: createSelectSchema(aiUsers),
-});
-
-export class AiUserDto extends createZodDto(AiUserDtoSchema) {}
+import { humanUsers } from "../../db/core/core.schema";
+import { AiUserDtoSchema } from "../ai-user/ai-user.dto";
 
 /**
  * Anonymous
@@ -43,7 +34,7 @@ export class AuthenticatedUserDto extends createZodDto(
  * Unions
  */
 export const UserDtoSchema = z.discriminatedUnion("type", [
-  AiUserDtoSchema,
+  z.object({ type: z.literal("AI"), data: AiUserDtoSchema }),
   AnonymousUserDtoSchema,
   AuthenticatedUserDtoSchema,
 ]);

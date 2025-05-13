@@ -1,16 +1,23 @@
 import { createSelectSchema } from "drizzle-zod";
 import { createZodDto } from "@anatine/zod-nestjs";
 import { z } from "zod";
-import * as schema from "../../db/core/core.schema";
 import { ProseDtoSchema } from "../prose/prose.dto";
 import { HumanUserDtoSchema } from "../user";
+import {
+  environments,
+  humanMessages,
+  plotPoints,
+  users,
+} from "../../db/core/core.schema";
+
 /**
  * Create
  */
 export const CreateHumanMessageDtoSchema = z.object({
-  userId: createSelectSchema(schema.users).shape.id,
-  environmentId: createSelectSchema(schema.environments).shape.id,
-  content: ProseDtoSchema,
+  userId: createSelectSchema(users).shape.id,
+  environmentId: createSelectSchema(environments).shape.id,
+  json: ProseDtoSchema,
+  text: createSelectSchema(humanMessages).shape.text,
 });
 
 export class CreateHumanMessageDto extends createZodDto(
@@ -21,13 +28,13 @@ export class CreateHumanMessageDto extends createZodDto(
  * Read
  */
 export const HumanMessageDtoSchema = z.object({
-  plotPoint: createSelectSchema(schema.plotPoints).extend({
+  plotPoint: createSelectSchema(plotPoints).extend({
     createdAt: z.coerce.date(),
   }),
-  humanMessage: createSelectSchema(schema.humanMessages).extend({
-    content: ProseDtoSchema,
+  humanMessage: createSelectSchema(humanMessages).extend({
+    json: ProseDtoSchema,
   }),
-  environment: createSelectSchema(schema.environments),
+  environment: createSelectSchema(environments),
   user: HumanUserDtoSchema,
 });
 
@@ -37,7 +44,7 @@ export class HumanMessageDto extends createZodDto(HumanMessageDtoSchema) {}
  * Filters
  */
 export const FilterHumanMessagesDtoSchema = z.object({
-  id: createSelectSchema(schema.humanMessages).shape.id.optional(),
+  id: createSelectSchema(humanMessages).shape.id.optional(),
   limit: z.number().optional(),
 });
 

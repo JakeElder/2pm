@@ -12,3 +12,46 @@
 .body {
   line-height: 1.4;
 }
+
+.root p:not(:last-of-type) {
+  margin-bottom: 10px;
+}
+
+.root h1 {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.root h2 {
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.root hr {
+  border: none;
+  border-bottom: 1px solid var(--surface0);
+  margin: 10px 0;
+}
+
+.root strong {
+  font-weight: 600;
+}
+
+.root u {
+  text-decoration: underline;
+}
+
+.root em {
+  font-style: italic;
+}
+
+.root code {
+  background: var(--surface0);
+  padding: 3px 5px;
+  border-radius: 1px;
+}
+
+.root ul {
+  list-style: disc inside;
+  margin: 10px 0;
+}

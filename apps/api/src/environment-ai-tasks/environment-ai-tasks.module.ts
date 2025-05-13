@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common';
-import { EnvironmentAiTasksController } from './environment-ai-tasks.controller';
 import { BullModule } from '@nestjs/bull';
 import { BullBoardModule } from '@bull-board/nestjs';
 import { BullAdapter } from '@bull-board/api/bullAdapter';
+import { EnvironmentAiTasksController } from './environment-ai-tasks.controller';
 import { EnvironmentAiTasksProcessor } from './environment-ai-tasks.processor';
-import { DatabaseModule } from '../database/database.module';
 import { EnvironmentAiTasksGateway } from './environment-ai-tasks.gateway';
+import { DatabaseModule } from '../database/database.module';
+import { NikoModule } from '../niko/niko.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { EnvironmentAiTasksGateway } from './environment-ai-tasks.gateway';
       name: 'environment-ai-tasks',
       adapter: BullAdapter,
     }),
+    NikoModule,
   ],
   providers: [EnvironmentAiTasksProcessor, EnvironmentAiTasksGateway],
   controllers: [EnvironmentAiTasksController],

@@ -1,4 +1,5 @@
 import {
+  AiMessageDto,
   EnviromentAiTaskCompletedEventDto,
   EnviromentAiTaskUpdatedEventDto,
   EnvironmentsRoomJoinedEventDto,
@@ -12,6 +13,9 @@ export type AppEvents = {
 
   /* Environments */
   'environments.joined': (body: EnvironmentsRoomJoinedEventDto) => void;
+
+  /* Ai Messages */
+  'ai-messages.updated': (body: AiMessageDto) => void;
 
   /* Ai Tasks */
   'environment-ai-tasks.updated': (

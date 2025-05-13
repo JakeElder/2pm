@@ -10,10 +10,12 @@ import { RedisModule } from './redis/redis.module';
 import { DatabaseModule } from './database/database.module';
 
 import { AiMessagesModule } from './ai-messages/ai-messages.module';
+import { AiUsersModule } from './ai-users/ai-users.module';
 import { EnvironmentAiTasksModule } from './environment-ai-tasks/environment-ai-tasks.module';
 import { EnvironmentUserListsModule } from './environment-user-lists/environment-user-lists.module';
 import { HumanMessagesModule } from './human-messages/human-messages.module';
 import { HumanUsersModule } from './human-users/human-users.module';
+import { NikoModule } from './niko/niko.module';
 import { PlotPointsModule } from './plot-points/plot-points.module';
 import { SessionsModule } from './sessions/sessions.module';
 import { SpaceListsModule } from './space-lists/space-lists.module';
@@ -31,6 +33,7 @@ import { WorldRoomEnvironmentsModule } from './world-room-environments/world-roo
     RedisModule,
     DatabaseModule,
     AiMessagesModule,
+    AiUsersModule,
     HumanMessagesModule,
     HumanUsersModule,
     PlotPointsModule,
@@ -49,6 +52,7 @@ import { WorldRoomEnvironmentsModule } from './world-room-environments/world-roo
     UserEnvironmentPresencesModule,
     SpaceListsModule,
     EnvironmentUserListsModule,
+    NikoModule,
   ],
   controllers: [AppController],
   providers: [AppService],

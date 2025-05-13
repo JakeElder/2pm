@@ -7,7 +7,6 @@ import {
   users,
   userEnvironmentPresences,
 } from "../../db/core/core.schema";
-import { AiUserDto } from "./user.dto";
 import { User, UserDto } from "./user.types";
 import HumanUsers from "../human-user/human-user.service";
 import { AiUser } from "../ai-user/ai-user.types";
@@ -61,8 +60,8 @@ export default class Users extends CoreDBServiceModule {
       if (!aiUser) {
         throw new Error();
       }
-      const dto: AiUserDto = { type: "AI", data: aiUser };
-      return dto;
+
+      return { type: "AI", data: aiUser };
     }
 
     throw new Error();

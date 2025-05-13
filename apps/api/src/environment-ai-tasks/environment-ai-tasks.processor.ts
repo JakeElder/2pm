@@ -1,63 +1,281 @@
 import { eq } from 'drizzle-orm';
-import { PlotPointDto } from '@2pm/core';
+import {
+  ActiveEnvironmentAiTaskDtoSchema,
+  Environment,
+  PlotPointDto,
+  type AiResponseJob,
+  type CharacterResponseEvent,
+  type AiUser,
+  EnvironmentAiTaskDto,
+  AiMessageDto,
+  CharacterThinkingEvent,
+  CharacterRespondingEvent,
+  CharacterChunkEvent,
+  CharacterCompleteEvent,
+} from '@2pm/core';
 import { type DBService } from '@2pm/core/db';
 import { Processor, Process } from '@nestjs/bull';
 import { Inject } from '@nestjs/common';
-import { Job } from 'bull';
 import { AppEventEmitter } from '../event-emitter';
-import { aiUsers, environments } from '@2pm/core/schema';
+import { aiUsers } from '@2pm/core/schema';
+import { NikoService } from '../niko/niko.service';
+
+type LoadingAiTaskProcess = {
+  state: 'LOADING';
+};
+
+type InitialisingAiTaskProcess = {
+  state: 'INITIALISING';
+  narrative: PlotPointDto[];
+  environment: Environment;
+  aiUser: AiUser;
+};
+
+type ThinkingAiTaskProcess = {
+  state: 'THINKING';
+  narrative: PlotPointDto[];
+  environment: Environment;
+  aiUser: AiUser;
+  task: EnvironmentAiTaskDto;
+};
+
+type RespondingAiTaskProcess = {
+  state: 'RESPONDING';
+  response: string;
+  narrative: PlotPointDto[];
+  environment: Environment;
+  aiUser: AiUser;
+  aiMessage: AiMessageDto;
+  task: EnvironmentAiTaskDto;
+};
+
+type AiTaskProcess =
+  | LoadingAiTaskProcess
+  | InitialisingAiTaskProcess
+  | ThinkingAiTaskProcess
+  | RespondingAiTaskProcess;
 
 @Processor('environment-ai-tasks')
 export class EnvironmentAiTasksProcessor {
   constructor(
     @Inject('DB') private readonly db: DBService,
     @Inject('E') private readonly events: AppEventEmitter,
+    private readonly niko: NikoService,
   ) {}
 
-  @Process()
-  async process(job: Job<{ trigger: PlotPointDto }>) {
-    const [environment] = await this.db.core.drizzle
-      .select()
-      .from(environments)
-      .where(eq(environments.id, job.data.trigger.data.environment.id));
+  private processes = new Map<Environment['id'], AiTaskProcess>();
+
+  @Process({ concurrency: 10 })
+  async process(job: AiResponseJob) {
+    const { environment } = job.data.message;
+
+    try {
+      if (this.processes.has(environment.id)) {
+        console.error(`Existing task: environment ${environment.id}`);
+        return;
+      }
+      this.run(job);
+    } catch (e) {
+      console.error(e);
+      this.processes.delete(environment.id);
+    }
+  }
+
+  async run(job: AiResponseJob) {
+    const { environment } = job.data.message;
+
+    this.processes.set(environment.id, {
+      state: 'LOADING',
+    });
+
+    const narrative = await this.db.core.plotPoints.findByEnvironmentId(
+      job.data.message.environment.id,
+      { reverse: true },
+    );
 
     const [aiUser] = await this.db.core.drizzle
       .select()
       .from(aiUsers)
-      .where(eq(aiUsers.id, 'NIKO'));
+      .where(eq(aiUsers.id, job.data.aiUserId));
 
-    this.events.emit('environment-ai-tasks.updated', {
+    this.processes.set(environment.id, {
+      state: 'INITIALISING',
+      narrative,
+      environment,
       aiUser,
-      createdAt: new Date(),
-      environmentId: environment.id,
-      id: 1,
+    });
+
+    await this.respond(environment.id);
+  }
+
+  async respond(environmentId: Environment['id']) {
+    const process = this.processes.get(environmentId);
+
+    if (!process || process.state !== 'INITIALISING') {
+      throw new Error();
+    }
+
+    for await (const event of this.niko.respond(process.narrative)) {
+      await this.handleResponseEvent(event, environmentId);
+    }
+  }
+
+  handleResponseEvent(
+    event: CharacterResponseEvent,
+    environmentId: Environment['id'],
+  ) {
+    if (event.type === 'THINKING') {
+      return this.handleThinkingEvent(event, environmentId);
+    }
+
+    if (event.type === 'RESPONDING') {
+      return this.handleRespondingEvent(event, environmentId);
+    }
+
+    if (event.type === 'CHUNK') {
+      return this.handleChunkEvent(event, environmentId);
+    }
+
+    if (event.type === 'COMPLETE') {
+      return this.handleCompleteEvent(event, environmentId);
+    }
+
+    throw new Error();
+  }
+
+  async handleThinkingEvent(
+    _: CharacterThinkingEvent,
+    environmentId: Environment['id'],
+  ) {
+    const process = this.processes.get(environmentId);
+
+    if (!process || process.state !== 'INITIALISING') {
+      throw new Error();
+    }
+
+    const task = await this.db.core.environmentAiTasks.create({
+      aiUserId: process.aiUser.id,
+      environmentId: process.environment.id,
       state: 'THINKING',
     });
 
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-
-    this.events.emit('environment-ai-tasks.updated', {
-      aiUser,
-      createdAt: new Date(),
-      environmentId: environment.id,
-      id: 1,
-      state: 'ACTING',
+    this.processes.set(environmentId, {
+      ...process,
+      state: 'THINKING',
+      task,
     });
 
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    this.events.emit(
+      'environment-ai-tasks.updated',
+      ActiveEnvironmentAiTaskDtoSchema.parse(task),
+    );
+  }
 
-    this.events.emit('environment-ai-tasks.updated', {
-      aiUser,
-      createdAt: new Date(),
-      environmentId: environment.id,
-      id: 1,
+  async handleRespondingEvent(
+    _: CharacterRespondingEvent,
+    environmentId: Environment['id'],
+  ) {
+    const process = this.processes.get(environmentId);
+
+    if (!process || process.state !== 'THINKING') {
+      throw new Error();
+    }
+
+    const task = await this.db.core.environmentAiTasks.update({
+      id: process.task.id,
       state: 'RESPONDING',
     });
 
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    this.events.emit(
+      'environment-ai-tasks.updated',
+      ActiveEnvironmentAiTaskDtoSchema.parse(task),
+    );
+  }
+
+  async handleChunkEvent(
+    event: CharacterChunkEvent,
+    environmentId: Environment['id'],
+  ) {
+    if (event.chunk === '') {
+      return;
+    }
+
+    const process = this.processes.get(environmentId);
+
+    if (!process) {
+      throw new Error();
+    }
+
+    if (process.state === 'THINKING') {
+      return this.handleFirstChunkEvent(event, environmentId);
+    }
+
+    if (process.state !== 'RESPONDING') {
+      throw new Error();
+    }
+
+    const message = await this.db.core.aiMessages.update({
+      id: process.aiMessage.aiMessage.id,
+      content: process.response + event.chunk,
+    });
+
+    this.events.emit('ai-messages.updated', message);
+
+    this.processes.set(environmentId, {
+      ...process,
+      response: message.aiMessage.content,
+    });
+  }
+
+  async handleFirstChunkEvent(
+    event: CharacterChunkEvent,
+    environmentId: Environment['id'],
+  ) {
+    const process = this.processes.get(environmentId);
+
+    if (!process || process.state !== 'THINKING') {
+      return;
+    }
+
+    const aiMessage = await this.db.core.aiMessages.create({
+      content: event.chunk,
+      environmentId: process.environment.id,
+      state: 'STREAMING',
+      userId: process.aiUser.userId,
+    });
+
+    this.events.emit('plot-points.created', {
+      type: 'AI_MESSAGE',
+      data: aiMessage,
+    });
+
+    this.processes.set(environmentId, {
+      ...process,
+      state: 'RESPONDING',
+      response: event.chunk,
+      aiMessage,
+    });
+  }
+
+  async handleCompleteEvent(
+    _: CharacterCompleteEvent,
+    environmentId: Environment['id'],
+  ) {
+    const process = this.processes.get(environmentId);
+
+    if (!process || process.state !== 'RESPONDING') {
+      throw new Error();
+    }
+
+    await this.db.core.environmentAiTasks.update({
+      id: process.task.id,
+      state: 'COMPLETE',
+    });
 
     this.events.emit('environment-ai-tasks.completed', {
-      environmentId: environment.id,
+      environmentId: process.environment.id,
     });
+
+    this.processes.delete(environmentId);
   }
 }

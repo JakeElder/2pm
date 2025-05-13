@@ -29,3 +29,8 @@
   padding: 3px 5px;
   border-radius: 1px;
 }
+
+.mention {
+  color: var(--ai);
+  font-weight: 400;
+}

@@ -2,7 +2,12 @@ import { Controller, Get, Inject, Param, ParseIntPipe } from '@nestjs/common';
 import { AppEventEmitter } from '../event-emitter';
 import { InjectQueue } from '@nestjs/bull';
 import { type Queue } from 'bull';
-import { ActiveEnvironmentAiTaskDto, PlotPointDto } from '@2pm/core';
+import {
+  ActiveEnvironmentAiTaskDto,
+  AI_USER_CODES,
+  type AiResponseJob,
+  PlotPointDto,
+} from '@2pm/core';
 import {
   ApiExtraModels,
   ApiOperation,
@@ -13,6 +18,7 @@ import {
 } from '@nestjs/swagger';
 import { type DBService } from '@2pm/core/db';
 import { EnvironmentAiTasksGateway } from './environment-ai-tasks.gateway';
+import traverse from 'traverse';
 
 @ApiExtraModels(ActiveEnvironmentAiTaskDto)
 @ApiTags('Evironment Ai Tasks')
@@ -22,7 +28,7 @@ export class EnvironmentAiTasksController {
     @Inject('DB') private readonly db: DBService,
     @Inject('E') private readonly events: AppEventEmitter,
     @InjectQueue('environment-ai-tasks')
-    private readonly queue: Queue<{ trigger: PlotPointDto }>,
+    private readonly queue: Queue<AiResponseJob['data']>,
     private readonly gateway: EnvironmentAiTasksGateway,
   ) {}
 
@@ -46,7 +52,18 @@ export class EnvironmentAiTasksController {
 
   async handlePlotPointCreated(dto: PlotPointDto) {
     if (dto.type === 'HUMAN_MESSAGE') {
-      this.queue.add({ trigger: dto });
+      const tree = traverse(dto.data.humanMessage.json);
+
+      const mentions = tree.reduce(function (acc, node) {
+        return node.type === 'mention' ? [...acc, node] : acc;
+      }, []);
+
+      if (mentions.length && AI_USER_CODES.includes(mentions[0].attrs.id)) {
+        this.queue.add({
+          message: dto.data,
+          aiUserId: mentions[0].attrs.id,
+        });
+      }
     }
   }
 

@@ -1,4 +1,5 @@
 import { AiMessageDto } from '@2pm/core';
+import { AppEventEmitter } from '../event-emitter';
 import { type DBService } from '@2pm/core/db';
 import {
   Controller,
@@ -16,11 +17,22 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { AiMessagesGateway } from './ai-messages.gateway';
 
 @ApiTags('Ai Messages')
 @Controller('ai-messages')
 export class AiMessagesController {
-  constructor(@Inject('DB') private readonly db: DBService) {}
+  constructor(
+    @Inject('DB') private readonly db: DBService,
+    @Inject('E') private readonly events: AppEventEmitter,
+    private readonly gateway: AiMessagesGateway,
+  ) {}
+
+  async onModuleInit() {
+    this.events.on('ai-messages.updated', (e) => {
+      this.gateway.server.to(`${e.aiMessage.id}`).emit('updated', e);
+    });
+  }
 
   @Get()
   @ApiOperation({

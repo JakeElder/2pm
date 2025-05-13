@@ -35,9 +35,9 @@ export class AiMessageDto extends createZodDto(AiMessageDtoSchema) {}
  * Update
  */
 export const UpdateAiMessageDtoSchema = z.object({
-  id: createSelectSchema(schema.messages).shape.id,
-  content: createInsertSchema(schema.aiMessages).shape.content,
-  state: createInsertSchema(schema.aiMessages).shape.state,
+  id: createSelectSchema(schema.aiMessages).shape.id,
+  content: createInsertSchema(schema.aiMessages).shape.content.optional(),
+  state: createInsertSchema(schema.aiMessages).shape.state.optional(),
 });
 
 export class UpdateAiMessageDto extends createZodDto(

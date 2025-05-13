@@ -2,9 +2,6 @@
 
 import React from "react";
 import css from "./StandardLayout.module.css";
-import { PaneHeader, UserTag } from "../../Components";
-import * as users from "../../fixtures/users";
-import classNames from "classnames";
 
 /*
  * Root
@@ -15,7 +12,11 @@ type RootProps = {
 };
 
 export const Root = ({ children }: RootProps) => {
-  return <div className={css["root"]}>{children}</div>;
+  return (
+    <div className={css["root"]} data-root>
+      {children}
+    </div>
+  );
 };
 
 /*

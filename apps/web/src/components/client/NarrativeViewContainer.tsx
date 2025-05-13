@@ -47,7 +47,7 @@ const NarrativeViewContainer = ({
       });
 
     return () => {
-      environmentsSocket.off("plot-points.created");
+      environmentsSocket.removeAllListeners();
       environmentsSocket.emit("leave", e);
     };
   }, []);
@@ -58,7 +58,8 @@ const NarrativeViewContainer = ({
         return (
           <PlotPointViewContainer
             key={plotPoint.data.plotPoint.id}
-            {...plotPoint}
+            session={session}
+            plotPoint={plotPoint}
           />
         );
       })}

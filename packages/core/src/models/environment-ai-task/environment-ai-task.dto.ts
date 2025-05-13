@@ -1,8 +1,8 @@
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { createZodDto } from "@anatine/zod-nestjs";
-import { environmentAiTasks } from "../../db/core/core.schema";
-import { AiUserDtoSchema } from "../user/user.dto";
 import { z } from "zod";
+import { environmentAiTasks } from "../../db/core/core.schema";
+import { AiUserDtoSchema } from "../ai-user/ai-user.dto";
 
 /**
  * Create
@@ -20,7 +20,7 @@ export class CreateEnvironmentAiTaskDto extends createZodDto(
 export const EnvironmentAiTaskDtoSchema = createSelectSchema(environmentAiTasks)
   .omit({ aiUserId: true })
   .extend({
-    aiUser: AiUserDtoSchema.shape.data,
+    aiUser: AiUserDtoSchema,
     createdAt: z.coerce.date(),
   });
 
@@ -28,6 +28,21 @@ export class EnvironmentAiTaskDto extends createZodDto(
   EnvironmentAiTaskDtoSchema,
 ) {}
 
+/**
+ * Update
+ */
+export const UpdateEnvironmentAiTaskDtoSchema = z.object({
+  id: createInsertSchema(environmentAiTasks).shape.id,
+  state: createInsertSchema(environmentAiTasks).shape.state,
+});
+
+export class UpdateEnvironmentAiTaskDto extends createZodDto(
+  UpdateEnvironmentAiTaskDtoSchema,
+) {}
+
+/**
+ * Active
+ */
 export const ActiveEnvironmentAiTaskDtoSchema =
   EnvironmentAiTaskDtoSchema.extend({
     state: EnvironmentAiTaskDtoSchema.shape.state.exclude(["COMPLETE"]),

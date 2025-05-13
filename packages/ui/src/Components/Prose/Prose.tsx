@@ -4,16 +4,18 @@ import React, { useCallback } from "react";
 import { useEditor, EditorContent, UseEditorOptions } from "@tiptap/react";
 import { Editor, Extension, Extensions } from "@tiptap/core";
 import { generateHTML } from "@tiptap/html";
+import Bold from "@tiptap/extension-bold";
+import Code from "@tiptap/extension-code";
 import Document from "@tiptap/extension-document";
+import History from "@tiptap/extension-history";
+import Italic from "@tiptap/extension-italic";
+import Mention, { MentionOptions } from "@tiptap/extension-mention";
 import Paragraph from "@tiptap/extension-paragraph";
 import Text from "@tiptap/extension-text";
-import Bold from "@tiptap/extension-bold";
-import Italic from "@tiptap/extension-italic";
 import Underline from "@tiptap/extension-underline";
-import Code from "@tiptap/extension-code";
-import History from "@tiptap/extension-history";
-import css from "./Prose.module.css";
 import { ProseDto } from "@2pm/core";
+import css from "./Prose.module.css";
+import suggestion from "./suggestion";
 
 type SubmitShortcutExtensionOptions = {
   onSubmit: (editor: Editor) => void;
@@ -35,9 +37,15 @@ type Props = {
   content?: ProseDto;
   editable?: UseEditorOptions["editable"];
   onSubmit?: (editor: Editor) => void;
+  suggestionItems?: MentionOptions["suggestion"]["items"];
 };
 
-const Prose = ({ content, editable = true, onSubmit }: Props) => {
+const Prose = ({
+  content,
+  editable = true,
+  onSubmit,
+  suggestionItems,
+}: Props) => {
   const handleSubmit = useCallback(
     (editor: Editor) => onSubmit?.(editor),
     [onSubmit],
@@ -54,6 +62,10 @@ const Prose = ({ content, editable = true, onSubmit }: Props) => {
     History,
     SubmitShortcut.configure({
       onSubmit: handleSubmit,
+    }),
+    Mention.configure({
+      HTMLAttributes: { class: css["mention"] },
+      suggestion: { ...suggestion, items: suggestionItems },
     }),
   ];
 
