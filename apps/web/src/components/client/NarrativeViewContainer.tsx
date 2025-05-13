@@ -1,15 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import {
   Environment,
-  EnvironmentsRoomJoinedEventDto,
   PlotPointDto,
   PlotPointType,
   SessionDto,
 } from "@2pm/core";
 import PlotPointViewContainer from "./PlotPointViewContainer";
-import { environmentsSocket } from "@/socket";
+import { usePlotPointEvents } from "@/hooks";
 
 type Props = {
   environmentId: Environment["id"];
@@ -28,29 +27,19 @@ const NarrativeViewContainer = ({
 }: Props) => {
   const [data, setPlotPoints] = useState<PlotPointDto[]>(plotPoints);
 
-  useEffect(() => {
-    const e: EnvironmentsRoomJoinedEventDto = {
-      humanUserId: session.user.data.id,
-      environmentId,
-    };
-
-    environmentsSocket
-      .emit("join", e)
-      .on("plot-points.created", async (plotPoint: PlotPointDto) => {
-        if (types && !types.includes(plotPoint.type)) {
-          return;
-        }
-        if (filter && filter.includes(plotPoint.type)) {
-          return;
-        }
-        setPlotPoints((data) => [plotPoint, ...data]);
-      });
-
-    return () => {
-      environmentsSocket.removeAllListeners();
-      environmentsSocket.emit("leave", e);
-    };
-  }, []);
+  usePlotPointEvents({
+    environmentId,
+    humanUserId: session.user.data.id,
+    onCreated: useCallback((plotPoint: PlotPointDto) => {
+      if (
+        (types && !types.includes(plotPoint.type)) ||
+        (filter && filter.includes(plotPoint.type))
+      ) {
+        return;
+      }
+      setPlotPoints((data) => [plotPoint, ...data]);
+    }, []),
+  });
 
   return (
     <>

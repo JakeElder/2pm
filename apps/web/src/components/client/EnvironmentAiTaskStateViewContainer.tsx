@@ -1,14 +1,9 @@
 "use client";
 
-import { environmentAiTasksSocket } from "@/socket";
-import {
-  ActiveEnvironmentAiTaskDto,
-  Environment,
-  EnvironmentAiTasksRoomJoinedEventDto,
-  SessionDto,
-} from "@2pm/core";
+import { useEnvironmentAiTaskEvents } from "@/hooks";
+import { ActiveEnvironmentAiTaskDto, Environment, SessionDto } from "@2pm/core";
 import { InfoBarAiState } from "@2pm/ui/components";
-import { useEffect, useState } from "react";
+import { useState, useCallback } from "react";
 
 type Props = {
   environmentId: Environment["id"];
@@ -23,26 +18,12 @@ const EnvironmentAiTaskStateViewContainer = ({
 }: Props) => {
   const [aiTask, setAiTask] = useState(rest.aiTask);
 
-  useEffect(() => {
-    const e: EnvironmentAiTasksRoomJoinedEventDto = {
-      humanUserId: session.user.data.id,
-      environmentId,
-    };
-
-    environmentAiTasksSocket
-      .emit("join", e)
-      .on("updated", async (nextAiTask) => {
-        setAiTask(nextAiTask);
-      })
-      .on("completed", () => {
-        setAiTask(null);
-      });
-
-    return () => {
-      environmentAiTasksSocket.removeAllListeners();
-      environmentAiTasksSocket.emit("leave", e);
-    };
-  }, []);
+  useEnvironmentAiTaskEvents({
+    environmentId,
+    humanUserId: session.user.data.id,
+    onUpdated: useCallback((e) => setAiTask(e), []),
+    onCompleted: useCallback(() => setAiTask(null), []),
+  });
 
   return aiTask === null ? (
     <InfoBarAiState.Idle />

@@ -1,15 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { spaceListsSocket } from "@/socket";
+import { useState, useCallback } from "react";
 import Link from "next/link";
 import { SpaceList } from "@2pm/ui/components";
-import {
-  Environment,
-  SessionDto,
-  SpaceListDto,
-  SpaceListsRoomJoinedEventDto,
-} from "@2pm/core";
+import { Environment, SessionDto, SpaceListDto } from "@2pm/core";
+import { useSpaceListEvents } from "@/hooks";
 
 type Props = {
   spaceList: SpaceListDto;
@@ -24,20 +19,10 @@ const SpaceListViewContainer = ({
 }: Props) => {
   const [spaceList, setSpaceList] = useState(rest.spaceList);
 
-  useEffect(() => {
-    const e: SpaceListsRoomJoinedEventDto = {
-      humanUserId: session.user.data.id,
-    };
-
-    spaceListsSocket.emit("join", e).on("updated", async (dto) => {
-      setSpaceList(dto);
-    });
-
-    return () => {
-      spaceListsSocket.removeAllListeners();
-      spaceListsSocket.emit("leave", e);
-    };
-  }, []);
+  useSpaceListEvents({
+    humanUserId: session.user.data.id,
+    onUpdated: useCallback(async (dto) => setSpaceList(dto), []),
+  });
 
   return (
     <SpaceList.Root>

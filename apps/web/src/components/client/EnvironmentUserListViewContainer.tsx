@@ -1,14 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useCallback } from "react";
 import { EnvironmentUserList } from "@2pm/ui/components";
-import { environmentUserListsSocket } from "@/socket";
-import {
-  Environment,
-  SessionDto,
-  EnvironmentUserListDto,
-  EnvironmentUserListsRoomJoinedEventDto,
-} from "@2pm/core";
+import { Environment, SessionDto, EnvironmentUserListDto } from "@2pm/core";
+import { useEnvironmentUserListEvents } from "@/hooks";
 
 type Props = {
   environmentUserList: EnvironmentUserListDto;
@@ -23,21 +18,11 @@ const EnvironmentUserListViewContainer = ({
 }: Props) => {
   const [list, setList] = useState(rest.environmentUserList);
 
-  useEffect(() => {
-    const e: EnvironmentUserListsRoomJoinedEventDto = {
-      environmentId: environmentId,
-      humanUserId: session.user.data.id,
-    };
-
-    environmentUserListsSocket.emit("join", e).on("updated", (dto) => {
-      setList(dto);
-    });
-
-    return () => {
-      environmentUserListsSocket.removeAllListeners();
-      environmentUserListsSocket.emit("leave", e);
-    };
-  }, []);
+  useEnvironmentUserListEvents({
+    environmentId,
+    humanUserId: session.user.data.id,
+    onUpdated: useCallback((e) => setList(e), []),
+  });
 
   return (
     <EnvironmentUserList.Root>
