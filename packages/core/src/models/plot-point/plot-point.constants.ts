@@ -5,4 +5,5 @@ export const PLOT_POINT_TYPES = [
   "ENVIRONMENT_LEFT",
   "EVALUATION",
   "AUTH_EMAIL_SENT",
+  "BIBLE_VERSE_REFERENCE",
 ] as const;

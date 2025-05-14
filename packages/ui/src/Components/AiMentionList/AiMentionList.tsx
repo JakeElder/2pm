@@ -26,14 +26,14 @@ type UserProps = {
   selected?: boolean;
 };
 
-export const User = ({ user, handleClick: onClick, selected }: UserProps) => {
+export const User = ({ user, handleClick, selected }: UserProps) => {
   return (
     <div
       className={classNames({
         [css["user"]]: true,
         [css["selected"]]: selected,
       })}
-      onClick={onClick}
+      onClick={handleClick}
     >
       <div className={css["avatar-and-info"]}>
         <div className={css["avatar"]}></div>

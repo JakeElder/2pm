@@ -2,7 +2,11 @@
 
 import { PlotPointDto, SessionDto } from "@2pm/core";
 import { Prose, UserTag } from "@2pm/ui/components";
-import { RoomPresenceChange, Message } from "@2pm/ui/plot-points";
+import {
+  RoomPresenceChange,
+  Message,
+  BibleVerseReference,
+} from "@2pm/ui/plot-points";
 import AiMessageViewContainer from "./AiMessageViewContainer";
 
 type Props = {
@@ -52,6 +56,14 @@ const PlotPointViewContainer = ({ plotPoint, session }: Props) => {
         </RoomPresenceChange.Tag>
         <RoomPresenceChange.Action />
       </RoomPresenceChange.Root>
+    );
+  }
+
+  if (type === "BIBLE_VERSE_REFERENCE") {
+    return (
+      <BibleVerseReference verse={`${data.bibleVerse.verse}`}>
+        {data.bibleChunk.content}
+      </BibleVerseReference>
     );
   }
 

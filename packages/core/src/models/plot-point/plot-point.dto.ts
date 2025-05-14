@@ -4,6 +4,12 @@ import { HumanMessageDtoSchema } from "../human-message/human-message.dto";
 import { AiMessageDtoSchema } from "../ai-message/ai-message.dto";
 import { PLOT_POINT_TYPES } from "./plot-point.constants";
 import { UserEnvironmentPresenceStateSchema } from "../user-environment-presence";
+import { BibleVerseDtoSchema } from "../bible-verse/bible-verse.dto";
+import { BibleChunkDtoSchema } from "../bible-chunk/bible-chunk.dto";
+import { EnvironmentDtoSchema } from "../environment";
+import { createSelectSchema } from "drizzle-zod";
+import { environments, plotPoints } from "../../db/app.schema";
+import { kjvChunks, kjvVerses } from "../../db/library.schema";
 
 /**
  * Human Message
@@ -54,6 +60,25 @@ export class EnvironmentLeftPlotPointDto extends createZodDto(
 ) {}
 
 /**
+ * Bible Verse
+ */
+export const BibleVerseReferencePlotPointDtoSchema = z.object({
+  type: z.literal("BIBLE_VERSE_REFERENCE"),
+  data: z.object({
+    plotPoint: createSelectSchema(plotPoints).extend({
+      createdAt: z.coerce.date(),
+    }),
+    environment: createSelectSchema(environments),
+    bibleVerse: createSelectSchema(kjvVerses),
+    bibleChunk: createSelectSchema(kjvChunks).omit({ embedding: true }),
+  }),
+});
+
+export class BibleVerseReferencePlotPointDto extends createZodDto(
+  BibleVerseReferencePlotPointDtoSchema,
+) {}
+
+/**
  * Union
  */
 export const PlotPointDtoSchema = z.discriminatedUnion("type", [
@@ -61,6 +86,7 @@ export const PlotPointDtoSchema = z.discriminatedUnion("type", [
   AiMessagePlotPointDtoSchema,
   EnvironmentEnteredPlotPointDtoSchema,
   EnvironmentLeftPlotPointDtoSchema,
+  BibleVerseReferencePlotPointDtoSchema,
 ]);
 
 export type PlotPointDto = z.infer<typeof PlotPointDtoSchema>;

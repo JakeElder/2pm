@@ -4,6 +4,8 @@ import {
   AiMessages,
   AiUsers,
   AuthEmails,
+  BibleChunks,
+  BibleVerseReferences,
   BibleVerses,
   EnvironmentAiTasks,
   EnvironmentUserLists,
@@ -35,7 +37,9 @@ export class DBService {
   public aiMessages: AiMessages;
   public aiUsers: AiUsers;
   public authEmails: AuthEmails;
+  public bibleChunks: BibleChunks;
   public bibleVerses: BibleVerses;
+  public bibleVerseReferences: BibleVerseReferences;
   public environmentAiTasks: EnvironmentAiTasks;
   public environmentUserLists: EnvironmentUserLists;
   public humanMessages: HumanMessages;
@@ -79,17 +83,24 @@ export class DBService {
     this.aiMessages = new AiMessages(this.contexts);
     this.aiUsers = new AiUsers(this.contexts);
     this.authEmails = new AuthEmails(this.contexts);
+    this.bibleChunks = new BibleChunks(this.contexts);
     this.bibleVerses = new BibleVerses(this.contexts);
+    this.bibleVerseReferences = new BibleVerseReferences(this.contexts);
     this.environmentAiTasks = new EnvironmentAiTasks(this.contexts);
     this.environmentUserLists = new EnvironmentUserLists(this.contexts);
     this.humanMessages = new HumanMessages(this.contexts);
     this.humanUsers = new HumanUsers(this.contexts);
-    this.plotPoints = new PlotPoints(this.contexts);
     this.sessions = new Sessions(this.contexts);
     this.spaceLists = new SpaceLists(this.contexts);
     this.userEnvironmentPresences = new UserEnvironmentPresences(this.contexts);
     this.users = new Users(this.contexts);
     this.worldRoomEnvironments = new WorldRoomEnvironments(this.contexts);
+
+    this.plotPoints = new PlotPoints(
+      this.contexts,
+      this.bibleChunks,
+      this.bibleVerses,
+    );
   }
 
   async clear() {
@@ -195,6 +206,13 @@ export class DBService {
           },
         ],
       },
+    });
+
+    await this.bibleVerseReferences.create({
+      bibleVerseId: 13127,
+      bibleChunkId: 13127,
+      environmentId: universe.environmentId,
+      userId: niko.userId,
     });
   }
 

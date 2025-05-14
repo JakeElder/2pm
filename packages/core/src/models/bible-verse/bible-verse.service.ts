@@ -1,3 +1,4 @@
+import { eq } from "drizzle-orm";
 import { DBServiceModule } from "../../db/db-service-module";
 import { BibleVerseDto } from "./bible-verse.dto";
 import { kjvVerses } from "../../db/library.schema";
@@ -5,6 +6,7 @@ import { DBContexts } from "../../db/db.types";
 import { OllamaEmbeddings } from "@langchain/ollama";
 import { PGVectorStore } from "@langchain/community/vectorstores/pgvector";
 import { inArray } from "drizzle-orm";
+import { BibleVerse } from "./bible-verse.types";
 
 export default class BibleVerses extends DBServiceModule {
   private vector: PGVectorStore;
@@ -28,6 +30,16 @@ export default class BibleVerses extends DBServiceModule {
       },
       distanceStrategy: "cosine",
     });
+  }
+
+  async find(id: BibleVerse["id"]): Promise<BibleVerseDto | null> {
+    const [res] = await this.library.drizzle
+      .select()
+      .from(kjvVerses)
+      .where(eq(kjvVerses.id, id))
+      .limit(1);
+
+    return res ? res : null;
   }
 
   async findAll(): Promise<BibleVerseDto[]> {

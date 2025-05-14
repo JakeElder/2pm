@@ -6,11 +6,12 @@ import {
   text,
   vector,
 } from "drizzle-orm/pg-core";
+import { BibleChunkMetadata } from "../models/bible-chunk/bible-chunk.types";
 
-export const kjvBookChunks = pgTable("kjv_book_chunks", {
+export const kjvChunks = pgTable("kjv_chunks", {
   id: serial("id").primaryKey(),
   content: text("content").notNull(),
-  metadata: jsonb("metadata").notNull(),
+  metadata: jsonb("metadata").notNull().$type<BibleChunkMetadata>(),
   embedding: vector("embedding", { dimensions: 1024 }),
 });
 

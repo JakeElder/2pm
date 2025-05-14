@@ -3,10 +3,12 @@ import { DBServiceModule } from "../../db/db-service-module";
 import {
   aiMessages,
   aiUsers,
+  bibleVerseReferences,
   environments,
   humanMessages,
   humanUsers,
   messages,
+  plotPointBibleVerseReferences,
   plotPointEnvironmentPresences,
   plotPoints,
   userEnvironmentPresences,
@@ -15,6 +17,8 @@ import {
 import {
   AiMessagePlotPointDto,
   AiMessagePlotPointDtoSchema,
+  BibleVerseReferencePlotPointDto,
+  BibleVerseReferencePlotPointDtoSchema,
   EnvironmentEnteredPlotPointDto,
   EnvironmentEnteredPlotPointDtoSchema,
   EnvironmentLeftPlotPointDto,
@@ -30,8 +34,19 @@ import Users from "../user/user.service";
 import HumanUsers from "../human-user/human-user.service";
 import { UserDto } from "../user/user.types";
 import { BaseMessage, SystemMessage } from "@langchain/core/messages";
+import { DBContexts } from "../../db/db.types";
+import BibleChunks from "../bible-chunk/bible-chunk.service";
+import BibleVerses from "../bible-verse/bible-verse.service";
 
 export default class PlotPoints extends DBServiceModule {
+  constructor(
+    context: DBContexts,
+    private bibleChunks: BibleChunks,
+    private bibleVerses: BibleVerses,
+  ) {
+    super(context);
+  }
+
   async findByEnvironmentId(id: number, options: FilterPlotPointsDto = {}) {
     const { limit, types, filter, reverse } = options;
 
@@ -50,7 +65,9 @@ export default class PlotPoints extends DBServiceModule {
         aiUser: aiUsers,
         environment: environments,
         plotPointEnvironmentPresence: plotPointEnvironmentPresences,
+        plotPointBibleVerseReferences: plotPointBibleVerseReferences,
         userEnvironmentPresence: userEnvironmentPresences,
+        bibleVerseReference: bibleVerseReferences,
       })
       .from(plotPoints)
       .innerJoin(users, eq(plotPoints.userId, users.id))
@@ -69,6 +86,17 @@ export default class PlotPoints extends DBServiceModule {
         eq(
           plotPointEnvironmentPresences.userEnvironmentPresenceId,
           userEnvironmentPresences.id,
+        ),
+      )
+      .leftJoin(
+        plotPointBibleVerseReferences,
+        eq(plotPoints.id, plotPointBibleVerseReferences.plotPointId),
+      )
+      .leftJoin(
+        bibleVerseReferences,
+        eq(
+          plotPointBibleVerseReferences.bibleVerseReferenceId,
+          bibleVerseReferences.id,
         ),
       )
       .where(
@@ -90,80 +118,111 @@ export default class PlotPoints extends DBServiceModule {
 
     const res = await query;
 
-    const data: PlotPointDto[] = res.map((row) => {
-      if (row.plotPoint.type === "HUMAN_MESSAGE") {
-        const { humanUser, humanMessage, message } = row;
+    const data: PlotPointDto[] = await Promise.all(
+      res.map(async (row) => {
+        if (row.plotPoint.type === "HUMAN_MESSAGE") {
+          const { humanUser, humanMessage, message } = row;
 
-        if (!humanUser || !humanMessage || !message) {
-          throw new Error();
+          if (!humanUser || !humanMessage || !message) {
+            throw new Error();
+          }
+
+          const res: HumanMessagePlotPointDto = {
+            type: "HUMAN_MESSAGE",
+            data: HumanMessageDtoSchema.parse({
+              ...row,
+              user: HumanUsers.discriminate(humanUser),
+            }),
+          };
+
+          return HumanMessagePlotPointDtoSchema.parse(res);
         }
 
-        const res: HumanMessagePlotPointDto = {
-          type: "HUMAN_MESSAGE",
-          data: HumanMessageDtoSchema.parse({
-            ...row,
-            user: HumanUsers.discriminate(humanUser),
-          }),
-        };
+        if (row.plotPoint.type === "AI_MESSAGE") {
+          const { aiUser, aiMessage, message } = row;
 
-        return HumanMessagePlotPointDtoSchema.parse(res);
-      }
+          if (!aiUser || !aiMessage || !message) {
+            throw new Error();
+          }
 
-      if (row.plotPoint.type === "AI_MESSAGE") {
-        const { aiUser, aiMessage, message } = row;
+          const res: AiMessagePlotPointDto = {
+            type: "AI_MESSAGE",
+            data: AiMessageDtoSchema.parse(row),
+          };
 
-        if (!aiUser || !aiMessage || !message) {
-          throw new Error();
+          return AiMessagePlotPointDtoSchema.parse(res);
         }
 
-        const res: AiMessagePlotPointDto = {
-          type: "AI_MESSAGE",
-          data: AiMessageDtoSchema.parse(row),
-        };
+        if (row.plotPoint.type === "ENVIRONMENT_ENTERED") {
+          const { userEnvironmentPresence } = row;
 
-        return AiMessagePlotPointDtoSchema.parse(res);
-      }
+          if (!userEnvironmentPresence) {
+            throw new Error();
+          }
 
-      if (row.plotPoint.type === "ENVIRONMENT_ENTERED") {
-        const { userEnvironmentPresence } = row;
+          const res: EnvironmentEnteredPlotPointDto = {
+            type: "ENVIRONMENT_ENTERED",
+            data: {
+              ...row,
+              userEnvironmentPresence,
+              user: Users.discriminate(row),
+            },
+          };
 
-        if (!userEnvironmentPresence) {
-          throw new Error();
+          return EnvironmentEnteredPlotPointDtoSchema.parse(res);
         }
 
-        const res: EnvironmentEnteredPlotPointDto = {
-          type: "ENVIRONMENT_ENTERED",
-          data: {
-            ...row,
-            userEnvironmentPresence,
-            user: Users.discriminate(row),
-          },
-        };
+        if (row.plotPoint.type === "ENVIRONMENT_LEFT") {
+          const { userEnvironmentPresence } = row;
 
-        return EnvironmentEnteredPlotPointDtoSchema.parse(res);
-      }
+          if (!userEnvironmentPresence) {
+            throw new Error();
+          }
 
-      if (row.plotPoint.type === "ENVIRONMENT_LEFT") {
-        const { userEnvironmentPresence } = row;
+          const res: EnvironmentLeftPlotPointDto = {
+            type: "ENVIRONMENT_LEFT",
+            data: {
+              ...row,
+              userEnvironmentPresence,
+              user: Users.discriminate(row),
+            },
+          };
 
-        if (!userEnvironmentPresence) {
-          throw new Error();
+          return EnvironmentLeftPlotPointDtoSchema.parse(res);
         }
 
-        const res: EnvironmentLeftPlotPointDto = {
-          type: "ENVIRONMENT_LEFT",
-          data: {
-            ...row,
-            userEnvironmentPresence,
-            user: Users.discriminate(row),
-          },
-        };
+        if (row.plotPoint.type === "BIBLE_VERSE_REFERENCE") {
+          const { bibleVerseReference, environment, plotPoint } = row;
 
-        return EnvironmentLeftPlotPointDtoSchema.parse(res);
-      }
+          if (!bibleVerseReference) {
+            throw new Error();
+          }
 
-      throw new Error(`${row.plotPoint.type} not implemented`);
-    });
+          const [bibleChunk, bibleVerse] = await Promise.all([
+            this.bibleChunks.find(bibleVerseReference.bibleChunkId),
+            this.bibleVerses.find(bibleVerseReference.bibleVerseId),
+          ]);
+
+          if (!bibleChunk || !bibleVerse) {
+            throw new Error();
+          }
+
+          const res: BibleVerseReferencePlotPointDto = {
+            type: "BIBLE_VERSE_REFERENCE",
+            data: {
+              bibleChunk,
+              bibleVerse,
+              environment,
+              plotPoint,
+            },
+          };
+
+          return BibleVerseReferencePlotPointDtoSchema.parse(res);
+        }
+
+        throw new Error(`${row.plotPoint.type} not implemented`);
+      }),
+    );
 
     return data;
   }

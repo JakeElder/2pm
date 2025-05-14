@@ -199,6 +199,16 @@ export const authEmails = pgTable("auth_emails", {
   code: text("code").notNull(),
 });
 
+/**
+ * Bible Verse References
+ */
+
+export const bibleVerseReferences = pgTable("bible_verse_references", {
+  id: serial("id").primaryKey(),
+  bibleChunkId: integer("bible_chunk_id").notNull(),
+  bibleVerseId: integer("bible_verse_id").notNull(),
+});
+
 /*
  * Join Tables
  */
@@ -231,5 +241,17 @@ export const plotPointEnvironmentPresences = pgTable(
     userEnvironmentPresenceId: integer("user_environment_presence_id")
       .notNull()
       .references(() => userEnvironmentPresences.id),
+  },
+);
+
+export const plotPointBibleVerseReferences = pgTable(
+  "plot_point_bible_verse_references",
+  {
+    plotPointId: integer("plot_point_id")
+      .notNull()
+      .references(() => plotPoints.id),
+    bibleVerseReferenceId: integer("bible_verse_reference_id")
+      .notNull()
+      .references(() => bibleVerseReferences.id),
   },
 );
