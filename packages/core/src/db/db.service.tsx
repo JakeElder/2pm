@@ -1,5 +1,5 @@
-import { drizzle } from "drizzle-orm/postgres-js";
-import postgres from "postgres";
+import { drizzle } from "drizzle-orm/node-postgres";
+import { Pool } from "pg";
 import {
   AiMessages,
   AiUsers,
@@ -48,17 +48,17 @@ export class DBService {
   public worldRoomEnvironments: WorldRoomEnvironments;
 
   constructor({ appDatabaseUrl, libraryDatabaseUrl }: Props) {
-    const appPostgres = postgres(appDatabaseUrl);
-    const libraryPostgres = postgres(libraryDatabaseUrl);
+    const appPool = new Pool({ connectionString: appDatabaseUrl });
+    const libraryPool = new Pool({ connectionString: libraryDatabaseUrl });
 
     this.app = {
-      pg: appPostgres,
-      drizzle: drizzle(appPostgres),
+      pool: appPool,
+      drizzle: drizzle({ client: appPool }),
     };
 
     this.library = {
-      pg: libraryPostgres,
-      drizzle: drizzle(libraryPostgres),
+      pool: libraryPool,
+      drizzle: drizzle({ client: libraryPool }),
     };
 
     this.contexts = {
@@ -200,8 +200,8 @@ export class DBService {
 
   async end() {
     await Promise.all([
-      this.contexts.app.pg.end(),
-      this.contexts.library.pg.end(),
+      this.contexts.app.pool.end(),
+      this.contexts.library.pool.end(),
     ]);
   }
 }

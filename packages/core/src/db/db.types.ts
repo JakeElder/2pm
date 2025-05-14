@@ -1,11 +1,11 @@
+import { Pool } from "pg";
 import * as appSchema from "./app.schema";
 import * as librarySchema from "./library.schema";
-import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
-import { Sql } from "postgres";
+import { NodePgDatabase } from "drizzle-orm/node-postgres";
 
 export type DBContext<T extends Record<string, unknown>> = {
-  pg: Sql;
-  drizzle: PostgresJsDatabase<T>;
+  pool: Pool;
+  drizzle: NodePgDatabase<T>;
 };
 
 export type AppDBContext = DBContext<typeof appSchema>;
