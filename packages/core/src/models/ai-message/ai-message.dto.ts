@@ -1,16 +1,22 @@
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { createZodDto } from "@anatine/zod-nestjs";
 import { z } from "zod";
-import * as schema from "../../db/app.schema";
+import {
+  aiMessages,
+  aiUsers,
+  environments,
+  plotPoints,
+  users,
+} from "../../db/app.schema";
 
 /**
  * Create
  */
 export const CreateAiMessageDtoSchema = z.object({
-  userId: createSelectSchema(schema.users).shape.id,
-  environmentId: createSelectSchema(schema.environments).shape.id,
-  content: createInsertSchema(schema.aiMessages).shape.content,
-  state: createInsertSchema(schema.aiMessages).shape.state,
+  userId: createSelectSchema(users).shape.id,
+  environmentId: createSelectSchema(environments).shape.id,
+  content: createInsertSchema(aiMessages).shape.content,
+  state: createInsertSchema(aiMessages).shape.state,
 });
 
 export class CreateAiMessageDto extends createZodDto(
@@ -21,12 +27,12 @@ export class CreateAiMessageDto extends createZodDto(
  * Read
  */
 export const AiMessageDtoSchema = z.object({
-  plotPoint: createSelectSchema(schema.plotPoints).extend({
+  plotPoint: createSelectSchema(plotPoints).extend({
     createdAt: z.coerce.date(),
   }),
-  aiMessage: createSelectSchema(schema.aiMessages),
-  environment: createSelectSchema(schema.environments),
-  aiUser: createSelectSchema(schema.aiUsers),
+  aiMessage: createSelectSchema(aiMessages),
+  environment: createSelectSchema(environments),
+  aiUser: createSelectSchema(aiUsers),
 });
 
 export class AiMessageDto extends createZodDto(AiMessageDtoSchema) {}
@@ -35,9 +41,9 @@ export class AiMessageDto extends createZodDto(AiMessageDtoSchema) {}
  * Update
  */
 export const UpdateAiMessageDtoSchema = z.object({
-  id: createSelectSchema(schema.aiMessages).shape.id,
-  content: createInsertSchema(schema.aiMessages).shape.content.optional(),
-  state: createInsertSchema(schema.aiMessages).shape.state.optional(),
+  id: createSelectSchema(aiMessages).shape.id,
+  content: createInsertSchema(aiMessages).shape.content.optional(),
+  state: createInsertSchema(aiMessages).shape.state.optional(),
 });
 
 export class UpdateAiMessageDto extends createZodDto(
@@ -48,7 +54,7 @@ export class UpdateAiMessageDto extends createZodDto(
  * Filters
  */
 export const FilterAiMessagesDtoSchema = z.object({
-  id: createSelectSchema(schema.aiMessages).shape.id.optional(),
+  id: createSelectSchema(aiMessages).shape.id.optional(),
   limit: z.number().optional(),
 });
 

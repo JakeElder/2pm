@@ -4,6 +4,7 @@ import {
   AiMessages,
   AiUsers,
   AuthEmails,
+  BibleVerses,
   EnvironmentAiTasks,
   EnvironmentUserLists,
   HumanMessages,
@@ -34,6 +35,7 @@ export class DBService {
   public aiMessages: AiMessages;
   public aiUsers: AiUsers;
   public authEmails: AuthEmails;
+  public bibleVerses: BibleVerses;
   public environmentAiTasks: EnvironmentAiTasks;
   public environmentUserLists: EnvironmentUserLists;
   public humanMessages: HumanMessages;
@@ -77,6 +79,7 @@ export class DBService {
     this.aiMessages = new AiMessages(this.contexts);
     this.aiUsers = new AiUsers(this.contexts);
     this.authEmails = new AuthEmails(this.contexts);
+    this.bibleVerses = new BibleVerses(this.contexts);
     this.environmentAiTasks = new EnvironmentAiTasks(this.contexts);
     this.environmentUserLists = new EnvironmentUserLists(this.contexts);
     this.humanMessages = new HumanMessages(this.contexts);

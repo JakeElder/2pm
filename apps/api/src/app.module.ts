@@ -22,6 +22,7 @@ import { SpaceListsModule } from './space-lists/space-lists.module';
 import { UserEnvironmentPresencesModule } from './user-environment-presences/user-environment-presences.module';
 import { UsersModule } from './users/users.module';
 import { WorldRoomEnvironmentsModule } from './world-room-environments/world-room-environments.module';
+import { BibleVersesModule } from './bible-verses/bible-verses.module';
 
 @Module({
   imports: [
@@ -53,6 +54,7 @@ import { WorldRoomEnvironmentsModule } from './world-room-environments/world-roo
     SpaceListsModule,
     EnvironmentUserListsModule,
     NikoModule,
+    BibleVersesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

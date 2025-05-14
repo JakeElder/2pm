@@ -1,6 +1,7 @@
 export * from "./ai-message";
 export * from "./ai-user";
 export * from "./auth-email";
+export * from "./bible-verse";
 export * from "./environment";
 export * from "./environment-ai-task";
 export * from "./environment-user-list";

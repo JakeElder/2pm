@@ -1,6 +1,7 @@
 export { default as AiMessages } from "../models/ai-message/ai-message.service";
 export { default as AiUsers } from "../models/ai-user/ai-user.service";
 export { default as AuthEmails } from "../models/auth-email/auth-email.service";
+export { default as BibleVerses } from "../models/bible-verse/bible-verse.service";
 export { default as EnvironmentAiTasks } from "../models/environment-ai-task/environment-ai-task.service";
 export { default as EnvironmentUserLists } from "../models/environment-user-list/environment-user-list.service";
 export { default as HumanMessages } from "../models/human-message/human-message.service";
