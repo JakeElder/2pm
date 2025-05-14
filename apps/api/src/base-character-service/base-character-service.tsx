@@ -9,6 +9,7 @@ import { type DBService } from '@2pm/core/db';
 import { txt } from '@2pm/core/utils';
 import { ChatTogetherAI } from '@langchain/community/chat_models/togetherai';
 import zodToJsonSchema from 'zod-to-json-schema';
+import { Inject } from '@nestjs/common';
 
 export abstract class BaseCharacterService {
   protected deepSeek: ChatDeepSeek;
@@ -35,7 +36,7 @@ export abstract class BaseCharacterService {
     </>,
   );
 
-  constructor(db: DBService) {
+  constructor(@Inject('DB') private readonly db: DBService) {
     this.deepSeek = new ChatDeepSeek({
       modelName: 'deepseek-chat',
       reasoningEffort: 'low',

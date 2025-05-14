@@ -173,7 +173,7 @@ export default class PlotPoints extends AppDBServiceModule {
     return data;
   }
 
-  toChain(plotPoints: PlotPointDto[]): BaseMessage[] {
+  static toChain(plotPoints: PlotPointDto[]): BaseMessage[] {
     const user = (dto: UserDto) => {
       if (dto.type === "AI") {
         return {
@@ -204,40 +204,6 @@ export default class PlotPoints extends AppDBServiceModule {
 
     return plotPoints.map(({ type, data }) => {
       return new SystemMessage(JSON.stringify({ type, data }));
-      //   if (type === "AI_MESSAGE") {
-      //     const context = user({ type: "AI", data: data.aiUser });
-      //     return new SystemMessage({
-      //       content: JSON.stringify({ type, data }),
-      //     });
-      //   }
-      //
-      //   if (type === "HUMAN_MESSAGE") {
-      //     const context = user(data.user);
-      //     return new SystemMessage({
-      //       content: data.humanMessage.text,
-      //       additional_kwargs: { sender: context },
-      //     });
-      //   }
-      //
-      //   if (type === "ENVIRONMENT_ENTERED") {
-      //     const summary = {
-      //       type,
-      //       time: data.plotPoint.createdAt,
-      //       user: user(data.user),
-      //     };
-      //     return new SystemMessage(`PLOT_POINT: ${JSON.stringify(summary)}`);
-      //   }
-      //
-      //   if (type === "ENVIRONMENT_LEFT") {
-      //     const summary = {
-      //       type,
-      //       time: data.plotPoint.createdAt,
-      //       user: user(data.user),
-      //     };
-      //     return new SystemMessage(`PLOT_POINT: ${JSON.stringify(summary)}`);
-      //   }
-      //
-      //   throw new Error();
     });
   }
 }

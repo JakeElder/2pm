@@ -17,7 +17,7 @@ import { type DBService } from '@2pm/core/db';
 import { Processor, Process } from '@nestjs/bull';
 import { Inject } from '@nestjs/common';
 import { AppEventEmitter } from '../event-emitter';
-import { aiUsers } from '@2pm/core/schema/app';
+import { aiUsers } from '@2pm/core/db/app/schema';
 import { NikoService } from '../niko/niko.service';
 
 type LoadingAiTaskProcess = {

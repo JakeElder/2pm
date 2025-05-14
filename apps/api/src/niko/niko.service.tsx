@@ -1,10 +1,10 @@
-import { type CharacterResponseEvent, PlotPointDto } from '@2pm/core';
+import { PlotPointDto } from '@2pm/core';
 import { BaseMessage, SystemMessage } from '@langchain/core/messages';
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { z } from 'zod';
 import { txt } from '@2pm/core/utils';
-import { type DBService } from '@2pm/core/db';
-import { BaseCharacterService } from 'src/base-character-service/base-character-service';
+import { PlotPoints } from '@2pm/core/db/app/services';
+import { BaseCharacterService } from '../base-character-service/base-character-service';
 
 const politeDecline = {
   name: 'politeDecline',
@@ -47,10 +47,6 @@ const findBibleVerse = {
 
 @Injectable()
 export class NikoService extends BaseCharacterService {
-  constructor(@Inject('DB') private readonly db: DBService) {
-    super(db);
-  }
-
   private static SYSTEM_PROMPT = txt(
     <>
       {super.BASE_SYSTEM_PROMPT}
@@ -61,7 +57,7 @@ export class NikoService extends BaseCharacterService {
   async react(narrative: PlotPointDto[]) {
     const messages = [
       new SystemMessage(NikoService.SYSTEM_PROMPT),
-      ...this.db.app.plotPoints.toChain(narrative),
+      ...PlotPoints.toChain(narrative),
     ];
 
     const res = await this.qwen.invoke(messages, {
@@ -74,9 +70,7 @@ export class NikoService extends BaseCharacterService {
     });
   }
 
-  async *respond(
-    narrative: PlotPointDto[],
-  ): AsyncGenerator<CharacterResponseEvent> {
+  async *respond(narrative: PlotPointDto[]) {
     const messages: BaseMessage[] = [
       new SystemMessage(NikoService.SYSTEM_PROMPT),
       new SystemMessage(
@@ -86,7 +80,7 @@ export class NikoService extends BaseCharacterService {
           </>,
         ),
       ),
-      ...this.db.app.plotPoints.toChain(narrative),
+      ...PlotPoints.toChain(narrative),
     ];
     yield* super.baseRespond(messages);
   }
