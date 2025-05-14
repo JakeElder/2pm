@@ -1,5 +1,5 @@
 import { asc, desc, eq, and, inArray, not } from "drizzle-orm";
-import { AppDBServiceModule } from "../../db/app/app-db-service-module";
+import { DBServiceModule } from "../../db/db-service-module";
 import {
   aiMessages,
   aiUsers,
@@ -11,7 +11,7 @@ import {
   plotPoints,
   userEnvironmentPresences,
   users,
-} from "../../db/app/app.schema";
+} from "../../db/app.schema";
 import {
   AiMessagePlotPointDto,
   AiMessagePlotPointDtoSchema,
@@ -29,14 +29,9 @@ import { AiMessageDtoSchema } from "../ai-message/ai-message.dto";
 import Users from "../user/user.service";
 import HumanUsers from "../human-user/human-user.service";
 import { UserDto } from "../user/user.types";
-import {
-  AIMessage,
-  BaseMessage,
-  HumanMessage,
-  SystemMessage,
-} from "@langchain/core/messages";
+import { BaseMessage, SystemMessage } from "@langchain/core/messages";
 
-export default class PlotPoints extends AppDBServiceModule {
+export default class PlotPoints extends DBServiceModule {
   async findByEnvironmentId(id: number, options: FilterPlotPointsDto = {}) {
     const { limit, types, filter, reverse } = options;
 
@@ -44,7 +39,7 @@ export default class PlotPoints extends AppDBServiceModule {
       ? asc(plotPoints.createdAt)
       : desc(plotPoints.createdAt);
 
-    const query = this.drizzle
+    const query = this.app.drizzle
       .select({
         plotPoint: plotPoints,
         message: messages,

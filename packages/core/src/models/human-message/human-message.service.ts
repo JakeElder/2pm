@@ -1,5 +1,5 @@
 import { eq, desc, and, SQL } from "drizzle-orm";
-import { AppDBServiceModule } from "../../db/app/app-db-service-module";
+import { DBServiceModule } from "../../db/db-service-module";
 import {
   humanUsers,
   environments,
@@ -7,7 +7,7 @@ import {
   plotPoints,
   users,
   humanMessages,
-} from "../../db/app/app.schema";
+} from "../../db/app.schema";
 import {
   HumanMessageDto,
   CreateHumanMessageDto,
@@ -17,7 +17,7 @@ import {
 import { HumanMessage } from "./human-message.types";
 import HumanUsers from "../human-user/human-user.service";
 
-export default class HumanMessages extends AppDBServiceModule {
+export default class HumanMessages extends DBServiceModule {
   public async create({
     userId,
     environmentId,
@@ -25,12 +25,12 @@ export default class HumanMessages extends AppDBServiceModule {
     text,
   }: CreateHumanMessageDto): Promise<HumanMessageDto> {
     const [[environment], [humanUser]] = await Promise.all([
-      this.drizzle
+      this.app.drizzle
         .select()
         .from(environments)
         .where(eq(environments.id, environmentId))
         .limit(1),
-      this.drizzle
+      this.app.drizzle
         .select()
         .from(humanUsers)
         .where(eq(humanUsers.userId, userId))
@@ -41,38 +41,40 @@ export default class HumanMessages extends AppDBServiceModule {
       throw new Error();
     }
 
-    const res: HumanMessageDto = await this.drizzle.transaction(async (tx) => {
-      const [plotPoint] = await tx
-        .insert(plotPoints)
-        .values({ type: "HUMAN_MESSAGE", environmentId, userId })
-        .returning();
+    const res: HumanMessageDto = await this.app.drizzle.transaction(
+      async (tx) => {
+        const [plotPoint] = await tx
+          .insert(plotPoints)
+          .values({ type: "HUMAN_MESSAGE", environmentId, userId })
+          .returning();
 
-      const [message] = await tx
-        .insert(messages)
-        .values({
-          type: "HUMAN",
-          environmentId,
-          userId,
-          plotPointId: plotPoint.id,
-        })
-        .returning();
+        const [message] = await tx
+          .insert(messages)
+          .values({
+            type: "HUMAN",
+            environmentId,
+            userId,
+            plotPointId: plotPoint.id,
+          })
+          .returning();
 
-      const [humanMessage] = await tx
-        .insert(humanMessages)
-        .values({
-          messageId: message.id,
-          json,
-          text,
-        })
-        .returning();
+        const [humanMessage] = await tx
+          .insert(humanMessages)
+          .values({
+            messageId: message.id,
+            json,
+            text,
+          })
+          .returning();
 
-      return {
-        plotPoint,
-        humanMessage,
-        environment,
-        user: HumanUsers.discriminate(humanUser),
-      };
-    });
+        return {
+          plotPoint,
+          humanMessage,
+          environment,
+          user: HumanUsers.discriminate(humanUser),
+        };
+      },
+    );
 
     return res;
   }
@@ -88,7 +90,7 @@ export default class HumanMessages extends AppDBServiceModule {
       filters.push(eq(humanMessages.id, id));
     }
 
-    const res = await this.drizzle
+    const res = await this.app.drizzle
       .select({
         plotPoint: plotPoints,
         humanMessage: humanMessages,
@@ -114,7 +116,7 @@ export default class HumanMessages extends AppDBServiceModule {
   }
 
   public async delete(id: HumanMessage["id"]) {
-    const res = await this.drizzle
+    const res = await this.app.drizzle
       .select({
         message: messages,
         humanMessage: humanMessages,
@@ -132,7 +134,7 @@ export default class HumanMessages extends AppDBServiceModule {
 
     const { message, humanMessage } = res[0];
 
-    await this.drizzle.transaction(async (tx) => {
+    await this.app.drizzle.transaction(async (tx) => {
       await tx.delete(humanMessages).where(eq(humanMessages.id, id));
       await tx.delete(messages).where(eq(messages.id, humanMessage.messageId));
       await tx.delete(plotPoints).where(eq(plotPoints.id, message.plotPointId));

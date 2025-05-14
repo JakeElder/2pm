@@ -1,7 +1,7 @@
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { createZodDto } from "@anatine/zod-nestjs";
 import { z } from "zod";
-import { environmentAiTasks } from "../../db/app/app.schema";
+import { environmentAiTasks } from "../../db/app.schema";
 import { AiUserDtoSchema } from "../ai-user/ai-user.dto";
 
 /**

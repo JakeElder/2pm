@@ -6,7 +6,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { AiUserDto, AnonymousUserDto, AuthenticatedUserDto } from '@2pm/core';
-import { type DBService } from '@2pm/core/db';
+import { DBService } from '@2pm/core/db';
 
 @ApiExtraModels(AnonymousUserDto)
 @ApiExtraModels(AuthenticatedUserDto)
@@ -26,6 +26,6 @@ export class AiUsersController {
     type: [AiUserDto],
   })
   findAll() {
-    return this.db.app.aiUsers.findAll();
+    return this.db.aiUsers.findAll();
   }
 }

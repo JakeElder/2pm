@@ -1,5 +1,5 @@
 import { Controller, Get, Inject, Param, ParseIntPipe } from '@nestjs/common';
-import { type DBService } from '@2pm/core/db';
+import { DBService } from '@2pm/core/db';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { EnvironmentUserListDtoSchema } from '@2pm/core';
 import { zodToOpenAPI } from 'nestjs-zod';
@@ -18,7 +18,7 @@ export class EnvironmentUserListsController {
   async onModuleInit() {
     this.events.on('user-environment-presences.created', async (dto) => {
       if (dto.previous) {
-        const list = await this.db.app.environmentUserLists.find(
+        const list = await this.db.environmentUserLists.find(
           dto.previous.environment.id,
         );
         this.gateway.server
@@ -26,7 +26,7 @@ export class EnvironmentUserListsController {
           .emit('updated', list);
       }
 
-      const list = await this.db.app.environmentUserLists.find(
+      const list = await this.db.environmentUserLists.find(
         dto.next.environment.id,
       );
 
@@ -52,6 +52,6 @@ export class EnvironmentUserListsController {
     schema: zodToOpenAPI(EnvironmentUserListDtoSchema),
   })
   findAll(@Param('id', ParseIntPipe) id: number) {
-    return this.db.app.environmentUserLists.find(id);
+    return this.db.environmentUserLists.find(id);
   }
 }

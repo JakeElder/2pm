@@ -5,7 +5,7 @@ import {
 } from '@2pm/core';
 import { BaseMessage } from '@langchain/core/messages';
 import { ChatDeepSeek } from '@langchain/deepseek';
-import { type DBService } from '@2pm/core/db';
+import { DBService } from '@2pm/core/db';
 import { txt } from '@2pm/core/utils';
 import { ChatTogetherAI } from '@langchain/community/chat_models/togetherai';
 import zodToJsonSchema from 'zod-to-json-schema';

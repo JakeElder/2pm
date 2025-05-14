@@ -8,7 +8,7 @@ import {
   Post,
   UsePipes,
 } from '@nestjs/common';
-import { type DBService } from '@2pm/core/db';
+import { DBService } from '@2pm/core/db';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ZodValidationPipe } from '@anatine/zod-nestjs';
 import {
@@ -39,7 +39,7 @@ export class HumanMessagesController {
     schema: zodToOpenAPI(HumanMessageDtoSchema),
   })
   async create(@Body() createDto: CreateHumanMessageDto) {
-    const data = await this.db.app.humanMessages.create(createDto);
+    const data = await this.db.humanMessages.create(createDto);
     this.events.emit('plot-points.created', { type: 'HUMAN_MESSAGE', data });
     return data;
   }
@@ -57,6 +57,6 @@ export class HumanMessagesController {
     type: String,
   })
   async delete(@Param('id') id: HumanMessage['id']) {
-    await this.db.app.humanMessages.delete(id);
+    await this.db.humanMessages.delete(id);
   }
 }

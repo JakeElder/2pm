@@ -7,26 +7,26 @@ import {
   plotPoints,
   userEnvironmentPresences,
   users,
-} from "../../db/app/app.schema";
-import { AppDBServiceModule } from "../../db/app/app-db-service-module";
+} from "../../db/app.schema";
+import { DBServiceModule } from "../../db/db-service-module";
 import {
   CreateUserEnvironmentPresenceDto,
   UserEnvironmentPresenceDto,
 } from ".";
 import Users from "../user/user.service";
 
-export default class UserEnvironmentPresences extends AppDBServiceModule {
+export default class UserEnvironmentPresences extends DBServiceModule {
   public async create({
     userId,
     environmentId,
   }: CreateUserEnvironmentPresenceDto): Promise<UserEnvironmentPresenceDto | null> {
     const [[environment], [{ user, humanUser, aiUser }]] = await Promise.all([
-      this.drizzle
+      this.app.drizzle
         .select()
         .from(environments)
         .where(eq(environments.id, environmentId))
         .limit(1),
-      this.drizzle
+      this.app.drizzle
         .select({
           user: users,
           humanUser: humanUsers,
@@ -44,7 +44,7 @@ export default class UserEnvironmentPresences extends AppDBServiceModule {
     }
 
     const res: UserEnvironmentPresenceDto | null =
-      await this.drizzle.transaction(async (tx) => {
+      await this.app.drizzle.transaction(async (tx) => {
         const [current] = await tx
           .select({
             userEnvironmentPresence: userEnvironmentPresences,

@@ -1,21 +1,21 @@
 import { eq } from "drizzle-orm";
-import { sessions, humanUsers } from "../../db/app/app.schema";
-import { AppDBServiceModule } from "../../db/app/app-db-service-module";
+import { sessions, humanUsers } from "../../db/app.schema";
+import { DBServiceModule } from "../../db/db-service-module";
 import { CreateSessionDto, SessionDto } from "./session.dto";
 import { Session } from "./session.types";
 import HumanUsers from "../human-user/human-user.service";
 
-export default class Sessions extends AppDBServiceModule {
+export default class Sessions extends DBServiceModule {
   public async create<T extends CreateSessionDto>(dto: T): Promise<SessionDto> {
     const { humanUserId } = dto;
 
-    const [humanUser] = await this.drizzle
+    const [humanUser] = await this.app.drizzle
       .select()
       .from(humanUsers)
       .where(eq(humanUsers.id, humanUserId))
       .limit(1);
 
-    const [session] = await this.drizzle
+    const [session] = await this.app.drizzle
       .insert(sessions)
       .values({ humanUserId: humanUser.id })
       .returning();
@@ -27,7 +27,7 @@ export default class Sessions extends AppDBServiceModule {
   }
 
   async find(id: Session["id"]): Promise<SessionDto | null> {
-    const res = await this.drizzle
+    const res = await this.app.drizzle
       .select({
         session: sessions,
         humanUser: humanUsers,

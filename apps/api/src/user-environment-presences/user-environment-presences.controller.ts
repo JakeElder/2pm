@@ -1,5 +1,5 @@
 import { Body, Controller, Inject, Post, UsePipes } from '@nestjs/common';
-import { type DBService } from '@2pm/core/db';
+import { DBService } from '@2pm/core/db';
 import { ZodValidationPipe } from 'nestjs-zod';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import {
@@ -28,7 +28,7 @@ export class UserEnvironmentPresencesController {
     type: UserEnvironmentPresenceDto,
   })
   async create(@Body() createDto: CreateUserEnvironmentPresenceDto) {
-    const dto = await this.db.app.userEnvironmentPresences.create(createDto);
+    const dto = await this.db.userEnvironmentPresences.create(createDto);
 
     if (!dto) {
       return null;

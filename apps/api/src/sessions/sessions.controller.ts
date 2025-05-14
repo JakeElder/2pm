@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateSessionDto, type Session, SessionDtoSchema } from '@2pm/core';
-import { type DBService } from '@2pm/core/db';
+import { DBService } from '@2pm/core/db';
 import { ZodValidationPipe } from '@anatine/zod-nestjs';
 import { zodToOpenAPI } from 'nestjs-zod';
 
@@ -38,7 +38,7 @@ export class SessionsController {
     type: String,
   })
   async findOne(@Param('id') id: Session['id']) {
-    const res = await this.db.app.sessions.find(id);
+    const res = await this.db.sessions.find(id);
     if (!res) {
       throw new NotFoundException(`Session ${id} not found`);
     }
@@ -56,7 +56,7 @@ export class SessionsController {
     schema: zodToOpenAPI(SessionDtoSchema),
   })
   async create(@Body() createDto: CreateSessionDto) {
-    const dto = await this.db.app.sessions.create(createDto);
+    const dto = await this.db.sessions.create(createDto);
     return dto;
   }
 }

@@ -1,5 +1,5 @@
 import { Controller, Get, Inject } from '@nestjs/common';
-import { type DBService } from '@2pm/core/db';
+import { DBService } from '@2pm/core/db';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { SpaceListDtoSchema } from '@2pm/core';
 import { zodToOpenAPI } from 'nestjs-zod';
@@ -17,7 +17,7 @@ export class SpaceListsController {
 
   async onModuleInit() {
     this.events.on('user-environment-presences.created', async () => {
-      const list = await this.db.app.spaceLists.find();
+      const list = await this.db.spaceLists.find();
       this.gateway.server.to('main').emit('updated', list);
     });
   }
@@ -32,7 +32,7 @@ export class SpaceListsController {
     schema: zodToOpenAPI(SpaceListDtoSchema),
   })
   async findOne() {
-    const spaceList = await this.db.app.spaceLists.find();
+    const spaceList = await this.db.spaceLists.find();
     return spaceList;
   }
 }

@@ -16,7 +16,7 @@ import {
   ApiTags,
   getSchemaPath,
 } from '@nestjs/swagger';
-import { type DBService } from '@2pm/core/db';
+import { DBService } from '@2pm/core/db';
 import { EnvironmentAiTasksGateway } from './environment-ai-tasks.gateway';
 import traverse from 'traverse';
 
@@ -87,6 +87,6 @@ export class EnvironmentAiTasksController {
     },
   })
   findByEnvironmentId(@Param('id', ParseIntPipe) id: number) {
-    return this.db.app.environmentAiTasks.findByEnvironmentId(id);
+    return this.db.environmentAiTasks.findByEnvironmentId(id);
   }
 }

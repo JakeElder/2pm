@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { AppDBService } from '@2pm/core/db';
+import { DBService } from '@2pm/core/db';
 import { ConfigService } from '@nestjs/config';
 
 @Module({
@@ -7,7 +7,7 @@ import { ConfigService } from '@nestjs/config';
     {
       inject: [ConfigService],
       provide: 'DB',
-      useFactory: (config: ConfigService) => {
+      useFactory: (config: ConfigService): DBService => {
         const appDatabaseUrl = config.get<string>('APP_DATABASE_URL');
         const libraryDatabaseUrl = config.get<string>('LIBRARY_DATABASE_URL');
 
@@ -19,9 +19,7 @@ import { ConfigService } from '@nestjs/config';
           throw new Error('LIBRARY_DATABASE_URL not set');
         }
 
-        return {
-          app: new AppDBService(appDatabaseUrl),
-        };
+        return new DBService({ appDatabaseUrl, libraryDatabaseUrl });
       },
     },
   ],

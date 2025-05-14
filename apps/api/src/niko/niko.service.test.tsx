@@ -3,7 +3,7 @@ import { NikoService } from './niko.service';
 import { PlotPointDto } from '@2pm/core';
 import { DatabaseModule } from 'src/database/database.module';
 import { Test } from '@nestjs/testing';
-import { AppDBService } from '@2pm/core/db';
+import { DBService } from '@2pm/core/db';
 
 const narrative: PlotPointDto[] = [
   {
@@ -347,7 +347,10 @@ test('react should choose the correct function', async () => {
     .useFactory({
       factory: () => {
         return {
-          app: new AppDBService(process.env.APP_DATABASE_URL!),
+          app: new DBService({
+            appDatabaseUrl: process.env.APP_DATABASE_URL!,
+            libraryDatabaseUrl: process.env.LIBRARY_DATABASE_URL!,
+          }),
         };
       },
     })

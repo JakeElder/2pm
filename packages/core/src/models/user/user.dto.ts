@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { createZodDto } from "@anatine/zod-nestjs";
 import { createSelectSchema } from "drizzle-zod";
-import { humanUsers } from "../../db/app/app.schema";
+import { humanUsers } from "../../db/app.schema";
 import { AiUserDtoSchema } from "../ai-user/ai-user.dto";
 
 /**

@@ -1,21 +1,21 @@
 import { eq } from "drizzle-orm";
-import { AppDBServiceModule } from "../../db/app/app-db-service-module";
-import { users, humanUsers } from "../../db/app/app.schema";
+import { DBServiceModule } from "../../db/db-service-module";
+import { users, humanUsers } from "../../db/app.schema";
 import { CreateHumanUserDto } from "./human-user.dto";
 import { AnonymousUserDto, AuthenticatedUserDto } from "../user/user.dto";
 import { shorten } from "../../utils";
 import { HumanUser, HumanUserDto } from "./human-user.types";
 
-export default class HumanUsers extends AppDBServiceModule {
+export default class HumanUsers extends DBServiceModule {
   async create(
     dto: CreateHumanUserDto = {},
   ): Promise<AnonymousUserDto | AuthenticatedUserDto> {
-    const [user] = await this.drizzle
+    const [user] = await this.app.drizzle
       .insert(users)
       .values({ type: "HUMAN" })
       .returning();
 
-    const [humanUser] = await this.drizzle
+    const [humanUser] = await this.app.drizzle
       .insert(humanUsers)
       .values({
         userId: user.id,
@@ -29,7 +29,7 @@ export default class HumanUsers extends AppDBServiceModule {
   async find(
     id: HumanUser["id"],
   ): Promise<AnonymousUserDto | AuthenticatedUserDto | null> {
-    const res = await this.drizzle
+    const res = await this.app.drizzle
       .select()
       .from(humanUsers)
       .where(eq(humanUsers.id, id))

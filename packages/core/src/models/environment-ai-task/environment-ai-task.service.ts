@@ -1,15 +1,15 @@
 import { not, eq, and } from "drizzle-orm";
-import { AppDBServiceModule } from "../../db/app/app-db-service-module";
-import { aiUsers, environmentAiTasks } from "../../db/app/app.schema";
+import { DBServiceModule } from "../../db/db-service-module";
+import { aiUsers, environmentAiTasks } from "../../db/app.schema";
 import {
   CreateEnvironmentAiTaskDto,
   EnvironmentAiTaskDto,
   UpdateEnvironmentAiTaskDto,
 } from "./environment-ai-task.dto";
 
-export default class EnvironmentAiTasks extends AppDBServiceModule {
+export default class EnvironmentAiTasks extends DBServiceModule {
   async create(dto: CreateEnvironmentAiTaskDto): Promise<EnvironmentAiTaskDto> {
-    const [aiUser] = await this.drizzle
+    const [aiUser] = await this.app.drizzle
       .select()
       .from(aiUsers)
       .where(eq(aiUsers.id, dto.aiUserId))
@@ -19,7 +19,7 @@ export default class EnvironmentAiTasks extends AppDBServiceModule {
       throw new Error();
     }
 
-    const [environmentAiTask] = await this.drizzle
+    const [environmentAiTask] = await this.app.drizzle
       .insert(environmentAiTasks)
       .values(dto)
       .returning();
@@ -34,13 +34,13 @@ export default class EnvironmentAiTasks extends AppDBServiceModule {
     id,
     ...rest
   }: UpdateEnvironmentAiTaskDto): Promise<EnvironmentAiTaskDto> {
-    const [environmentAiTask] = await this.drizzle
+    const [environmentAiTask] = await this.app.drizzle
       .update(environmentAiTasks)
       .set({ ...rest })
       .where(eq(environmentAiTasks.id, id))
       .returning();
 
-    const [aiUser] = await this.drizzle
+    const [aiUser] = await this.app.drizzle
       .select()
       .from(aiUsers)
       .where(eq(aiUsers.id, environmentAiTask.aiUserId))
@@ -53,7 +53,7 @@ export default class EnvironmentAiTasks extends AppDBServiceModule {
   }
 
   async findByEnvironmentId(id: number): Promise<EnvironmentAiTaskDto | null> {
-    const res = await this.drizzle
+    const res = await this.app.drizzle
       .select({
         aiUser: aiUsers,
         environmentAiTask: environmentAiTasks,

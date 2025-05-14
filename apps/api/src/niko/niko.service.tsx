@@ -3,7 +3,7 @@ import { BaseMessage, SystemMessage } from '@langchain/core/messages';
 import { Injectable } from '@nestjs/common';
 import { z } from 'zod';
 import { txt } from '@2pm/core/utils';
-import { PlotPoints } from '@2pm/core/db/app/services';
+import { PlotPoints } from '@2pm/core/db/services';
 import { BaseCharacterService } from '../base-character-service/base-character-service';
 
 const politeDecline = {

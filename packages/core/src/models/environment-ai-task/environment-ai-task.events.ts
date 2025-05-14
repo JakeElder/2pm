@@ -3,7 +3,7 @@ import type { Socket as ClientSocket } from "socket.io-client";
 import { createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
 import { createZodDto } from "@anatine/zod-nestjs";
-import { environments, humanUsers } from "../../db/app/app.schema";
+import { environments, humanUsers } from "../../db/app.schema";
 import { ActiveEnvironmentAiTaskDtoSchema } from "./environment-ai-task.dto";
 
 /**

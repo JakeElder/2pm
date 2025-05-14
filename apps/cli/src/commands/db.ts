@@ -1,9 +1,9 @@
 import { Command } from "commander";
 import ora from "ora";
-import { AppDBService } from "@2pm/core/db";
+import { DBService } from "@2pm/core/db";
 import postgres from "postgres";
 
-const { APP_DATABASE_URL } = process.env as {
+const { APP_DATABASE_URL, LIBRARY_DATABASE_URL } = process.env as {
   APP_DATABASE_URL: string;
   LIBRARY_DATABASE_URL: string;
 };
@@ -66,7 +66,10 @@ db.command("seed")
     const spinner = ora("Seeding database").start();
 
     try {
-      const db = new AppDBService(APP_DATABASE_URL);
+      const db = new DBService({
+        appDatabaseUrl: APP_DATABASE_URL,
+        libraryDatabaseUrl: LIBRARY_DATABASE_URL,
+      });
       await db.seed();
       await db.end();
       spinner.succeed(`Seeded database`);
@@ -83,7 +86,10 @@ db.command("clear")
     const spinner = ora("Clearing DB").start();
 
     try {
-      const db = new AppDBService(APP_DATABASE_URL);
+      const db = new DBService({
+        appDatabaseUrl: APP_DATABASE_URL,
+        libraryDatabaseUrl: LIBRARY_DATABASE_URL,
+      });
       await db.clear();
       await db.end();
       spinner.succeed(`Cleared DB`);

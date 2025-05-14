@@ -12,7 +12,7 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Inject, Logger } from '@nestjs/common';
-import { type DBService } from '@2pm/core/db';
+import { DBService } from '@2pm/core/db';
 
 @WebSocketGateway({
   namespace: '/environment-user-lists',
@@ -33,7 +33,7 @@ export class EnvironmentUserListsGateway {
     @ConnectedSocket() socket: EnvironmentUserListsServerSocket,
   ) {
     if (!socket.rooms.has(`${environmentId}`)) {
-      const user = await this.db.app.humanUsers.find(humanUserId);
+      const user = await this.db.humanUsers.find(humanUserId);
 
       if (!user) {
         return;
@@ -56,7 +56,7 @@ export class EnvironmentUserListsGateway {
     @ConnectedSocket() socket: EnvironmentUserListsServerSocket,
   ) {
     if (socket.rooms.has(`${environmentId}`)) {
-      const user = await this.db.app.humanUsers.find(humanUserId);
+      const user = await this.db.humanUsers.find(humanUserId);
 
       if (!user) {
         return;

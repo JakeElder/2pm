@@ -1,5 +1,4 @@
 import { eq, desc, and, SQL } from "drizzle-orm";
-import { AppDBServiceModule } from "../../db/app/app-db-service-module";
 import {
   aiMessages,
   aiUsers,
@@ -7,7 +6,7 @@ import {
   messages,
   plotPoints,
   users,
-} from "../../db/app/app.schema";
+} from "../../db/app.schema";
 import {
   AiMessageDto,
   CreateAiMessageDto,
@@ -15,8 +14,9 @@ import {
   FilterAiMessagesDtoSchema,
   UpdateAiMessageDto,
 } from "./ai-message.dto";
+import { DBServiceModule } from "../../db/db-service-module";
 
-export default class AiMessages extends AppDBServiceModule {
+export default class AiMessages extends DBServiceModule {
   public async create({
     userId,
     environmentId,
@@ -24,12 +24,12 @@ export default class AiMessages extends AppDBServiceModule {
     state,
   }: CreateAiMessageDto): Promise<AiMessageDto> {
     const [[environment], [aiUser]] = await Promise.all([
-      this.drizzle
+      this.app.drizzle
         .select()
         .from(environments)
         .where(eq(environments.id, environmentId))
         .limit(1),
-      this.drizzle
+      this.app.drizzle
         .select()
         .from(aiUsers)
         .where(eq(aiUsers.userId, userId))
@@ -40,12 +40,12 @@ export default class AiMessages extends AppDBServiceModule {
       throw new Error();
     }
 
-    const [plotPoint] = await this.drizzle
+    const [plotPoint] = await this.app.drizzle
       .insert(plotPoints)
       .values({ type: "AI_MESSAGE", environmentId, userId })
       .returning();
 
-    const [message] = await this.drizzle
+    const [message] = await this.app.drizzle
       .insert(messages)
       .values({
         type: "AI",
@@ -55,7 +55,7 @@ export default class AiMessages extends AppDBServiceModule {
       })
       .returning();
 
-    const [aiMessage] = await this.drizzle
+    const [aiMessage] = await this.app.drizzle
       .insert(aiMessages)
       .values({ messageId: message.id, content, state })
       .returning();
@@ -69,7 +69,7 @@ export default class AiMessages extends AppDBServiceModule {
   }
 
   async update({ id, ...rest }: UpdateAiMessageDto): Promise<AiMessageDto> {
-    const r = this.drizzle
+    const r = this.app.drizzle
       .update(aiMessages)
       .set({ ...rest })
       .where(eq(aiMessages.id, id))
@@ -77,7 +77,7 @@ export default class AiMessages extends AppDBServiceModule {
 
     const [aiMessage] = await r;
 
-    const res = this.drizzle
+    const res = this.app.drizzle
       .select({
         plotPoint: plotPoints,
         environment: environments,
@@ -110,7 +110,7 @@ export default class AiMessages extends AppDBServiceModule {
       filters.push(eq(aiMessages.id, id));
     }
 
-    const res = await this.drizzle
+    const res = await this.app.drizzle
       .select({
         plotPoint: plotPoints,
         aiMessage: aiMessages,

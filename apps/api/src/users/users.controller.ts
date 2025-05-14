@@ -8,7 +8,7 @@ import {
   getSchemaPath,
 } from '@nestjs/swagger';
 import { AiUserDto, AnonymousUserDto, AuthenticatedUserDto } from '@2pm/core';
-import { type DBService } from '@2pm/core/db';
+import { DBService } from '@2pm/core/db';
 
 @ApiExtraModels(AiUserDto)
 @ApiExtraModels(AnonymousUserDto)
@@ -43,6 +43,6 @@ export class UsersController {
     },
   })
   findAll(@Param('id', ParseIntPipe) id: number) {
-    return this.db.app.users.findByEnvironmentId(id);
+    return this.db.users.findByEnvironmentId(id);
   }
 }

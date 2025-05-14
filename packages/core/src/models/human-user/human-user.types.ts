@@ -1,5 +1,5 @@
 import { InferSelectModel } from "drizzle-orm";
-import { humanUsers } from "../../db/app/app.schema";
+import { humanUsers } from "../../db/app.schema";
 import { HumanUserDtoSchema } from "../user";
 import { z } from "zod";
 
