@@ -69,7 +69,7 @@ export const BibleVerseReferencePlotPointDtoSchema = z.object({
       createdAt: z.coerce.date(),
     }),
     environment: createSelectSchema(environments),
-    bibleVerse: createSelectSchema(kjvVerses),
+    bibleVerse: BibleVerseDtoSchema,
     bibleChunk: createSelectSchema(kjvChunks).omit({ embedding: true }),
   }),
 });

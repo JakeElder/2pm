@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 import { DBServiceModule } from "../../db/db-service-module";
 import { BibleVerseDto } from "./bible-verse.dto";
-import { kjvVerses } from "../../db/library.schema";
+import { kjvBooks, kjvVerses } from "../../db/library.schema";
 import { DBContexts } from "../../db/db.types";
 import { OllamaEmbeddings } from "@langchain/ollama";
 import { PGVectorStore } from "@langchain/community/vectorstores/pgvector";
@@ -34,25 +34,51 @@ export default class BibleVerses extends DBServiceModule {
 
   async find(id: BibleVerse["id"]): Promise<BibleVerseDto | null> {
     const [res] = await this.library.drizzle
-      .select()
+      .select({
+        kjvVerse: kjvVerses,
+        kjvBook: kjvBooks,
+      })
       .from(kjvVerses)
+      .innerJoin(kjvBooks, eq(kjvVerses.bookId, kjvBooks.id))
       .where(eq(kjvVerses.id, id))
       .limit(1);
 
-    return res ? res : null;
+    if (!res) {
+      return null;
+    }
+
+    return {
+      ...res.kjvVerse,
+      bookName: res.kjvBook.name,
+    };
   }
 
   async findAll(): Promise<BibleVerseDto[]> {
-    const res = await this.library.drizzle.select().from(kjvVerses).limit(20);
-    return res;
+    const res = await this.library.drizzle
+      .select({
+        kjvVerse: kjvVerses,
+        kjvBook: kjvBooks,
+      })
+      .from(kjvVerses)
+      .innerJoin(kjvBooks, eq(kjvVerses.bookId, kjvBooks.id))
+      .limit(20);
+
+    return res.map((row) => ({
+      ...row.kjvVerse,
+      bookName: row.kjvBook.name,
+    }));
   }
 
   async vectorQuery(query: string): Promise<BibleVerseDto[]> {
     const res = await this.vector.similaritySearch(query, 3);
 
     const dtos = await this.library.drizzle
-      .select()
+      .select({
+        kjvVerse: kjvVerses,
+        kjvBook: kjvBooks,
+      })
       .from(kjvVerses)
+      .innerJoin(kjvBooks, eq(kjvVerses.bookId, kjvBooks.id))
       .where(
         inArray(
           kjvVerses.id,
@@ -60,6 +86,9 @@ export default class BibleVerses extends DBServiceModule {
         ),
       );
 
-    return dtos;
+    return dtos.map((row) => ({
+      ...row.kjvVerse,
+      bookName: row.kjvBook.name,
+    }));
   }
 }

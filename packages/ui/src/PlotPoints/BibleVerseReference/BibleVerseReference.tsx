@@ -7,13 +7,13 @@ type Props = {
   children: React.ReactNode;
 };
 
-const BibleVerse = ({ verse, children }: Props) => {
+const BibleVerseReference = ({ verse, children }: Props) => {
   return (
     <StandardPlotPoint.Root>
       <StandardPlotPoint.Header>
         <StandardPlotPoint.HeadingAndReference>
           <StandardPlotPoint.Heading>
-            <div className={css["translation"]}> The Bible</div>
+            <div className={css["heading"]}> Bible Reference</div>
             <div className={css["verse"]}>{verse}</div>
           </StandardPlotPoint.Heading>
         </StandardPlotPoint.HeadingAndReference>
@@ -23,4 +23,4 @@ const BibleVerse = ({ verse, children }: Props) => {
   );
 };
 
-export default BibleVerse;
+export default BibleVerseReference;
