@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import Prose from "./Prose";
 import * as Frame from "../Frame";
 import * as prose from "../../fixtures/prose";
+import * as users from "../../fixtures/users";
 
 const meta: Meta<typeof Prose> = {
   title: "Components/Prose",
@@ -25,10 +26,19 @@ export const Default: Story = {
   args: {
     content: prose.WITH_BOLD,
     suggestionItems: async ({ query }) => {
-      return ["niko", "note", "why"]
-        .filter((item) => item.toLowerCase().startsWith(query.toLowerCase()))
+      return [users.AI]
+        .filter((item) =>
+          item.tag.toLowerCase().startsWith(query.toLowerCase()),
+        )
         .slice(0, 5);
     },
+  },
+};
+
+export const NoResults: Story = {
+  args: {
+    content: prose.WITH_BOLD,
+    suggestionItems: async () => [],
   },
 };
 

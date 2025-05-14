@@ -1,3 +1,4 @@
+export * as AiMentionList from "./AiMentionList";
 export * as InfoBar from "./InfoBar";
 export * as InfoBarAiState from "./InfoBarAiState";
 export * as LibraryList from "./LibraryList";

@@ -96,7 +96,7 @@ export const Default: Story = {
               </Message.Root>
               <Message.Root>
                 <Message.Header>
-                  <UserTag {...users.AI} />
+                  <UserTag type="AI" data={users.AI} />
                 </Message.Header>
                 <Message.Body>
                   Lorem ipsum dolor sit amet, [1] adipiscing elit, sed do
@@ -115,7 +115,7 @@ export const Default: Story = {
               <span style={{ fontSize: 10, marginRight: 10 }}></span> Users
             </PaneHeader>
             <EnvironmentUserList.Root>
-              <EnvironmentUserList.User {...users.AI} />
+              <EnvironmentUserList.User type="AI" data={users.AI} />
               <EnvironmentUserList.User {...users.AUTHENTICATED} showHash />
               <EnvironmentUserList.User {...users.ANONYMOUS} showHash />
             </EnvironmentUserList.Root>

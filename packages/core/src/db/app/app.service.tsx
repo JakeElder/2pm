@@ -87,17 +87,17 @@ export class AppDBService {
       this.aiUsers.create({
         id: "NIKO",
         tag: "niko",
-        bio: txt(<>Niko is our host.</>),
+        bio: txt(<>our host and ancient text expert</>),
       }),
       this.aiUsers.create({
         id: "NOTE",
         tag: "note",
-        bio: txt(<>Note is an expert on Buddhist teachings.</>),
+        bio: txt(<>an expert on buddhist teachings</>),
       }),
       this.aiUsers.create({
         id: "WHY",
         tag: "why",
-        bio: txt(<>Why is a general knowledge expert.</>),
+        bio: txt(<>our general knowledge expert</>),
       }),
     ]);
 

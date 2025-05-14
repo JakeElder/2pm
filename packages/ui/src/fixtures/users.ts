@@ -1,4 +1,4 @@
-import { UserDto } from "@2pm/core";
+import { AiUserDto, UserDto } from "@2pm/core";
 
 export const ANONYMOUS: UserDto = {
   type: "ANONYMOUS",
@@ -19,12 +19,9 @@ export const AUTHENTICATED: UserDto = {
   },
 };
 
-export const AI: UserDto = {
-  type: "AI",
-  data: {
-    id: "NIKO",
-    tag: "niko",
-    userId: 1,
-    bio: "",
-  },
+export const AI: AiUserDto = {
+  id: "NIKO",
+  tag: "niko",
+  userId: 1,
+  bio: "our host and ancient text expert",
 };

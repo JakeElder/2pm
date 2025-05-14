@@ -43,7 +43,7 @@ export const Ai: Story = {
     return (
       <Message.Root>
         <Message.Header>
-          <UserTag {...users.AI} />
+          <UserTag type="AI" data={users.AI} />
         </Message.Header>
         <Message.Body>
           Lorem ipsum dolor sit amet, [1] adipiscing elit, sed do eiusmod tempor

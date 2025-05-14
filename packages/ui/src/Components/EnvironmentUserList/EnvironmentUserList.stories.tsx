@@ -24,7 +24,7 @@ export const Default: Story = {
   render() {
     return (
       <EnvironmentUserList.Root>
-        <EnvironmentUserList.User {...users.AI} />
+        <EnvironmentUserList.User type="AI" data={users.AI} />
         <EnvironmentUserList.User {...users.AUTHENTICATED} />
         <EnvironmentUserList.User {...users.ANONYMOUS} showHash />
       </EnvironmentUserList.Root>

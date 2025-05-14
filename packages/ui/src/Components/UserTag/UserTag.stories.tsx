@@ -30,7 +30,7 @@ export const Authenticated: Story = {
 };
 
 export const Ai: Story = {
-  args: users.AI,
+  args: { type: "AI", data: users.AI },
 };
 
 export default meta;

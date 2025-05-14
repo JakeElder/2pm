@@ -1,4 +1,3 @@
-import classNames from "classnames";
 import css from "./MentionList.module.css";
 
 import React, {
@@ -8,6 +7,7 @@ import React, {
   useState,
 } from "react";
 import { AiUserDto } from "@2pm/core";
+import * as AiMentionList from "../AiMentionList";
 
 export default forwardRef<{}, { items: AiUserDto[]; command: any }>(
   ({ items, command }, ref) => {
@@ -66,13 +66,13 @@ export default forwardRef<{}, { items: AiUserDto[]; command: any }>(
     }));
 
     return (
-      <div className={css["dropdown-menu"]}>
+      <AiMentionList.Root>
         <Items
           items={items}
           onClick={(index: any) => selectItem(index)}
           selectedIndex={selectedIndex}
         />
-      </div>
+      </AiMentionList.Root>
     );
   },
 );
@@ -82,25 +82,21 @@ export default forwardRef<{}, { items: AiUserDto[]; command: any }>(
  */
 
 type ItemsProps = {
-  items: any[];
+  items: AiUserDto[];
   onClick: any;
   selectedIndex: number;
 };
 
 export const Items = ({ items, onClick, selectedIndex }: ItemsProps) => {
   if (!items.length) {
-    return <div className={css["no-results"]}>no results</div>;
+    return <AiMentionList.NoResults />;
   }
   return items.map((item, index) => (
-    <button
-      className={classNames({
-        [css["button"]]: true,
-        [css["selected"]]: index === selectedIndex,
-      })}
-      key={index}
-      onClick={() => onClick(index)}
-    >
-      @{item.tag}
-    </button>
+    <AiMentionList.User
+      user={item}
+      key={item.userId}
+      selected={index === selectedIndex}
+      handleClick={() => onClick(index)}
+    />
   ));
 };

@@ -1,0 +1,75 @@
+.root {
+  background: var(--base);
+  border-radius: 4px;
+  border: 3px solid rgb(from var(--text) r g b / 30%);
+  box-shadow: 3px 3px 1px 2px rgb(from var(--crust) r g b / 30%);
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  position: relative;
+  min-width: 120px;
+}
+
+.user {
+  font-family: var(--font-family-1);
+  width: 100%;
+  text-align: left;
+  padding-right: 40px;
+  box-sizing: border-box;
+}
+
+.tag {
+  margin-bottom: 1px;
+}
+
+.avatar-and-info {
+  height: 28px;
+  display: flex;
+}
+
+.avatar {
+  width: 28px;
+  height: 28px;
+  background: var(--surface0);
+  border-radius: 2px;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+.info {
+  padding-top: 3px;
+}
+
+.bio {
+  color: var(--overlay1);
+  font-weight: 200;
+  white-space: nowrap;
+}
+
+.user,
+.no-results {
+  font-size: 11px;
+  padding: 8px;
+  padding-right: 30px;
+}
+
+.user:not(:last-child) {
+  border-bottom: 1px solid var(--surface0);
+}
+
+.bio-prefix {
+  margin-right: 3px;
+}
+
+.user:hover {
+  background: rgb(from var(--surface0) r g b / 30%);
+}
+
+.avatar-and-info {
+  display: flex;
+}
+
+.selected,
+.selected:hover {
+  background: rgb(from var(--surface0) r g b / 50%);
+}
