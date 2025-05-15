@@ -10,7 +10,7 @@ const ThemeContainer = async ({ children }: Props) => {
   const session = await getSession();
   const humanUserTheme = await getHumanUserTheme(session.humanUserId);
   return (
-    <ThemeViewContainer theme={humanUserTheme.data.theme}>
+    <ThemeViewContainer session={session} humanUserTheme={humanUserTheme.data}>
       {children}
     </ThemeViewContainer>
   );

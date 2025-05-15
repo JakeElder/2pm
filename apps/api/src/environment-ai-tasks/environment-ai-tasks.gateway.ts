@@ -11,16 +11,14 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
-import { Inject, Logger } from '@nestjs/common';
-import { DBService } from '@2pm/core/db';
+import { Logger } from '@nestjs/common';
+import { BaseGateway } from 'src/base-gateway/base-gateway-service';
 
 @WebSocketGateway({
   namespace: '/environment-ai-tasks',
   cors: { origin: '*' },
 })
-export class EnvironmentAiTasksGateway {
-  constructor(@Inject('DB') private readonly db: DBService) {}
-
+export class EnvironmentAiTasksGateway extends BaseGateway {
   private readonly logger = new Logger(EnvironmentAiTasksGateway.name);
 
   @WebSocketServer()
@@ -32,21 +30,12 @@ export class EnvironmentAiTasksGateway {
     { environmentId, humanUserId }: EnvironmentAiTasksRoomJoinedEventDto,
     @ConnectedSocket() socket: EnvironmentAiTasksServerSocket,
   ) {
-    if (!socket.rooms.has(`${environmentId}`)) {
-      const user = await this.db.humanUsers.find(humanUserId);
-
-      if (!user) {
-        return;
-      }
-
-      const name =
-        user.type === 'ANONYMOUS'
-          ? `@anon#${user.data.hash}`
-          : `@${user.data.tag}`;
-
-      socket.join(`${environmentId}`);
-      this.logger.debug(`joined: ${name}`);
+    if (socket.rooms.has(`${environmentId}`)) {
+      return;
     }
+    socket.join(`${environmentId}`);
+    const tag = await this.getUserTag(humanUserId);
+    this.logger.debug(`joined: ${tag}`);
   }
 
   @SubscribeMessage('leave')
@@ -55,20 +44,11 @@ export class EnvironmentAiTasksGateway {
     { environmentId, humanUserId }: EnvironmentAiTasksRoomLeftEventDto,
     @ConnectedSocket() socket: EnvironmentAiTasksServerSocket,
   ) {
-    if (socket.rooms.has(`${environmentId}`)) {
-      const user = await this.db.humanUsers.find(humanUserId);
-
-      if (!user) {
-        return;
-      }
-
-      const name =
-        user.type === 'ANONYMOUS'
-          ? `@anon#${user.data.hash}`
-          : `@${user.data.tag}`;
-
-      socket.leave(`${environmentId}`);
-      this.logger.debug(`left: ${name}`);
+    if (!socket.rooms.has(`${environmentId}`)) {
+      return;
     }
+    socket.leave(`${environmentId}`);
+    const tag = await this.getUserTag(humanUserId);
+    this.logger.debug(`left: ${tag}`);
   }
 }

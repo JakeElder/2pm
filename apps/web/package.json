@@ -13,6 +13,7 @@
     "@2pm/api": "workspace:*",
     "@2pm/core": "workspace:*",
     "@2pm/ui": "workspace:*",
-    "next": "^15.3.1"
+    "next": "^15.3.1",
+    "react-hotkeys-hook": "^5.0.1"
   }
 }

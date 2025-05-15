@@ -3,6 +3,7 @@ import {
   EnvironmentAiTasksClientSocket,
   EnvironmentsClientSocket,
   EnvironmentUserListsClientSocket,
+  HumanUserThemesClientSocket,
   SpaceListsClientSocket,
 } from "@2pm/core";
 import { io } from "socket.io-client";
@@ -25,4 +26,8 @@ export const environmentUserListsSocket: EnvironmentUserListsClientSocket = io(
 
 export const aiMessagesSocket: AiMessagesClientSocket = io(
   `${process.env.NEXT_PUBLIC_SOCKET_BASE_URL}/ai-messages`,
+);
+
+export const humanUserThemesSocket: HumanUserThemesClientSocket = io(
+  `${process.env.NEXT_PUBLIC_SOCKET_BASE_URL}/human-user-themes`,
 );

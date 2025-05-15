@@ -1,7 +1,7 @@
 import { test } from 'bun:test';
 import { NikoService } from './niko.service';
 import { PlotPointDto } from '@2pm/core';
-import { DatabaseModule } from 'src/database/database.module';
+import { DatabaseModule } from '../database/database.module';
 import { Test } from '@nestjs/testing';
 import { DBService } from '@2pm/core/db';
 

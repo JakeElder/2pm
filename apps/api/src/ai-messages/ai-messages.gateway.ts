@@ -11,16 +11,14 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
-import { Inject, Logger } from '@nestjs/common';
-import { DBService } from '@2pm/core/db';
+import { Logger } from '@nestjs/common';
+import { BaseGateway } from '../base-gateway/base-gateway-service';
 
 @WebSocketGateway({
   namespace: '/ai-messages',
   cors: { origin: '*' },
 })
-export class AiMessagesGateway {
-  constructor(@Inject('DB') private readonly db: DBService) {}
-
+export class AiMessagesGateway extends BaseGateway {
   private readonly logger = new Logger(AiMessagesGateway.name);
 
   @WebSocketServer()
@@ -32,21 +30,12 @@ export class AiMessagesGateway {
     { aiMessageId, humanUserId }: AiMessagesRoomJoinedEventDto,
     @ConnectedSocket() socket: AiMessagesServerSocket,
   ) {
-    if (!socket.rooms.has(`${aiMessageId}`)) {
-      const user = await this.db.humanUsers.find(humanUserId);
-
-      if (!user) {
-        return;
-      }
-
-      const name =
-        user.type === 'ANONYMOUS'
-          ? `@anon#${user.data.hash}`
-          : `@${user.data.tag}`;
-
-      socket.join(`${aiMessageId}`);
-      this.logger.debug(`joined: ${name}`);
+    if (socket.rooms.has(`${aiMessageId}`)) {
+      return;
     }
+    socket.join(`${aiMessageId}`);
+    const tag = await this.getUserTag(humanUserId);
+    this.logger.debug(`joined: ${tag}`);
   }
 
   @SubscribeMessage('leave')
@@ -55,20 +44,11 @@ export class AiMessagesGateway {
     { aiMessageId, humanUserId }: AiMessagesRoomLeftEventDto,
     @ConnectedSocket() socket: AiMessagesServerSocket,
   ) {
-    if (socket.rooms.has(`${aiMessageId}`)) {
-      const user = await this.db.humanUsers.find(humanUserId);
-
-      if (!user) {
-        return;
-      }
-
-      const name =
-        user.type === 'ANONYMOUS'
-          ? `@anon#${user.data.hash}`
-          : `@${user.data.tag}`;
-
-      socket.leave(`${aiMessageId}`);
-      this.logger.debug(`left: ${name}`);
+    if (!socket.rooms.has(`${aiMessageId}`)) {
+      return;
     }
+    socket.leave(`${aiMessageId}`);
+    const tag = await this.getUserTag(humanUserId);
+    this.logger.debug(`left: ${tag}`);
   }
 }

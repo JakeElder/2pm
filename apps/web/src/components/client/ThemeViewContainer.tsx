@@ -1,27 +1,34 @@
 "use client";
 
-import { ThemeDto } from "@2pm/core";
+import { nextTheme, prevTheme } from "@/actions";
+import { useHumanUserThemeEvents } from "@/hooks/use-human-user-theme-events";
+import { HumanUserThemeDto, SessionDto } from "@2pm/core";
 import { Theme } from "@2pm/ui/components";
+import { useCallback, useState } from "react";
+import { useHotkeys } from "react-hotkeys-hook";
 
 type Props = {
-  theme: ThemeDto;
+  humanUserTheme: HumanUserThemeDto;
+  session: SessionDto;
   children: React.ReactNode;
 };
 
-const ThemeViewContainer = ({ theme, children }: Props) => {
-  // useHotkeys(
-  //   ["c", "shift+c"],
-  //   (e) =>
-  //     setThemeId((current) => {
-  //       const offset = e.shiftKey ? -1 : 1;
-  //       const nextIndex =
-  //         (THEMES.indexOf(current) + offset + THEMES.length) % THEMES.length;
-  //       return THEMES[nextIndex];
-  //     }),
-  //   [themeId],
-  // );
+const ThemeViewContainer = ({ session, children, ...rest }: Props) => {
+  const [humanUserTheme, setHumanUserTheme] = useState(rest.humanUserTheme);
 
-  return <Theme theme={theme}>{children}</Theme>;
+  useHotkeys("c", () => nextTheme(humanUserTheme.id), [humanUserTheme.id]);
+
+  useHotkeys("shift+c", () => prevTheme(humanUserTheme.id), [
+    humanUserTheme.id,
+  ]);
+
+  useHumanUserThemeEvents({
+    humanUserId: session.humanUserId,
+    humanUserThemeId: humanUserTheme.id,
+    onUpdated: useCallback((e) => setHumanUserTheme(e), []),
+  });
+
+  return <Theme theme={humanUserTheme.theme}>{children}</Theme>;
 };
 
 export default ThemeViewContainer;

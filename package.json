@@ -3,7 +3,7 @@
   "scripts": {
     "generate:module": "hygen module new",
     "generate:api-client": "bun niko generate client --out ./apps/api/src/generated/client.ts",
-    "watch:controllers": "nodemon --watch \"apps/api/src/**/*.ts\" --ignore \"apps/api/src/generated\" --ext ts --exec \"bun generate:api-client\""
+    "watch:controllers": "nodemon --watch \"apps/api/src/**/*.ts\" --ignore \"apps/api/src/generated\" --watch \"packages/core/src/models/**/*.ts\" --ext ts --exec \"bun generate:api-client\""
   },
   "workspaces": [
     "apps/*",

@@ -11,16 +11,14 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
-import { Inject, Logger } from '@nestjs/common';
-import { DBService } from '@2pm/core/db';
+import { Logger } from '@nestjs/common';
+import { BaseGateway } from '../base-gateway/base-gateway-service';
 
 @WebSocketGateway({
   namespace: '/space-lists',
   cors: { origin: '*' },
 })
-export class SpaceListsGateway {
-  constructor(@Inject('DB') private readonly db: DBService) {}
-
+export class SpaceListsGateway extends BaseGateway {
   private readonly logger = new Logger(SpaceListsGateway.name);
 
   @WebSocketServer()
@@ -32,21 +30,12 @@ export class SpaceListsGateway {
     { humanUserId }: SpaceListsRoomJoinedEventDto,
     @ConnectedSocket() socket: SpaceListsServerSocket,
   ) {
-    if (!socket.rooms.has('main')) {
-      const user = await this.db.humanUsers.find(humanUserId);
-
-      if (!user) {
-        return;
-      }
-
-      const name =
-        user.type === 'ANONYMOUS'
-          ? `@anon#${user.data.hash}`
-          : `@${user.data.tag}`;
-
-      socket.join('main');
-      this.logger.debug(`joined: ${name}`);
+    if (socket.rooms.has('main')) {
+      return;
     }
+    socket.join('main');
+    const tag = await this.getUserTag(humanUserId);
+    this.logger.debug(`joined: ${tag}`);
   }
 
   @SubscribeMessage('leave')
@@ -55,20 +44,11 @@ export class SpaceListsGateway {
     { humanUserId }: SpaceListsRoomLeftEventDto,
     @ConnectedSocket() socket: SpaceListsServerSocket,
   ) {
-    if (socket.rooms.has('main')) {
-      const user = await this.db.humanUsers.find(humanUserId);
-
-      if (!user) {
-        return;
-      }
-
-      const name =
-        user.type === 'ANONYMOUS'
-          ? `@anon#${user.data.hash}`
-          : `@${user.data.tag}`;
-
-      socket.leave('main');
-      this.logger.debug(`left: ${name}`);
+    if (!socket.rooms.has('main')) {
+      return;
     }
+    socket.leave('main');
+    const tag = await this.getUserTag(humanUserId);
+    this.logger.debug(`left: ${tag}`);
   }
 }
