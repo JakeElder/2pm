@@ -14,6 +14,7 @@ import {
   PlotPoints,
   Sessions,
   SpaceLists,
+  Themes,
   UserEnvironmentPresences,
   Users,
   WorldRoomEnvironments,
@@ -22,6 +23,8 @@ import { reset } from "drizzle-seed";
 import { txt } from "../utils";
 import { AppDBContext, DBContexts, LibraryDBContext } from "./db.types";
 import * as appSchema from "./app.schema";
+import { DEFAULT_THEMES } from "../models/theme/theme.constants";
+import HumanUserThemes from "../models/human-user-theme/human-user-theme.service";
 
 type Props = {
   appDatabaseUrl: string;
@@ -44,9 +47,11 @@ export class DBService {
   public environmentUserLists: EnvironmentUserLists;
   public humanMessages: HumanMessages;
   public humanUsers: HumanUsers;
+  public humanUserThemes: HumanUserThemes;
   public plotPoints: PlotPoints;
   public sessions: Sessions;
   public spaceLists: SpaceLists;
+  public themes: Themes;
   public userEnvironmentPresences: UserEnvironmentPresences;
   public users: Users;
   public worldRoomEnvironments: WorldRoomEnvironments;
@@ -90,8 +95,10 @@ export class DBService {
     this.environmentUserLists = new EnvironmentUserLists(this.contexts);
     this.humanMessages = new HumanMessages(this.contexts);
     this.humanUsers = new HumanUsers(this.contexts);
+    this.humanUserThemes = new HumanUserThemes(this.contexts);
     this.sessions = new Sessions(this.contexts);
     this.spaceLists = new SpaceLists(this.contexts);
+    this.themes = new Themes(this.contexts);
     this.userEnvironmentPresences = new UserEnvironmentPresences(this.contexts);
     this.users = new Users(this.contexts);
     this.worldRoomEnvironments = new WorldRoomEnvironments(this.contexts);
@@ -146,6 +153,12 @@ export class DBService {
         tag: "why",
         bio: txt(<>our general knowledge expert</>),
       }),
+    ]);
+
+    // Themes
+    const [dark] = await Promise.all([
+      this.themes.create(DEFAULT_THEMES.dark),
+      this.themes.create(DEFAULT_THEMES.light),
     ]);
 
     // Human Users

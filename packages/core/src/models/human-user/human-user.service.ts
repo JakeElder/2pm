@@ -1,29 +1,37 @@
 import { eq } from "drizzle-orm";
 import { DBServiceModule } from "../../db/db-service-module";
-import { users, humanUsers } from "../../db/app.schema";
+import { users, humanUsers, humanUserThemes } from "../../db/app.schema";
 import { CreateHumanUserDto } from "./human-user.dto";
 import { AnonymousUserDto, AuthenticatedUserDto } from "../user/user.dto";
 import { shorten } from "../../utils";
 import { HumanUser, HumanUserDto } from "./human-user.types";
+import { DEFAULT_THEME_ID } from "../theme/theme.constants";
 
 export default class HumanUsers extends DBServiceModule {
   async create(
     dto: CreateHumanUserDto = {},
   ): Promise<AnonymousUserDto | AuthenticatedUserDto> {
-    const [user] = await this.app.drizzle
-      .insert(users)
-      .values({ type: "HUMAN" })
-      .returning();
+    return this.app.drizzle.transaction(async (tx) => {
+      const [user] = await tx
+        .insert(users)
+        .values({ type: "HUMAN" })
+        .returning();
 
-    const [humanUser] = await this.app.drizzle
-      .insert(humanUsers)
-      .values({
-        userId: user.id,
-        ...dto,
-      })
-      .returning();
+      const [humanUser] = await tx
+        .insert(humanUsers)
+        .values({ userId: user.id, ...dto })
+        .returning();
 
-    return HumanUsers.discriminate(humanUser);
+      await tx
+        .insert(humanUserThemes)
+        .values({
+          humanUserId: humanUser.id,
+          themeId: DEFAULT_THEME_ID,
+        })
+        .returning();
+
+      return HumanUsers.discriminate(humanUser);
+    });
   }
 
   async find(

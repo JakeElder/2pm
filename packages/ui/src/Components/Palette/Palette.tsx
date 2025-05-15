@@ -1,13 +1,13 @@
 import React from "react";
 import css from "./Palette.module.css";
-import { ThemeColor } from "@2pm/core";
+import { ThemeKey } from "@2pm/core";
 
 /*
  * Color
  */
 
 type ColorProps = {
-  name: ThemeColor;
+  name: ThemeKey;
 };
 
 export const Color = ({ name }: ColorProps) => {
@@ -33,14 +33,14 @@ export const Palette = ({}: PaletteProps) => {
         <Color name="mantle" />
         <Color name="crust" />
         <Color name="text" />
+        <Color name="surface0" />
+        <Color name="surface1" />
+        <Color name="surface2" />
+        <Color name="overlay0" />
+        <Color name="overlay1" />
+        <Color name="overlay2" />
         <Color name="subtext1" />
         <Color name="subtext0" />
-        <Color name="overlay2" />
-        <Color name="overlay1" />
-        <Color name="overlay0" />
-        <Color name="surface2" />
-        <Color name="surface1" />
-        <Color name="surface0" />
       </div>
       <div className={css["group"]}>
         <Color name="rosewater" />

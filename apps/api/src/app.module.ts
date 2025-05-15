@@ -23,6 +23,7 @@ import { UserEnvironmentPresencesModule } from './user-environment-presences/use
 import { UsersModule } from './users/users.module';
 import { WorldRoomEnvironmentsModule } from './world-room-environments/world-room-environments.module';
 import { BibleVersesModule } from './bible-verses/bible-verses.module';
+import { HumanUserThemesModule } from './human-user-themes/human-user-themes.module';
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { BibleVersesModule } from './bible-verses/bible-verses.module';
     EnvironmentUserListsModule,
     NikoModule,
     BibleVersesModule,
+    HumanUserThemesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

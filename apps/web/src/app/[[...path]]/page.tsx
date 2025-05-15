@@ -14,7 +14,6 @@ import {
   InfoBarLogo,
   LibraryList,
   PaneHeader,
-  Theme,
   UserSpaceList,
   UserTag,
 } from "@2pm/ui/components";
@@ -24,6 +23,7 @@ import * as users from "../../fixtures/users";
 import EnvironmentAiTaskStateContainer from "@/components/server/EnvironmentAiTaskStateContainer";
 import { getSession } from "@/actions";
 import { createUserEnvironmentPresence } from "@/api/user-environment-presences";
+import ThemeContainer from "@/components/server/ThemeContainer";
 
 type Params = Promise<{ path?: string[] }>;
 type Props = { params: Params };
@@ -69,7 +69,7 @@ export default async function Home({ params }: Props) {
   });
 
   return (
-    <Theme>
+    <ThemeContainer>
       <StandardLayout.Root>
         <StandardLayout.Main>
           <StandardLayout.SiteMap>
@@ -149,6 +149,6 @@ export default async function Home({ params }: Props) {
           </InfoBar.Root>
         </StandardLayout.InfoBar>
       </StandardLayout.Root>
-    </Theme>
+    </ThemeContainer>
   );
 }

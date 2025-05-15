@@ -11,6 +11,7 @@ export { default as HumanUsers } from "../models/human-user/human-user.service";
 export { default as PlotPoints } from "../models/plot-point/plot-point.service";
 export { default as Sessions } from "../models/session/session.service";
 export { default as SpaceLists } from "../models/space-list/space-list.service";
+export { default as Themes } from "../models/theme/theme.service";
 export { default as UserEnvironmentPresences } from "../models/user-environment-presence/user-environment-presence.service";
 export { default as Users } from "../models/user/user.service";
 export { default as WorldRoomEnvironments } from "../models/world-room-environment/world-room-environment.service";

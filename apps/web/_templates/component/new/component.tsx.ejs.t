@@ -7,7 +7,7 @@ to: src/components/<%= type %>/<%= name %>.tsx
 <% } -%>
 type Props = {};
 
-const <%= name %> = ({}: Props) => {
+const <%= name %> = <%= type  === 'client' ? '' : 'async ' %>({}: Props) => {
   return <><%= name %></>;
 };
 

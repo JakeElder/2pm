@@ -21,7 +21,6 @@ type Story = StoryObj<typeof BibleVerseReference>;
 export const Default: Story = {
   args: {
     verse: "Job 11:18",
-    reference: 1,
     children: (
       <>
         Because thou shalt forget thy misery, and remember it as waters that

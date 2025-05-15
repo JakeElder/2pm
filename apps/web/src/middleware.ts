@@ -3,12 +3,14 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export async function middleware(request: NextRequest) {
-  if (request.nextUrl.pathname.startsWith("/.well-known")) {
+  const [_, ...path] = request.nextUrl.pathname.split("/");
+
+  if (path[0] === ".well-known") {
     return Response.json({}, { status: 200 });
   }
 
-  if (request.nextUrl.pathname.startsWith("/@")) {
-    const [_, tag, channel] = request.nextUrl.pathname.split("/");
+  if (path[0].startsWith("@")) {
+    const [tag, channel] = path;
     request.nextUrl.pathname = `/user/${tag.slice(1)}/${channel}`;
     return NextResponse.rewrite(request.nextUrl);
   }
