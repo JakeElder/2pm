@@ -1,0 +1,7 @@
+{
+  "watch": ["src"],
+  "ignore": ["apps/api/src/generated"],
+  "ext": "ts,js,jsx,tsx",
+  "exec": "bun src/main",
+  "verbose": true
+}
