@@ -2,57 +2,42 @@ import {
   ChainPlotPoint,
   CharacterResponseEvent,
   HumanMessageDto,
+  ThemeDtoSchema,
 } from '@2pm/core';
+import { SystemMessage } from '@langchain/core/messages';
 import { Injectable } from '@nestjs/common';
 import { z } from 'zod';
 import { txt } from '@2pm/core/utils';
 import { BaseCharacterService } from '../base-character-service/base-character-service';
+import { ToolCall } from '@langchain/core/messages/tool';
 import { PlotPoints } from '@2pm/core/db/services';
 
-const politeDecline = {
-  name: 'politeDecline',
+const switchTheme = {
+  name: 'switchTheme',
+  description: txt(<>Switch the users theme</>),
+  schema: z.object({
+    themeId: ThemeDtoSchema.shape.id,
+  }),
+};
+
+const informThemeAlreadyActive = {
+  name: 'informThemeAlreadyActive',
   description: txt(
     <>
-      Declines to fulfil the users request as it falls outside of your
-      capabilities
+      Invoked when the user tries to change to a theme that is already active
     </>,
   ),
   schema: z.object({}),
 };
 
-const respondGeneral = {
-  name: 'respondGeneral',
-  description: txt(
-    <>The user may ask general questions about the current narrative</>,
-  ),
-  schema: z.object({}),
-};
-
-const findBibleVerse = {
-  name: 'findBibleVerse',
-  description: 'Finds a bible verse based on long form similary text',
-  schema: z.object({
-    text: z
-      .string()
-      .describe(
-        txt(
-          <>
-            The text to search for. This can contain keywords and phrases from
-            the entire conversation chain. Include as much context and detail
-            from the context available as possible. IE, be very specific and
-            include important verbs, adjectives and details. Do not omit points
-            that my be contentious. Be respectful to the provided content.
-          </>,
-        ),
-      ),
-  }),
-};
-
 @Injectable()
-export class NikoService extends BaseCharacterService {
+export class TinyService extends BaseCharacterService {
   private static PERSONA = txt(
     <>
-      You are @niko an honourable, helpful bot, and expert in ancient scripts.
+      You are @tiny an honourable, helpful bot. You are a general helper. You
+      can do things like change the users theme. You make answer general
+      questions and partake in conversations, but do not offer domain specific
+      advice, instead suggesting the user consult another source.
     </>,
   );
 
@@ -120,7 +105,7 @@ export class NikoService extends BaseCharacterService {
       type: 'REPLY',
       chain,
       actionChain,
-      persona: NikoService.PERSONA,
+      persona: TinyService.PERSONA,
       context,
     });
 

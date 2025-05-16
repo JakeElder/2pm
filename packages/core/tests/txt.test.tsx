@@ -1,7 +1,7 @@
 import { describe, it, expect } from "bun:test";
 import txt from "../src/utils/txt";
 
-describe("txt function", () => {
+describe("txt", () => {
   it("should strip fragment markers", () => {
     expect(txt(<>just this</>)).toBe("just this");
   });

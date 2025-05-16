@@ -5,11 +5,53 @@ import { AiMessageDtoSchema } from "../ai-message/ai-message.dto";
 import { PLOT_POINT_TYPES } from "./plot-point.constants";
 import { UserEnvironmentPresenceStateSchema } from "../user-environment-presence";
 import { BibleVerseDtoSchema } from "../bible-verse/bible-verse.dto";
-import { BibleChunkDtoSchema } from "../bible-chunk/bible-chunk.dto";
-import { EnvironmentDtoSchema } from "../environment";
 import { createSelectSchema } from "drizzle-zod";
-import { environments, plotPoints } from "../../db/app.schema";
+import {
+  aiMessages,
+  environments,
+  humanMessages,
+  plotPoints,
+  users,
+} from "../../db/app.schema";
 import { kjvChunks, kjvVerses } from "../../db/library.schema";
+import BibleChunks from "../bible-chunk/bible-chunk.service";
+
+/**
+ * Chain User
+ */
+
+const ChainAnonymousUserSchema = z.object({
+  type: z.literal("ANONYMOUS"),
+  id: createSelectSchema(users).shape.id,
+  tag: z.string(),
+});
+
+const ChainAuthenticatedUserSchema = z.object({
+  type: z.literal("AUTHENTICATED"),
+  id: createSelectSchema(users).shape.id,
+  tag: z.string(),
+});
+
+const ChainAiUserSchema = z.object({
+  type: z.literal("AI"),
+  id: createSelectSchema(users).shape.id,
+  tag: z.string(),
+});
+
+const ChainHumanUserSchema = z.discriminatedUnion("type", [
+  ChainAuthenticatedUserSchema,
+  ChainAnonymousUserSchema,
+]);
+
+const ChainUserSchema = z.discriminatedUnion("type", [
+  ChainAuthenticatedUserSchema,
+  ChainAnonymousUserSchema,
+  ChainAiUserSchema,
+]);
+
+export type ChainHumanUser = z.infer<typeof ChainHumanUserSchema>;
+export type ChainAiUser = z.infer<typeof ChainAiUserSchema>;
+export type ChainUser = z.infer<typeof ChainUserSchema>;
 
 /**
  * Human Message
@@ -17,6 +59,15 @@ import { kjvChunks, kjvVerses } from "../../db/library.schema";
 export const HumanMessagePlotPointDtoSchema = z.object({
   type: z.literal("HUMAN_MESSAGE"),
   data: HumanMessageDtoSchema,
+});
+
+export const HumanMessageChainPlotPointSchema = z.object({
+  type: z.literal("HUMAN_MESSAGE"),
+  data: z.object({
+    user: ChainHumanUserSchema,
+    message: createSelectSchema(humanMessages).shape.text,
+    date: createSelectSchema(plotPoints).shape.createdAt,
+  }),
 });
 
 export class HumanMessagePlotPointDto extends createZodDto(
@@ -29,6 +80,15 @@ export class HumanMessagePlotPointDto extends createZodDto(
 export const AiMessagePlotPointDtoSchema = z.object({
   type: z.literal("AI_MESSAGE"),
   data: AiMessageDtoSchema,
+});
+
+export const AiMessageChainPlotPointSchema = z.object({
+  type: z.literal("AI_MESSAGE"),
+  data: z.object({
+    user: ChainAiUserSchema,
+    message: createSelectSchema(aiMessages).shape.content,
+    date: createSelectSchema(plotPoints).shape.createdAt,
+  }),
 });
 
 export class AiMessagePlotPointDto extends createZodDto(
@@ -47,6 +107,14 @@ export class EnvironmentEnteredPlotPointDto extends createZodDto(
   EnvironmentEnteredPlotPointDtoSchema,
 ) {}
 
+export const EnvironmentEnteredChainPlotPointSchema = z.object({
+  type: z.literal("ENVIRONMENT_ENTERED"),
+  data: z.object({
+    user: ChainUserSchema,
+    date: createSelectSchema(plotPoints).shape.createdAt,
+  }),
+});
+
 /**
  * Environment Left
  */
@@ -58,6 +126,14 @@ export const EnvironmentLeftPlotPointDtoSchema = z.object({
 export class EnvironmentLeftPlotPointDto extends createZodDto(
   EnvironmentLeftPlotPointDtoSchema,
 ) {}
+
+export const EnvironmentLeftChainPlotPointSchema = z.object({
+  type: z.literal("ENVIRONMENT_LEFT"),
+  data: z.object({
+    user: ChainUserSchema,
+    date: createSelectSchema(plotPoints).shape.createdAt,
+  }),
+});
 
 /**
  * Bible Verse
@@ -78,6 +154,15 @@ export class BibleVerseReferencePlotPointDto extends createZodDto(
   BibleVerseReferencePlotPointDtoSchema,
 ) {}
 
+export const BibleVerseReferenceChainPlotPointDtoSchema = z.object({
+  type: z.literal("BIBLE_VERSE_REFERENCE"),
+  data: z.object({
+    passage: createSelectSchema(kjvChunks).shape.content,
+    verse: createSelectSchema(kjvVerses),
+    date: createSelectSchema(plotPoints).shape.createdAt,
+  }),
+});
+
 /**
  * Union
  */
@@ -89,6 +174,15 @@ export const PlotPointDtoSchema = z.discriminatedUnion("type", [
   BibleVerseReferencePlotPointDtoSchema,
 ]);
 
+export const ChainPlotPointSchema = z.discriminatedUnion("type", [
+  HumanMessageChainPlotPointSchema,
+  AiMessageChainPlotPointSchema,
+  EnvironmentEnteredChainPlotPointSchema,
+  EnvironmentLeftChainPlotPointSchema,
+  BibleVerseReferenceChainPlotPointDtoSchema,
+]);
+
+export type ChainPlotPoint = z.infer<typeof ChainPlotPointSchema>;
 export type PlotPointDto = z.infer<typeof PlotPointDtoSchema>;
 
 /**

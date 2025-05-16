@@ -7,6 +7,7 @@ import { EnvironmentAiTasksProcessor } from './environment-ai-tasks.processor';
 import { EnvironmentAiTasksGateway } from './environment-ai-tasks.gateway';
 import { DatabaseModule } from '../database/database.module';
 import { NikoModule } from '../niko/niko.module';
+import { TinyModule } from '../tiny/tiny.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { NikoModule } from '../niko/niko.module';
       adapter: BullAdapter,
     }),
     NikoModule,
+    TinyModule,
   ],
   providers: [EnvironmentAiTasksProcessor, EnvironmentAiTasksGateway],
   controllers: [EnvironmentAiTasksController],

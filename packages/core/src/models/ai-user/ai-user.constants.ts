@@ -1,4 +1,4 @@
-export const AI_USER_CODES = ["NIKO", "NOTE", "WHY"] as const;
+export const AI_USER_CODES = ["NIKO", "NOTE", "WHY", "TINY"] as const;
 export const AI_USER_STATES = [
   "IDLE",
   "THINKING",

@@ -137,7 +137,7 @@ export class DBService {
     ]);
 
     // Ai Users
-    const [niko, note, why] = await Promise.all([
+    const [niko, note, tiny] = await Promise.all([
       this.aiUsers.create({
         id: "NIKO",
         tag: "niko",
@@ -149,9 +149,9 @@ export class DBService {
         bio: txt(<>an expert on buddhist teachings</>),
       }),
       this.aiUsers.create({
-        id: "WHY",
-        tag: "why",
-        bio: txt(<>our general knowledge expert</>),
+        id: "TINY",
+        tag: "tiny",
+        bio: txt(<>helps with config and small tasks</>),
       }),
     ]);
 
@@ -180,7 +180,7 @@ export class DBService {
       }),
       this.userEnvironmentPresences.create({
         environmentId: universe.environmentId,
-        userId: why.userId,
+        userId: tiny.userId,
       }),
       this.userEnvironmentPresences.create({
         environmentId: universe.environmentId,

@@ -6,5 +6,5 @@ export type Environment = InferSelectModel<typeof environments>;
 export type EnvironmentAiTaskState = (typeof ENVIRONMENT_AI_TASK_STATE)[number];
 export type ActiveEnvironmentAiTaskState = Exclude<
   EnvironmentAiTaskState,
-  "COMPLETE"
+  "COMPLETE" | "FAILED"
 >;

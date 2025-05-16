@@ -14,6 +14,10 @@ export default class Themes extends DBServiceModule {
     return theme;
   }
 
+  async findAll(): Promise<ThemeDto[]> {
+    return this.app.drizzle.select().from(themes);
+  }
+
   async find(id: Theme["id"]): Promise<ThemeDto | null> {
     const [res] = await this.app.drizzle
       .select()

@@ -1,4 +1,4 @@
-import { not, eq, and } from "drizzle-orm";
+import { not, eq, and, inArray } from "drizzle-orm";
 import { DBServiceModule } from "../../db/db-service-module";
 import { aiUsers, environmentAiTasks } from "../../db/app.schema";
 import {
@@ -63,7 +63,7 @@ export default class EnvironmentAiTasks extends DBServiceModule {
       .where(
         and(
           eq(environmentAiTasks.environmentId, id),
-          not(eq(environmentAiTasks.state, "COMPLETE")),
+          not(inArray(environmentAiTasks.state, ["COMPLETE", "FAILED"])),
         ),
       )
       .orderBy(environmentAiTasks.createdAt)

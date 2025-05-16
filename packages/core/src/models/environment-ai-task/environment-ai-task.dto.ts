@@ -45,7 +45,10 @@ export class UpdateEnvironmentAiTaskDto extends createZodDto(
  */
 export const ActiveEnvironmentAiTaskDtoSchema =
   EnvironmentAiTaskDtoSchema.extend({
-    state: EnvironmentAiTaskDtoSchema.shape.state.exclude(["COMPLETE"]),
+    state: EnvironmentAiTaskDtoSchema.shape.state.exclude([
+      "COMPLETE",
+      "FAILED",
+    ]),
   });
 
 export class ActiveEnvironmentAiTaskDto extends createZodDto(

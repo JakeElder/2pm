@@ -158,7 +158,7 @@ export const environmentAiTasks = pgTable(
   (table) => [
     uniqueIndex("unique_active_task_per_environment_idx")
       .on(table.environmentId)
-      .where(sql`${table.state} != 'COMPLETE'`),
+      .where(sql`${table.state} NOT IN ('COMPLETE', 'FAILED')`),
   ],
 );
 

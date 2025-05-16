@@ -4,4 +4,5 @@ export const ENVIRONMENT_AI_TASK_STATE = [
   "ACTING",
   "RESPONDING",
   "COMPLETE",
+  "FAILED",
 ] as const;

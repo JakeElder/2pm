@@ -19,6 +19,7 @@ import { NikoModule } from './niko/niko.module';
 import { PlotPointsModule } from './plot-points/plot-points.module';
 import { SessionsModule } from './sessions/sessions.module';
 import { SpaceListsModule } from './space-lists/space-lists.module';
+import { TinyModule } from './tiny/tiny.module';
 import { UserEnvironmentPresencesModule } from './user-environment-presences/user-environment-presences.module';
 import { UsersModule } from './users/users.module';
 import { WorldRoomEnvironmentsModule } from './world-room-environments/world-room-environments.module';
@@ -55,6 +56,7 @@ import { HumanUserThemesModule } from './human-user-themes/human-user-themes.mod
     SpaceListsModule,
     EnvironmentUserListsModule,
     NikoModule,
+    TinyModule,
     BibleVersesModule,
     HumanUserThemesModule,
   ],

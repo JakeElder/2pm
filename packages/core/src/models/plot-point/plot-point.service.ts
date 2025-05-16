@@ -19,6 +19,10 @@ import {
   AiMessagePlotPointDtoSchema,
   BibleVerseReferencePlotPointDto,
   BibleVerseReferencePlotPointDtoSchema,
+  ChainAiUser,
+  ChainHumanUser,
+  ChainPlotPoint,
+  ChainUser,
   EnvironmentEnteredPlotPointDto,
   EnvironmentEnteredPlotPointDtoSchema,
   EnvironmentLeftPlotPointDto,
@@ -32,11 +36,35 @@ import { HumanMessageDtoSchema } from "../human-message/human-message.dto";
 import { AiMessageDtoSchema } from "../ai-message/ai-message.dto";
 import Users from "../user/user.service";
 import HumanUsers from "../human-user/human-user.service";
-import { UserDto } from "../user/user.types";
-import { BaseMessage, SystemMessage } from "@langchain/core/messages";
 import { DBContexts } from "../../db/db.types";
 import BibleChunks from "../bible-chunk/bible-chunk.service";
 import BibleVerses from "../bible-verse/bible-verse.service";
+import { HumanUserDto } from "../human-user/human-user.types";
+import { UserDto } from "../user/user.types";
+import { AiUserDto } from "../ai-user/ai-user.dto";
+
+const chainHumanUser = (user: HumanUserDto): ChainHumanUser => {
+  const tag =
+    user.type === "ANONYMOUS" ? `anon#${user.data.hash}` : user.data.tag!;
+
+  return {
+    type: user.type,
+    id: user.data.userId,
+    tag,
+  };
+};
+
+const chainAiUser = (user: AiUserDto): ChainAiUser => {
+  return {
+    type: "AI",
+    id: user.userId,
+    tag: user.tag,
+  };
+};
+
+const chainUser = (user: UserDto): ChainUser => {
+  return user.type === "AI" ? chainAiUser(user.data) : chainHumanUser(user);
+};
 
 export default class PlotPoints extends DBServiceModule {
   constructor(
@@ -227,37 +255,54 @@ export default class PlotPoints extends DBServiceModule {
     return data;
   }
 
-  static toChain(plotPoints: PlotPointDto[]): BaseMessage[] {
-    const user = (dto: UserDto) => {
-      if (dto.type === "AI") {
-        return {
-          type: "AI",
-          id: dto.data.userId,
-          tag: dto.data.tag,
-        };
-      }
+  static toChainPlotPoint({ type, data }: PlotPointDto): ChainPlotPoint {
+    if (type === "HUMAN_MESSAGE") {
+      return {
+        type,
+        data: {
+          user: chainHumanUser(data.user),
+          message: data.humanMessage.text,
+          date: data.plotPoint.createdAt,
+        },
+      };
+    }
 
-      if (dto.type === "AUTHENTICATED") {
-        return {
-          type: "AUTHENTICATED",
-          id: dto.data.userId,
-          tag: dto.data.tag,
-        };
-      }
+    if (type === "AI_MESSAGE") {
+      return {
+        type,
+        data: {
+          user: chainAiUser(data.aiUser),
+          message: data.aiMessage.content,
+          date: data.plotPoint.createdAt,
+        },
+      };
+    }
 
-      if (dto.type === "ANONYMOUS") {
-        return {
-          type: "AUTHENTICATED",
-          id: dto.data.userId,
-          tag: `anon#${dto.data.hash}`,
-        };
-      }
+    if (type === "ENVIRONMENT_ENTERED" || type === "ENVIRONMENT_LEFT") {
+      return {
+        type,
+        data: {
+          user: chainUser(data.user),
+          date: data.plotPoint.createdAt,
+        },
+      };
+    }
 
-      throw new Error();
-    };
+    if (type === "BIBLE_VERSE_REFERENCE") {
+      return {
+        type,
+        data: {
+          passage: data.bibleChunk.content,
+          verse: data.bibleVerse,
+          date: data.plotPoint.createdAt,
+        },
+      };
+    }
 
-    return plotPoints.map(({ type, data }) => {
-      return new SystemMessage(JSON.stringify({ type, data }));
-    });
+    throw new Error(`${type} not implemented`);
+  }
+
+  static toChain(plotPoints: PlotPointDto[]): ChainPlotPoint[] {
+    return plotPoints.map(PlotPoints.toChainPlotPoint);
   }
 }

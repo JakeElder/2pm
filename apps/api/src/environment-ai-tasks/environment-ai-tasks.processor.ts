@@ -8,27 +8,34 @@ import {
   type AiUser,
   EnvironmentAiTaskDto,
   AiMessageDto,
-  CharacterThinkingEvent,
+  CharacterGeneratingResponseEvent,
   CharacterRespondingEvent,
   CharacterChunkEvent,
   CharacterCompleteEvent,
+  AiUserId,
+  HumanMessageDto,
+  CharacterActingEvent,
 } from '@2pm/core';
 import { DBService } from '@2pm/core/db';
 import { Processor, Process } from '@nestjs/bull';
 import { Inject } from '@nestjs/common';
-import { AppEventEmitter } from '../event-emitter';
 import { aiUsers } from '@2pm/core/db/app-schema';
+import { PlotPoints } from '@2pm/core/db/services';
+import { AppEventEmitter } from '../event-emitter';
 import { NikoService } from '../niko/niko.service';
+import { TinyService } from '../tiny/tiny.service';
+import { BaseCharacterService } from '../base-character-service/base-character-service';
 
 type LoadingAiTaskProcess = {
   state: 'LOADING';
 };
 
-type InitialisingAiTaskProcess = {
-  state: 'INITIALISING';
+type ActingAiTaskProcess = {
+  state: 'ACTING';
   narrative: PlotPointDto[];
   environment: Environment;
   aiUser: AiUser;
+  task: EnvironmentAiTaskDto;
 };
 
 type ThinkingAiTaskProcess = {
@@ -51,7 +58,7 @@ type RespondingAiTaskProcess = {
 
 type AiTaskProcess =
   | LoadingAiTaskProcess
-  | InitialisingAiTaskProcess
+  | ActingAiTaskProcess
   | ThinkingAiTaskProcess
   | RespondingAiTaskProcess;
 
@@ -61,6 +68,7 @@ export class EnvironmentAiTasksProcessor {
     @Inject('DB') private readonly db: DBService,
     @Inject('E') private readonly events: AppEventEmitter,
     private readonly niko: NikoService,
+    private readonly tiny: TinyService,
   ) {}
 
   private processes = new Map<Environment['id'], AiTaskProcess>();
@@ -74,11 +82,30 @@ export class EnvironmentAiTasksProcessor {
         console.error(`Existing task: environment ${environment.id}`);
         return;
       }
-      this.run(job);
+      await this.run(job);
     } catch (e) {
       console.error(e);
-      this.processes.delete(environment.id);
+      await this.fail(environment.id);
     }
+  }
+
+  async fail(environmentId: Environment['id']) {
+    const process = this.processes.get(environmentId);
+
+    if (!process) {
+      return;
+    }
+
+    if (process.state !== 'LOADING') {
+      this.db.environmentAiTasks.update({
+        id: process.task.id,
+        state: 'FAILED',
+      });
+
+      this.events.emit('environment-ai-tasks.completed', { environmentId });
+    }
+
+    this.processes.delete(environmentId);
   }
 
   async run(job: AiResponseJob) {
@@ -98,25 +125,52 @@ export class EnvironmentAiTasksProcessor {
       .from(aiUsers)
       .where(eq(aiUsers.id, job.data.aiUserId));
 
+    const task = await this.db.environmentAiTasks.create({
+      aiUserId: aiUser.id,
+      environmentId: environment.id,
+      state: 'THINKING',
+    });
+
     this.processes.set(environment.id, {
-      state: 'INITIALISING',
+      state: 'THINKING',
       narrative,
       environment,
       aiUser,
+      task,
     });
 
-    await this.respond(environment.id);
+    this.events.emit(
+      'environment-ai-tasks.updated',
+      ActiveEnvironmentAiTaskDtoSchema.parse(task),
+    );
+
+    const characters: Record<AiUserId, BaseCharacterService | null> = {
+      NIKO: this.niko,
+      TINY: this.tiny,
+      NOTE: null,
+      WHY: null,
+    };
+
+    const character = characters[aiUser.id];
+
+    if (!character) {
+      throw new Error(`${aiUser.id} not implemented`);
+    }
+
+    await this.respond(job.data.message, character);
   }
 
-  async respond(environmentId: Environment['id']) {
-    const process = this.processes.get(environmentId);
+  async respond(trigger: HumanMessageDto, character: BaseCharacterService) {
+    const process = this.processes.get(trigger.environment.id);
 
-    if (!process || process.state !== 'INITIALISING') {
+    if (!process || process.state === 'LOADING') {
       throw new Error();
     }
 
-    for await (const event of this.niko.respond(process.narrative)) {
-      await this.handleResponseEvent(event, environmentId);
+    const chain = PlotPoints.toChain(process.narrative);
+
+    for await (const event of character.react(chain, trigger)) {
+      await this.handleResponseEvent(event, trigger.environment.id);
     }
   }
 
@@ -124,8 +178,20 @@ export class EnvironmentAiTasksProcessor {
     event: CharacterResponseEvent,
     environmentId: Environment['id'],
   ) {
-    if (event.type === 'THINKING') {
-      return this.handleThinkingEvent(event, environmentId);
+    if (event.type === 'IDENTIFYING_TOOLS') {
+      return;
+    }
+
+    if (event.type === 'ACTING') {
+      return this.handleActingEvent(event, environmentId);
+    }
+
+    if (event.type === 'PLOT_POINT_CREATED') {
+      return;
+    }
+
+    if (event.type === 'GENERATING_RESPONSE') {
+      return this.handleGeneratingResponseEvent(event, environmentId);
     }
 
     if (event.type === 'RESPONDING') {
@@ -143,26 +209,49 @@ export class EnvironmentAiTasksProcessor {
     throw new Error();
   }
 
-  async handleThinkingEvent(
-    _: CharacterThinkingEvent,
+  async handleActingEvent(
+    _: CharacterActingEvent,
     environmentId: Environment['id'],
   ) {
     const process = this.processes.get(environmentId);
 
-    if (!process || process.state !== 'INITIALISING') {
+    if (!process || process.state === 'LOADING') {
       throw new Error();
     }
 
-    const task = await this.db.environmentAiTasks.create({
-      aiUserId: process.aiUser.id,
-      environmentId: process.environment.id,
-      state: 'THINKING',
+    const task = await this.db.environmentAiTasks.update({
+      id: process.task.id,
+      state: 'ACTING',
     });
+
+    this.events.emit(
+      'environment-ai-tasks.updated',
+      ActiveEnvironmentAiTaskDtoSchema.parse(task),
+    );
+  }
+
+  async handleGeneratingResponseEvent(
+    _: CharacterGeneratingResponseEvent,
+    environmentId: Environment['id'],
+  ) {
+    const process = this.processes.get(environmentId);
+
+    if (!process) {
+      throw new Error();
+    }
+
+    if (process.state !== 'ACTING') {
+      return;
+    }
 
     this.processes.set(environmentId, {
       ...process,
       state: 'THINKING',
-      task,
+    });
+
+    const task = await this.db.environmentAiTasks.update({
+      id: process.task.id,
+      state: 'THINKING',
     });
 
     this.events.emit(
