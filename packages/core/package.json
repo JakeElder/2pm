@@ -9,7 +9,7 @@
     ".": "./src/index.ts"
   },
   "scripts": {
-    "studio": "drizzle-kit studio",
+    "studio:app": "drizzle-kit --config=drizzle-app.config.ts studio",
     "drizzle:app": "drizzle-kit --config=drizzle-app.config.ts",
     "drizzle:library": "drizzle-kit --config=drizzle-library.config.ts",
     "generate": "drizzle-kit generate",

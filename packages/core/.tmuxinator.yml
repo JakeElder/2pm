@@ -6,4 +6,4 @@ attach: false
 windows:
   - Vim: vim
   - Terminal:
-  - Studio: bun studio
+  - Studio: bun studio:app
