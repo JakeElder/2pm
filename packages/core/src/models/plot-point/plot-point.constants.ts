@@ -6,4 +6,5 @@ export const PLOT_POINT_TYPES = [
   "EVALUATION",
   "AUTH_EMAIL_SENT",
   "BIBLE_VERSE_REFERENCE",
+  "USER_THEME_SWITCHED",
 ] as const;

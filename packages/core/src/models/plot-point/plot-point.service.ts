@@ -7,10 +7,13 @@ import {
   environments,
   humanMessages,
   humanUsers,
+  humanUserThemes,
   messages,
   plotPointBibleVerseReferences,
   plotPointEnvironmentPresences,
   plotPoints,
+  plotPointThemeSwitches,
+  themes,
   userEnvironmentPresences,
   users,
 } from "../../db/app.schema";
@@ -31,6 +34,7 @@ import {
   HumanMessagePlotPointDto,
   HumanMessagePlotPointDtoSchema,
   PlotPointDto,
+  UserThemeSwitchedPlotPointDto,
 } from "./plot-point.dto";
 import { HumanMessageDtoSchema } from "../human-message/human-message.dto";
 import { AiMessageDtoSchema } from "../ai-message/ai-message.dto";
@@ -94,6 +98,7 @@ export default class PlotPoints extends DBServiceModule {
         environment: environments,
         plotPointEnvironmentPresence: plotPointEnvironmentPresences,
         plotPointBibleVerseReferences: plotPointBibleVerseReferences,
+        plotPointThemeSwitches: plotPointThemeSwitches,
         userEnvironmentPresence: userEnvironmentPresences,
         bibleVerseReference: bibleVerseReferences,
       })
@@ -126,6 +131,10 @@ export default class PlotPoints extends DBServiceModule {
           plotPointBibleVerseReferences.bibleVerseReferenceId,
           bibleVerseReferences.id,
         ),
+      )
+      .leftJoin(
+        plotPointThemeSwitches,
+        eq(plotPoints.id, plotPointThemeSwitches.plotPointId),
       )
       .where(
         and(
@@ -248,6 +257,49 @@ export default class PlotPoints extends DBServiceModule {
           return BibleVerseReferencePlotPointDtoSchema.parse(res);
         }
 
+        if (row.plotPoint.type === "USER_THEME_SWITCHED") {
+          const { plotPointThemeSwitches, humanUser, plotPoint, environment } =
+            row;
+
+          if (!plotPointThemeSwitches || !humanUser) {
+            throw new Error();
+          }
+
+          const [{ humanUserTheme, currentTheme }] = await this.app.drizzle
+            .select({ humanUserTheme: humanUserThemes, currentTheme: themes })
+            .from(humanUserThemes)
+            .innerJoin(themes, eq(humanUserThemes.themeId, themes.id))
+            .where(eq(humanUserThemes.humanUserId, humanUser.id));
+
+          const [[fromTheme], [toTheme]] = await Promise.all([
+            this.app.drizzle
+              .select()
+              .from(themes)
+              .where(eq(themes.id, plotPointThemeSwitches.fromThemeId)),
+            this.app.drizzle
+              .select()
+              .from(themes)
+              .where(eq(themes.id, plotPointThemeSwitches.toThemeId)),
+          ]);
+
+          const res: UserThemeSwitchedPlotPointDto = {
+            type: "USER_THEME_SWITCHED",
+            data: {
+              plotPoint,
+              environment,
+              from: fromTheme,
+              to: toTheme,
+              humanUserTheme: {
+                id: humanUserTheme.id,
+                theme: currentTheme,
+                humanUser: HumanUsers.discriminate(humanUser),
+              },
+            },
+          };
+
+          return res;
+        }
+
         throw new Error(`${row.plotPoint.type} not implemented`);
       }),
     );
@@ -295,6 +347,18 @@ export default class PlotPoints extends DBServiceModule {
           passage: data.bibleChunk.content,
           verse: data.bibleVerse,
           date: data.plotPoint.createdAt,
+        },
+      };
+    }
+
+    if (type === "USER_THEME_SWITCHED") {
+      return {
+        type,
+        data: {
+          date: data.plotPoint.createdAt,
+          user: chainUser(data.humanUserTheme.humanUser),
+          fromThemeId: data.from.id,
+          toThemeId: data.to.id,
         },
       };
     }

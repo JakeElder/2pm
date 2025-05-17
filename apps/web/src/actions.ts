@@ -2,7 +2,10 @@
 
 import { cookies } from "next/headers";
 import api from "@/api";
-import { CreateHumanMessageDto, HumanUserTheme } from "@2pm/core";
+import {
+  CreateHumanMessageDto,
+  ShiftDirectionHumanUserThemeDto,
+} from "@2pm/core";
 import { createHumanMessage } from "@/api/human-messages";
 
 export const submitMessage = async ({
@@ -24,12 +27,19 @@ export const submitMessage = async ({
   return res.data;
 };
 
-export const nextTheme = async (id: HumanUserTheme["id"]) => {
-  await api.humanUserThemes.nextHumanUserTheme(id);
+export const nextTheme = async ({
+  id,
+  environmentId,
+}: ShiftDirectionHumanUserThemeDto) => {
+  console.log(id, environmentId);
+  await api.humanUserThemes.nextHumanUserTheme(id, { environmentId });
 };
 
-export const prevTheme = async (id: HumanUserTheme["id"]) => {
-  await api.humanUserThemes.prevHumanUserTheme(id);
+export const prevTheme = async ({
+  id,
+  environmentId,
+}: ShiftDirectionHumanUserThemeDto) => {
+  await api.humanUserThemes.prevHumanUserTheme(id, { environmentId });
 };
 
 export async function getSession() {

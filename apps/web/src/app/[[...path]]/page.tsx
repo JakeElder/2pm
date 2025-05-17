@@ -69,7 +69,7 @@ export default async function Home({ params }: Props) {
   });
 
   return (
-    <ThemeContainer>
+    <ThemeContainer environmentId={environmentId}>
       <StandardLayout.Root>
         <StandardLayout.Main>
           <StandardLayout.SiteMap>

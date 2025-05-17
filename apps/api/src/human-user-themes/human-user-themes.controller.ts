@@ -2,6 +2,7 @@ import {
   type HumanUser,
   type HumanUserTheme,
   HumanUserThemeDtoSchema,
+  ShiftDirectionHumanUserThemeDto,
 } from '@2pm/core';
 import { DBService } from '@2pm/core/db';
 import {
@@ -12,18 +13,37 @@ import {
   ParseIntPipe,
   ParseUUIDPipe,
   Post,
+  Query,
 } from '@nestjs/common';
-import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiOperation,
+  ApiParam,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { zodToOpenAPI } from 'nestjs-zod';
 import { HumanUserThemesGateway } from './human-user-themes.gateway';
+import { AppEventEmitter } from '../event-emitter';
 
 @ApiTags('Human User Themes')
 @Controller()
 export class HumanUserThemesController {
   constructor(
+    @Inject('E') protected readonly events: AppEventEmitter,
     @Inject('DB') private readonly db: DBService,
     private readonly gateway: HumanUserThemesGateway,
   ) {}
+
+  async onModuleInit() {
+    this.events.on('plot-points.created', ({ type, data }) => {
+      if (type === 'USER_THEME_SWITCHED') {
+        this.gateway.server
+          .to(`${data.humanUserTheme.id}`)
+          .emit('updated', { type, data });
+      }
+    });
+  }
 
   @Post('human-user-themes/:id/prev')
   @ApiOperation({
@@ -35,13 +55,21 @@ export class HumanUserThemesController {
     description: 'The Id of the human user theme',
     type: Number,
   })
+  @ApiQuery({
+    name: 'environmentId',
+    description: 'The Id of the environment changed from',
+    type: Number,
+  })
   @ApiResponse({
     status: 201,
     schema: zodToOpenAPI(HumanUserThemeDtoSchema),
   })
-  async prev(@Param('id', ParseIntPipe) id: HumanUserTheme['id']) {
-    const dto = await this.db.humanUserThemes.prev(id);
-    this.gateway.server.to(`${dto.id}`).emit('updated', dto);
+  async prev(
+    @Param('id', ParseIntPipe) id: HumanUserTheme['id'],
+    @Query() { environmentId }: Omit<ShiftDirectionHumanUserThemeDto, 'id'>,
+  ) {
+    const dto = await this.db.humanUserThemes.prev({ id, environmentId });
+    this.events.emit('plot-points.created', dto);
     return dto;
   }
 
@@ -55,13 +83,21 @@ export class HumanUserThemesController {
     description: 'The Id of the human user theme',
     type: Number,
   })
+  @ApiQuery({
+    name: 'environmentId',
+    description: 'The Id of the environment changed from',
+    type: Number,
+  })
   @ApiResponse({
     status: 201,
     schema: zodToOpenAPI(HumanUserThemeDtoSchema),
   })
-  async next(@Param('id', ParseIntPipe) id: HumanUserTheme['id']) {
-    const dto = await this.db.humanUserThemes.next(id);
-    this.gateway.server.to(`${dto.id}`).emit('updated', dto);
+  async next(
+    @Param('id', ParseIntPipe) id: HumanUserTheme['id'],
+    @Query() { environmentId }: Omit<ShiftDirectionHumanUserThemeDto, 'id'>,
+  ) {
+    const dto = await this.db.humanUserThemes.next({ id, environmentId });
+    this.events.emit('plot-points.created', dto);
     return dto;
   }
 

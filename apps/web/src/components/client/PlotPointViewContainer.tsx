@@ -6,6 +6,7 @@ import {
   RoomPresenceChange,
   Message,
   BibleVerseReference,
+  UserThemeSwitched,
 } from "@2pm/ui/plot-points";
 import AiMessageViewContainer from "./AiMessageViewContainer";
 
@@ -65,6 +66,21 @@ const PlotPointViewContainer = ({ plotPoint, session }: Props) => {
       <BibleVerseReference verse={`${bookName} ${chapter}:${verse}`}>
         {data.bibleChunk.content}
       </BibleVerseReference>
+    );
+  }
+
+  if (type === "USER_THEME_SWITCHED") {
+    return (
+      <UserThemeSwitched.Root>
+        <UserThemeSwitched.Icon />
+        <UserThemeSwitched.Tag>
+          <UserTag
+            {...data.humanUserTheme.humanUser}
+            showHash={data.humanUserTheme.humanUser.type === "ANONYMOUS"}
+          />
+        </UserThemeSwitched.Tag>
+        <UserThemeSwitched.Action themeName={data.to.name} />
+      </UserThemeSwitched.Root>
     );
   }
 

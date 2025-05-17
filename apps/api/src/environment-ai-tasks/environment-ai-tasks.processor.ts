@@ -187,6 +187,7 @@ export class EnvironmentAiTasksProcessor {
     }
 
     if (event.type === 'PLOT_POINT_CREATED') {
+      this.events.emit('plot-points.created', event.data);
       return;
     }
 
@@ -219,6 +220,11 @@ export class EnvironmentAiTasksProcessor {
       throw new Error();
     }
 
+    this.processes.set(environmentId, {
+      ...process,
+      state: 'ACTING',
+    });
+
     const task = await this.db.environmentAiTasks.update({
       id: process.task.id,
       state: 'ACTING',
@@ -240,6 +246,7 @@ export class EnvironmentAiTasksProcessor {
       throw new Error();
     }
 
+    // If no action was taken, we're already in thinking state
     if (process.state !== 'ACTING') {
       return;
     }

@@ -13,7 +13,7 @@ const politeDecline = {
   name: 'politeDecline',
   description: txt(
     <>
-      Declines to fulfil the users request as it falls outside of your
+      Declines to fulfill the users request as it falls outside of your
       capabilities
     </>,
   ),
@@ -118,10 +118,12 @@ export class NikoService extends BaseCharacterService {
 
     const messages = this.preparePrompt({
       type: 'REPLY',
-      chain,
-      actionChain,
-      persona: NikoService.PERSONA,
-      context,
+      data: {
+        chain,
+        actionChain,
+        persona: NikoService.PERSONA,
+        context,
+      },
     });
 
     yield* super.reply(messages);

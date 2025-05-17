@@ -11,10 +11,11 @@ import {
   environments,
   humanMessages,
   plotPoints,
+  themes,
   users,
 } from "../../db/app.schema";
 import { kjvChunks, kjvVerses } from "../../db/library.schema";
-import BibleChunks from "../bible-chunk/bible-chunk.service";
+import { HumanUserThemeDtoSchema } from "../human-user-theme/human-user-theme.dto";
 
 /**
  * Chain User
@@ -136,7 +137,7 @@ export const EnvironmentLeftChainPlotPointSchema = z.object({
 });
 
 /**
- * Bible Verse
+ * Bible Verse Reference
  */
 export const BibleVerseReferencePlotPointDtoSchema = z.object({
   type: z.literal("BIBLE_VERSE_REFERENCE"),
@@ -164,6 +165,36 @@ export const BibleVerseReferenceChainPlotPointDtoSchema = z.object({
 });
 
 /**
+ * User Theme Switched
+ */
+export const UserThemeSwitchedPlotPointDtoSchema = z.object({
+  type: z.literal("USER_THEME_SWITCHED"),
+  data: z.object({
+    plotPoint: createSelectSchema(plotPoints).extend({
+      createdAt: z.coerce.date(),
+    }),
+    environment: createSelectSchema(environments),
+    humanUserTheme: HumanUserThemeDtoSchema,
+    from: createSelectSchema(themes),
+    to: createSelectSchema(themes),
+  }),
+});
+
+export const UserThemeSwitchedChainPlotPointSchema = z.object({
+  type: z.literal("USER_THEME_SWITCHED"),
+  data: z.object({
+    date: createSelectSchema(plotPoints).shape.createdAt,
+    user: ChainUserSchema,
+    fromThemeId: createSelectSchema(themes).shape.id,
+    toThemeId: createSelectSchema(themes).shape.id,
+  }),
+});
+
+export class UserThemeSwitchedPlotPointDto extends createZodDto(
+  UserThemeSwitchedPlotPointDtoSchema,
+) {}
+
+/**
  * Union
  */
 export const PlotPointDtoSchema = z.discriminatedUnion("type", [
@@ -172,6 +203,7 @@ export const PlotPointDtoSchema = z.discriminatedUnion("type", [
   EnvironmentEnteredPlotPointDtoSchema,
   EnvironmentLeftPlotPointDtoSchema,
   BibleVerseReferencePlotPointDtoSchema,
+  UserThemeSwitchedPlotPointDtoSchema,
 ]);
 
 export const ChainPlotPointSchema = z.discriminatedUnion("type", [
@@ -180,6 +212,7 @@ export const ChainPlotPointSchema = z.discriminatedUnion("type", [
   EnvironmentEnteredChainPlotPointSchema,
   EnvironmentLeftChainPlotPointSchema,
   BibleVerseReferenceChainPlotPointDtoSchema,
+  UserThemeSwitchedChainPlotPointSchema,
 ]);
 
 export type ChainPlotPoint = z.infer<typeof ChainPlotPointSchema>;

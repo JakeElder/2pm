@@ -256,7 +256,24 @@ export const themes = pgTable("themes", {
 });
 
 /**
- * Join: Human User Themes
+ * Join: Plot Point Theme Switches
+ */
+
+export const plotPointThemeSwitches = pgTable("plot_point_theme_switches", {
+  id: serial("id").primaryKey(),
+  plotPointId: integer("plot_point_id")
+    .notNull()
+    .references(() => plotPoints.id),
+  fromThemeId: integer("from_theme_id")
+    .notNull()
+    .references(() => themes.id),
+  toThemeId: integer("to_theme_id")
+    .notNull()
+    .references(() => themes.id),
+});
+
+/**
+ * Join: HumanUser Themes
  */
 
 export const humanUserThemes = pgTable("human_user_themes", {
@@ -294,7 +311,7 @@ export const userEnvironmentPresences = pgTable(
 );
 
 /*
- * Join: PlotPointEnvironmentPresences
+ * Join: PlotPoint EnvironmentPresences
  */
 
 export const plotPointEnvironmentPresences = pgTable(
@@ -310,7 +327,7 @@ export const plotPointEnvironmentPresences = pgTable(
 );
 
 /*
- * Join: PlotPointBibleVerseReferences
+ * Join: PlotPoint BibleVerseReferences
  */
 
 export const plotPointBibleVerseReferences = pgTable(

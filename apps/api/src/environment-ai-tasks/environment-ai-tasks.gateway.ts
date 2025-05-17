@@ -12,7 +12,7 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Logger } from '@nestjs/common';
-import { BaseGateway } from 'src/base-gateway/base-gateway-service';
+import { BaseGateway } from '../base-gateway/base-gateway-service';
 
 @WebSocketGateway({
   namespace: '/environment-ai-tasks',

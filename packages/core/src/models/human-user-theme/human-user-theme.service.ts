@@ -1,13 +1,24 @@
-import { eq } from "drizzle-orm";
-import { humanUsers, humanUserThemes, themes } from "../../db/app.schema";
+import { eq, inArray } from "drizzle-orm";
+import {
+  environments,
+  humanUsers,
+  humanUserThemes,
+  plotPoints,
+  plotPointThemeSwitches,
+  themes,
+  users,
+} from "../../db/app.schema";
 import { DBServiceModule } from "../../db/db-service-module";
 import {
   HumanUserThemeDto,
+  ShiftDirectionHumanUserThemeDto,
+  ShiftHumanUserThemeDto,
   UpdateHumanUserThemeDto,
 } from "./human-user-theme.dto";
 import HumanUsers from "../human-user/human-user.service";
 import { HumanUser } from "../human-user/human-user.types";
 import { HumanUserTheme } from "./human-user-theme.types";
+import { UserThemeSwitchedPlotPointDto } from "../plot-point/plot-point.dto";
 
 export default class HumanUserThemes extends DBServiceModule {
   async find(id: HumanUserTheme["id"]): Promise<HumanUserThemeDto | null> {
@@ -87,35 +98,105 @@ export default class HumanUserThemes extends DBServiceModule {
 
   async update({
     id,
+    environmentId,
     ...rest
-  }: UpdateHumanUserThemeDto): Promise<HumanUserThemeDto> {
-    await this.app.drizzle
-      .update(humanUserThemes)
-      .set(rest)
-      .where(eq(humanUserThemes.id, id))
-      .returning();
+  }: UpdateHumanUserThemeDto): Promise<UserThemeSwitchedPlotPointDto> {
+    const { from, to, plotPoint } = await this.app.drizzle.transaction(
+      async (tx) => {
+        const current = await this.find(id);
+
+        if (!current) {
+          throw new Error();
+        }
+
+        const fromId = current.theme.id;
+        const toId = rest.themeId;
+
+        const themeRows = await tx
+          .select()
+          .from(themes)
+          .where(inArray(themes.id, [fromId, toId]));
+
+        const from = themeRows.find((t) => t.id === fromId);
+        const to = themeRows.find((t) => t.id === toId);
+
+        if (!from || !to) {
+          throw new Error();
+        }
+
+        const [hut] = await tx
+          .update(humanUserThemes)
+          .set(rest)
+          .where(eq(humanUserThemes.id, id))
+          .returning();
+
+        const [{ user }] = await tx
+          .select({ user: users })
+          .from(users)
+          .innerJoin(humanUsers, eq(users.id, humanUsers.userId))
+          .where(eq(humanUsers.id, hut.humanUserId));
+
+        const [plotPoint] = await tx
+          .insert(plotPoints)
+          .values({
+            type: "USER_THEME_SWITCHED",
+            userId: user.id,
+            environmentId,
+          })
+          .returning();
+
+        await tx.insert(plotPointThemeSwitches).values({
+          fromThemeId: from.id,
+          toThemeId: to.id,
+          plotPointId: plotPoint.id,
+        });
+
+        return { from, to, plotPoint };
+      },
+    );
 
     const res = await this.find(id);
 
-    if (!res) {
+    const [environment] = await this.app.drizzle
+      .select()
+      .from(environments)
+      .where(eq(environments.id, environmentId));
+
+    if (!res || !environment) {
       throw new Error();
     }
 
-    return res;
+    return {
+      type: "USER_THEME_SWITCHED",
+      data: {
+        environment,
+        plotPoint,
+        humanUserTheme: res,
+        from,
+        to,
+      },
+    };
   }
 
-  prev(id: HumanUserTheme["id"]): Promise<HumanUserThemeDto> {
-    return this.shift(id, "PREV");
+  prev({
+    id,
+    environmentId,
+  }: ShiftDirectionHumanUserThemeDto): Promise<UserThemeSwitchedPlotPointDto> {
+    return this.shift({ id, environmentId, direction: "PREV" });
   }
 
-  next(id: HumanUserTheme["id"]): Promise<HumanUserThemeDto> {
-    return this.shift(id, "NEXT");
+  next({
+    id,
+    environmentId,
+  }: ShiftDirectionHumanUserThemeDto): Promise<UserThemeSwitchedPlotPointDto> {
+    return this.shift({ id, environmentId, direction: "NEXT" });
   }
 
-  async shift(
-    id: HumanUserTheme["id"],
-    direction: "PREV" | "NEXT" = "NEXT",
-  ): Promise<HumanUserThemeDto> {
+  async shift({
+    id,
+    environmentId,
+    direction,
+  }: ShiftHumanUserThemeDto): Promise<UserThemeSwitchedPlotPointDto> {
     const allThemes = await this.app.drizzle
       .select()
       .from(themes)
@@ -142,6 +223,7 @@ export default class HumanUserThemes extends DBServiceModule {
 
     const next = await this.update({
       id,
+      environmentId,
       themeId: nextThemeId,
     });
 

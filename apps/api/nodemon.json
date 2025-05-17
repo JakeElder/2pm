@@ -1,5 +1,5 @@
 {
-  "watch": ["src"],
+  "watch": ["src", "../../packages/core/src"],
   "ignore": ["src/generated"],
   "ext": "ts,js,jsx,tsx",
   "exec": "bun src/main",

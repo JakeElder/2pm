@@ -11,27 +11,39 @@ import { txt } from '@2pm/core/utils';
 import { ChatTogetherAI } from '@langchain/community/chat_models/togetherai';
 import zodToJsonSchema from 'zod-to-json-schema';
 import { Inject } from '@nestjs/common';
+import { AppEventEmitter } from '../event-emitter';
 
-type PreparePromptParams = {
-  type: 'ACT' | 'REPLY';
-  persona: string;
-  chain: ChainPlotPoint[];
-  actionChain: ChainPlotPoint[];
-  context?: Record<string, any>;
+type PrepareReplyPromptParams = {
+  type: 'REPLY';
+  data: {
+    persona: string;
+    chain: ChainPlotPoint[];
+    actionChain: ChainPlotPoint[];
+    context?: Record<string, any>;
+  };
 };
 
+type PrepareActPromptParams = {
+  type: 'ACT';
+  data: {
+    persona: string;
+    chain: ChainPlotPoint[];
+    context?: Record<string, any>;
+  };
+};
+
+type PreparePromptParams = PrepareReplyPromptParams | PrepareActPromptParams;
+
 export abstract class BaseCharacterService {
+  @Inject('E') protected readonly events: AppEventEmitter;
   @Inject('DB') protected readonly db: DBService;
+
   protected deepSeek: ChatDeepSeek;
   protected qwen: ChatTogetherAI;
 
-  preparePrompt({
-    type,
-    persona,
-    context,
-    chain,
-    actionChain,
-  }: PreparePromptParams): BaseMessage[] {
+  preparePrompt({ type, data }: PreparePromptParams): BaseMessage[] {
+    const { chain, persona, context } = data;
+
     const messages: BaseMessage[] = [
       new SystemMessage(
         txt(
@@ -95,7 +107,7 @@ export abstract class BaseCharacterService {
           ),
         ),
         new SystemMessage('-- ACTION PLOT POINTS BEGIN --'),
-        ...BaseCharacterService.chainToMessages(actionChain),
+        ...BaseCharacterService.chainToMessages(data.actionChain),
         new SystemMessage('-- ACTION PLOT POINTS END --'),
       );
       messages.push(
@@ -143,8 +155,13 @@ export abstract class BaseCharacterService {
     yield { type: 'COMPLETE' };
   }
 
-  async *react(
+  abstract react(
     chain: ChainPlotPoint[],
     trigger: HumanMessageDto,
-  ): AsyncGenerator<CharacterResponseEvent> {}
+  ): AsyncGenerator<CharacterResponseEvent>;
+
+  abstract act(
+    chain: ChainPlotPoint[],
+    trigger: HumanMessageDto,
+  ): AsyncGenerator<CharacterResponseEvent>;
 }

@@ -1,0 +1,24 @@
+.root {
+  display: flex;
+  align-items: center;
+  padding: 0 2px;
+}
+
+.icon {
+  color: var(--overlay0);
+  margin-right: 12px;
+}
+
+.tag {
+  min-width: 0;
+}
+
+.action {
+  flex-shrink: 0;
+}
+
+.name {
+  background: var(--surface0);
+  padding: 3px 5px;
+  border-radius: 1px;
+}
