@@ -1,6 +1,9 @@
 import { eq } from "drizzle-orm";
 import { DBServiceModule } from "../../db/db-service-module";
-import { BibleVerseDto } from "./bible-verse.dto";
+import {
+  BibleVerseDto,
+  BibleVerseVectorQueryResultDto,
+} from "./bible-verse.dto";
 import { kjvBooks, kjvVerses } from "../../db/library.schema";
 import { DBContexts } from "../../db/db.types";
 import { OllamaEmbeddings } from "@langchain/ollama";
@@ -35,8 +38,8 @@ export default class BibleVerses extends DBServiceModule {
   async find(id: BibleVerse["id"]): Promise<BibleVerseDto | null> {
     const [res] = await this.library.drizzle
       .select({
-        kjvVerse: kjvVerses,
-        kjvBook: kjvBooks,
+        bibleVerse: kjvVerses,
+        bibleBook: kjvBooks,
       })
       .from(kjvVerses)
       .innerJoin(kjvBooks, eq(kjvVerses.bookId, kjvBooks.id))
@@ -47,30 +50,31 @@ export default class BibleVerses extends DBServiceModule {
       return null;
     }
 
-    return {
-      ...res.kjvVerse,
-      bookName: res.kjvBook.name,
-    };
+    return res;
   }
 
   async findAll(): Promise<BibleVerseDto[]> {
     const res = await this.library.drizzle
       .select({
-        kjvVerse: kjvVerses,
-        kjvBook: kjvBooks,
+        bibleVerse: kjvVerses,
+        bibleBook: kjvBooks,
       })
       .from(kjvVerses)
       .innerJoin(kjvBooks, eq(kjvVerses.bookId, kjvBooks.id))
       .limit(20);
 
-    return res.map((row) => ({
-      ...row.kjvVerse,
-      bookName: row.kjvBook.name,
-    }));
+    return res;
   }
 
-  async vectorQuery(query: string): Promise<BibleVerseDto[]> {
-    const res = await this.vector.similaritySearch(query, 3);
+  async vectorQuery(
+    query: string,
+    results: number = 1,
+  ): Promise<BibleVerseVectorQueryResultDto> {
+    const res = await this.vector.similaritySearch(query, results);
+
+    const verseIdToChunkIdMap = new Map(
+      res.map((d) => [d.metadata.id, parseInt(d.id!)]),
+    );
 
     const dtos = await this.library.drizzle
       .select({
@@ -86,9 +90,21 @@ export default class BibleVerses extends DBServiceModule {
         ),
       );
 
-    return dtos.map((row) => ({
-      ...row.kjvVerse,
-      bookName: row.kjvBook.name,
-    }));
+    return {
+      query,
+      results: dtos.map((dto) => {
+        const chunkId = verseIdToChunkIdMap.get(dto.kjvVerse.id);
+
+        if (!chunkId) {
+          throw new Error();
+        }
+
+        return {
+          book: dto.kjvBook,
+          verse: dto.kjvVerse,
+          chunkId,
+        };
+      }),
+    };
   }
 }

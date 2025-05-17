@@ -8,43 +8,40 @@ import { z } from 'zod';
 import { txt } from '@2pm/core/utils';
 import { BaseCharacterService } from '../base-character-service/base-character-service';
 import { PlotPoints } from '@2pm/core/db/services';
+import { SystemMessage } from '@langchain/core/messages';
 
-const politeDecline = {
-  name: 'politeDecline',
+const PERFORM_BIBLE_VECTOR_QUERY = {
+  name: 'PERFORM_BIBLE_VECTOR_QUERY',
   description: txt(
     <>
-      Declines to fulfill the users request as it falls outside of your
-      capabilities
+      Searches a vector database of the bible, using specific terms extracted
+      from all available context
     </>,
   ),
-  schema: z.object({}),
-};
-
-const respondGeneral = {
-  name: 'respondGeneral',
-  description: txt(
-    <>The user may ask general questions about the current narrative</>,
-  ),
-  schema: z.object({}),
-};
-
-const findBibleVerse = {
-  name: 'findBibleVerse',
-  description: 'Finds a bible verse based on long form similary text',
   schema: z.object({
-    text: z
-      .string()
-      .describe(
-        txt(
-          <>
-            The text to search for. This can contain keywords and phrases from
-            the entire conversation chain. Include as much context and detail
-            from the context available as possible. IE, be very specific and
-            include important verbs, adjectives and details. Do not omit points
-            that my be contentious. Be respectful to the provided content.
-          </>,
-        ),
+    query: z.string().describe(
+      txt(
+        <ul>
+          <li>Be as specific as possible</li>
+          <li>Include as many adjectives from the source as possible</li>
+          <li>Include potentially contentious keywords</li>
+          <li>PRIORITISE potentially contentious keywords</li>
+          <li>More is better</li>
+          <li>Be respectful to the source content. Include rather than omit</li>
+          <li>
+            Ensure to include multiple adjectives/nouns that have overlap. Do
+            not condense
+          </li>
+          <li>
+            Extrapolate a little. IE, you can infer more keywords based on
+            subtext
+          </li>
+          <li>
+            Summarise in a natural langauge paragraph, rather than keyword list
+          </li>
+        </ul>,
       ),
+    ),
   }),
 };
 
@@ -56,49 +53,61 @@ export class NikoService extends BaseCharacterService {
     </>,
   );
 
-  async getContext(trigger: HumanMessageDto) {
-    const themes = await this.db.themes.findAll();
-    const humanUserTheme = await this.db.humanUserThemes.findByHumanUserId(
-      trigger.user.data.id,
-    );
-
-    if (!humanUserTheme) {
-      throw new Error();
-    }
-
-    return {
-      availableThemes: themes,
-      activeThemeId: humanUserTheme.theme.id,
-    };
-  }
-
   async *act(
     chain: ChainPlotPoint[],
     trigger: HumanMessageDto,
   ): AsyncGenerator<CharacterResponseEvent> {
-    // const vars: PrompTemplatePlaceholders = {
-    //   persona: [new SystemMessage(TinyService.PERSONA)],
-    //   formatting: [],
-    //   context: [
-    //     new SystemMessage(JSON.stringify(await this.getContext(trigger))),
-    //   ],
-    //   plotPoints: BaseCharacterService.chainToMessages(chain),
-    // };
-    //
-    // const { messages } =
-    //   await BaseCharacterService.PROMPT_TEMPLATE.invoke(vars);
-    //
-    // const res = await this.qwen.invoke(messages, {
-    //   tools: [switchTheme, informThemeAlreadyActive],
-    //   tool_choice: 'any',
-    //   response_format: null as any,
-    // });
-    //
-    // return res.tool_calls;
-    // yield { type: 'IDENTIFYING_TOOLS' };
-    // yield { type: 'ACTING' };
-    // await new Promise((resolve) => setTimeout(resolve, 4000));
-    // yield { type: 'PLOT_POINT_CREATED', data: { message: 'hi' } as any };
+    yield { type: 'IDENTIFYING_TOOLS' };
+
+    const messages = this.preparePrompt({
+      type: 'ACT',
+      data: {
+        chain,
+        persona: NikoService.PERSONA,
+        instructions: [
+          new SystemMessage('Choose the best tool. No tool selection is fine'),
+        ],
+      },
+    });
+
+    const res = await this.qwen.invoke(messages, {
+      tools: [PERFORM_BIBLE_VECTOR_QUERY],
+      tool_choice: '',
+      response_format: null as any,
+    });
+
+    const call = res.tool_calls?.[0];
+
+    if (call && call.name === 'PERFORM_BIBLE_VECTOR_QUERY') {
+      if (!call.args.query) {
+        throw new Error();
+      }
+
+      yield { type: 'ACTING' };
+
+      const res = await this.db.bibleVerses.vectorQuery(call.args.query);
+
+      for (let verse of res.results) {
+        const plotPoint = await this.db.bibleVerseReferences.create({
+          bibleChunkId: verse.chunkId,
+          bibleVerseId: verse.verse.id,
+          environmentId: trigger.environment.id,
+          userId: trigger.user.data.userId,
+        });
+
+        yield {
+          type: 'PLOT_POINT_CREATED',
+          data: {
+            type: 'BIBLE_VERSE_REFERENCE',
+            data: plotPoint,
+          },
+        };
+
+        await new Promise((resolve) => setTimeout(resolve, 500));
+      }
+
+      await new Promise((resolve) => setTimeout(resolve, 500));
+    }
   }
 
   async *react(
@@ -114,15 +123,12 @@ export class NikoService extends BaseCharacterService {
       yield event;
     }
 
-    const context = await this.getContext(trigger);
-
     const messages = this.preparePrompt({
       type: 'REPLY',
       data: {
         chain,
         actionChain,
         persona: NikoService.PERSONA,
-        context,
       },
     });
 

@@ -11,7 +11,6 @@ import { txt } from '@2pm/core/utils';
 import { ChatTogetherAI } from '@langchain/community/chat_models/togetherai';
 import zodToJsonSchema from 'zod-to-json-schema';
 import { Inject } from '@nestjs/common';
-import { AppEventEmitter } from '../event-emitter';
 
 type PrepareReplyPromptParams = {
   type: 'REPLY';
@@ -28,6 +27,7 @@ type PrepareActPromptParams = {
   data: {
     persona: string;
     chain: ChainPlotPoint[];
+    instructions?: BaseMessage[];
     context?: Record<string, any>;
   };
 };
@@ -35,7 +35,6 @@ type PrepareActPromptParams = {
 type PreparePromptParams = PrepareReplyPromptParams | PrepareActPromptParams;
 
 export abstract class BaseCharacterService {
-  @Inject('E') protected readonly events: AppEventEmitter;
   @Inject('DB') protected readonly db: DBService;
 
   protected deepSeek: ChatDeepSeek;
@@ -115,6 +114,10 @@ export abstract class BaseCharacterService {
           txt(<>Respond in natural language. Do *NOT* respond in JSON</>),
         ),
       );
+    }
+
+    if (type === 'ACT' && data.instructions) {
+      messages.push(...data.instructions);
     }
 
     return messages;

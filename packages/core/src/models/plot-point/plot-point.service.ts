@@ -247,8 +247,8 @@ export default class PlotPoints extends DBServiceModule {
           const res: BibleVerseReferencePlotPointDto = {
             type: "BIBLE_VERSE_REFERENCE",
             data: {
+              ...bibleVerse,
               bibleChunk,
-              bibleVerse,
               environment,
               plotPoint,
             },

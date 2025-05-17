@@ -4,7 +4,6 @@ import { HumanMessageDtoSchema } from "../human-message/human-message.dto";
 import { AiMessageDtoSchema } from "../ai-message/ai-message.dto";
 import { PLOT_POINT_TYPES } from "./plot-point.constants";
 import { UserEnvironmentPresenceStateSchema } from "../user-environment-presence";
-import { BibleVerseDtoSchema } from "../bible-verse/bible-verse.dto";
 import { createSelectSchema } from "drizzle-zod";
 import {
   aiMessages,
@@ -14,7 +13,7 @@ import {
   themes,
   users,
 } from "../../db/app.schema";
-import { kjvChunks, kjvVerses } from "../../db/library.schema";
+import { kjvBooks, kjvChunks, kjvVerses } from "../../db/library.schema";
 import { HumanUserThemeDtoSchema } from "../human-user-theme/human-user-theme.dto";
 
 /**
@@ -146,7 +145,8 @@ export const BibleVerseReferencePlotPointDtoSchema = z.object({
       createdAt: z.coerce.date(),
     }),
     environment: createSelectSchema(environments),
-    bibleVerse: BibleVerseDtoSchema,
+    bibleVerse: createSelectSchema(kjvVerses),
+    bibleBook: createSelectSchema(kjvBooks),
     bibleChunk: createSelectSchema(kjvChunks).omit({ embedding: true }),
   }),
 });

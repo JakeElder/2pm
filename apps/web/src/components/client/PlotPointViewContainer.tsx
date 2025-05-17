@@ -61,9 +61,10 @@ const PlotPointViewContainer = ({ plotPoint, session }: Props) => {
   }
 
   if (type === "BIBLE_VERSE_REFERENCE") {
-    const { bookName, chapter, verse } = data.bibleVerse;
+    const { verse, chapter } = data.bibleVerse;
+    const { bibleBook } = data;
     return (
-      <BibleVerseReference verse={`${bookName} ${chapter}:${verse}`}>
+      <BibleVerseReference verse={`${bibleBook.name} ${chapter}:${verse}`}>
         {data.bibleChunk.content}
       </BibleVerseReference>
     );
