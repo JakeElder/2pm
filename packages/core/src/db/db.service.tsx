@@ -118,7 +118,7 @@ export class DBService {
     await this.clear();
 
     // Environments
-    const [universe] = await Promise.all([
+    const [universe, campfire] = await Promise.all([
       this.worldRoomEnvironments.create({
         id: "UNIVERSE",
         slug: "universe",
@@ -137,7 +137,7 @@ export class DBService {
     ]);
 
     // Ai Users
-    const [niko, note, tiny] = await Promise.all([
+    const [niko, note, tiny, albert, prose] = await Promise.all([
       this.aiUsers.create({
         id: "NIKO",
         tag: "niko",
@@ -152,6 +152,16 @@ export class DBService {
         id: "TINY",
         tag: "tiny",
         bio: txt(<>helps with config and small tasks</>),
+      }),
+      this.aiUsers.create({
+        id: "ALBERT",
+        tag: "albert",
+        bio: txt(<>veteran physics and maths smarty</>),
+      }),
+      this.aiUsers.create({
+        id: "PROSE",
+        tag: "prose",
+        bio: txt(<>creative story teller</>),
       }),
     ]);
 
@@ -185,6 +195,14 @@ export class DBService {
       this.userEnvironmentPresences.create({
         environmentId: universe.environmentId,
         userId: jake.data.userId,
+      }),
+      this.userEnvironmentPresences.create({
+        environmentId: campfire.environmentId,
+        userId: albert.userId,
+      }),
+      this.userEnvironmentPresences.create({
+        environmentId: campfire.environmentId,
+        userId: prose.userId,
       }),
     ]);
 
@@ -221,12 +239,12 @@ export class DBService {
       },
     });
 
-    await this.bibleVerseReferences.create({
-      bibleVerseId: 13127,
-      bibleChunkId: 13127,
-      environmentId: universe.environmentId,
-      userId: niko.userId,
-    });
+    // await this.bibleVerseReferences.create({
+    //   bibleVerseId: 13127,
+    //   bibleChunkId: 13127,
+    //   environmentId: universe.environmentId,
+    //   userId: niko.userId,
+    // });
   }
 
   async end() {

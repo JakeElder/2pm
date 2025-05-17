@@ -12,7 +12,7 @@ const ProseViewContainer = ({ environmentId }: Props) => {
   return (
     <Prose
       suggestionItems={async ({ query }) => {
-        const users = await getAiUsers();
+        const users = await getAiUsers({ environmentId });
         return users.filter((item) =>
           item.tag.toLowerCase().startsWith(query.toLowerCase()),
         );

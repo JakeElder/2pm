@@ -1,6 +1,7 @@
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { createZodDto } from "@anatine/zod-nestjs";
-import { aiUsers } from "../../db/app.schema";
+import { aiUsers, environments } from "../../db/app.schema";
+import { z } from "zod";
 
 /**
  * Create
@@ -18,3 +19,12 @@ export class CreateAiUserDto extends createZodDto(CreateAiUserDtoSchema) {}
 export const AiUserDtoSchema = createSelectSchema(aiUsers);
 
 export class AiUserDto extends createZodDto(AiUserDtoSchema) {}
+
+/**
+ * Filters
+ */
+export const FilterAiUsersDtoSchema = z.object({
+  environmentId: createSelectSchema(environments).shape.id.optional(),
+});
+
+export class FilterAiUsersDto extends createZodDto(FilterAiUsersDtoSchema) {}

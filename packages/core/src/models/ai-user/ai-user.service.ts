@@ -1,6 +1,12 @@
 import { DBServiceModule } from "../../db/db-service-module";
-import { users, aiUsers } from "../../db/app.schema";
-import { AiUserDto, CreateAiUserDto } from "./ai-user.dto";
+import { users, aiUsers, userEnvironmentPresences } from "../../db/app.schema";
+import {
+  AiUserDto,
+  CreateAiUserDto,
+  FilterAiUsersDto,
+  FilterAiUsersDtoSchema,
+} from "./ai-user.dto";
+import { and, eq, isNull, SQL } from "drizzle-orm";
 
 export default class AiUsers extends DBServiceModule {
   async create(dto: CreateAiUserDto): Promise<AiUserDto> {
@@ -17,8 +23,27 @@ export default class AiUsers extends DBServiceModule {
     return aiUser;
   }
 
-  public async findAll(): Promise<AiUserDto[]> {
-    const res = await this.app.drizzle.select().from(aiUsers);
-    return res;
+  public async findAll(filter: FilterAiUsersDto = {}): Promise<AiUserDto[]> {
+    const { environmentId } = FilterAiUsersDtoSchema.parse(filter);
+
+    if (environmentId) {
+      const res = await this.app.drizzle
+        .select({ aiUser: aiUsers })
+        .from(aiUsers)
+        .innerJoin(users, eq(aiUsers.userId, users.id))
+        .innerJoin(
+          userEnvironmentPresences,
+          and(
+            eq(userEnvironmentPresences.userId, users.id),
+            eq(userEnvironmentPresences.environmentId, environmentId),
+            isNull(userEnvironmentPresences.expired),
+          ),
+        )
+        .where(eq(users.type, "AI"));
+
+      return res.map((r) => r.aiUser);
+    }
+
+    return this.app.drizzle.select().from(aiUsers);
   }
 }

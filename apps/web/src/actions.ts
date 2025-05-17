@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import api from "@/api";
 import {
   CreateHumanMessageDto,
+  FilterAiUsersDto,
   ShiftDirectionHumanUserThemeDto,
 } from "@2pm/core";
 import { createHumanMessage } from "@/api/human-messages";
@@ -59,7 +60,11 @@ export async function getSession() {
   throw new Error();
 }
 
-export async function getAiUsers() {
+export async function getAiUsers({ environmentId }: FilterAiUsersDto) {
+  if (environmentId) {
+    const users = await api.environments.getEnvironmentAiUsers(environmentId);
+    return users.data;
+  }
   const users = await api.aiUsers.getAiUsers();
   return users.data;
 }
