@@ -211,6 +211,15 @@ export const bibleVerseReferences = pgTable("bible_verse_references", {
 });
 
 /**
+ * Pali Canon References
+ */
+
+export const paliCanonReferences = pgTable("pali_canon_references", {
+  id: serial("id").primaryKey(),
+  paliCanonChunkId: integer("pali_canon_chunk_id").notNull(),
+});
+
+/**
  * Themes
  */
 
@@ -339,5 +348,21 @@ export const plotPointBibleVerseReferences = pgTable(
     bibleVerseReferenceId: integer("bible_verse_reference_id")
       .notNull()
       .references(() => bibleVerseReferences.id),
+  },
+);
+
+/*
+ * Join: PlotPoint PaliCanonReferences
+ */
+
+export const plotPointPaliCanonReferences = pgTable(
+  "plot_point_pali_canon_references",
+  {
+    plotPointId: integer("plot_point_id")
+      .notNull()
+      .references(() => plotPoints.id),
+    paliCanonReferenceId: integer("pali_canon_reference_id")
+      .notNull()
+      .references(() => paliCanonReferences.id),
   },
 );

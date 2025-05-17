@@ -8,6 +8,9 @@ export { default as EnvironmentAiTasks } from "../models/environment-ai-task/env
 export { default as EnvironmentUserLists } from "../models/environment-user-list/environment-user-list.service";
 export { default as HumanMessages } from "../models/human-message/human-message.service";
 export { default as HumanUsers } from "../models/human-user/human-user.service";
+export { default as HumanUserThemes } from "../models/human-user-theme/human-user-theme.service";
+export { default as PaliCanonPassages } from "../models/pali-canon-passage/pali-canon-passage.service";
+export { default as PaliCanonReferences } from "../models/pali-canon-reference/pali-canon-reference.service";
 export { default as PlotPoints } from "../models/plot-point/plot-point.service";
 export { default as Sessions } from "../models/session/session.service";
 export { default as SpaceLists } from "../models/space-list/space-list.service";

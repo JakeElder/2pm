@@ -13,7 +13,12 @@ import {
   themes,
   users,
 } from "../../db/app.schema";
-import { kjvBooks, kjvChunks, kjvVerses } from "../../db/library.schema";
+import {
+  kjvBooks,
+  kjvChunks,
+  kjvVerses,
+  paliCanonChunks,
+} from "../../db/library.schema";
 import { HumanUserThemeDtoSchema } from "../human-user-theme/human-user-theme.dto";
 
 /**
@@ -138,6 +143,36 @@ export const EnvironmentLeftChainPlotPointSchema = z.object({
 /**
  * Bible Verse Reference
  */
+export const PaliCanonReferencePlotPointDtoSchema = z.object({
+  type: z.literal("PALI_CANON_REFERENCE"),
+  data: z.object({
+    plotPoint: createSelectSchema(plotPoints).extend({
+      createdAt: z.coerce.date(),
+    }),
+    environment: createSelectSchema(environments),
+    paliCanonChunk: createSelectSchema(paliCanonChunks).omit({
+      embedding: true,
+    }),
+  }),
+});
+
+export class PaliCanonReferencePlotPointDto extends createZodDto(
+  PaliCanonReferencePlotPointDtoSchema,
+) {}
+
+export const PaliCanonReferenceChainPlotPointDtoSchema = z.object({
+  type: z.literal("PALI_CANON_REFERENCE"),
+  data: z.object({
+    basket: z.string(),
+    author: z.string(),
+    passage: z.string(),
+    date: createSelectSchema(plotPoints).shape.createdAt,
+  }),
+});
+
+/**
+ * Bible Verse Reference
+ */
 export const BibleVerseReferencePlotPointDtoSchema = z.object({
   type: z.literal("BIBLE_VERSE_REFERENCE"),
   data: z.object({
@@ -203,6 +238,7 @@ export const PlotPointDtoSchema = z.discriminatedUnion("type", [
   EnvironmentEnteredPlotPointDtoSchema,
   EnvironmentLeftPlotPointDtoSchema,
   BibleVerseReferencePlotPointDtoSchema,
+  PaliCanonReferencePlotPointDtoSchema,
   UserThemeSwitchedPlotPointDtoSchema,
 ]);
 
@@ -212,6 +248,7 @@ export const ChainPlotPointSchema = z.discriminatedUnion("type", [
   EnvironmentEnteredChainPlotPointSchema,
   EnvironmentLeftChainPlotPointSchema,
   BibleVerseReferenceChainPlotPointDtoSchema,
+  PaliCanonReferenceChainPlotPointDtoSchema,
   UserThemeSwitchedChainPlotPointSchema,
 ]);
 

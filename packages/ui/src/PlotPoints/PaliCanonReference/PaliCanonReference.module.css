@@ -1,0 +1,16 @@
+.heading {
+  margin-bottom: 8px;
+}
+
+.basket {
+  margin-bottom: 4px;
+}
+
+.label {
+  color: var(--overlay1);
+  margin-right: 4px;
+}
+
+.value {
+  color: var(--blue);
+}

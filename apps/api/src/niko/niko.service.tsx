@@ -37,7 +37,7 @@ const PERFORM_BIBLE_VECTOR_QUERY = {
             subtext
           </li>
           <li>
-            Summarise in a natural langauge paragraph, rather than keyword list
+            Summarise in a natural language paragraph, rather than keyword list
           </li>
         </ul>,
       ),

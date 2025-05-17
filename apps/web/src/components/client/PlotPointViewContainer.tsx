@@ -7,6 +7,7 @@ import {
   Message,
   BibleVerseReference,
   UserThemeSwitched,
+  PaliCanonReference,
 } from "@2pm/ui/plot-points";
 import AiMessageViewContainer from "./AiMessageViewContainer";
 
@@ -82,6 +83,17 @@ const PlotPointViewContainer = ({ plotPoint, session }: Props) => {
         </UserThemeSwitched.Tag>
         <UserThemeSwitched.Action themeName={data.to.name} />
       </UserThemeSwitched.Root>
+    );
+  }
+
+  if (type === "PALI_CANON_REFERENCE") {
+    return (
+      <PaliCanonReference
+        author={data.paliCanonChunk.metadata.author_uid}
+        basket={data.paliCanonChunk.metadata.basket}
+      >
+        {data.paliCanonChunk.content}
+      </PaliCanonReference>
     );
   }
 

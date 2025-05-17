@@ -25,6 +25,7 @@ import { AppEventEmitter } from '../event-emitter';
 import { NikoService } from '../niko/niko.service';
 import { TinyService } from '../tiny/tiny.service';
 import { BaseCharacterService } from '../base-character-service/base-character-service';
+import { NoteService } from '../note/note.service';
 
 type LoadingAiTaskProcess = {
   state: 'LOADING';
@@ -69,6 +70,7 @@ export class EnvironmentAiTasksProcessor {
     @Inject('E') private readonly events: AppEventEmitter,
     private readonly niko: NikoService,
     private readonly tiny: TinyService,
+    private readonly note: NoteService,
   ) {}
 
   private processes = new Map<Environment['id'], AiTaskProcess>();
@@ -147,8 +149,11 @@ export class EnvironmentAiTasksProcessor {
     const characters: Record<AiUserId, BaseCharacterService | null> = {
       NIKO: this.niko,
       TINY: this.tiny,
-      NOTE: null,
+      NOTE: this.note,
       WHY: null,
+      ALBERT: null,
+      PROSE: null,
+      VENUS: null,
     };
 
     const character = characters[aiUser.id];

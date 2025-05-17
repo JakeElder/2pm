@@ -9,6 +9,8 @@ export * from "./environment-user-list";
 export * from "./human-message";
 export * from "./human-user";
 export * from "./human-user-theme";
+export * from "./pali-canon-passage";
+export * from "./pali-canon-reference";
 export * from "./plot-point";
 export * from "./prose";
 export * from "./session";

@@ -10,7 +10,10 @@ import {
   EnvironmentAiTasks,
   EnvironmentUserLists,
   HumanMessages,
+  HumanUserThemes,
   HumanUsers,
+  PaliCanonPassages,
+  PaliCanonReferences,
   PlotPoints,
   Sessions,
   SpaceLists,
@@ -24,7 +27,6 @@ import { txt } from "../utils";
 import { AppDBContext, DBContexts, LibraryDBContext } from "./db.types";
 import * as appSchema from "./app.schema";
 import { DEFAULT_THEMES } from "../models/theme/theme.constants";
-import HumanUserThemes from "../models/human-user-theme/human-user-theme.service";
 
 type Props = {
   appDatabaseUrl: string;
@@ -48,6 +50,8 @@ export class DBService {
   public humanMessages: HumanMessages;
   public humanUsers: HumanUsers;
   public humanUserThemes: HumanUserThemes;
+  public paliCanonPassages: PaliCanonPassages;
+  public paliCanonReferences: PaliCanonReferences;
   public plotPoints: PlotPoints;
   public sessions: Sessions;
   public spaceLists: SpaceLists;
@@ -96,6 +100,8 @@ export class DBService {
     this.humanMessages = new HumanMessages(this.contexts);
     this.humanUsers = new HumanUsers(this.contexts);
     this.humanUserThemes = new HumanUserThemes(this.contexts);
+    this.paliCanonPassages = new PaliCanonPassages(this.contexts);
+    this.paliCanonReferences = new PaliCanonReferences(this.contexts);
     this.sessions = new Sessions(this.contexts);
     this.spaceLists = new SpaceLists(this.contexts);
     this.themes = new Themes(this.contexts);
@@ -244,6 +250,12 @@ export class DBService {
     //   bibleChunkId: 13127,
     //   environmentId: universe.environmentId,
     //   userId: niko.userId,
+    // });
+
+    // await this.paliCanonReferences.create({
+    //   environmentId: universe.environmentId,
+    //   paliCanonChunkId: 68969,
+    //   userId: jake.data.userId,
     // });
   }
 

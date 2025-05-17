@@ -9,8 +9,10 @@ import {
   humanUsers,
   humanUserThemes,
   messages,
+  paliCanonReferences,
   plotPointBibleVerseReferences,
   plotPointEnvironmentPresences,
+  plotPointPaliCanonReferences,
   plotPoints,
   plotPointThemeSwitches,
   themes,
@@ -33,6 +35,8 @@ import {
   FilterPlotPointsDto,
   HumanMessagePlotPointDto,
   HumanMessagePlotPointDtoSchema,
+  PaliCanonReferencePlotPointDto,
+  PaliCanonReferencePlotPointDtoSchema,
   PlotPointDto,
   UserThemeSwitchedPlotPointDto,
 } from "./plot-point.dto";
@@ -46,6 +50,7 @@ import BibleVerses from "../bible-verse/bible-verse.service";
 import { HumanUserDto } from "../human-user/human-user.types";
 import { UserDto } from "../user/user.types";
 import { AiUserDto } from "../ai-user/ai-user.dto";
+import { paliCanonChunks } from "../../db/library.schema";
 
 const chainHumanUser = (user: HumanUserDto): ChainHumanUser => {
   const tag =
@@ -98,9 +103,11 @@ export default class PlotPoints extends DBServiceModule {
         environment: environments,
         plotPointEnvironmentPresence: plotPointEnvironmentPresences,
         plotPointBibleVerseReferences: plotPointBibleVerseReferences,
+        plotPointPaliCanonReferences: plotPointPaliCanonReferences,
         plotPointThemeSwitches: plotPointThemeSwitches,
         userEnvironmentPresence: userEnvironmentPresences,
         bibleVerseReference: bibleVerseReferences,
+        paliCanonReference: paliCanonReferences,
       })
       .from(plotPoints)
       .innerJoin(users, eq(plotPoints.userId, users.id))
@@ -130,6 +137,17 @@ export default class PlotPoints extends DBServiceModule {
         eq(
           plotPointBibleVerseReferences.bibleVerseReferenceId,
           bibleVerseReferences.id,
+        ),
+      )
+      .leftJoin(
+        plotPointPaliCanonReferences,
+        eq(plotPoints.id, plotPointPaliCanonReferences.plotPointId),
+      )
+      .leftJoin(
+        paliCanonReferences,
+        eq(
+          plotPointPaliCanonReferences.paliCanonReferenceId,
+          paliCanonReferences.id,
         ),
       )
       .leftJoin(
@@ -227,7 +245,6 @@ export default class PlotPoints extends DBServiceModule {
 
           return EnvironmentLeftPlotPointDtoSchema.parse(res);
         }
-
         if (row.plotPoint.type === "BIBLE_VERSE_REFERENCE") {
           const { bibleVerseReference, environment, plotPoint } = row;
 
@@ -255,6 +272,34 @@ export default class PlotPoints extends DBServiceModule {
           };
 
           return BibleVerseReferencePlotPointDtoSchema.parse(res);
+        }
+
+        if (row.plotPoint.type === "PALI_CANON_REFERENCE") {
+          const { paliCanonReference, environment, plotPoint } = row;
+
+          if (!paliCanonReference) {
+            throw new Error();
+          }
+
+          const [paliCanonChunk] = await this.library.drizzle
+            .select()
+            .from(paliCanonChunks)
+            .where(eq(paliCanonChunks.id, paliCanonReference.paliCanonChunkId));
+
+          if (!paliCanonChunk) {
+            throw new Error();
+          }
+
+          const res: PaliCanonReferencePlotPointDto = {
+            type: "PALI_CANON_REFERENCE",
+            data: {
+              paliCanonChunk,
+              environment,
+              plotPoint,
+            },
+          };
+
+          return PaliCanonReferencePlotPointDtoSchema.parse(res);
         }
 
         if (row.plotPoint.type === "USER_THEME_SWITCHED") {
@@ -346,6 +391,18 @@ export default class PlotPoints extends DBServiceModule {
         data: {
           passage: data.bibleChunk.content,
           verse: data.bibleVerse,
+          date: data.plotPoint.createdAt,
+        },
+      };
+    }
+
+    if (type === "PALI_CANON_REFERENCE") {
+      return {
+        type,
+        data: {
+          author: data.paliCanonChunk.metadata.author_uid,
+          basket: data.paliCanonChunk.metadata.basket,
+          passage: data.paliCanonChunk.content,
           date: data.plotPoint.createdAt,
         },
       };

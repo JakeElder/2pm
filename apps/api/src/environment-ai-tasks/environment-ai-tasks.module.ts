@@ -8,6 +8,7 @@ import { EnvironmentAiTasksGateway } from './environment-ai-tasks.gateway';
 import { DatabaseModule } from '../database/database.module';
 import { NikoModule } from '../niko/niko.module';
 import { TinyModule } from '../tiny/tiny.module';
+import { NoteModule } from '../note/note.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { TinyModule } from '../tiny/tiny.module';
     }),
     NikoModule,
     TinyModule,
+    NoteModule,
   ],
   providers: [EnvironmentAiTasksProcessor, EnvironmentAiTasksGateway],
   controllers: [EnvironmentAiTasksController],

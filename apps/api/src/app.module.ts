@@ -17,6 +17,7 @@ import { HumanMessagesModule } from './human-messages/human-messages.module';
 import { HumanUsersModule } from './human-users/human-users.module';
 import { NikoModule } from './niko/niko.module';
 import { PlotPointsModule } from './plot-points/plot-points.module';
+import { PaliCanonPassagesModule } from './pali-canon-passages/pali-canon-passages.module';
 import { SessionsModule } from './sessions/sessions.module';
 import { SpaceListsModule } from './space-lists/space-lists.module';
 import { TinyModule } from './tiny/tiny.module';
@@ -32,17 +33,6 @@ import { HumanUserThemesModule } from './human-user-themes/human-user-themes.mod
       isGlobal: true,
       envFilePath: '.env',
     }),
-    EventEmitterModule,
-    RedisModule,
-    DatabaseModule,
-    AiMessagesModule,
-    AiUsersModule,
-    HumanMessagesModule,
-    HumanUsersModule,
-    PlotPointsModule,
-    SessionsModule,
-    UsersModule,
-    WorldRoomEnvironmentsModule,
     BullModule.forRoot({
       redis: { host: 'localhost', port: 6379 },
     }),
@@ -50,15 +40,28 @@ import { HumanUserThemesModule } from './human-user-themes/human-user-themes.mod
       route: '/queues',
       adapter: ExpressAdapter,
     }),
-    SessionsModule,
-    EnvironmentAiTasksModule,
-    UserEnvironmentPresencesModule,
-    SpaceListsModule,
-    EnvironmentUserListsModule,
-    NikoModule,
-    TinyModule,
+    EventEmitterModule,
+    RedisModule,
+    DatabaseModule,
+
+    AiMessagesModule,
+    AiUsersModule,
     BibleVersesModule,
+    EnvironmentAiTasksModule,
+    EnvironmentUserListsModule,
+    HumanMessagesModule,
     HumanUserThemesModule,
+    HumanUsersModule,
+    NikoModule,
+    PaliCanonPassagesModule,
+    PlotPointsModule,
+    SessionsModule,
+    SessionsModule,
+    SpaceListsModule,
+    TinyModule,
+    UserEnvironmentPresencesModule,
+    UsersModule,
+    WorldRoomEnvironmentsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
