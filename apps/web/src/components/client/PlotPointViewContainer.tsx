@@ -9,6 +9,7 @@ import {
   UserThemeSwitched,
   PaliCanonReference,
   ThemeCreated,
+  ThemesListed,
 } from "@2pm/ui/plot-points";
 import AiMessageViewContainer from "./AiMessageViewContainer";
 
@@ -100,6 +101,10 @@ const PlotPointViewContainer = ({ plotPoint, session }: Props) => {
 
   if (type === "THEME_CREATED") {
     return <ThemeCreated theme={data.theme} />;
+  }
+
+  if (type === "THEMES_LISTED") {
+    return <ThemesListed themes={data.themes} />;
   }
 
   throw new Error();

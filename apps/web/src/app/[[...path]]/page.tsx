@@ -23,7 +23,7 @@ import * as users from "../../fixtures/users";
 import EnvironmentAiTaskStateContainer from "@/components/server/EnvironmentAiTaskStateContainer";
 import { getSession } from "@/actions";
 import { createUserEnvironmentPresence } from "@/api/user-environment-presences";
-import ThemeContainer from "@/components/server/ThemeContainer";
+import ThemeProviderContainer from "@/components/server/ThemeProviderContainer";
 
 type Params = Promise<{ path?: string[] }>;
 type Props = { params: Params };
@@ -69,7 +69,7 @@ export default async function Home({ params }: Props) {
   });
 
   return (
-    <ThemeContainer environmentId={environmentId}>
+    <ThemeProviderContainer environmentId={environmentId}>
       <StandardLayout.Root>
         <StandardLayout.Main>
           <StandardLayout.SiteMap>
@@ -149,6 +149,6 @@ export default async function Home({ params }: Props) {
           </InfoBar.Root>
         </StandardLayout.InfoBar>
       </StandardLayout.Root>
-    </ThemeContainer>
+    </ThemeProviderContainer>
   );
 }

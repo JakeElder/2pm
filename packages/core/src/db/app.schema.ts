@@ -265,6 +265,45 @@ export const themes = pgTable("themes", {
 });
 
 /**
+ * Theme Lists
+ */
+
+export const themeLists = pgTable("theme_lists", {
+  id: serial("id").primaryKey(),
+  plotPointId: integer("plot_point_id")
+    .notNull()
+    .references(() => plotPoints.id),
+});
+
+/**
+ * Join: Theme List Themes
+ */
+
+export const themeListThemes = pgTable("theme_list_themes", {
+  id: serial("id").primaryKey(),
+  themeListId: integer("theme_list_id")
+    .notNull()
+    .references(() => themeLists.id),
+  themeId: integer("theme_id")
+    .notNull()
+    .references(() => themes.id),
+});
+
+/**
+ * Join: Plot Point Theme Lists
+ */
+
+export const plotPointThemeLists = pgTable("plot_point_theme_lists", {
+  id: serial("id").primaryKey(),
+  plotPointId: integer("plot_point_id")
+    .notNull()
+    .references(() => plotPoints.id),
+  themeListId: integer("theme_list_id")
+    .notNull()
+    .references(() => themeLists.id),
+});
+
+/**
  * Join: Plot Point Theme Switches
  */
 

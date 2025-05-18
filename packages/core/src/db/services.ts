@@ -14,6 +14,7 @@ export { default as PaliCanonReferences } from "../models/pali-canon-reference/p
 export { default as PlotPoints } from "../models/plot-point/plot-point.service";
 export { default as Sessions } from "../models/session/session.service";
 export { default as SpaceLists } from "../models/space-list/space-list.service";
+export { default as ThemeLists } from "../models/theme-list/theme-list.service";
 export { default as Themes } from "../models/theme/theme.service";
 export { default as UserEnvironmentPresences } from "../models/user-environment-presence/user-environment-presence.service";
 export { default as Users } from "../models/user/user.service";

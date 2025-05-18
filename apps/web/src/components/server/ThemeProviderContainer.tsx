@@ -1,6 +1,6 @@
 import { getSession } from "@/actions";
 import { getHumanUserTheme } from "@/api/human-users";
-import ThemeViewContainer from "../client/ThemeViewContainer";
+import ThemeProviderViewContainer from "../client/ThemeProviderViewContainer";
 import { Environment } from "@2pm/core";
 
 type Props = {
@@ -8,18 +8,18 @@ type Props = {
   environmentId: Environment["id"];
 };
 
-const ThemeContainer = async ({ children, environmentId }: Props) => {
+const ThemeProviderContainer = async ({ children, environmentId }: Props) => {
   const session = await getSession();
   const humanUserTheme = await getHumanUserTheme(session.humanUserId);
   return (
-    <ThemeViewContainer
+    <ThemeProviderViewContainer
       session={session}
       humanUserTheme={humanUserTheme.data}
       environmentId={environmentId}
     >
       {children}
-    </ThemeViewContainer>
+    </ThemeProviderViewContainer>
   );
 };
 
-export default ThemeContainer;
+export default ThemeProviderContainer;

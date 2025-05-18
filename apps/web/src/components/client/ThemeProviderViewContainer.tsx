@@ -3,7 +3,7 @@
 import { nextTheme, prevTheme } from "@/actions";
 import { useHumanUserThemeEvents } from "@/hooks/use-human-user-theme-events";
 import { Environment, HumanUserThemeDto, SessionDto } from "@2pm/core";
-import { Theme } from "@2pm/ui/components";
+import { ThemeProvider } from "@2pm/ui/components";
 import { useCallback, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 
@@ -14,7 +14,7 @@ type Props = {
   environmentId: Environment["id"];
 };
 
-const ThemeViewContainer = ({
+const ThemeProviderViewContainer = ({
   session,
   children,
   environmentId,
@@ -40,7 +40,7 @@ const ThemeViewContainer = ({
     }, []),
   });
 
-  return <Theme theme={humanUserTheme.theme}>{children}</Theme>;
+  return <ThemeProvider theme={humanUserTheme.theme}>{children}</ThemeProvider>;
 };
 
-export default ThemeViewContainer;
+export default ThemeProviderViewContainer;

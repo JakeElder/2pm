@@ -1,0 +1,15 @@
+.themes {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.theme-heading {
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+.theme:not(:last-child) {
+  padding-bottom: 20px;
+  border-bottom: 1px dotted var(--surface0);
+}

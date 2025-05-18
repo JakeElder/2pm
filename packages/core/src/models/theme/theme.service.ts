@@ -47,7 +47,6 @@ export default class Themes extends DBServiceModule {
         .values({ type: "THEME_CREATED", environmentId, userId })
         .returning();
 
-      console.log(rest);
       const [theme] = await this.app.drizzle
         .insert(themes)
         .values(rest)

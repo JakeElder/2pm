@@ -46,6 +46,12 @@ const CREATE_THEME = {
   }),
 };
 
+const LIST_THEMES = {
+  name: 'LIST_THEMES',
+  description: txt(<>Lists the themes for the user</>),
+  schema: z.object({}),
+};
+
 @Injectable()
 export class TinyService extends BaseCharacterService {
   private static PERSONA = txt(
@@ -96,7 +102,7 @@ export class TinyService extends BaseCharacterService {
     });
 
     const res = await this.qwen.invoke(messages, {
-      tools: [SWITCH_THEME, CREATE_THEME],
+      tools: [SWITCH_THEME, CREATE_THEME, LIST_THEMES],
       tool_choice: 'any',
       response_format: null as any,
     });
@@ -129,6 +135,19 @@ export class TinyService extends BaseCharacterService {
       yield { type: 'PLOT_POINT_CREATED', data: dto };
 
       await new Promise((resolve) => setTimeout(resolve, 500));
+    }
+
+    if (call.name === 'LIST_THEMES') {
+      const dto = await this.db.themeLists.create({
+        environmentId: trigger.environment.id,
+        userId: trigger.user.data.userId,
+        themeIds: context.availableThemes.map((t) => t.id),
+      });
+
+      yield {
+        type: 'PLOT_POINT_CREATED',
+        data: { type: 'THEMES_LISTED', data: dto },
+      };
     }
 
     if (call.name === 'CREATE_THEME') {

@@ -15,7 +15,10 @@ import {
   plotPointEnvironmentPresences,
   plotPointPaliCanonReferences,
   plotPoints,
+  plotPointThemeLists,
   plotPointThemeSwitches,
+  themeLists,
+  themeListThemes,
   themes,
   userEnvironmentPresences,
   users,
@@ -40,6 +43,7 @@ import {
   PaliCanonReferencePlotPointDtoSchema,
   PlotPointDto,
   ThemeCreatedPlotPointDto,
+  ThemesListedPlotPointDto,
   UserThemeSwitchedPlotPointDto,
 } from "./plot-point.dto";
 import { HumanMessageDtoSchema } from "../human-message/human-message.dto";
@@ -108,10 +112,12 @@ export default class PlotPoints extends DBServiceModule {
         plotPointPaliCanonReference: plotPointPaliCanonReferences,
         plotPointThemeSwitch: plotPointThemeSwitches,
         plotPointCreatedTheme: plotPointPaliCanonReferences,
+        plotPointThemeList: plotPointThemeLists,
         userEnvironmentPresence: userEnvironmentPresences,
         bibleVerseReference: bibleVerseReferences,
         paliCanonReference: paliCanonReferences,
         theme: themes,
+        themeList: themeLists,
       })
       .from(plotPoints)
       .innerJoin(users, eq(plotPoints.userId, users.id))
@@ -163,6 +169,11 @@ export default class PlotPoints extends DBServiceModule {
         eq(plotPoints.id, plotPointCreatedThemes.plotPointId),
       )
       .leftJoin(themes, eq(plotPointCreatedThemes.themeId, themes.id))
+      .leftJoin(
+        plotPointThemeLists,
+        eq(plotPoints.id, plotPointThemeLists.plotPointId),
+      )
+      .leftJoin(themeLists, eq(plotPointThemeLists.themeListId, themeLists.id))
       .where(
         and(
           eq(plotPoints.environmentId, id),
@@ -358,6 +369,36 @@ export default class PlotPoints extends DBServiceModule {
           return res;
         }
 
+        if (row.plotPoint.type === "THEMES_LISTED") {
+          const { humanUser, plotPoint, environment, themeList } = row;
+
+          if (!themeList || !humanUser) {
+            throw new Error();
+          }
+
+          const listedThemes = await this.app.drizzle
+            .select()
+            .from(themes)
+            .innerJoin(themeListThemes, eq(themes.id, themeListThemes.themeId))
+            .innerJoin(
+              themeLists,
+              eq(themeLists.id, themeListThemes.themeListId),
+            )
+            .where(eq(themeLists.id, themeList.id));
+
+          const res: ThemesListedPlotPointDto = {
+            type: "THEMES_LISTED",
+            data: {
+              environment,
+              humanUser: HumanUsers.discriminate(humanUser),
+              plotPoint,
+              themes: listedThemes.map((l) => l.themes),
+            },
+          };
+
+          return res;
+        }
+
         if (row.plotPoint.type === "THEME_CREATED") {
           const { plotPoint, theme, humanUser, environment } = row;
 
@@ -377,6 +418,7 @@ export default class PlotPoints extends DBServiceModule {
 
           return res;
         }
+
         throw new Error(`${row.plotPoint.type} not implemented`);
       }),
     );
@@ -459,6 +501,17 @@ export default class PlotPoints extends DBServiceModule {
           date: data.plotPoint.createdAt,
           user: chainHumanUser(data.humanUser),
           theme: data.theme,
+        },
+      };
+    }
+
+    if (type === "THEMES_LISTED") {
+      return {
+        type,
+        data: {
+          date: data.plotPoint.createdAt,
+          user: chainHumanUser(data.humanUser),
+          themeIds: data.themes.map((t) => t.id),
         },
       };
     }

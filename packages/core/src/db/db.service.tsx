@@ -17,6 +17,7 @@ import {
   PlotPoints,
   Sessions,
   SpaceLists,
+  ThemeLists,
   Themes,
   UserEnvironmentPresences,
   Users,
@@ -56,6 +57,7 @@ export class DBService {
   public sessions: Sessions;
   public spaceLists: SpaceLists;
   public themes: Themes;
+  public themeLists: ThemeLists;
   public userEnvironmentPresences: UserEnvironmentPresences;
   public users: Users;
   public worldRoomEnvironments: WorldRoomEnvironments;
@@ -105,6 +107,7 @@ export class DBService {
     this.sessions = new Sessions(this.contexts);
     this.spaceLists = new SpaceLists(this.contexts);
     this.themes = new Themes(this.contexts);
+    this.themeLists = new ThemeLists(this.contexts);
     this.userEnvironmentPresences = new UserEnvironmentPresences(this.contexts);
     this.users = new Users(this.contexts);
     this.worldRoomEnvironments = new WorldRoomEnvironments(this.contexts);
@@ -172,7 +175,7 @@ export class DBService {
     ]);
 
     // Themes
-    const [dark] = await Promise.all([
+    const [dark, light] = await Promise.all([
       this.themes.createDefault(DEFAULT_THEMES.dark),
       this.themes.createDefault(DEFAULT_THEMES.light),
     ]);

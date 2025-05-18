@@ -10,4 +10,5 @@ export { default as InfoBarLogo } from "./InfoBarLogo";
 export { default as PaneHeader } from "./PaneHeader";
 export { default as Prose } from "./Prose";
 export { default as Theme } from "./Theme";
+export { default as ThemeProvider } from "./ThemeProvider";
 export { default as UserTag } from "./UserTag";

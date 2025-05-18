@@ -1,24 +1,26 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import Theme from "./Theme";
-import { Palette } from "../Palette";
 import { DEFAULT_THEMES } from "@2pm/core";
+import Theme from "./Theme";
+import * as Frame from "../Frame";
 
 const meta: Meta<typeof Theme> = {
   title: "Components/Theme",
-  parameters: { layout: "centered" },
   component: Theme,
+  decorators: [
+    (Story) => {
+      return (
+        <Frame.PlotPoint>
+          <Story />
+        </Frame.PlotPoint>
+      );
+    },
+  ],
 };
 
 type Story = StoryObj<typeof Theme>;
 
 export const Default: Story = {
-  render: () => {
-    return (
-      <Theme theme={DEFAULT_THEMES.dark}>
-        <Palette />
-      </Theme>
-    );
-  },
+  args: DEFAULT_THEMES.dark,
 };
 
 export default meta;

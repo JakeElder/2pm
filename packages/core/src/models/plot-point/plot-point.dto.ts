@@ -260,6 +260,34 @@ export class ThemeCreatedPlotPointDto extends createZodDto(
 ) {}
 
 /**
+ * Themes Listed
+ */
+export const ThemesListedPlotPointDtoSchema = z.object({
+  type: z.literal("THEMES_LISTED"),
+  data: z.object({
+    plotPoint: createSelectSchema(plotPoints).extend({
+      createdAt: z.coerce.date(),
+    }),
+    environment: createSelectSchema(environments),
+    themes: z.array(createSelectSchema(themes)),
+    humanUser: HumanUserDtoSchema,
+  }),
+});
+
+export const ThemesListedChainPlotPointSchema = z.object({
+  type: z.literal("THEMES_LISTED"),
+  data: z.object({
+    date: createSelectSchema(plotPoints).shape.createdAt,
+    user: ChainHumanUserSchema,
+    themeIds: z.array(createSelectSchema(themes).shape.id),
+  }),
+});
+
+export class ThemesListedPlotPointDto extends createZodDto(
+  ThemesListedPlotPointDtoSchema,
+) {}
+
+/**
  * Union
  */
 export const PlotPointDtoSchema = z.discriminatedUnion("type", [
@@ -271,6 +299,7 @@ export const PlotPointDtoSchema = z.discriminatedUnion("type", [
   PaliCanonReferencePlotPointDtoSchema,
   UserThemeSwitchedPlotPointDtoSchema,
   ThemeCreatedPlotPointDtoSchema,
+  ThemesListedPlotPointDtoSchema,
 ]);
 
 export const ChainPlotPointSchema = z.discriminatedUnion("type", [
@@ -282,6 +311,7 @@ export const ChainPlotPointSchema = z.discriminatedUnion("type", [
   PaliCanonReferenceChainPlotPointDtoSchema,
   UserThemeSwitchedChainPlotPointSchema,
   ThemeCreatedChainPlotPointSchema,
+  ThemesListedChainPlotPointSchema,
 ]);
 
 export type ChainPlotPoint = z.infer<typeof ChainPlotPointSchema>;
