@@ -1,6 +1,6 @@
 import { ThemeDto } from "./theme.dto";
 
-export const THEME_KEYS = [
+export const SEMANTIC_THEME_KEYS = [
   "base",
   "mantle",
   "crust",
@@ -13,6 +13,9 @@ export const THEME_KEYS = [
   "surface0",
   "surface1",
   "surface2",
+] as const;
+
+export const NAMED_THEME_KEYS = [
   "rosewater",
   "flamingo",
   "pink",
@@ -27,6 +30,19 @@ export const THEME_KEYS = [
   "sapphire",
   "blue",
   "lavender",
+] as const;
+
+export const ALIAS_THEME_KEYS = [
+  "separatorAlias",
+  "aiAlias",
+  "authenticatedAlias",
+  "anonymousAlias",
+] as const;
+
+export const THEME_KEYS = [
+  ...SEMANTIC_THEME_KEYS,
+  ...NAMED_THEME_KEYS,
+  ...ALIAS_THEME_KEYS,
 ] as const;
 
 export const DARK_THEME_ID = 1;

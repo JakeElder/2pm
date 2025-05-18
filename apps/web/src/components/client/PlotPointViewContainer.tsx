@@ -8,6 +8,7 @@ import {
   BibleVerseReference,
   UserThemeSwitched,
   PaliCanonReference,
+  ThemeCreated,
 } from "@2pm/ui/plot-points";
 import AiMessageViewContainer from "./AiMessageViewContainer";
 
@@ -95,6 +96,10 @@ const PlotPointViewContainer = ({ plotPoint, session }: Props) => {
         {data.paliCanonChunk.content}
       </PaliCanonReference>
     );
+  }
+
+  if (type === "THEME_CREATED") {
+    return <ThemeCreated theme={data.theme} />;
   }
 
   throw new Error();

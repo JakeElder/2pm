@@ -282,6 +282,20 @@ export const plotPointThemeSwitches = pgTable("plot_point_theme_switches", {
 });
 
 /**
+ * Join: Plot Point Created Themes
+ */
+
+export const plotPointCreatedThemes = pgTable("plot_point_created_themes", {
+  id: serial("id").primaryKey(),
+  plotPointId: integer("plot_point_id")
+    .notNull()
+    .references(() => plotPoints.id),
+  themeId: integer("theme_id")
+    .notNull()
+    .references(() => themes.id),
+});
+
+/**
  * Join: HumanUser Themes
  */
 

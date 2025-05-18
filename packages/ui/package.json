@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@2pm/core": "workspace:*",
+    "@floating-ui/react": "^0.27.8",
     "@tiptap/extension-mention": "^2.12.0",
     "classnames": "^2.5.1",
     "react-markdown": "^10.1.0",

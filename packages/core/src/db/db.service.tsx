@@ -173,8 +173,8 @@ export class DBService {
 
     // Themes
     const [dark] = await Promise.all([
-      this.themes.create(DEFAULT_THEMES.dark),
-      this.themes.create(DEFAULT_THEMES.light),
+      this.themes.createDefault(DEFAULT_THEMES.dark),
+      this.themes.createDefault(DEFAULT_THEMES.light),
     ]);
 
     // Human Users

@@ -11,6 +11,7 @@ import {
   messages,
   paliCanonReferences,
   plotPointBibleVerseReferences,
+  plotPointCreatedThemes,
   plotPointEnvironmentPresences,
   plotPointPaliCanonReferences,
   plotPoints,
@@ -38,6 +39,7 @@ import {
   PaliCanonReferencePlotPointDto,
   PaliCanonReferencePlotPointDtoSchema,
   PlotPointDto,
+  ThemeCreatedPlotPointDto,
   UserThemeSwitchedPlotPointDto,
 } from "./plot-point.dto";
 import { HumanMessageDtoSchema } from "../human-message/human-message.dto";
@@ -102,12 +104,14 @@ export default class PlotPoints extends DBServiceModule {
         aiUser: aiUsers,
         environment: environments,
         plotPointEnvironmentPresence: plotPointEnvironmentPresences,
-        plotPointBibleVerseReferences: plotPointBibleVerseReferences,
-        plotPointPaliCanonReferences: plotPointPaliCanonReferences,
-        plotPointThemeSwitches: plotPointThemeSwitches,
+        plotPointBibleVerseReference: plotPointBibleVerseReferences,
+        plotPointPaliCanonReference: plotPointPaliCanonReferences,
+        plotPointThemeSwitch: plotPointThemeSwitches,
+        plotPointCreatedTheme: plotPointPaliCanonReferences,
         userEnvironmentPresence: userEnvironmentPresences,
         bibleVerseReference: bibleVerseReferences,
         paliCanonReference: paliCanonReferences,
+        theme: themes,
       })
       .from(plotPoints)
       .innerJoin(users, eq(plotPoints.userId, users.id))
@@ -154,6 +158,11 @@ export default class PlotPoints extends DBServiceModule {
         plotPointThemeSwitches,
         eq(plotPoints.id, plotPointThemeSwitches.plotPointId),
       )
+      .leftJoin(
+        plotPointCreatedThemes,
+        eq(plotPoints.id, plotPointCreatedThemes.plotPointId),
+      )
+      .leftJoin(themes, eq(plotPointCreatedThemes.themeId, themes.id))
       .where(
         and(
           eq(plotPoints.environmentId, id),
@@ -303,8 +312,12 @@ export default class PlotPoints extends DBServiceModule {
         }
 
         if (row.plotPoint.type === "USER_THEME_SWITCHED") {
-          const { plotPointThemeSwitches, humanUser, plotPoint, environment } =
-            row;
+          const {
+            plotPointThemeSwitch: plotPointThemeSwitches,
+            humanUser,
+            plotPoint,
+            environment,
+          } = row;
 
           if (!plotPointThemeSwitches || !humanUser) {
             throw new Error();
@@ -345,6 +358,25 @@ export default class PlotPoints extends DBServiceModule {
           return res;
         }
 
+        if (row.plotPoint.type === "THEME_CREATED") {
+          const { plotPoint, theme, humanUser, environment } = row;
+
+          if (!theme || !humanUser) {
+            throw new Error();
+          }
+
+          const res: ThemeCreatedPlotPointDto = {
+            type: "THEME_CREATED",
+            data: {
+              plotPoint,
+              environment,
+              theme,
+              humanUser: HumanUsers.discriminate(humanUser),
+            },
+          };
+
+          return res;
+        }
         throw new Error(`${row.plotPoint.type} not implemented`);
       }),
     );
@@ -416,6 +448,17 @@ export default class PlotPoints extends DBServiceModule {
           user: chainUser(data.humanUserTheme.humanUser),
           fromThemeId: data.from.id,
           toThemeId: data.to.id,
+        },
+      };
+    }
+
+    if (type === "THEME_CREATED") {
+      return {
+        type,
+        data: {
+          date: data.plotPoint.createdAt,
+          user: chainHumanUser(data.humanUser),
+          theme: data.theme,
         },
       };
     }

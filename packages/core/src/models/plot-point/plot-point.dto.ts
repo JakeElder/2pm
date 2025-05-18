@@ -9,6 +9,7 @@ import {
   aiMessages,
   environments,
   humanMessages,
+  humanUsers,
   plotPoints,
   themes,
   users,
@@ -20,6 +21,7 @@ import {
   paliCanonChunks,
 } from "../../db/library.schema";
 import { HumanUserThemeDtoSchema } from "../human-user-theme/human-user-theme.dto";
+import { HumanUserDtoSchema } from "../user";
 
 /**
  * Chain User
@@ -230,6 +232,34 @@ export class UserThemeSwitchedPlotPointDto extends createZodDto(
 ) {}
 
 /**
+ * Theme Created
+ */
+export const ThemeCreatedPlotPointDtoSchema = z.object({
+  type: z.literal("THEME_CREATED"),
+  data: z.object({
+    plotPoint: createSelectSchema(plotPoints).extend({
+      createdAt: z.coerce.date(),
+    }),
+    environment: createSelectSchema(environments),
+    theme: createSelectSchema(themes),
+    humanUser: HumanUserDtoSchema,
+  }),
+});
+
+export const ThemeCreatedChainPlotPointSchema = z.object({
+  type: z.literal("THEME_CREATED"),
+  data: z.object({
+    date: createSelectSchema(plotPoints).shape.createdAt,
+    user: ChainHumanUserSchema,
+    theme: createSelectSchema(themes),
+  }),
+});
+
+export class ThemeCreatedPlotPointDto extends createZodDto(
+  ThemeCreatedPlotPointDtoSchema,
+) {}
+
+/**
  * Union
  */
 export const PlotPointDtoSchema = z.discriminatedUnion("type", [
@@ -240,6 +270,7 @@ export const PlotPointDtoSchema = z.discriminatedUnion("type", [
   BibleVerseReferencePlotPointDtoSchema,
   PaliCanonReferencePlotPointDtoSchema,
   UserThemeSwitchedPlotPointDtoSchema,
+  ThemeCreatedPlotPointDtoSchema,
 ]);
 
 export const ChainPlotPointSchema = z.discriminatedUnion("type", [
@@ -250,6 +281,7 @@ export const ChainPlotPointSchema = z.discriminatedUnion("type", [
   BibleVerseReferenceChainPlotPointDtoSchema,
   PaliCanonReferenceChainPlotPointDtoSchema,
   UserThemeSwitchedChainPlotPointSchema,
+  ThemeCreatedChainPlotPointSchema,
 ]);
 
 export type ChainPlotPoint = z.infer<typeof ChainPlotPointSchema>;
