@@ -1,35 +1,51 @@
 import React from "react";
 import * as StandardPlotPoint from "../../Components/StandardPlotPoint";
 import css from "./ThemeCreated.module.css";
-import { ThemeDto } from "@2pm/core";
-import Theme from "../../Components/Theme";
 
-/**
- * ThemeCreated
+/*
+ * Root
  */
-type Props = {
-  theme: ThemeDto;
+
+type RootProps = {
+  children: React.ReactNode;
 };
 
-const ThemeCreated = ({ theme }: Props) => {
+export const Root = ({ children }: RootProps) => {
+  return <StandardPlotPoint.Root>{children}</StandardPlotPoint.Root>;
+};
+
+/*
+ * Header
+ */
+
+type HeaderProps = {
+  name: string;
+};
+
+export const Header = ({ name }: HeaderProps) => {
   return (
-    <StandardPlotPoint.Root>
-      <StandardPlotPoint.Header>
-        <StandardPlotPoint.HeadingAndReference>
-          <StandardPlotPoint.Heading>
-            <div className={css["heading"]}> Theme Created</div>
-            <div className={css["name"]}>
-              <span className={css["label"]}>[name]:</span>
-              <span className={css["value"]}>{theme.name}</span>
-            </div>
-          </StandardPlotPoint.Heading>
-        </StandardPlotPoint.HeadingAndReference>
-      </StandardPlotPoint.Header>
-      <StandardPlotPoint.Body>
-        <Theme {...theme} />
-      </StandardPlotPoint.Body>
-    </StandardPlotPoint.Root>
+    <StandardPlotPoint.Header>
+      <StandardPlotPoint.HeadingAndReference>
+        <StandardPlotPoint.Heading>
+          <div className={css["heading"]}> Theme Created</div>
+          <div className={css["name"]}>
+            <span className={css["label"]}>[name]:</span>
+            <span className={css["value"]}>{name}</span>
+          </div>
+        </StandardPlotPoint.Heading>
+      </StandardPlotPoint.HeadingAndReference>
+    </StandardPlotPoint.Header>
   );
 };
 
-export default ThemeCreated;
+/*
+ * Body
+ */
+
+type BodyProps = {
+  children: React.ReactNode;
+};
+
+export const Body = ({ children }: BodyProps) => {
+  return <StandardPlotPoint.Body>{children}</StandardPlotPoint.Body>;
+};

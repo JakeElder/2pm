@@ -7,6 +7,7 @@ import {
   NAMED_THEME_KEYS,
   ALIAS_THEME_KEYS,
   ThemeDto,
+  AliasThemeKey,
 } from "@2pm/core";
 import {
   useFloating,
@@ -90,6 +91,25 @@ export const TooltipColor = ({ toolTip, color }: TooltipColorProps) => {
   );
 };
 
+/*
+ * Alias
+ */
+
+type AliasProps = {
+  k: AliasThemeKey;
+};
+
+export const Alias = ({ k }: AliasProps) => {
+  const keys: Record<AliasThemeKey, string> = {
+    activeChannelAlias: "active-channel",
+    aiAlias: "ai-tag",
+    anonymousAlias: "anonymous-tag",
+    authenticatedAlias: "authenticated-tag",
+    separatorAlias: "separator",
+  };
+  return keys[k];
+};
+
 /**
  * Theme
  */
@@ -119,7 +139,7 @@ const Theme = (theme: Props) => {
                 <div className={css["alias-color"]}>
                   <Color toolTip={k} color={v} />
                 </div>{" "}
-                {key.replace("Alias", "")}
+                <Alias k={key} />
               </li>
             );
           })}

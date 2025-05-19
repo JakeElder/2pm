@@ -1,1 +1,1 @@
-export { default } from "./ThemesListed";
+export * from "./ThemesListed";

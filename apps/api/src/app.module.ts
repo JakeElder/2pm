@@ -23,6 +23,7 @@ import { PaliCanonPassagesModule } from './pali-canon-passages/pali-canon-passag
 import { PlotPointsModule } from './plot-points/plot-points.module';
 import { SessionsModule } from './sessions/sessions.module';
 import { SpaceListsModule } from './space-lists/space-lists.module';
+import { ThemesModule } from './themes/themes.module';
 import { TinyModule } from './tiny/tiny.module';
 import { UserEnvironmentPresencesModule } from './user-environment-presences/user-environment-presences.module';
 import { UserSpaceListsModule } from './user-space-lists/user-space-lists.module';
@@ -61,6 +62,7 @@ import { WorldRoomEnvironmentsModule } from './world-room-environments/world-roo
     SessionsModule,
     SessionsModule,
     SpaceListsModule,
+    ThemesModule,
     TinyModule,
     UserEnvironmentPresencesModule,
     UserSpaceListsModule,

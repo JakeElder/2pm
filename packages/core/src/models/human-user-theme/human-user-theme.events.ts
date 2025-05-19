@@ -4,7 +4,7 @@ import { createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
 import { createZodDto } from "@anatine/zod-nestjs";
 import { humanUsers, humanUserThemes } from "../../db/app.schema";
-import { UserThemeSwitchedPlotPointDtoSchema } from "../plot-point/plot-point.dto";
+import { HumanUserThemeDtoSchema } from "./human-user-theme.dto";
 
 /**
  * Presence
@@ -30,8 +30,7 @@ export class HumanUserThemesRoomLeftEventDto extends createZodDto(
 /**
  * Updated
  */
-export const HumanUserThemeUpdatedEventDtoSchema =
-  UserThemeSwitchedPlotPointDtoSchema;
+export const HumanUserThemeUpdatedEventDtoSchema = HumanUserThemeDtoSchema;
 
 export class HumanUserThemeUpdatedEventDto extends createZodDto(
   HumanUserThemeUpdatedEventDtoSchema,

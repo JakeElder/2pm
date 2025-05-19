@@ -1,1 +1,1 @@
-export { default } from "./ThemeCreated";
+export * from "./ThemeCreated";

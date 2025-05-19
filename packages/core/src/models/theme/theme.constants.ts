@@ -37,6 +37,7 @@ export const ALIAS_THEME_KEYS = [
   "aiAlias",
   "authenticatedAlias",
   "anonymousAlias",
+  "activeChannelAlias",
 ] as const;
 
 export const THEME_KEYS = [
@@ -88,6 +89,7 @@ export const DEFAULT_THEMES: Record<"dark" | "light", ThemeDto> = {
     aiAlias: "pink",
     authenticatedAlias: "yellow",
     anonymousAlias: "maroon",
+    activeChannelAlias: "peach",
   },
   light: {
     id: LIGHT_THEME_ID,
@@ -128,5 +130,6 @@ export const DEFAULT_THEMES: Record<"dark" | "light", ThemeDto> = {
     aiAlias: "pink",
     authenticatedAlias: "yellow",
     anonymousAlias: "maroon",
+    activeChannelAlias: "peach",
   },
 };

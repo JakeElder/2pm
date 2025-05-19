@@ -29,7 +29,7 @@
 
 .active-channel,
 .active-channel .user-icon {
-  color: var(--peach);
+  color: var(--active-channel);
 }
 
 .tag {

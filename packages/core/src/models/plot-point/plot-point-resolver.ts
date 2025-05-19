@@ -18,6 +18,7 @@ import {
   themeLists,
   themeListThemes,
   themes,
+  themeUpdates,
   userEnvironmentPresences,
   users,
 } from "../../db/app.schema";
@@ -32,6 +33,7 @@ import {
   PaliCanonReferencePlotPointDto,
   ThemeCreatedPlotPointDto,
   ThemesListedPlotPointDto,
+  ThemeUpdatedPlotPointDto,
   UserThemeSwitchedPlotPointDto,
 } from "./plot-point.dto";
 import { PlotPointRow } from "./plot-point.types";
@@ -369,6 +371,35 @@ export class PlotPointResolver {
       data: {
         plotPoint,
         environment,
+        theme,
+        humanUser: HumanUsers.discriminate(humanUser),
+      },
+    };
+  }
+
+  static async themeUpdated(
+    { plotPoint, environment }: PlotPointRow,
+    { app }: DBContexts,
+  ): Promise<ThemeUpdatedPlotPointDto> {
+    const [{ theme, humanUser, themeUpdate }] = await app.drizzle
+      .select({
+        theme: themes,
+        humanUser: humanUsers,
+        themeUpdate: themeUpdates,
+      })
+      .from(plotPoints)
+      .innerJoin(users, eq(users.id, plotPoints.userId))
+      .innerJoin(humanUsers, eq(humanUsers.userId, users.id))
+      .innerJoin(themeUpdates, eq(themeUpdates.plotPointId, plotPoints.id))
+      .innerJoin(themes, eq(themes.id, themeUpdates.themeId))
+      .where(eq(plotPoints.id, plotPoint.id));
+
+    return {
+      type: "THEME_UPDATED",
+      data: {
+        plotPoint,
+        environment,
+        patch: themeUpdate.patch,
         theme,
         humanUser: HumanUsers.discriminate(humanUser),
       },

@@ -16,6 +16,7 @@ import {
   PlotPointDto,
   ThemeCreatedPlotPointDtoSchema,
   ThemesListedPlotPointDtoSchema,
+  ThemeUpdatedPlotPointDtoSchema,
   UserThemeSwitchedPlotPointDtoSchema,
 } from "./plot-point.dto";
 import { DBContexts } from "../../db/db.types";
@@ -141,6 +142,11 @@ export default class PlotPoints extends DBServiceModule {
           return ThemeCreatedPlotPointDtoSchema.parse(res);
         }
 
+        if (type === "THEME_UPDATED") {
+          const res = await PlotPointResolver.themeUpdated(row, contexts);
+          return ThemeUpdatedPlotPointDtoSchema.parse(res);
+        }
+
         throw new Error(`${type} not implemented`);
       }),
     );
@@ -234,6 +240,18 @@ export default class PlotPoints extends DBServiceModule {
           date: data.plotPoint.createdAt,
           user: chainHumanUser(data.humanUser),
           themeIds: data.themes.map((t) => t.id),
+        },
+      };
+    }
+
+    if (type === "THEME_UPDATED") {
+      return {
+        type,
+        data: {
+          date: data.plotPoint.createdAt,
+          user: chainHumanUser(data.humanUser),
+          patch: data.patch,
+          theme: data.theme,
         },
       };
     }

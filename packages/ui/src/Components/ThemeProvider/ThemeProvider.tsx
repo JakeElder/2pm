@@ -53,6 +53,7 @@ const ThemeProvider = ({ children, theme }: Props) => {
         "--ai": `var(--${theme.aiAlias})`,
         "--authenticated": `var(--${theme.authenticatedAlias})`,
         "--anonymous": `var(--${theme.anonymousAlias})`,
+        "--active-channel": `var(--${theme.activeChannelAlias})`,
       }}
     >
       {children}

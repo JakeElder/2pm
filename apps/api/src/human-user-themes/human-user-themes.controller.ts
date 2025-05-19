@@ -36,11 +36,20 @@ export class HumanUserThemesController {
   ) {}
 
   async onModuleInit() {
-    this.events.on('plot-points.created', ({ type, data }) => {
+    this.events.on('plot-points.created', async ({ type, data }) => {
+      if (type === 'THEME_UPDATED') {
+        const users = await this.db.humanUserThemes.findAllByThemeId(
+          data.theme.id,
+        );
+        users.forEach((u) => {
+          this.gateway.server.to(`${u.id}`).emit('updated', u);
+        });
+      }
+
       if (type === 'USER_THEME_SWITCHED') {
         this.gateway.server
           .to(`${data.humanUserTheme.id}`)
-          .emit('updated', { type, data });
+          .emit('updated', data.humanUserTheme);
       }
     });
   }

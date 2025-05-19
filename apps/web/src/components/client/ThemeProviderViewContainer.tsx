@@ -36,7 +36,7 @@ const ThemeProviderViewContainer = ({
     humanUserId: session.humanUserId,
     humanUserThemeId: humanUserTheme.id,
     onUpdated: useCallback((e) => {
-      setHumanUserTheme(e.data.humanUserTheme);
+      setHumanUserTheme(e);
     }, []),
   });
 

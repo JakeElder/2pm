@@ -1,5 +1,5 @@
 import React from "react";
-import css from "./UserThemeSwitched.module.css";
+import css from "./ThemeUpdated.module.css";
 
 /*
  * Root
@@ -55,7 +55,7 @@ type ActionProps = {
 export const Action = ({ themeName }: ActionProps) => {
   return (
     <span className={css["action"]}>
-      changed to <span className={css["name"]}>{themeName}</span> theme
+      updated <span className={css["name"]}>{themeName}</span> theme
     </span>
   );
 };

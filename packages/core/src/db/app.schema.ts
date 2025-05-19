@@ -23,6 +23,7 @@ import {
   ENVIRONMENT_AI_TASK_STATE,
   ENVIRONMENT_TYPE_CODES,
 } from "../models/environment/environment.constants";
+import { Operation } from "fast-json-patch";
 
 export const userTypeEnum = pgEnum("user_type", USER_TYPES);
 export const messageTypeEnum = pgEnum("message_type", MESSAGE_TYPES);
@@ -265,6 +266,7 @@ export const themes = pgTable("themes", {
   aiAlias: themeKeyEnum("ai_alias").default("pink"),
   authenticatedAlias: themeKeyEnum("authenticated_alias").default("yellow"),
   anonymousAlias: themeKeyEnum("anonymous_alias").default("maroon"),
+  activeChannelAlias: themeKeyEnum("active_channel_alias").default("peach"),
 });
 
 /**
@@ -276,6 +278,21 @@ export const themeLists = pgTable("theme_lists", {
   plotPointId: integer("plot_point_id")
     .notNull()
     .references(() => plotPoints.id),
+});
+
+/**
+ * Theme Updates
+ */
+
+export const themeUpdates = pgTable("theme_updates", {
+  id: serial("id").primaryKey(),
+  plotPointId: integer("plot_point_id")
+    .notNull()
+    .references(() => plotPoints.id),
+  themeId: integer("theme_id")
+    .notNull()
+    .references(() => themes.id),
+  patch: jsonb("patch").notNull().$type<Operation[]>(),
 });
 
 /**

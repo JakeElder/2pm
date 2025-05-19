@@ -9,4 +9,5 @@ export const PLOT_POINT_TYPES = [
   "USER_THEME_SWITCHED",
   "THEME_CREATED",
   "THEMES_LISTED",
+  "THEME_UPDATED",
 ] as const;

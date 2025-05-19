@@ -1,5 +1,9 @@
 import { createZodDto } from "@anatine/zod-nestjs";
-import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import {
+  createInsertSchema,
+  createSelectSchema,
+  createUpdateSchema,
+} from "drizzle-zod";
 import { environments, themes, users } from "../../db/app.schema";
 
 /**
@@ -24,3 +28,15 @@ export class CreateThemeDto extends createZodDto(CreateThemeDtoSchema) {}
 export const ThemeDtoSchema = createSelectSchema(themes);
 
 export class ThemeDto extends createZodDto(ThemeDtoSchema) {}
+
+/**
+ * Update
+ */
+
+export const UpdateThemeDtoSchema = createUpdateSchema(themes).extend({
+  environmentId: createSelectSchema(environments).shape.id,
+  userId: createSelectSchema(users).shape.id,
+  id: createSelectSchema(themes).shape.id,
+});
+
+export class UpdateThemeDto extends createZodDto(UpdateThemeDtoSchema) {}

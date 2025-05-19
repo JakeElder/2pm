@@ -10,8 +10,10 @@ import {
   PaliCanonReference,
   ThemeCreated,
   ThemesListed,
+  ThemeUpdated,
 } from "@2pm/ui/plot-points";
 import AiMessageViewContainer from "./AiMessageViewContainer";
+import ThemeViewContainer from "./ThemeViewContainer";
 
 type Props = {
   session: SessionDto;
@@ -100,11 +102,46 @@ const PlotPointViewContainer = ({ plotPoint, session }: Props) => {
   }
 
   if (type === "THEME_CREATED") {
-    return <ThemeCreated theme={data.theme} />;
+    return (
+      <ThemeCreated.Root>
+        <ThemeCreated.Header name={data.theme.name} />
+        <ThemeCreated.Body>
+          <ThemeViewContainer session={session} theme={data.theme} />
+        </ThemeCreated.Body>
+      </ThemeCreated.Root>
+    );
   }
 
   if (type === "THEMES_LISTED") {
-    return <ThemesListed themes={data.themes} />;
+    return (
+      <ThemesListed.Root>
+        <ThemesListed.Header />
+        <ThemesListed.Body>
+          {data.themes.map((t) => {
+            return (
+              <ThemesListed.Theme name={t.name} key={t.id}>
+                <ThemeViewContainer session={session} theme={t} />
+              </ThemesListed.Theme>
+            );
+          })}
+        </ThemesListed.Body>
+      </ThemesListed.Root>
+    );
+  }
+
+  if (type === "THEME_UPDATED") {
+    return (
+      <ThemeUpdated.Root>
+        <ThemeUpdated.Icon />
+        <ThemeUpdated.Tag>
+          <UserTag
+            {...data.humanUser}
+            showHash={data.humanUser.type === "ANONYMOUS"}
+          />
+        </ThemeUpdated.Tag>
+        <ThemeUpdated.Action themeName={data.theme.name} />
+      </ThemeUpdated.Root>
+    );
   }
 
   throw new Error();

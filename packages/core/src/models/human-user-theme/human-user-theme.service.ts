@@ -75,6 +75,29 @@ export default class HumanUserThemes extends DBServiceModule {
     };
   }
 
+  async findAllByThemeId(
+    themeId: HumanUserThemeDto["id"],
+  ): Promise<HumanUserThemeDto[]> {
+    const res = await this.app.drizzle
+      .select({
+        humanUserTheme: humanUserThemes,
+        humanUser: humanUsers,
+        theme: themes,
+      })
+      .from(humanUserThemes)
+      .where(eq(humanUserThemes.themeId, themeId))
+      .innerJoin(humanUsers, eq(humanUsers.id, humanUserThemes.humanUserId))
+      .innerJoin(themes, eq(themes.id, humanUserThemes.themeId));
+
+    return res.map((r) => {
+      return {
+        id: r.humanUserTheme.id,
+        theme: r.theme,
+        humanUser: HumanUsers.discriminate(r.humanUser),
+      };
+    });
+  }
+
   async findAll(): Promise<HumanUserThemeDto[]> {
     const res = await this.app.drizzle
       .select({

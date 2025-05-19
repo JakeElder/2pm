@@ -4,6 +4,7 @@ import {
   CreateThemeDtoSchema,
   HumanMessageDto,
   ThemeDtoSchema,
+  UpdateThemeDtoSchema,
 } from '@2pm/core';
 import { Injectable } from '@nestjs/common';
 import { z } from 'zod';
@@ -36,6 +37,7 @@ const CREATE_THEME = {
           the light or dark themes
         </li>
         <li>The alias values reference one of the 26 theme colors</li>
+        <li>Values are hex, without the preceding #</li>
       </ul>
     </>,
   ),
@@ -44,6 +46,30 @@ const CREATE_THEME = {
     environmentId: true,
     userId: true,
   }),
+};
+
+const UPDATE_THEME = {
+  name: 'UPDATE_THEME',
+  description: txt(
+    <>
+      You are a color theory expert. Update a theme
+      <ul>
+        <li>The themes use Catppuccin's theme system</li>
+        <li>It is comprised of 12 core colors, and 14 named colors</li>
+        <li>Pay close attention to existing themes</li>
+        <li>
+          There are built in systems to ensure proper contrast. IE, the 12 core
+          colors should complement each other in terms of contrast. The visual
+          difference between the values you create, should be similar to that of
+          the light or dark themes
+        </li>
+        <li>The alias values reference one of the 26 theme colors</li>
+        <li>You may partially update the theme</li>
+        <li>Values are hex, without the preceding #</li>
+      </ul>
+    </>,
+  ),
+  schema: UpdateThemeDtoSchema,
 };
 
 const LIST_THEMES = {
@@ -59,7 +85,8 @@ export class TinyService extends BaseCharacterService {
       You are @tiny an honourable, helpful bot. You are a general helper. You
       can do things like change the users theme. You make answer general
       questions and partake in conversations, but do not offer domain specific
-      advice, instead suggesting the user consult another source.
+      advice, instead suggesting the user consult another source. You don't have
+      to start every sentence with "Got it!"
     </>,
   );
 
@@ -102,7 +129,7 @@ export class TinyService extends BaseCharacterService {
     });
 
     const res = await this.qwen.invoke(messages, {
-      tools: [SWITCH_THEME, CREATE_THEME, LIST_THEMES],
+      tools: [SWITCH_THEME, CREATE_THEME, LIST_THEMES, UPDATE_THEME],
       tool_choice: 'any',
       response_format: null as any,
     });
@@ -157,12 +184,26 @@ export class TinyService extends BaseCharacterService {
         userId: trigger.user.data.userId,
       });
 
-      console.log(args);
       const dto = await this.db.themes.create(args);
 
       yield {
         type: 'PLOT_POINT_CREATED',
         data: { type: 'THEME_CREATED', data: dto },
+      };
+    }
+
+    if (call.name === 'UPDATE_THEME') {
+      const args = UpdateThemeDtoSchema.parse({
+        ...call.args,
+        environmentId: trigger.environment.id,
+        userId: trigger.user.data.userId,
+      });
+
+      const dto = await this.db.themes.update(args);
+
+      yield {
+        type: 'PLOT_POINT_CREATED',
+        data: dto,
       };
     }
   }

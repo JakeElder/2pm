@@ -9,7 +9,6 @@ import {
   aiMessages,
   environments,
   humanMessages,
-  humanUsers,
   plotPoints,
   themes,
   users,
@@ -288,6 +287,36 @@ export class ThemesListedPlotPointDto extends createZodDto(
 ) {}
 
 /**
+ * Theme Updated
+ */
+export const ThemeUpdatedPlotPointDtoSchema = z.object({
+  type: z.literal("THEME_UPDATED"),
+  data: z.object({
+    plotPoint: createSelectSchema(plotPoints).extend({
+      createdAt: z.coerce.date(),
+    }),
+    environment: createSelectSchema(environments),
+    theme: createSelectSchema(themes),
+    patch: z.array(z.any()),
+    humanUser: HumanUserDtoSchema,
+  }),
+});
+
+export const ThemeUpdatedChainPlotPointSchema = z.object({
+  type: z.literal("THEME_UPDATED"),
+  data: z.object({
+    date: createSelectSchema(plotPoints).shape.createdAt,
+    user: ChainHumanUserSchema,
+    theme: createSelectSchema(themes),
+    patch: z.array(z.any()),
+  }),
+});
+
+export class ThemeUpdatedPlotPointDto extends createZodDto(
+  ThemeUpdatedPlotPointDtoSchema,
+) {}
+
+/**
  * Union
  */
 export const PlotPointDtoSchema = z.discriminatedUnion("type", [
@@ -300,6 +329,7 @@ export const PlotPointDtoSchema = z.discriminatedUnion("type", [
   UserThemeSwitchedPlotPointDtoSchema,
   ThemeCreatedPlotPointDtoSchema,
   ThemesListedPlotPointDtoSchema,
+  ThemeUpdatedPlotPointDtoSchema,
 ]);
 
 export const ChainPlotPointSchema = z.discriminatedUnion("type", [
@@ -312,6 +342,7 @@ export const ChainPlotPointSchema = z.discriminatedUnion("type", [
   UserThemeSwitchedChainPlotPointSchema,
   ThemeCreatedChainPlotPointSchema,
   ThemesListedChainPlotPointSchema,
+  ThemeUpdatedChainPlotPointSchema,
 ]);
 
 export type ChainPlotPoint = z.infer<typeof ChainPlotPointSchema>;
