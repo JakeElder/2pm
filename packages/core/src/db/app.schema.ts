@@ -171,18 +171,21 @@ export const worldRoomEnvironments = pgTable("world_room_environments", {
   order: integer("order").notNull(),
 });
 
-export const companionEnvironments = pgTable("companion_environments", {
-  id: serial("id").primaryKey(),
-  environmentId: integer("environment_id")
-    .notNull()
-    .references(() => environments.id),
-  userId: integer("user_id")
-    .notNull()
-    .references(() => users.id),
-  companionUserId: integer("companion_user_id")
-    .notNull()
-    .references(() => users.id),
-});
+export const humanUserRoomEnvironments = pgTable(
+  "human_user_room_environments",
+  {
+    id: serial("id").primaryKey(),
+    environmentId: integer("environment_id")
+      .notNull()
+      .references(() => environments.id),
+    userId: integer("user_id")
+      .notNull()
+      .references(() => users.id),
+    slug: varchar("slug").notNull(),
+    order: integer("order").notNull(),
+  },
+  (table) => [uniqueIndex("user_slug_idx").on(table.userId, table.slug)],
+);
 
 /**
  * Auth Emails

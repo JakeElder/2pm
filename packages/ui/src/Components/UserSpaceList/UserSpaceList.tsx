@@ -48,15 +48,22 @@ type ChannelProps = {
   children: React.ReactNode;
   disabled?: boolean;
   updates?: boolean;
+  active?: boolean;
 };
 
-export const Channel = ({ children, disabled, updates }: ChannelProps) => {
+export const Channel = ({
+  children,
+  disabled,
+  active,
+  updates,
+}: ChannelProps) => {
   return (
     <li
       className={classNames({
         [css["channel"]]: true,
         [css["disabled-channel"]]: disabled,
         [css["updates-channel"]]: updates,
+        [css["active-channel"]]: active,
       })}
     >
       {children}

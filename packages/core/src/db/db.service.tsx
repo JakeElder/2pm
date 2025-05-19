@@ -10,6 +10,7 @@ import {
   EnvironmentAiTasks,
   EnvironmentUserLists,
   HumanMessages,
+  HumanUserRoomEnvironments,
   HumanUserThemes,
   HumanUsers,
   PaliCanonPassages,
@@ -20,6 +21,7 @@ import {
   ThemeLists,
   Themes,
   UserEnvironmentPresences,
+  UserSpaceLists,
   Users,
   WorldRoomEnvironments,
 } from "./services";
@@ -44,21 +46,23 @@ export class DBService {
   public aiUsers: AiUsers;
   public authEmails: AuthEmails;
   public bibleChunks: BibleChunks;
-  public bibleVerses: BibleVerses;
   public bibleVerseReferences: BibleVerseReferences;
+  public bibleVerses: BibleVerses;
   public environmentAiTasks: EnvironmentAiTasks;
   public environmentUserLists: EnvironmentUserLists;
   public humanMessages: HumanMessages;
-  public humanUsers: HumanUsers;
+  public humanUserRoomEnvironments: HumanUserRoomEnvironments;
   public humanUserThemes: HumanUserThemes;
+  public humanUsers: HumanUsers;
   public paliCanonPassages: PaliCanonPassages;
   public paliCanonReferences: PaliCanonReferences;
   public plotPoints: PlotPoints;
   public sessions: Sessions;
   public spaceLists: SpaceLists;
-  public themes: Themes;
   public themeLists: ThemeLists;
+  public themes: Themes;
   public userEnvironmentPresences: UserEnvironmentPresences;
+  public userSpaceLists: UserSpaceLists;
   public users: Users;
   public worldRoomEnvironments: WorldRoomEnvironments;
 
@@ -95,28 +99,27 @@ export class DBService {
     this.aiUsers = new AiUsers(this.contexts);
     this.authEmails = new AuthEmails(this.contexts);
     this.bibleChunks = new BibleChunks(this.contexts);
-    this.bibleVerses = new BibleVerses(this.contexts);
     this.bibleVerseReferences = new BibleVerseReferences(this.contexts);
+    this.bibleVerses = new BibleVerses(this.contexts);
     this.environmentAiTasks = new EnvironmentAiTasks(this.contexts);
     this.environmentUserLists = new EnvironmentUserLists(this.contexts);
     this.humanMessages = new HumanMessages(this.contexts);
-    this.humanUsers = new HumanUsers(this.contexts);
+    this.humanUserRoomEnvironments = new HumanUserRoomEnvironments(
+      this.contexts,
+    );
     this.humanUserThemes = new HumanUserThemes(this.contexts);
+    this.humanUsers = new HumanUsers(this.contexts);
     this.paliCanonPassages = new PaliCanonPassages(this.contexts);
     this.paliCanonReferences = new PaliCanonReferences(this.contexts);
+    this.plotPoints = new PlotPoints(this.contexts);
     this.sessions = new Sessions(this.contexts);
     this.spaceLists = new SpaceLists(this.contexts);
-    this.themes = new Themes(this.contexts);
     this.themeLists = new ThemeLists(this.contexts);
+    this.themes = new Themes(this.contexts);
     this.userEnvironmentPresences = new UserEnvironmentPresences(this.contexts);
+    this.userSpaceLists = new UserSpaceLists(this.contexts);
     this.users = new Users(this.contexts);
     this.worldRoomEnvironments = new WorldRoomEnvironments(this.contexts);
-
-    this.plotPoints = new PlotPoints(
-      this.contexts,
-      this.bibleChunks,
-      this.bibleVerses,
-    );
   }
 
   async clear() {
@@ -126,7 +129,7 @@ export class DBService {
   async seed() {
     await this.clear();
 
-    // Environments
+    // World Room Environments
     const [universe, campfire] = await Promise.all([
       this.worldRoomEnvironments.create({
         id: "UNIVERSE",
@@ -175,7 +178,7 @@ export class DBService {
     ]);
 
     // Themes
-    const [dark, light] = await Promise.all([
+    await Promise.all([
       this.themes.createDefault(DEFAULT_THEMES.dark),
       this.themes.createDefault(DEFAULT_THEMES.light),
     ]);
@@ -184,6 +187,40 @@ export class DBService {
     const [jake] = await Promise.all([
       this.humanUsers.create({
         tag: "jake",
+      }),
+    ]);
+
+    // Human User Room Environments
+    await Promise.all([
+      this.humanUserRoomEnvironments.create({
+        userId: jake.data.userId,
+        order: 1,
+        slug: "home",
+      }),
+      this.humanUserRoomEnvironments.create({
+        userId: jake.data.userId,
+        order: 2,
+        slug: "street-photography",
+      }),
+      this.humanUserRoomEnvironments.create({
+        userId: jake.data.userId,
+        order: 3,
+        slug: "food",
+      }),
+      this.humanUserRoomEnvironments.create({
+        userId: jake.data.userId,
+        order: 4,
+        slug: "fitness",
+      }),
+      this.humanUserRoomEnvironments.create({
+        userId: jake.data.userId,
+        order: 5,
+        slug: "chiang-mai",
+      }),
+      this.humanUserRoomEnvironments.create({
+        userId: jake.data.userId,
+        order: 6,
+        slug: "music",
       }),
     ]);
 
@@ -255,9 +292,29 @@ export class DBService {
     //   userId: niko.userId,
     // });
 
+    // await this.bibleVerseReferences.create({
+    //   bibleVerseId: 28054,
+    //   bibleChunkId: 28054,
+    //   environmentId: universe.environmentId,
+    //   userId: niko.userId,
+    // });
+
+    // await this.bibleVerseReferences.create({
+    //   bibleVerseId: 30171,
+    //   bibleChunkId: 30171,
+    //   environmentId: universe.environmentId,
+    //   userId: niko.userId,
+    // });
+
     // await this.paliCanonReferences.create({
     //   environmentId: universe.environmentId,
     //   paliCanonChunkId: 68969,
+    //   userId: jake.data.userId,
+    // });
+
+    // await this.paliCanonReferences.create({
+    //   environmentId: universe.environmentId,
+    //   paliCanonChunkId: 81747,
     //   userId: jake.data.userId,
     // });
   }

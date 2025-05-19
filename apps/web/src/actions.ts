@@ -32,7 +32,6 @@ export const nextTheme = async ({
   id,
   environmentId,
 }: ShiftDirectionHumanUserThemeDto) => {
-  console.log(id, environmentId);
   await api.humanUserThemes.nextHumanUserTheme(id, { environmentId });
 };
 

@@ -27,6 +27,11 @@
   color: var(--green);
 }
 
+.active-channel,
+.active-channel .user-icon {
+  color: var(--peach);
+}
+
 .tag {
   margin-bottom: 8px;
 }

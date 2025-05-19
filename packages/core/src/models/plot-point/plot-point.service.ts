@@ -1,62 +1,28 @@
 import { asc, desc, eq, and, inArray, not } from "drizzle-orm";
 import { DBServiceModule } from "../../db/db-service-module";
+import { environments, plotPoints, users } from "../../db/app.schema";
 import {
-  aiMessages,
-  aiUsers,
-  bibleVerseReferences,
-  environments,
-  humanMessages,
-  humanUsers,
-  humanUserThemes,
-  messages,
-  paliCanonReferences,
-  plotPointBibleVerseReferences,
-  plotPointCreatedThemes,
-  plotPointEnvironmentPresences,
-  plotPointPaliCanonReferences,
-  plotPoints,
-  plotPointThemeLists,
-  plotPointThemeSwitches,
-  themeLists,
-  themeListThemes,
-  themes,
-  userEnvironmentPresences,
-  users,
-} from "../../db/app.schema";
-import {
-  AiMessagePlotPointDto,
   AiMessagePlotPointDtoSchema,
-  BibleVerseReferencePlotPointDto,
   BibleVerseReferencePlotPointDtoSchema,
   ChainAiUser,
   ChainHumanUser,
   ChainPlotPoint,
   ChainUser,
-  EnvironmentEnteredPlotPointDto,
   EnvironmentEnteredPlotPointDtoSchema,
-  EnvironmentLeftPlotPointDto,
   EnvironmentLeftPlotPointDtoSchema,
   FilterPlotPointsDto,
-  HumanMessagePlotPointDto,
   HumanMessagePlotPointDtoSchema,
-  PaliCanonReferencePlotPointDto,
   PaliCanonReferencePlotPointDtoSchema,
   PlotPointDto,
-  ThemeCreatedPlotPointDto,
-  ThemesListedPlotPointDto,
-  UserThemeSwitchedPlotPointDto,
+  ThemeCreatedPlotPointDtoSchema,
+  ThemesListedPlotPointDtoSchema,
+  UserThemeSwitchedPlotPointDtoSchema,
 } from "./plot-point.dto";
-import { HumanMessageDtoSchema } from "../human-message/human-message.dto";
-import { AiMessageDtoSchema } from "../ai-message/ai-message.dto";
-import Users from "../user/user.service";
-import HumanUsers from "../human-user/human-user.service";
 import { DBContexts } from "../../db/db.types";
-import BibleChunks from "../bible-chunk/bible-chunk.service";
-import BibleVerses from "../bible-verse/bible-verse.service";
 import { HumanUserDto } from "../human-user/human-user.types";
 import { UserDto } from "../user/user.types";
 import { AiUserDto } from "../ai-user/ai-user.dto";
-import { paliCanonChunks } from "../../db/library.schema";
+import { PlotPointResolver } from "./plot-point-resolver";
 
 const chainHumanUser = (user: HumanUserDto): ChainHumanUser => {
   const tag =
@@ -82,11 +48,7 @@ const chainUser = (user: UserDto): ChainUser => {
 };
 
 export default class PlotPoints extends DBServiceModule {
-  constructor(
-    context: DBContexts,
-    private bibleChunks: BibleChunks,
-    private bibleVerses: BibleVerses,
-  ) {
+  constructor(context: DBContexts) {
     super(context);
   }
 
@@ -100,80 +62,11 @@ export default class PlotPoints extends DBServiceModule {
     const query = this.app.drizzle
       .select({
         plotPoint: plotPoints,
-        message: messages,
-        humanMessage: humanMessages,
-        aiMessage: aiMessages,
-        user: users,
-        humanUser: humanUsers,
-        aiUser: aiUsers,
         environment: environments,
-        plotPointEnvironmentPresence: plotPointEnvironmentPresences,
-        plotPointBibleVerseReference: plotPointBibleVerseReferences,
-        plotPointPaliCanonReference: plotPointPaliCanonReferences,
-        plotPointThemeSwitch: plotPointThemeSwitches,
-        plotPointCreatedTheme: plotPointPaliCanonReferences,
-        plotPointThemeList: plotPointThemeLists,
-        userEnvironmentPresence: userEnvironmentPresences,
-        bibleVerseReference: bibleVerseReferences,
-        paliCanonReference: paliCanonReferences,
-        theme: themes,
-        themeList: themeLists,
       })
       .from(plotPoints)
-      .innerJoin(users, eq(plotPoints.userId, users.id))
       .innerJoin(environments, eq(plotPoints.environmentId, environments.id))
-      .leftJoin(messages, eq(messages.plotPointId, plotPoints.id))
-      .leftJoin(humanMessages, eq(messages.id, humanMessages.messageId))
-      .leftJoin(aiMessages, eq(messages.id, aiMessages.messageId))
-      .leftJoin(humanUsers, eq(users.id, humanUsers.userId))
-      .leftJoin(aiUsers, eq(users.id, aiUsers.userId))
-      .leftJoin(
-        plotPointEnvironmentPresences,
-        eq(plotPoints.id, plotPointEnvironmentPresences.plotPointId),
-      )
-      .leftJoin(
-        userEnvironmentPresences,
-        eq(
-          plotPointEnvironmentPresences.userEnvironmentPresenceId,
-          userEnvironmentPresences.id,
-        ),
-      )
-      .leftJoin(
-        plotPointBibleVerseReferences,
-        eq(plotPoints.id, plotPointBibleVerseReferences.plotPointId),
-      )
-      .leftJoin(
-        bibleVerseReferences,
-        eq(
-          plotPointBibleVerseReferences.bibleVerseReferenceId,
-          bibleVerseReferences.id,
-        ),
-      )
-      .leftJoin(
-        plotPointPaliCanonReferences,
-        eq(plotPoints.id, plotPointPaliCanonReferences.plotPointId),
-      )
-      .leftJoin(
-        paliCanonReferences,
-        eq(
-          plotPointPaliCanonReferences.paliCanonReferenceId,
-          paliCanonReferences.id,
-        ),
-      )
-      .leftJoin(
-        plotPointThemeSwitches,
-        eq(plotPoints.id, plotPointThemeSwitches.plotPointId),
-      )
-      .leftJoin(
-        plotPointCreatedThemes,
-        eq(plotPoints.id, plotPointCreatedThemes.plotPointId),
-      )
-      .leftJoin(themes, eq(plotPointCreatedThemes.themeId, themes.id))
-      .leftJoin(
-        plotPointThemeLists,
-        eq(plotPoints.id, plotPointThemeLists.plotPointId),
-      )
-      .leftJoin(themeLists, eq(plotPointThemeLists.themeListId, themeLists.id))
+      .innerJoin(users, eq(plotPoints.userId, users.id))
       .where(
         and(
           eq(plotPoints.environmentId, id),
@@ -195,231 +88,60 @@ export default class PlotPoints extends DBServiceModule {
 
     const data: PlotPointDto[] = await Promise.all(
       res.map(async (row) => {
-        if (row.plotPoint.type === "HUMAN_MESSAGE") {
-          const { humanUser, humanMessage, message } = row;
+        const { plotPoint } = row;
+        const { type } = plotPoint;
+        const { app, library } = this;
+        const contexts = { app, library };
 
-          if (!humanUser || !humanMessage || !message) {
-            throw new Error();
-          }
-
-          const res: HumanMessagePlotPointDto = {
-            type: "HUMAN_MESSAGE",
-            data: HumanMessageDtoSchema.parse({
-              ...row,
-              user: HumanUsers.discriminate(humanUser),
-            }),
-          };
-
+        if (type === "HUMAN_MESSAGE") {
+          const res = await PlotPointResolver.humanMessage(row, contexts);
           return HumanMessagePlotPointDtoSchema.parse(res);
         }
 
-        if (row.plotPoint.type === "AI_MESSAGE") {
-          const { aiUser, aiMessage, message } = row;
-
-          if (!aiUser || !aiMessage || !message) {
-            throw new Error();
-          }
-
-          const res: AiMessagePlotPointDto = {
-            type: "AI_MESSAGE",
-            data: AiMessageDtoSchema.parse(row),
-          };
-
+        if (type === "AI_MESSAGE") {
+          const res = await PlotPointResolver.aiMessage(row, contexts);
           return AiMessagePlotPointDtoSchema.parse(res);
         }
 
-        if (row.plotPoint.type === "ENVIRONMENT_ENTERED") {
-          const { userEnvironmentPresence } = row;
-
-          if (!userEnvironmentPresence) {
-            throw new Error();
-          }
-
-          const res: EnvironmentEnteredPlotPointDto = {
-            type: "ENVIRONMENT_ENTERED",
-            data: {
-              ...row,
-              userEnvironmentPresence,
-              user: Users.discriminate(row),
-            },
-          };
-
+        if (type === "ENVIRONMENT_ENTERED") {
+          const res = await PlotPointResolver.environmentEntered(row, contexts);
           return EnvironmentEnteredPlotPointDtoSchema.parse(res);
         }
 
-        if (row.plotPoint.type === "ENVIRONMENT_LEFT") {
-          const { userEnvironmentPresence } = row;
-
-          if (!userEnvironmentPresence) {
-            throw new Error();
-          }
-
-          const res: EnvironmentLeftPlotPointDto = {
-            type: "ENVIRONMENT_LEFT",
-            data: {
-              ...row,
-              userEnvironmentPresence,
-              user: Users.discriminate(row),
-            },
-          };
-
+        if (type === "ENVIRONMENT_LEFT") {
+          const res = await PlotPointResolver.environmentLeft(row, contexts);
           return EnvironmentLeftPlotPointDtoSchema.parse(res);
         }
-        if (row.plotPoint.type === "BIBLE_VERSE_REFERENCE") {
-          const { bibleVerseReference, environment, plotPoint } = row;
 
-          if (!bibleVerseReference) {
-            throw new Error();
-          }
-
-          const [bibleChunk, bibleVerse] = await Promise.all([
-            this.bibleChunks.find(bibleVerseReference.bibleChunkId),
-            this.bibleVerses.find(bibleVerseReference.bibleVerseId),
-          ]);
-
-          if (!bibleChunk || !bibleVerse) {
-            throw new Error();
-          }
-
-          const res: BibleVerseReferencePlotPointDto = {
-            type: "BIBLE_VERSE_REFERENCE",
-            data: {
-              ...bibleVerse,
-              bibleChunk,
-              environment,
-              plotPoint,
-            },
-          };
-
+        if (type === "BIBLE_VERSE_REFERENCE") {
+          const res = await PlotPointResolver.bibleVerseReference(
+            row,
+            contexts,
+          );
           return BibleVerseReferencePlotPointDtoSchema.parse(res);
         }
 
-        if (row.plotPoint.type === "PALI_CANON_REFERENCE") {
-          const { paliCanonReference, environment, plotPoint } = row;
-
-          if (!paliCanonReference) {
-            throw new Error();
-          }
-
-          const [paliCanonChunk] = await this.library.drizzle
-            .select()
-            .from(paliCanonChunks)
-            .where(eq(paliCanonChunks.id, paliCanonReference.paliCanonChunkId));
-
-          if (!paliCanonChunk) {
-            throw new Error();
-          }
-
-          const res: PaliCanonReferencePlotPointDto = {
-            type: "PALI_CANON_REFERENCE",
-            data: {
-              paliCanonChunk,
-              environment,
-              plotPoint,
-            },
-          };
-
+        if (type === "PALI_CANON_REFERENCE") {
+          const res = await PlotPointResolver.paliCanonReference(row, contexts);
           return PaliCanonReferencePlotPointDtoSchema.parse(res);
         }
 
-        if (row.plotPoint.type === "USER_THEME_SWITCHED") {
-          const {
-            plotPointThemeSwitch: plotPointThemeSwitches,
-            humanUser,
-            plotPoint,
-            environment,
-          } = row;
-
-          if (!plotPointThemeSwitches || !humanUser) {
-            throw new Error();
-          }
-
-          const [{ humanUserTheme, currentTheme }] = await this.app.drizzle
-            .select({ humanUserTheme: humanUserThemes, currentTheme: themes })
-            .from(humanUserThemes)
-            .innerJoin(themes, eq(humanUserThemes.themeId, themes.id))
-            .where(eq(humanUserThemes.humanUserId, humanUser.id));
-
-          const [[fromTheme], [toTheme]] = await Promise.all([
-            this.app.drizzle
-              .select()
-              .from(themes)
-              .where(eq(themes.id, plotPointThemeSwitches.fromThemeId)),
-            this.app.drizzle
-              .select()
-              .from(themes)
-              .where(eq(themes.id, plotPointThemeSwitches.toThemeId)),
-          ]);
-
-          const res: UserThemeSwitchedPlotPointDto = {
-            type: "USER_THEME_SWITCHED",
-            data: {
-              plotPoint,
-              environment,
-              from: fromTheme,
-              to: toTheme,
-              humanUserTheme: {
-                id: humanUserTheme.id,
-                theme: currentTheme,
-                humanUser: HumanUsers.discriminate(humanUser),
-              },
-            },
-          };
-
-          return res;
+        if (type === "USER_THEME_SWITCHED") {
+          const res = await PlotPointResolver.userThemeSwitched(row, contexts);
+          return UserThemeSwitchedPlotPointDtoSchema.parse(res);
         }
 
-        if (row.plotPoint.type === "THEMES_LISTED") {
-          const { humanUser, plotPoint, environment, themeList } = row;
-
-          if (!themeList || !humanUser) {
-            throw new Error();
-          }
-
-          const listedThemes = await this.app.drizzle
-            .select()
-            .from(themes)
-            .innerJoin(themeListThemes, eq(themes.id, themeListThemes.themeId))
-            .innerJoin(
-              themeLists,
-              eq(themeLists.id, themeListThemes.themeListId),
-            )
-            .where(eq(themeLists.id, themeList.id));
-
-          const res: ThemesListedPlotPointDto = {
-            type: "THEMES_LISTED",
-            data: {
-              environment,
-              humanUser: HumanUsers.discriminate(humanUser),
-              plotPoint,
-              themes: listedThemes.map((l) => l.themes),
-            },
-          };
-
-          return res;
+        if (type === "THEMES_LISTED") {
+          const res = await PlotPointResolver.themesListed(row, contexts);
+          return ThemesListedPlotPointDtoSchema.parse(res);
         }
 
-        if (row.plotPoint.type === "THEME_CREATED") {
-          const { plotPoint, theme, humanUser, environment } = row;
-
-          if (!theme || !humanUser) {
-            throw new Error();
-          }
-
-          const res: ThemeCreatedPlotPointDto = {
-            type: "THEME_CREATED",
-            data: {
-              plotPoint,
-              environment,
-              theme,
-              humanUser: HumanUsers.discriminate(humanUser),
-            },
-          };
-
-          return res;
+        if (type === "THEME_CREATED") {
+          const res = await PlotPointResolver.themeCreated(row, contexts);
+          return ThemeCreatedPlotPointDtoSchema.parse(res);
         }
 
-        throw new Error(`${row.plotPoint.type} not implemented`);
+        throw new Error(`${type} not implemented`);
       }),
     );
 

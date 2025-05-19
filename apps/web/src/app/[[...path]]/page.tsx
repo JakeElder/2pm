@@ -2,28 +2,12 @@ import {
   getOneWorldRoomEnvironment,
   getWorldRoomEnvironments,
 } from "@/api/world-room-environments";
-import ProseViewContainer from "@/components/client/ProseViewContainer";
-import ConversationNarrativeContainer from "@/components/server/ConversationNarrativeContainer";
-import InfoBarUserTagContainer from "@/components/server/InfoBarUserTagContainer";
-import ReferenceNarrativeContainer from "@/components/server/ReferenceNarrativeContainer";
-import SpaceListContainer from "@/components/server/SpaceListContainer";
-import EnvironmentUserListContainer from "@/components/server/EnvironmentUserListContainer";
 import { WorldRoomEnvironmentDto } from "@2pm/core";
-import {
-  InfoBar,
-  InfoBarLogo,
-  LibraryList,
-  PaneHeader,
-  UserSpaceList,
-  UserTag,
-} from "@2pm/ui/components";
-import { StandardLayout } from "@2pm/ui/layouts";
 import { redirect } from "next/navigation";
-import * as users from "../../fixtures/users";
-import EnvironmentAiTaskStateContainer from "@/components/server/EnvironmentAiTaskStateContainer";
 import { getSession } from "@/actions";
 import { createUserEnvironmentPresence } from "@/api/user-environment-presences";
 import ThemeProviderContainer from "@/components/server/ThemeProviderContainer";
+import StandardLayoutContainer from "@/components/server/StandardLayoutContainer";
 
 type Params = Promise<{ path?: string[] }>;
 type Props = { params: Params };
@@ -70,85 +54,7 @@ export default async function Home({ params }: Props) {
 
   return (
     <ThemeProviderContainer environmentId={environmentId}>
-      <StandardLayout.Root>
-        <StandardLayout.Main>
-          <StandardLayout.SiteMap>
-            <StandardLayout.Spaces>
-              <PaneHeader> Spaces</PaneHeader>
-              <SpaceListContainer activeEnvironmentId={environmentId} />
-            </StandardLayout.Spaces>
-            <StandardLayout.Library>
-              <PaneHeader> Library</PaneHeader>
-              <LibraryList.Root>
-                <LibraryList.Resource>~[the-pali-canon]</LibraryList.Resource>
-                <LibraryList.Resource>~[the-bible]</LibraryList.Resource>
-                <LibraryList.Resource>~[meditations]</LibraryList.Resource>
-                <LibraryList.Resource>~[the-art-of-war]</LibraryList.Resource>
-                <LibraryList.Resource>
-                  ~[the-us-constitution]
-                </LibraryList.Resource>
-              </LibraryList.Root>
-            </StandardLayout.Library>
-            <StandardLayout.UserSpaces>
-              <PaneHeader>󱕭 User Spaces</PaneHeader>
-              <UserSpaceList.Root>
-                <UserSpaceList.Tag>
-                  <UserTag {...users.AUTHENTICATED} />
-                </UserSpaceList.Tag>
-                <UserSpaceList.Channels>
-                  <UserSpaceList.Channel>#home</UserSpaceList.Channel>
-                  <UserSpaceList.Channel>
-                    #street-photography
-                  </UserSpaceList.Channel>
-                  <UserSpaceList.Channel updates>#food</UserSpaceList.Channel>
-                  <UserSpaceList.Channel>#bike-vids</UserSpaceList.Channel>
-                  <UserSpaceList.Channel>#fitness</UserSpaceList.Channel>
-                  <UserSpaceList.Channel>#chiang-mai</UserSpaceList.Channel>
-                  <UserSpaceList.Channel>#music</UserSpaceList.Channel>
-                </UserSpaceList.Channels>
-              </UserSpaceList.Root>
-              <UserSpaceList.Root>
-                <UserSpaceList.Tag>
-                  <UserTag {...users.ANONYMOUS} showHash />
-                </UserSpaceList.Tag>
-                <UserSpaceList.Channels>
-                  <UserSpaceList.Channel disabled>#home</UserSpaceList.Channel>
-                </UserSpaceList.Channels>
-              </UserSpaceList.Root>
-            </StandardLayout.UserSpaces>
-          </StandardLayout.SiteMap>
-          <ReferenceNarrativeContainer environmentId={environmentId} />
-          <StandardLayout.Conversation>
-            <ConversationNarrativeContainer environmentId={environmentId} />
-            <StandardLayout.InputBar>
-              <ProseViewContainer environmentId={environmentId} />
-            </StandardLayout.InputBar>
-          </StandardLayout.Conversation>
-          <StandardLayout.Users>
-            <PaneHeader>
-              <span style={{ fontSize: 10, marginRight: 10 }}></span> Users
-            </PaneHeader>
-            <EnvironmentUserListContainer environmentId={environmentId} />
-          </StandardLayout.Users>
-        </StandardLayout.Main>
-        <StandardLayout.StatusBar />
-        <StandardLayout.InfoBar>
-          <InfoBar.Root>
-            <InfoBar.LogoAndUser>
-              <InfoBar.Logo>
-                <InfoBarLogo />
-              </InfoBar.Logo>
-              <InfoBar.Separator />
-              <InfoBar.User>
-                <InfoBarUserTagContainer />
-              </InfoBar.User>
-            </InfoBar.LogoAndUser>
-            <InfoBar.AiState>
-              <EnvironmentAiTaskStateContainer environmentId={environmentId} />
-            </InfoBar.AiState>
-          </InfoBar.Root>
-        </StandardLayout.InfoBar>
-      </StandardLayout.Root>
+      <StandardLayoutContainer environmentId={environmentId} />
     </ThemeProviderContainer>
   );
 }
