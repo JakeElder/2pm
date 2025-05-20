@@ -27,6 +27,7 @@ const UserSpaceListViewContainer = ({ activeEnvironmentId, user }: Props) => {
             <UserSpaceList.Channel
               key={space.id}
               active={space.environmentId === activeEnvironmentId}
+              updates={space.slug === "food"}
             >
               <Link key={space.id} href={`/@${tag}/${space.slug}`}>
                 #{space.slug}

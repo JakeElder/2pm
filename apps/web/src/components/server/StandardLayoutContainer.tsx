@@ -33,9 +33,13 @@ const StandardLayoutContainer = async ({ environmentId }: Props) => {
             <LibraryList.Root>
               <LibraryList.Resource>~[the-pali-canon]</LibraryList.Resource>
               <LibraryList.Resource>~[the-bible]</LibraryList.Resource>
-              <LibraryList.Resource>~[meditations]</LibraryList.Resource>
-              <LibraryList.Resource>~[the-art-of-war]</LibraryList.Resource>
-              <LibraryList.Resource>
+              <LibraryList.Resource disabled>
+                ~[meditations]
+              </LibraryList.Resource>
+              <LibraryList.Resource disabled>
+                ~[the-art-of-war]
+              </LibraryList.Resource>
+              <LibraryList.Resource disabled>
                 ~[the-us-constitution]
               </LibraryList.Resource>
             </LibraryList.Root>

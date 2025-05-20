@@ -1,5 +1,6 @@
 import React from "react";
 import css from "./LibraryList.module.css";
+import classNames from "classnames";
 
 /*
  * Root
@@ -19,8 +20,18 @@ export const Root = ({ children }: RootProps) => {
 
 type ResourceProps = {
   children: React.ReactNode;
+  disabled?: boolean;
 };
 
-export const Resource = ({ children }: ResourceProps) => {
-  return <li className={css["resource"]}>{children}</li>;
+export const Resource = ({ children, disabled }: ResourceProps) => {
+  return (
+    <li
+      className={classNames({
+        [css["resource"]]: true,
+        [css["disabled"]]: disabled,
+      })}
+    >
+      {children}
+    </li>
+  );
 };
