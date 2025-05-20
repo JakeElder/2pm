@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import * as StandardLayout from "./StandardLayout";
-import { EmailSent, BibleVerseReference, Message } from "../../PlotPoints";
+import { BibleVerseReference, Message, HumanPost } from "../../PlotPoints";
 import {
   PaneHeader,
   SpaceList,
@@ -12,6 +12,7 @@ import {
   UserTag,
   LibraryList,
   UserSpaceList,
+  ImageGrid,
 } from "../../Components";
 import * as users from "../../fixtures/users";
 import * as prose from "../../fixtures/prose";
@@ -73,7 +74,28 @@ export const Default: Story = {
             </StandardLayout.UserSpaces>
           </StandardLayout.SiteMap>
           <StandardLayout.ReferenceNarrative>
-            <EmailSent email="jake@2pm.io" reference={2} />
+            <HumanPost.Root>
+              <HumanPost.Header>
+                <HumanPost.Heading>
+                  Chiang Mai Food Festival Jan 2025
+                </HumanPost.Heading>
+                <HumanPost.Text>
+                  <p>A few snaps from Chiang Mai food festival</p>
+                  <p>กินข้าวหรือยังครับ</p>
+                </HumanPost.Text>
+              </HumanPost.Header>
+              <HumanPost.Body>
+                <HumanPost.Images>
+                  <ImageGrid />
+                </HumanPost.Images>
+              </HumanPost.Body>
+              <HumanPost.Footer>
+                <HumanPost.Tag>
+                  <UserTag {...users.AUTHENTICATED} />
+                </HumanPost.Tag>
+                <HumanPost.Date date={new Date(2025, 4, 20, 14, 0, 0)} />
+              </HumanPost.Footer>
+            </HumanPost.Root>
             <BibleVerseReference verse="Job 11:18">
               Because thou shalt forget thy misery, and remember it as waters
               that pass away: And thine age shall be clearer than the noonday;

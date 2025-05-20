@@ -1,0 +1,56 @@
+.header {
+  padding: 24px;
+}
+
+.body {
+  padding: 10px 4px;
+}
+
+.header,
+.footer {
+  background: rgb(from var(--blue) r g b / 10%);
+  border-radius: 2px;
+}
+
+.heading {
+  font-weight: 400;
+  margin-bottom: 16px;
+}
+
+.text {
+  padding: 2px 28px 2px 2ch;
+  position: relative;
+  border-left: 1px solid var(--overlay0);
+  font-size: 11px;
+}
+
+.text p:not(:last-child) {
+  margin-bottom: 8px;
+}
+
+.icon {
+  margin-right: 2ch;
+}
+
+.tag {
+  margin-right: 1ch;
+}
+
+.footer {
+  padding: 18px 24px;
+  display: flex;
+  font-size: 11px;
+}
+
+.date {
+  display: flex;
+}
+
+.date-prefix {
+  margin-right: 1ch;
+}
+
+.formatted-date {
+  font-style: italic;
+  color: var(--yellow);
+}

@@ -4,6 +4,7 @@ export * as ThemeCreated from "./ThemeCreated";
 export * as ThemeUpdated from "./ThemeUpdated";
 export * as ThemesListed from "./ThemesListed";
 export * as UserThemeSwitched from "./UserThemeSwitched";
+export * as HumanPost from "./HumanPost";
 
 export { default as BibleVerseReference } from "./BibleVerseReference";
 export { default as PaliCanonReference } from "./PaliCanonReference";

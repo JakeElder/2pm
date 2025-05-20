@@ -1,0 +1,26 @@
+.root {
+  --gap: 10px;
+  aspect-ratio: 2 / 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--gap);
+  width: 100%;
+}
+
+.cols {
+  display: grid;
+  gap: var(--gap);
+  grid-template-columns: 1fr 1fr;
+}
+
+.rows {
+  display: grid;
+  gap: var(--gap);
+  grid-template-rows: 1fr 1fr;
+}
+
+.item {
+  background: rgb(from var(--blue) r g b / 10%);
+  border-radius: 2px;
+  background-size: cover;
+}
