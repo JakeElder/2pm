@@ -2,6 +2,7 @@
 
 import React from "react";
 import css from "./StandardLayout.module.css";
+import { useSpring, animated } from "@react-spring/web";
 
 /*
  * Root
@@ -29,6 +30,33 @@ type MainProps = {
 
 export const Main = ({ children }: MainProps) => {
   return <div className={css["main"]}>{children}</div>;
+};
+
+/*
+ * SiteMapContainer
+ */
+
+type SiteMapContainerProps = {
+  children: React.ReactNode;
+  open: boolean;
+};
+
+export const SiteMapContainer = ({ children, open }: SiteMapContainerProps) => {
+  const spring = useSpring({
+    flexBasis: open ? 220 : 0,
+    config: {
+      mass: 0.5,
+      tension: 160,
+      friction: 20,
+    },
+  });
+
+  return (
+    <animated.div className={css["site-map-container"]} style={spring}>
+      <div className={css["site-map-border"]} />
+      {children}
+    </animated.div>
+  );
 };
 
 /*
@@ -80,6 +108,18 @@ export const UserSpaces = ({ children }: UserSpaces) => {
 };
 
 /*
+ * Narratives
+ */
+
+type NarrativesProps = {
+  children: React.ReactNode;
+};
+
+export const Narratives = ({ children }: NarrativesProps) => {
+  return <div className={css["narratives"]}>{children}</div>;
+};
+
+/*
  * ReferenceNarrative
  */
 
@@ -101,6 +141,28 @@ type PlotPointProps = {
 
 export const PlotPoint = ({ children }: PlotPointProps) => {
   return <div className={css["plot-point"]}>{children}</div>;
+};
+
+/*
+ * Reference
+ */
+
+type ReferenceProps = {
+  children: React.ReactNode;
+};
+
+export const Reference = ({ children }: ReferenceProps) => {
+  return <div className={css["reference"]}>{children}</div>;
+};
+
+/*
+ * Divider
+ */
+
+type DividerProps = {};
+
+export const Divider = ({}: DividerProps) => {
+  return <div className={css["divider"]} />;
 };
 
 /*
@@ -127,6 +189,33 @@ export const ConversationNarrative = ({
   children,
 }: ConversationNarrativeProps) => {
   return <div className={css["conversation-narrative"]}>{children}</div>;
+};
+
+/*
+ * UsersContainer
+ */
+
+type UsersContainerProps = {
+  children: React.ReactNode;
+  open: boolean;
+};
+
+export const UsersContainer = ({ children, open }: UsersContainerProps) => {
+  const spring = useSpring({
+    flexBasis: open ? 220 : 0,
+    config: {
+      mass: 0.5,
+      tension: 160,
+      friction: 20,
+    },
+  });
+
+  return (
+    <animated.div className={css["users-container"]} style={spring}>
+      <div className={css["users-border"]} />
+      {children}
+    </animated.div>
+  );
 };
 
 /*

@@ -15,16 +15,54 @@
   min-height: 0;
 }
 
-.site-map,
-.users {
+.narratives {
+  flex: 1;
+  display: flex;
+}
+
+.site-map-container,
+.users-container {
   flex: 0;
   flex-basis: 220px;
   flex-grow: 0;
   overflow-x: hidden;
 }
 
+.site-map-container {
+  position: relative;
+  padding-right: 1px;
+}
+
+.users-container {
+  position: relative;
+  padding-left: 1px;
+}
+
+.site-map-border {
+  position: absolute;
+  height: 100%;
+  right: 1px;
+  width: 1px;
+  background-color: var(--separator);
+}
+
+.users-border {
+  position: absolute;
+  height: 100%;
+  left: 1px;
+  width: 1px;
+  background-color: var(--separator);
+}
+
+.site-map {
+  box-sizing: border-box;
+  min-width: 220px;
+  min-height: 100%;
+}
+
 .users {
-  border-left: 1px solid var(--separator);
+  min-width: 220px;
+  min-height: 100%;
 }
 
 .spaces,
@@ -43,23 +81,35 @@
   color: var(--overlay2);
 }
 
-.reference-narrative {
-  flex: 4;
-}
-
-.conversation {
-  flex: 5;
-}
-
 .status-bar {
   height: 18px;
   background: var(--separator);
   flex-shrink: 0;
 }
 
-.site-map,
 .reference-narrative {
-  border-right: 1px solid var(--separator);
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.divider {
+  height: 100%;
+  width: 1px;
+  background: var(--separator);
+}
+
+.reference,
+.conversation {
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+.reference {
+  flex: 4;
+}
+
+.conversation {
+  flex: 5;
 }
 
 .reference-narrative,
@@ -75,7 +125,8 @@
   gap: 10px;
 }
 
-.conversation {
+.conversation,
+.reference {
   display: flex;
   flex-direction: column;
 }

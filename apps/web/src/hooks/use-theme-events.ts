@@ -17,7 +17,6 @@ export const useThemeEvents = ({ humanUserId, themeId, onUpdated }: Props) => {
     themesSocket.on("connect", join).on("updated", onUpdated);
 
     if (themesSocket.connected) {
-      console.log("joining");
       join();
     }
 
