@@ -175,6 +175,10 @@ const PlotPointViewContainer = ({ plotPoint, session }: Props) => {
     );
   }
 
+  if (type === "HUMAN_USER_CONFIG_UPDATED") {
+    return <pre>{JSON.stringify(data, null, 2)}</pre>;
+  }
+
   throw new Error();
 };
 

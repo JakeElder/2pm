@@ -32,6 +32,7 @@ export const worldRoomCodeEnum = pgEnum("world_room_code", WORLD_ROOM_CODES);
 export const aiUserCodeEnum = pgEnum("ai_user_code", AI_USER_CODES);
 export const aiMessageStateEnum = pgEnum("ai_message_state", AI_MESSAGE_STATES);
 export const themeKeyEnum = pgEnum("theme_key", THEME_KEYS);
+export const sidebarStateEnum = pgEnum("sidebar_state", ["OPEN", "CLOSED"]);
 export const environmentTypeEnum = pgEnum(
   "environment_type",
   ENVIRONMENT_TYPE_CODES,
@@ -65,6 +66,23 @@ export const aiUsers = pgTable("ai_users", {
     .notNull()
     .references(() => users.id),
   bio: text("bio").notNull(),
+});
+
+/**
+ * Config
+ */
+
+export const humanUserConfigs = pgTable("human_user_configs", {
+  id: serial("id").primaryKey(),
+  humanUserId: uuid("human_user_id")
+    .notNull()
+    .references(() => humanUsers.id),
+  siteMapSidebarState: sidebarStateEnum("site_map_sidebar_state")
+    .notNull()
+    .default("OPEN"),
+  usersSidebarState: sidebarStateEnum("users_sidebar_state")
+    .notNull()
+    .default("OPEN"),
 });
 
 /**

@@ -6,6 +6,7 @@ import {
   CreateHumanMessageDto,
   FilterAiUsersDto,
   ShiftDirectionHumanUserThemeDto,
+  UpdateHumanUserConfigDto,
 } from "@2pm/core";
 import { createHumanMessage } from "@/api/human-messages";
 
@@ -26,6 +27,13 @@ export const submitMessage = async ({
   const res = await createHumanMessage(data);
 
   return res.data;
+};
+
+export const updateHumanUserConfig = async ({
+  humanUserId,
+  ...rest
+}: UpdateHumanUserConfigDto) => {
+  await api.humanUsers.updateHumanUserConfig(humanUserId, rest);
 };
 
 export const nextTheme = async ({

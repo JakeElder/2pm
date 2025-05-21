@@ -4,6 +4,7 @@ import {
   CreateThemeDtoSchema,
   HumanMessageDto,
   ThemeDtoSchema,
+  UpdateHumanUserConfigDtoSchema,
   UpdateThemeDtoSchema,
 } from '@2pm/core';
 import { Injectable } from '@nestjs/common';
@@ -72,6 +73,17 @@ const UPDATE_THEME = {
   schema: UpdateThemeDtoSchema,
 };
 
+const UPDATE_USER_CONFIG = {
+  name: 'UPDATE_USER_CONFIG',
+  description: txt(<>Updates the users config</>),
+  schema: UpdateHumanUserConfigDtoSchema.omit({
+    humanUserId: true,
+    id: true,
+    environmentId: true,
+    userId: true,
+  }),
+};
+
 const LIST_THEMES = {
   name: 'LIST_THEMES',
   description: txt(<>Lists the themes for the user</>),
@@ -86,7 +98,8 @@ export class TinyService extends BaseCharacterService {
       can do things like change the users theme. You make answer general
       questions and partake in conversations, but do not offer domain specific
       advice, instead suggesting the user consult another source. You don't have
-      to start every sentence with "Got it!"
+      to start every sentence with "Got it!". You may occasionally interject
+      with observations about the current environment
     </>,
   );
 
@@ -96,13 +109,16 @@ export class TinyService extends BaseCharacterService {
       trigger.user.data.id,
     );
 
-    if (!humanUserTheme) {
+    const config = await this.db.humanUserConfigs.find(trigger.user.data.id);
+
+    if (!humanUserTheme || !config) {
       throw new Error();
     }
 
     return {
       availableThemes: themes,
       activeThemeId: humanUserTheme.theme.id,
+      userConfig: config,
     };
   }
 
@@ -129,7 +145,13 @@ export class TinyService extends BaseCharacterService {
     });
 
     const res = await this.qwen.invoke(messages, {
-      tools: [SWITCH_THEME, CREATE_THEME, LIST_THEMES, UPDATE_THEME],
+      tools: [
+        SWITCH_THEME,
+        CREATE_THEME,
+        LIST_THEMES,
+        UPDATE_THEME,
+        UPDATE_USER_CONFIG,
+      ],
       tool_choice: 'any',
       response_format: null as any,
     });
@@ -162,6 +184,22 @@ export class TinyService extends BaseCharacterService {
       yield { type: 'PLOT_POINT_CREATED', data: dto };
 
       await new Promise((resolve) => setTimeout(resolve, 500));
+    }
+
+    if (call.name === 'UPDATE_USER_CONFIG') {
+      const args = UpdateHumanUserConfigDtoSchema.parse({
+        ...call.args,
+        environmentId: trigger.environment.id,
+        userId: trigger.user.data.userId,
+        humanUserId: trigger.user.data.id,
+      });
+
+      const dto = await this.db.humanUserConfigs.update(args);
+
+      yield {
+        type: 'PLOT_POINT_CREATED',
+        data: dto,
+      };
     }
 
     if (call.name === 'LIST_THEMES') {

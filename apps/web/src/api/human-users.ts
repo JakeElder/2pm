@@ -1,3 +1,8 @@
 import api from ".";
 
-export const { getHumanUser, getHumanUserTheme } = api.humanUsers;
+export const {
+  getHumanUser,
+  getHumanUserTheme,
+  getHumanUserConfig,
+  updateHumanUserConfig,
+} = api.humanUsers;

@@ -1,6 +1,11 @@
 import { eq } from "drizzle-orm";
 import { DBServiceModule } from "../../db/db-service-module";
-import { users, humanUsers, humanUserThemes } from "../../db/app.schema";
+import {
+  users,
+  humanUsers,
+  humanUserThemes,
+  humanUserConfigs,
+} from "../../db/app.schema";
 import { CreateHumanUserDto } from "./human-user.dto";
 import { AnonymousUserDto, AuthenticatedUserDto } from "../user/user.dto";
 import { shorten } from "../../utils";
@@ -28,6 +33,11 @@ export default class HumanUsers extends DBServiceModule {
           humanUserId: humanUser.id,
           themeId: DEFAULT_THEME_ID,
         })
+        .returning();
+
+      await tx
+        .insert(humanUserConfigs)
+        .values({ humanUserId: humanUser.id })
         .returning();
 
       return HumanUsers.discriminate(humanUser);

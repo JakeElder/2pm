@@ -8,6 +8,7 @@ export * from "./environment-ai-task";
 export * from "./environment-user-list";
 export * from "./human-message";
 export * from "./human-user";
+export * from "./human-user-config";
 export * from "./human-user-room-environment";
 export * from "./human-user-theme";
 export * from "./pali-canon-passage";

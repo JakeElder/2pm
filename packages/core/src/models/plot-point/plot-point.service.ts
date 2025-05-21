@@ -13,6 +13,7 @@ import {
   FilterPlotPointsDto,
   HumanMessagePlotPointDtoSchema,
   HumanPostPlotPointDtoSchema,
+  HumanUserConfigUpdatedPlotPointDtoSchema,
   PaliCanonReferencePlotPointDtoSchema,
   PlotPointDto,
   ThemeCreatedPlotPointDtoSchema,
@@ -153,6 +154,11 @@ export default class PlotPoints extends DBServiceModule {
           return HumanPostPlotPointDtoSchema.parse(res);
         }
 
+        if (type === "HUMAN_USER_CONFIG_UPDATED") {
+          const res = await PlotPointResolver.humanUserConfig(row, contexts);
+          return HumanUserConfigUpdatedPlotPointDtoSchema.parse(res);
+        }
+
         throw new Error(`${type} not implemented`);
       }),
     );
@@ -264,6 +270,17 @@ export default class PlotPoints extends DBServiceModule {
 
     if (type === "HUMAN_POST") {
       return { type, data };
+    }
+
+    if (type === "HUMAN_USER_CONFIG_UPDATED") {
+      return {
+        type,
+        data: {
+          date: data.plotPoint.createdAt,
+          user: chainHumanUser(data.humanUser),
+          humanUserConfig: data.humanUserConfig,
+        },
+      };
     }
 
     throw new Error(`${type} not implemented`);

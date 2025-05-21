@@ -15,6 +15,7 @@ import { BibleVersesModule } from './bible-verses/bible-verses.module';
 import { EnvironmentAiTasksModule } from './environment-ai-tasks/environment-ai-tasks.module';
 import { EnvironmentUserListsModule } from './environment-user-lists/environment-user-lists.module';
 import { HumanMessagesModule } from './human-messages/human-messages.module';
+import { HumanUserConfigsModule } from './human-user-configs/human-user-configs.module';
 import { HumanUserRoomEnvironmentsModule } from './human-user-room-environments/human-user-room-environments.module';
 import { HumanUserThemesModule } from './human-user-themes/human-user-themes.module';
 import { HumanUsersModule } from './human-users/human-users.module';
@@ -53,6 +54,7 @@ import { WorldRoomEnvironmentsModule } from './world-room-environments/world-roo
     EnvironmentAiTasksModule,
     EnvironmentUserListsModule,
     HumanMessagesModule,
+    HumanUserConfigsModule,
     HumanUserRoomEnvironmentsModule,
     HumanUserThemesModule,
     HumanUsersModule,

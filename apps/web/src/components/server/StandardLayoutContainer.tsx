@@ -14,8 +14,8 @@ import {
 import { Environment } from "@2pm/core";
 import NarrativeContainer from "./NarrativeContainer";
 import { ComponentProps } from "react";
-import SiteMapContainerViewContainer from "@/components/client/SiteMapContainerViewContainer";
-import UsersContainerViewContainer from "@/components/client/UsersContainerViewContainer";
+import UsersContainerContainer from "./UsersContainerContainer";
+import SiteMapContainerContainer from "./SiteMapContainerContainer";
 
 type NarrativeProps = Omit<
   ComponentProps<typeof NarrativeContainer>,
@@ -36,7 +36,7 @@ const StandardLayoutContainer = async ({
   return (
     <StandardLayout.Root>
       <StandardLayout.Main>
-        <SiteMapContainerViewContainer>
+        <SiteMapContainerContainer environmentId={environmentId}>
           <StandardLayout.SiteMap>
             <StandardLayout.Spaces>
               <PaneHeader> Spaces</PaneHeader>
@@ -63,7 +63,7 @@ const StandardLayoutContainer = async ({
               <UserSpaceListContainer activeEnvironmentId={environmentId} />
             </StandardLayout.UserSpaces>
           </StandardLayout.SiteMap>
-        </SiteMapContainerViewContainer>
+        </SiteMapContainerContainer>
         <StandardLayout.Narratives>
           <StandardLayout.Reference>
             <StandardLayout.ReferenceNarrative>
@@ -86,14 +86,14 @@ const StandardLayoutContainer = async ({
             </StandardLayout.InputBar>
           </StandardLayout.Conversation>
         </StandardLayout.Narratives>
-        <UsersContainerViewContainer>
+        <UsersContainerContainer environmentId={environmentId}>
           <StandardLayout.Users>
             <PaneHeader>
               <span style={{ fontSize: 10, marginRight: 10 }}></span> Users
             </PaneHeader>
             <EnvironmentUserListContainer environmentId={environmentId} />
           </StandardLayout.Users>
-        </UsersContainerViewContainer>
+        </UsersContainerContainer>
       </StandardLayout.Main>
       <StandardLayout.StatusBar />
       <StandardLayout.InfoBar>

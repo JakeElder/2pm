@@ -11,6 +11,7 @@ import {
   EnvironmentUserLists,
   HumanMessages,
   HumanPosts,
+  HumanUserConfigs,
   HumanUserRoomEnvironments,
   HumanUserThemes,
   HumanUsers,
@@ -53,6 +54,7 @@ export class DBService {
   public environmentUserLists: EnvironmentUserLists;
   public humanMessages: HumanMessages;
   public humanPosts: HumanPosts;
+  public humanUserConfigs: HumanUserConfigs;
   public humanUserRoomEnvironments: HumanUserRoomEnvironments;
   public humanUserThemes: HumanUserThemes;
   public humanUsers: HumanUsers;
@@ -107,6 +109,7 @@ export class DBService {
     this.environmentUserLists = new EnvironmentUserLists(this.contexts);
     this.humanMessages = new HumanMessages(this.contexts);
     this.humanPosts = new HumanPosts(this.contexts);
+    this.humanUserConfigs = new HumanUserConfigs(this.contexts);
     this.humanUserRoomEnvironments = new HumanUserRoomEnvironments(
       this.contexts,
     );

@@ -4,6 +4,7 @@ import {
   aiUsers,
   bibleVerseReferences,
   humanMessages,
+  humanUserConfigs,
   humanUsers,
   humanUserThemes,
   messages,
@@ -31,6 +32,7 @@ import {
   EnvironmentLeftPlotPointDto,
   HumanMessagePlotPointDto,
   HumanPostPlotPointDto,
+  HumanUserConfigUpdatedPlotPointDto,
   PaliCanonReferencePlotPointDto,
   ThemeCreatedPlotPointDto,
   ThemesListedPlotPointDto,
@@ -443,6 +445,35 @@ export class PlotPointResolver {
               "A beautiful woman smiling emphatically, she is showing the peace sign with her fingers",
           },
         ],
+      },
+    };
+  }
+
+  static async humanUserConfig(
+    { plotPoint, environment }: PlotPointRow,
+    { app }: DBContexts,
+  ): Promise<HumanUserConfigUpdatedPlotPointDto> {
+    const [{ humanUserConfig, humanUser }] = await app.drizzle
+      .select({
+        humanUserConfig: humanUserConfigs,
+        humanUser: humanUsers,
+      })
+      .from(plotPoints)
+      .innerJoin(users, eq(users.id, plotPoints.userId))
+      .innerJoin(humanUsers, eq(humanUsers.userId, users.id))
+      .innerJoin(
+        humanUserConfigs,
+        eq(humanUserConfigs.humanUserId, humanUsers.id),
+      )
+      .where(eq(plotPoints.id, plotPoint.id));
+
+    return {
+      type: "HUMAN_USER_CONFIG_UPDATED",
+      data: {
+        plotPoint,
+        humanUserConfig,
+        environment,
+        humanUser: HumanUsers.discriminate(humanUser),
       },
     };
   }
