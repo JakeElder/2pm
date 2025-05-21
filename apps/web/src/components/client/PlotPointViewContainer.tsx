@@ -1,7 +1,7 @@
 "use client";
 
 import { PlotPointDto, SessionDto } from "@2pm/core";
-import { Prose, UserTag } from "@2pm/ui/components";
+import { ImageGrid, Prose, UserTag } from "@2pm/ui/components";
 import {
   RoomPresenceChange,
   Message,
@@ -11,6 +11,7 @@ import {
   ThemeCreated,
   ThemesListed,
   ThemeUpdated,
+  HumanPost,
 } from "@2pm/ui/plot-points";
 import AiMessageViewContainer from "./AiMessageViewContainer";
 import ThemeViewContainer from "./ThemeViewContainer";
@@ -141,6 +142,36 @@ const PlotPointViewContainer = ({ plotPoint, session }: Props) => {
         </ThemeUpdated.Tag>
         <ThemeUpdated.Action themeName={data.theme.name} />
       </ThemeUpdated.Root>
+    );
+  }
+
+  if (type === "HUMAN_POST") {
+    return (
+      <HumanPost.Root>
+        <HumanPost.Header>
+          <HumanPost.Heading>
+            Chiang Mai Food Festival Jan 2025
+          </HumanPost.Heading>
+          <HumanPost.Text>
+            <p>A few snaps from Chiang Mai food festival</p>
+            <p>กินข้าวหรือยังครับ</p>
+          </HumanPost.Text>
+        </HumanPost.Header>
+        <HumanPost.Body>
+          <HumanPost.Images>
+            <ImageGrid />
+          </HumanPost.Images>
+        </HumanPost.Body>
+        <HumanPost.Footer>
+          <HumanPost.Tag>
+            <UserTag
+              {...data.humanUser}
+              showHash={data.humanUser.type === "ANONYMOUS"}
+            />
+          </HumanPost.Tag>
+          <HumanPost.Date date={new Date(2025, 4, 20, 14, 0, 0)} />
+        </HumanPost.Footer>
+      </HumanPost.Root>
     );
   }
 

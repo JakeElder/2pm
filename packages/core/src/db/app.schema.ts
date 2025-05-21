@@ -387,11 +387,10 @@ export const userEnvironmentPresences = pgTable(
   },
   (table) => [
     uniqueIndex("user_presence_idx")
-      .on(table.userId)
+      .on(table.userId, table.environmentId)
       .where(sql`${table.expired} IS NULL`),
   ],
 );
-
 /*
  * Join: PlotPoint EnvironmentPresences
  */

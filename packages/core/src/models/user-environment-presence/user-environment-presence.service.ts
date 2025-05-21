@@ -64,7 +64,7 @@ export default class UserEnvironmentPresences extends DBServiceModule {
 
         let previous: UserEnvironmentPresenceDto["previous"] = null;
 
-        if (current) {
+        if (current && user.type !== "AI") {
           if (current.environment.id === environmentId) {
             return null;
           }

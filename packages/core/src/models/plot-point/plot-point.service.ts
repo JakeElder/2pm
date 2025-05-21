@@ -12,6 +12,7 @@ import {
   EnvironmentLeftPlotPointDtoSchema,
   FilterPlotPointsDto,
   HumanMessagePlotPointDtoSchema,
+  HumanPostPlotPointDtoSchema,
   PaliCanonReferencePlotPointDtoSchema,
   PlotPointDto,
   ThemeCreatedPlotPointDtoSchema,
@@ -147,6 +148,11 @@ export default class PlotPoints extends DBServiceModule {
           return ThemeUpdatedPlotPointDtoSchema.parse(res);
         }
 
+        if (type === "HUMAN_POST") {
+          const res = await PlotPointResolver.humanPost(row, contexts);
+          return HumanPostPlotPointDtoSchema.parse(res);
+        }
+
         throw new Error(`${type} not implemented`);
       }),
     );
@@ -254,6 +260,10 @@ export default class PlotPoints extends DBServiceModule {
           theme: data.theme,
         },
       };
+    }
+
+    if (type === "HUMAN_POST") {
+      return { type, data };
     }
 
     throw new Error(`${type} not implemented`);

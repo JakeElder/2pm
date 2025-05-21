@@ -10,6 +10,7 @@ import {
   EnvironmentAiTasks,
   EnvironmentUserLists,
   HumanMessages,
+  HumanPosts,
   HumanUserRoomEnvironments,
   HumanUserThemes,
   HumanUsers,
@@ -51,6 +52,7 @@ export class DBService {
   public environmentAiTasks: EnvironmentAiTasks;
   public environmentUserLists: EnvironmentUserLists;
   public humanMessages: HumanMessages;
+  public humanPosts: HumanPosts;
   public humanUserRoomEnvironments: HumanUserRoomEnvironments;
   public humanUserThemes: HumanUserThemes;
   public humanUsers: HumanUsers;
@@ -104,6 +106,7 @@ export class DBService {
     this.environmentAiTasks = new EnvironmentAiTasks(this.contexts);
     this.environmentUserLists = new EnvironmentUserLists(this.contexts);
     this.humanMessages = new HumanMessages(this.contexts);
+    this.humanPosts = new HumanPosts(this.contexts);
     this.humanUserRoomEnvironments = new HumanUserRoomEnvironments(
       this.contexts,
     );
@@ -191,16 +194,16 @@ export class DBService {
     ]);
 
     // Human User Room Environments
-    await Promise.all([
-      this.humanUserRoomEnvironments.create({
-        userId: jake.data.userId,
-        order: 1,
-        slug: "home",
-      }),
+    const [photography] = await Promise.all([
       this.humanUserRoomEnvironments.create({
         userId: jake.data.userId,
         order: 2,
         slug: "street-photography",
+      }),
+      this.humanUserRoomEnvironments.create({
+        userId: jake.data.userId,
+        order: 1,
+        slug: "home",
       }),
       this.humanUserRoomEnvironments.create({
         userId: jake.data.userId,
@@ -226,6 +229,7 @@ export class DBService {
 
     // Environment Presences
     await Promise.all([
+      // Universe
       this.userEnvironmentPresences.create({
         environmentId: universe.environmentId,
         userId: niko.userId,
@@ -238,17 +242,18 @@ export class DBService {
         environmentId: universe.environmentId,
         userId: tiny.userId,
       }),
+      // Photography
       this.userEnvironmentPresences.create({
-        environmentId: universe.environmentId,
-        userId: jake.data.userId,
+        environmentId: photography.environmentId,
+        userId: niko.userId,
       }),
       this.userEnvironmentPresences.create({
-        environmentId: campfire.environmentId,
-        userId: albert.userId,
+        environmentId: photography.environmentId,
+        userId: note.userId,
       }),
       this.userEnvironmentPresences.create({
-        environmentId: campfire.environmentId,
-        userId: prose.userId,
+        environmentId: photography.environmentId,
+        userId: tiny.userId,
       }),
     ]);
 
@@ -258,6 +263,11 @@ export class DBService {
       environmentId: universe.environmentId,
       content: "Welcome to the 2pm universe",
       state: "COMPLETE",
+    });
+
+    await this.humanPosts.create({
+      userId: jake.data.userId,
+      environmentId: photography.environmentId,
     });
 
     await this.humanMessages.create({

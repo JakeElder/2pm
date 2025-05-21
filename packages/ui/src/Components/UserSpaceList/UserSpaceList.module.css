@@ -46,7 +46,7 @@
 
 .new {
   margin-left: 6px;
-  color: var(--surface1);
+  color: var(--overlay0);
   position: relative;
   top: 1px;
 }

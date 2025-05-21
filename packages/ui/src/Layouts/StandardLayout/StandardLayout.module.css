@@ -23,6 +23,10 @@
   overflow-x: hidden;
 }
 
+.users {
+  border-left: 1px solid var(--separator);
+}
+
 .spaces,
 .library {
   margin-bottom: 22px;
@@ -54,8 +58,7 @@
 }
 
 .site-map,
-.reference-narrative,
-.conversation {
+.reference-narrative {
   border-right: 1px solid var(--separator);
 }
 

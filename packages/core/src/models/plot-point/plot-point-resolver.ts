@@ -30,6 +30,7 @@ import {
   EnvironmentEnteredPlotPointDto,
   EnvironmentLeftPlotPointDto,
   HumanMessagePlotPointDto,
+  HumanPostPlotPointDto,
   PaliCanonReferencePlotPointDto,
   ThemeCreatedPlotPointDto,
   ThemesListedPlotPointDto,
@@ -401,6 +402,29 @@ export class PlotPointResolver {
         environment,
         patch: themeUpdate.patch,
         theme,
+        humanUser: HumanUsers.discriminate(humanUser),
+      },
+    };
+  }
+
+  static async humanPost(
+    { plotPoint, environment }: PlotPointRow,
+    { app }: DBContexts,
+  ): Promise<HumanPostPlotPointDto> {
+    const [{ humanUser }] = await app.drizzle
+      .select({
+        humanUser: humanUsers,
+      })
+      .from(plotPoints)
+      .innerJoin(users, eq(users.id, plotPoints.userId))
+      .innerJoin(humanUsers, eq(humanUsers.userId, users.id))
+      .where(eq(plotPoints.id, plotPoint.id));
+
+    return {
+      type: "HUMAN_POST",
+      data: {
+        plotPoint,
+        environment,
         humanUser: HumanUsers.discriminate(humanUser),
       },
     };

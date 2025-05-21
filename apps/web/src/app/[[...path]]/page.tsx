@@ -54,7 +54,12 @@ export default async function Home({ params }: Props) {
 
   return (
     <ThemeProviderContainer environmentId={environmentId}>
-      <StandardLayoutContainer environmentId={environmentId} />
+      <StandardLayoutContainer
+        environmentId={environmentId}
+        conversationNarrativeProps={{ types: ["HUMAN_MESSAGE", "AI_MESSAGE"] }}
+        referenceNarrativeProps={{ filter: ["HUMAN_MESSAGE", "AI_MESSAGE"] }}
+        showUsers={true}
+      />
     </ThemeProviderContainer>
   );
 }

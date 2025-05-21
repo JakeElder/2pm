@@ -7,6 +7,7 @@ export { default as BibleVerses } from "../models/bible-verse/bible-verse.servic
 export { default as EnvironmentAiTasks } from "../models/environment-ai-task/environment-ai-task.service";
 export { default as EnvironmentUserLists } from "../models/environment-user-list/environment-user-list.service";
 export { default as HumanMessages } from "../models/human-message/human-message.service";
+export { default as HumanPosts } from "../models/human-post/human-post.service";
 export { default as HumanUserRoomEnvironments } from "../models/human-user-room-environment/human-user-room-environment.service";
 export { default as HumanUserThemes } from "../models/human-user-theme/human-user-theme.service";
 export { default as HumanUsers } from "../models/human-user/human-user.service";
