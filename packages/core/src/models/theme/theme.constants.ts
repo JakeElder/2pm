@@ -133,3 +133,46 @@ export const DEFAULT_THEMES: Record<"dark" | "light", ThemeDto> = {
     activeChannelAlias: "peach",
   },
 };
+
+// Made by Deepseek
+const cybperpunk = {
+  id: 26,
+  name: "cybperpunk",
+
+  // Base
+  base: "1a1b26",
+  mantle: "161822",
+  crust: "13141a",
+  text: "a9b1d6",
+  subtext0: "787c99",
+  subtext1: "565f89",
+  overlay0: "414868",
+  overlay1: "3b4261",
+  overlay2: "24283b",
+  surface0: "24283b",
+  surface1: "1f2335",
+  surface2: "1a1b26",
+
+  // Named
+  rosewater: "f7768e",
+  flamingo: "f5a97f",
+  pink: "bb9af7",
+  mauve: "9d7cd8",
+  red: "f7768e",
+  maroon: "e0af68",
+  peach: "ff9e64",
+  yellow: "e0af68",
+  green: "9ece6a",
+  teal: "7dcfff",
+  sky: "7aa2f7",
+  sapphire: "7aa2f7",
+  blue: "7aa2f7",
+  lavender: "bb9af7",
+
+  // Alias
+  separatorAlias: "crust",
+  aiAlias: "pink",
+  authenticatedAlias: "yellow",
+  anonymousAlias: "maroon",
+  activeChannelAlias: "peach",
+};

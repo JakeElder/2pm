@@ -11,6 +11,7 @@ type Props = {
 const ThemeProviderContainer = async ({ children, environmentId }: Props) => {
   const session = await getSession();
   const humanUserTheme = await getHumanUserTheme(session.humanUserId);
+
   return (
     <ThemeProviderViewContainer
       session={session}

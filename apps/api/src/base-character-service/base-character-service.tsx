@@ -37,7 +37,7 @@ type PreparePromptParams = PrepareReplyPromptParams | PrepareActPromptParams;
 export abstract class BaseCharacterService {
   @Inject('DB') protected readonly db: DBService;
 
-  protected deepSeek: ChatDeepSeek;
+  protected deepseek: ChatDeepSeek;
   protected qwen: ChatTogetherAI;
 
   preparePrompt({ type, data }: PreparePromptParams): BaseMessage[] {
@@ -124,7 +124,7 @@ export abstract class BaseCharacterService {
   }
 
   constructor() {
-    this.deepSeek = new ChatDeepSeek({
+    this.deepseek = new ChatDeepSeek({
       modelName: 'deepseek-chat',
       reasoningEffort: 'low',
       streaming: true,
@@ -147,7 +147,7 @@ export abstract class BaseCharacterService {
   ): AsyncGenerator<CharacterResponseEvent> {
     yield { type: 'GENERATING_RESPONSE' };
 
-    const stream = await this.deepSeek.stream(messages);
+    const stream = await this.deepseek.stream(messages);
 
     yield { type: 'RESPONDING' };
 

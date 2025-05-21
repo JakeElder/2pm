@@ -1,7 +1,6 @@
 .root {
   display: flex;
-  height: 1.3em;
-  padding: 0 2px;
+  padding: 0 6px;
 }
 
 .icon {
