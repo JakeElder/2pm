@@ -426,6 +426,23 @@ export class PlotPointResolver {
         plotPoint,
         environment,
         humanUser: HumanUsers.discriminate(humanUser),
+        heading: "Chiang Mai Food Festival Jan 2025",
+        text: "<p>A few snaps from Chiang Mai food festival</p><p>กินข้าวหรือยังครับ</p>",
+        images: [
+          { description: "A picture of a woman holding a young girls hand" },
+          {
+            description:
+              "A picture of a man looking after his young family member. There is a woman in the background",
+          },
+          {
+            description:
+              "A woman beckoning her daughter, reaching her hand out",
+          },
+          {
+            description:
+              "A beautiful woman smiling emphatically, she is showing the peace sign with her fingers",
+          },
+        ],
       },
     };
   }

@@ -39,11 +39,16 @@
 .footer {
   padding: 18px 24px;
   display: flex;
+  flex-wrap: none;
+  white-space: nowrap;
   font-size: 12px;
+  overflow: hidden;
 }
 
 .date {
   display: flex;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .date-prefix {
@@ -53,4 +58,6 @@
 .formatted-date {
   font-style: italic;
   color: var(--yellow);
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

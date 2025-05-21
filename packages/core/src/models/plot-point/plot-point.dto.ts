@@ -328,6 +328,9 @@ export const HumanPostPlotPointDtoSchema = z.object({
     }),
     environment: createSelectSchema(environments),
     humanUser: HumanUserDtoSchema,
+    heading: z.string(),
+    text: z.string(),
+    images: z.array(z.object({ description: z.string() })),
   }),
 });
 

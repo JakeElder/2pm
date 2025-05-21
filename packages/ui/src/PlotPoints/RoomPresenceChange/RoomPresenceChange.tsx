@@ -34,15 +34,16 @@ export const Icon = ({}: IconProps) => {
   const type = useRoomPresenceContext();
   return (
     <>
-      <span
-        className={classNames({
-          [css["icon"]]: true,
-          [css["reverse"]]: type === "EXIT",
-        })}
-      >
-        
+      <span className={css["icon"]}>
+        <span
+          className={classNames({
+            [css["glyph"]]: true,
+            [css["reverse"]]: type === "EXIT",
+          })}
+        >
+          
+        </span>
       </span>
-      &nbsp;
     </>
   );
 };
@@ -59,7 +60,6 @@ export const Tag = ({ children }: TagProps) => {
   return (
     <>
       <span className={css["tag"]}>{children}</span>
-      &nbsp;
     </>
   );
 };
