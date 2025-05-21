@@ -15,29 +15,6 @@ import { Environment } from "@2pm/core";
 import NarrativeContainer from "./NarrativeContainer";
 import { ComponentProps } from "react";
 
-/*
- * Users
- */
-
-type UsersProps = {
-  show: boolean;
-  environmentId: Environment["id"];
-};
-
-export const Users = ({ show, environmentId }: UsersProps) => {
-  if (!show) {
-    return;
-  }
-  return (
-    <StandardLayout.Users>
-      <PaneHeader>
-        <span style={{ fontSize: 10, marginRight: 10 }}></span> Users
-      </PaneHeader>
-      <EnvironmentUserListContainer environmentId={environmentId} />
-    </StandardLayout.Users>
-  );
-};
-
 type NarrativeProps = Omit<
   ComponentProps<typeof NarrativeContainer>,
   "environmentId"
@@ -47,13 +24,12 @@ type Props = {
   environmentId: Environment["id"];
   conversationNarrativeProps: NarrativeProps;
   referenceNarrativeProps: NarrativeProps;
-  showUsers: boolean;
 };
+
 const StandardLayoutContainer = async ({
   environmentId,
   referenceNarrativeProps,
   conversationNarrativeProps,
-  showUsers,
 }: Props) => {
   return (
     <StandardLayout.Root>
@@ -101,7 +77,12 @@ const StandardLayoutContainer = async ({
             <ProseViewContainer environmentId={environmentId} />
           </StandardLayout.InputBar>
         </StandardLayout.Conversation>
-        <Users environmentId={environmentId} show={showUsers} />
+        <StandardLayout.Users>
+          <PaneHeader>
+            <span style={{ fontSize: 10, marginRight: 10 }}></span> Users
+          </PaneHeader>
+          <EnvironmentUserListContainer environmentId={environmentId} />
+        </StandardLayout.Users>
       </StandardLayout.Main>
       <StandardLayout.StatusBar />
       <StandardLayout.InfoBar>
