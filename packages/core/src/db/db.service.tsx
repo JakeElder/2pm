@@ -32,6 +32,7 @@ import { txt } from "../utils";
 import { AppDBContext, DBContexts, LibraryDBContext } from "./db.types";
 import * as appSchema from "./app.schema";
 import { DEFAULT_THEMES } from "../models/theme/theme.constants";
+import { ADMIN_USER } from "../models";
 
 type Props = {
   appDatabaseUrl: string;
@@ -190,11 +191,7 @@ export class DBService {
     ]);
 
     // Human Users
-    const [jake] = await Promise.all([
-      this.humanUsers.create({
-        tag: "jake",
-      }),
-    ]);
+    const [jake] = await Promise.all([this.humanUsers.create(ADMIN_USER)]);
 
     // Human User Room Environments
     const [photography] = await Promise.all([

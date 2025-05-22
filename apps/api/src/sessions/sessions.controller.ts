@@ -19,6 +19,21 @@ import { zodToOpenAPI } from 'nestjs-zod';
 export class SessionsController {
   constructor(@Inject('DB') private readonly db: DBService) {}
 
+  @Get('count')
+  @ApiOperation({
+    summary: 'Get Count',
+    operationId: 'getSessionsCount',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'The number of sessions',
+    type: Number,
+  })
+  async count() {
+    const res = await this.db.sessions.count();
+    return res;
+  }
+
   @Get(':id')
   @UsePipes(ZodValidationPipe)
   @ApiOperation({

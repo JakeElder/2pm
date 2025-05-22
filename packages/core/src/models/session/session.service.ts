@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { count, eq } from "drizzle-orm";
 import { sessions, humanUsers } from "../../db/app.schema";
 import { DBServiceModule } from "../../db/db-service-module";
 import { CreateSessionDto, SessionDto } from "./session.dto";
@@ -24,6 +24,14 @@ export default class Sessions extends DBServiceModule {
       ...session,
       user: HumanUsers.discriminate(humanUser),
     };
+  }
+
+  async count(): Promise<number> {
+    const [{ count: c }] = await this.app.drizzle
+      .select({ count: count() })
+      .from(sessions);
+
+    return c;
   }
 
   async find(id: Session["id"]): Promise<SessionDto | null> {

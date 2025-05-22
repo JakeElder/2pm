@@ -90,7 +90,6 @@ export class HumanUserConfigsController {
       humanUserId,
     });
     this.events.emit('plot-points.created', dto);
-    console.log(dto);
     return dto;
   }
 
