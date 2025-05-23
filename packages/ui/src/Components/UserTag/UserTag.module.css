@@ -2,12 +2,13 @@
   overflow: hidden;
   text-overflow: ellipsis;
   color: var(--surface2);
-  line-height: 1.02em;
+  line-height: 1.1em;
 }
 
 .name {
   margin-right: 1px;
   font-weight: 100;
+  white-space: nowrap;
 }
 
 .hash-symbol {

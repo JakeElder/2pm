@@ -33,6 +33,7 @@ import {
   HumanMessagePlotPointDto,
   HumanPostPlotPointDto,
   HumanUserConfigUpdatedPlotPointDto,
+  HumanUserTagUpdatedPlotPointDto,
   PaliCanonReferencePlotPointDto,
   ThemeCreatedPlotPointDto,
   ThemesListedPlotPointDto,
@@ -472,6 +473,34 @@ export class PlotPointResolver {
       data: {
         plotPoint,
         humanUserConfig,
+        environment,
+        humanUser: HumanUsers.discriminate(humanUser),
+      },
+    };
+  }
+
+  static async humanUserTagUpdated(
+    { plotPoint, environment }: PlotPointRow,
+    { app }: DBContexts,
+  ): Promise<HumanUserTagUpdatedPlotPointDto> {
+    const [{ humanUser }] = await app.drizzle
+      .select({
+        humanUserConfig: humanUserConfigs,
+        humanUser: humanUsers,
+      })
+      .from(plotPoints)
+      .innerJoin(users, eq(users.id, plotPoints.userId))
+      .innerJoin(humanUsers, eq(humanUsers.userId, users.id))
+      .innerJoin(
+        humanUserConfigs,
+        eq(humanUserConfigs.humanUserId, humanUsers.id),
+      )
+      .where(eq(plotPoints.id, plotPoint.id));
+
+    return {
+      type: "HUMAN_USER_TAG_UPDATED",
+      data: {
+        plotPoint,
         environment,
         humanUser: HumanUsers.discriminate(humanUser),
       },

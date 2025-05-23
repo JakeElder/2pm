@@ -35,6 +35,7 @@ export default async function Home({ params }: Props) {
             "ENVIRONMENT_LEFT",
             "ENVIRONMENT_ENTERED",
             "HUMAN_USER_CONFIG_UPDATED",
+            "HUMAN_USER_TAG_UPDATED",
           ],
         }}
       />

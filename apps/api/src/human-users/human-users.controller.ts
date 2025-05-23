@@ -21,18 +21,37 @@ import {
   AuthenticatedUserDto,
   CreateHumanUserDto,
   HumanUserDtoSchema,
+  HumanUserTagUpdatedPlotPointDtoSchema,
+  UpdateHumanUserTagDto,
+  UpdateHumanUserTagDtoSchema,
   type HumanUser,
 } from '@2pm/core';
 import { DBService } from '@2pm/core/db';
 import { zodToOpenAPI } from 'nestjs-zod';
 import { ZodValidationPipe } from '@anatine/zod-nestjs';
+import { AppEventEmitter } from 'src/event-emitter';
+import { HumanUsersGateway } from './human-users.gateway';
 
 @ApiExtraModels(AnonymousUserDto)
 @ApiExtraModels(AuthenticatedUserDto)
 @ApiTags('Human Users')
 @Controller('human-users')
 export class HumanUsersController {
-  constructor(@Inject('DB') private readonly db: DBService) {}
+  constructor(
+    @Inject('E') protected readonly events: AppEventEmitter,
+    @Inject('DB') private readonly db: DBService,
+    private readonly gateway: HumanUsersGateway,
+  ) {}
+
+  async onModuleInit() {
+    this.events.on('plot-points.created', ({ type, data }) => {
+      if (type === 'HUMAN_USER_TAG_UPDATED') {
+        this.gateway.server
+          .to(`${data.humanUser.data.id}`)
+          .emit('updated', { type, data });
+      }
+    });
+  }
 
   @Get(':id')
   @ApiOperation({
@@ -54,6 +73,38 @@ export class HumanUsersController {
     if (!res) {
       throw new NotFoundException(`User ${id} not found`);
     }
+    return res;
+  }
+
+  @Post(':id/tag')
+  @ApiParam({
+    name: 'id',
+    description: 'The users id',
+    type: String,
+  })
+  @ApiOperation({
+    summary: 'Update Tag',
+    operationId: 'updateHumanUserTag',
+  })
+  @ApiBody({
+    schema: zodToOpenAPI(
+      UpdateHumanUserTagDtoSchema.omit({
+        humanUserId: true,
+      }),
+    ),
+  })
+  @ApiResponse({
+    status: 201,
+    schema: zodToOpenAPI(HumanUserTagUpdatedPlotPointDtoSchema),
+  })
+  async updateTag(
+    @Param('id') id: HumanUser['id'],
+    @Body() dto: Omit<UpdateHumanUserTagDto, 'humanUserId'>,
+  ) {
+    const res = await this.db.humanUsers.updateTag({
+      ...dto,
+      humanUserId: id,
+    });
     return res;
   }
 

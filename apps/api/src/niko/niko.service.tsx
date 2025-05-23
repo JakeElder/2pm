@@ -15,7 +15,7 @@ const PERFORM_BIBLE_VECTOR_QUERY = {
   description: txt(
     <>
       Searches a vector database of the bible, using specific terms extracted
-      from all available context
+      from all available context.
     </>,
   ),
   schema: z.object({
@@ -39,9 +39,28 @@ const PERFORM_BIBLE_VECTOR_QUERY = {
           <li>
             Summarise in a natural language paragraph, rather than keyword list
           </li>
+          <li>
+            If the user is asking about nonsense in social media, use this
+            vector query exactly: "passages in the bible that might bring
+            comfort to people who feel unwell due strange and nonsensical media
+            reports"
+          </li>
         </ul>,
       ),
     ),
+    numPassages: z
+      .number()
+      .max(3)
+      .default(1)
+      .describe(
+        txt(
+          <>
+            The number of passages to return. IE, if the user says find "a"
+            passage, this should be 1. If they ask for "any passages" etc, this
+            should be 2 or 3
+          </>,
+        ),
+      ),
   }),
 };
 
@@ -50,6 +69,7 @@ export class NikoService extends BaseCharacterService {
   private static PERSONA = txt(
     <>
       You are @niko an honourable, helpful bot, and expert in ancient scripts.
+      Do not start sentences with "Ah, (user)"
     </>,
   );
 
@@ -85,7 +105,10 @@ export class NikoService extends BaseCharacterService {
 
       yield { type: 'ACTING' };
 
-      const res = await this.db.bibleVerses.vectorQuery(call.args.query);
+      const res = await this.db.bibleVerses.vectorQuery(
+        call.args.query,
+        call.args.numPassages,
+      );
 
       for (let verse of res.results) {
         const plotPoint = await this.db.bibleVerseReferences.create({
@@ -127,6 +150,7 @@ export class NikoService extends BaseCharacterService {
       type: 'REPLY',
       data: {
         chain,
+        context: await this.getBaseContext(),
         actionChain,
         persona: NikoService.PERSONA,
       },

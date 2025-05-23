@@ -1,11 +1,11 @@
 import { getSession } from "@/actions";
-import { UserTag } from "@2pm/ui/components";
+import UserTagViewContainer from "../client/UserTagViewContainer";
 
 type Props = {};
 
 const InfoBarUserTagContainer = async ({}: Props) => {
   const session = await getSession();
-  return <UserTag {...session.user} showHash />;
+  return <UserTagViewContainer {...session.user} showHash />;
 };
 
 export default InfoBarUserTagContainer;

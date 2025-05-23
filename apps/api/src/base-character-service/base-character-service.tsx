@@ -158,6 +158,14 @@ export abstract class BaseCharacterService {
     yield { type: 'COMPLETE' };
   }
 
+  async getBaseContext() {
+    const aiUsers = await this.db.aiUsers.findAll();
+
+    return {
+      aiUsers,
+    };
+  }
+
   abstract react(
     chain: ChainPlotPoint[],
     trigger: HumanMessageDto,

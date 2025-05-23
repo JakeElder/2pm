@@ -346,6 +346,32 @@ export class HumanUserConfigUpdatedPlotPointDto extends createZodDto(
 ) {}
 
 /**
+ * Human User Tag Updated
+ */
+export const HumanUserTagUpdatedPlotPointDtoSchema = z.object({
+  type: z.literal("HUMAN_USER_TAG_UPDATED"),
+  data: z.object({
+    plotPoint: createSelectSchema(plotPoints).extend({
+      createdAt: z.coerce.date(),
+    }),
+    environment: createSelectSchema(environments),
+    humanUser: HumanUserDtoSchema,
+  }),
+});
+
+export const HumanUserTagUpdatedChainPlotPointSchema = z.object({
+  type: z.literal("HUMAN_USER_TAG_UPDATED"),
+  data: z.object({
+    date: createSelectSchema(plotPoints).shape.createdAt,
+    user: ChainHumanUserSchema,
+  }),
+});
+
+export class HumanUserTagUpdatedPlotPointDto extends createZodDto(
+  HumanUserTagUpdatedPlotPointDtoSchema,
+) {}
+
+/**
  * Human Post
  */
 
@@ -388,6 +414,7 @@ export const PlotPointDtoSchema = z.discriminatedUnion("type", [
   ThemeUpdatedPlotPointDtoSchema,
   HumanPostPlotPointDtoSchema,
   HumanUserConfigUpdatedPlotPointDtoSchema,
+  HumanUserTagUpdatedPlotPointDtoSchema,
 ]);
 
 export const ChainPlotPointSchema = z.discriminatedUnion("type", [
@@ -403,6 +430,7 @@ export const ChainPlotPointSchema = z.discriminatedUnion("type", [
   ThemeUpdatedChainPlotPointSchema,
   HumanPostChainPlotPointSchema,
   HumanUserConfigUpdatedChainPlotPointSchema,
+  HumanUserTagUpdatedChainPlotPointSchema,
 ]);
 
 export type ChainPlotPoint = z.infer<typeof ChainPlotPointSchema>;

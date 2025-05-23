@@ -3,9 +3,8 @@ export const AI_USER_CODES = [
   "NOTE",
   "WHY",
   "TINY",
-  "PROSE",
-  "ALBERT",
-  "VENUS",
+  "TAG",
+  "IRIS",
 ] as const;
 export const AI_USER_STATES = [
   "IDLE",

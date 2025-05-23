@@ -186,6 +186,7 @@ export class NoteService extends BaseCharacterService {
       type: 'REPLY',
       data: {
         chain,
+        context: await this.getBaseContext(),
         actionChain,
         persona: NoteService.PERSONA,
       },

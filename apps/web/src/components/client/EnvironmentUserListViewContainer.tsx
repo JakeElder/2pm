@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { EnvironmentUserList } from "@2pm/ui/components";
+import { EnvironmentUserList, UserTag } from "@2pm/ui/components";
 import { Environment, SessionDto, EnvironmentUserListDto } from "@2pm/core";
 import { useEnvironmentUserListEvents } from "@/hooks";
+import UserTagViewContainer from "./UserTagViewContainer";
 
 type Props = {
   environmentUserList: EnvironmentUserListDto;
@@ -27,11 +28,9 @@ const EnvironmentUserListViewContainer = ({
   return (
     <EnvironmentUserList.Root>
       {list.users.map((user) => (
-        <EnvironmentUserList.User
-          key={user.data.id}
-          {...user}
-          showHash={user.type === "ANONYMOUS"}
-        />
+        <EnvironmentUserList.User key={user.data.id}>
+          <UserTagViewContainer {...user} />
+        </EnvironmentUserList.User>
       ))}
     </EnvironmentUserList.Root>
   );

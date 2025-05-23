@@ -14,6 +14,7 @@ import {
   HumanMessagePlotPointDtoSchema,
   HumanPostPlotPointDtoSchema,
   HumanUserConfigUpdatedPlotPointDtoSchema,
+  HumanUserTagUpdatedPlotPointDtoSchema,
   PaliCanonReferencePlotPointDtoSchema,
   PlotPointDto,
   ThemeCreatedPlotPointDtoSchema,
@@ -159,6 +160,14 @@ export default class PlotPoints extends DBServiceModule {
           return HumanUserConfigUpdatedPlotPointDtoSchema.parse(res);
         }
 
+        if (type === "HUMAN_USER_TAG_UPDATED") {
+          const res = await PlotPointResolver.humanUserTagUpdated(
+            row,
+            contexts,
+          );
+          return HumanUserTagUpdatedPlotPointDtoSchema.parse(res);
+        }
+
         throw new Error(`${type} not implemented`);
       }),
     );
@@ -279,6 +288,16 @@ export default class PlotPoints extends DBServiceModule {
           date: data.plotPoint.createdAt,
           user: chainHumanUser(data.humanUser),
           humanUserConfig: data.humanUserConfig,
+        },
+      };
+    }
+
+    if (type === "HUMAN_USER_TAG_UPDATED") {
+      return {
+        type,
+        data: {
+          date: data.plotPoint.createdAt,
+          user: chainHumanUser(data.humanUser),
         },
       };
     }

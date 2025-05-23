@@ -58,7 +58,12 @@ export default async function Home({ params }: Props) {
         environmentId={environmentId}
         conversationNarrativeProps={{ types: ["HUMAN_MESSAGE", "AI_MESSAGE"] }}
         referenceNarrativeProps={{
-          filter: ["HUMAN_MESSAGE", "AI_MESSAGE", "HUMAN_USER_CONFIG_UPDATED"],
+          filter: [
+            "HUMAN_MESSAGE",
+            "AI_MESSAGE",
+            "HUMAN_USER_CONFIG_UPDATED",
+            "HUMAN_USER_TAG_UPDATED",
+          ],
         }}
       />
     </ThemeProviderContainer>

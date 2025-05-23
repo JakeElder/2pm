@@ -1,7 +1,7 @@
 "use client";
 
 import { PlotPointDto, SessionDto } from "@2pm/core";
-import { ImageGrid, Prose, UserTag } from "@2pm/ui/components";
+import { ImageGrid, Prose } from "@2pm/ui/components";
 import {
   RoomPresenceChange,
   Message,
@@ -15,6 +15,7 @@ import {
 } from "@2pm/ui/plot-points";
 import AiMessageViewContainer from "./AiMessageViewContainer";
 import ThemeViewContainer from "./ThemeViewContainer";
+import UserTagViewContainer from "./UserTagViewContainer";
 
 type Props = {
   session: SessionDto;
@@ -33,7 +34,7 @@ const PlotPointViewContainer = ({ plotPoint, session }: Props) => {
     return (
       <Message.Root>
         <Message.Header>
-          <UserTag {...user} showHash />
+          <UserTagViewContainer {...user} />
         </Message.Header>
         <Message.Body>
           <Prose editable={false} content={humanMessage.json} />
@@ -47,7 +48,7 @@ const PlotPointViewContainer = ({ plotPoint, session }: Props) => {
       <RoomPresenceChange.Root type="ENTRACE">
         <RoomPresenceChange.Icon />
         <RoomPresenceChange.Tag>
-          <UserTag {...data.user} showHash={data.user.type === "ANONYMOUS"} />
+          <UserTagViewContainer {...data.user} />
         </RoomPresenceChange.Tag>
         <RoomPresenceChange.Action />
       </RoomPresenceChange.Root>
@@ -59,7 +60,7 @@ const PlotPointViewContainer = ({ plotPoint, session }: Props) => {
       <RoomPresenceChange.Root type="EXIT">
         <RoomPresenceChange.Icon />
         <RoomPresenceChange.Tag>
-          <UserTag {...data.user} showHash={data.user.type === "ANONYMOUS"} />
+          <UserTagViewContainer {...data.user} />
         </RoomPresenceChange.Tag>
         <RoomPresenceChange.Action />
       </RoomPresenceChange.Root>
@@ -81,10 +82,7 @@ const PlotPointViewContainer = ({ plotPoint, session }: Props) => {
       <UserThemeSwitched.Root>
         <UserThemeSwitched.Icon />
         <UserThemeSwitched.Tag>
-          <UserTag
-            {...data.humanUserTheme.humanUser}
-            showHash={data.humanUserTheme.humanUser.type === "ANONYMOUS"}
-          />
+          <UserTagViewContainer {...data.humanUserTheme.humanUser} />
         </UserThemeSwitched.Tag>
         <UserThemeSwitched.Action themeName={data.to.name} />
       </UserThemeSwitched.Root>
@@ -135,10 +133,7 @@ const PlotPointViewContainer = ({ plotPoint, session }: Props) => {
       <ThemeUpdated.Root>
         <ThemeUpdated.Icon />
         <ThemeUpdated.Tag>
-          <UserTag
-            {...data.humanUser}
-            showHash={data.humanUser.type === "ANONYMOUS"}
-          />
+          <UserTagViewContainer {...data.humanUser} />
         </ThemeUpdated.Tag>
         <ThemeUpdated.Action themeName={data.theme.name} />
       </ThemeUpdated.Root>
@@ -164,10 +159,7 @@ const PlotPointViewContainer = ({ plotPoint, session }: Props) => {
         </HumanPost.Body>
         <HumanPost.Footer>
           <HumanPost.Tag>
-            <UserTag
-              {...data.humanUser}
-              showHash={data.humanUser.type === "ANONYMOUS"}
-            />
+            <UserTagViewContainer {...data.humanUser} />
           </HumanPost.Tag>
           <HumanPost.Date date={new Date(2025, 4, 20, 14, 0, 0)} />
         </HumanPost.Footer>
@@ -176,6 +168,10 @@ const PlotPointViewContainer = ({ plotPoint, session }: Props) => {
   }
 
   if (type === "HUMAN_USER_CONFIG_UPDATED") {
+    return <pre>{JSON.stringify(data, null, 2)}</pre>;
+  }
+
+  if (type === "HUMAN_USER_TAG_UPDATED") {
     return <pre>{JSON.stringify(data, null, 2)}</pre>;
   }
 

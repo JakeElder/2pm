@@ -26,6 +26,9 @@ import { NikoService } from '../niko/niko.service';
 import { TinyService } from '../tiny/tiny.service';
 import { BaseCharacterService } from '../base-character-service/base-character-service';
 import { NoteService } from '../note/note.service';
+import { TagService } from '../tag/tag.service';
+import { IrisService } from '../iris/iris.service';
+import { WhyService } from '../why/why.service';
 
 type LoadingAiTaskProcess = {
   state: 'LOADING';
@@ -71,6 +74,9 @@ export class EnvironmentAiTasksProcessor {
     private readonly niko: NikoService,
     private readonly tiny: TinyService,
     private readonly note: NoteService,
+    private readonly tag: TagService,
+    private readonly iris: IrisService,
+    private readonly why: WhyService,
   ) {}
 
   private processes = new Map<Environment['id'], AiTaskProcess>();
@@ -150,10 +156,9 @@ export class EnvironmentAiTasksProcessor {
       NIKO: this.niko,
       TINY: this.tiny,
       NOTE: this.note,
-      WHY: null,
-      ALBERT: null,
-      PROSE: null,
-      VENUS: null,
+      IRIS: this.iris,
+      WHY: this.why,
+      TAG: this.tag,
     };
 
     const character = characters[aiUser.id];

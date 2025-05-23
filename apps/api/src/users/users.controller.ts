@@ -1,5 +1,15 @@
-import { Controller, Get, Inject, Param, ParseIntPipe } from '@nestjs/common';
 import {
+  Body,
+  Controller,
+  Get,
+  Inject,
+  Param,
+  ParseIntPipe,
+  Post,
+  UsePipes,
+} from '@nestjs/common';
+import {
+  ApiBody,
   ApiExtraModels,
   ApiOperation,
   ApiParam,
@@ -7,8 +17,16 @@ import {
   ApiTags,
   getSchemaPath,
 } from '@nestjs/swagger';
-import { AiUserDto, AnonymousUserDto, AuthenticatedUserDto } from '@2pm/core';
+import {
+  AiUserDto,
+  AnonymousUserDto,
+  AuthenticatedUserDto,
+  HumanUserTagUpdatedPlotPointDto,
+  HumanUserTagUpdatedPlotPointDtoSchema,
+  UpdateHumanUserTagDto,
+} from '@2pm/core';
 import { DBService } from '@2pm/core/db';
+import { zodToOpenAPI, ZodValidationPipe } from 'nestjs-zod';
 
 @ApiExtraModels(AiUserDto)
 @ApiExtraModels(AnonymousUserDto)

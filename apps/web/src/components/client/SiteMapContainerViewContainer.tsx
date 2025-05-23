@@ -25,7 +25,6 @@ const SiteMapContainerViewContainer = ({
   useHumanUserConfigEvents({
     humanUserId: session.humanUserId,
     onUpdated: useCallback((e) => {
-      console.log(e);
       setOpen(e.data.humanUserConfig.siteMapSidebarState === "OPEN");
     }, []),
   });

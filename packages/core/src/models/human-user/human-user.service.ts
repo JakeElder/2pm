@@ -5,14 +5,60 @@ import {
   humanUsers,
   humanUserThemes,
   humanUserConfigs,
+  environments,
+  plotPoints,
 } from "../../db/app.schema";
-import { CreateHumanUserDto } from "./human-user.dto";
+import { CreateHumanUserDto, UpdateHumanUserTagDto } from "./human-user.dto";
 import { AnonymousUserDto, AuthenticatedUserDto } from "../user/user.dto";
 import { shorten } from "../../utils";
 import { HumanUser, HumanUserDto } from "./human-user.types";
 import { DEFAULT_THEME_ID } from "../theme/theme.constants";
+import { HumanUserTagUpdatedPlotPointDto } from "../plot-point";
 
 export default class HumanUsers extends DBServiceModule {
+  async updateTag({
+    humanUserId,
+    environmentId,
+    tag,
+  }: UpdateHumanUserTagDto): Promise<HumanUserTagUpdatedPlotPointDto> {
+    const r = await this.app.drizzle
+      .select({ user: users, humanUser: humanUsers })
+      .from(humanUsers)
+      .innerJoin(users, eq(users.id, humanUsers.userId))
+      .where(eq(humanUsers.id, humanUserId));
+
+    const [{ user }] = r;
+
+    const [newHumanUser] = await this.app.drizzle
+      .update(humanUsers)
+      .set({ tag })
+      .where(eq(humanUsers.id, humanUserId))
+      .returning();
+
+    const [environment] = await this.app.drizzle
+      .select()
+      .from(environments)
+      .where(eq(environments.id, environmentId));
+
+    const [plotPoint] = await this.app.drizzle
+      .insert(plotPoints)
+      .values({
+        type: "HUMAN_USER_TAG_UPDATED",
+        environmentId: environment.id,
+        userId: user.id,
+      })
+      .returning();
+
+    return {
+      type: "HUMAN_USER_TAG_UPDATED",
+      data: {
+        plotPoint,
+        environment,
+        humanUser: HumanUsers.discriminate(newHumanUser),
+      },
+    };
+  }
+
   async create(
     dto: CreateHumanUserDto = {},
   ): Promise<AnonymousUserDto | AuthenticatedUserDto> {

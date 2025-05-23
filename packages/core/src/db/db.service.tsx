@@ -156,11 +156,11 @@ export class DBService {
     ]);
 
     // Ai Users
-    const [niko, note, tiny, albert, prose] = await Promise.all([
+    const [niko, note, why, tiny, tag, iris] = await Promise.all([
       this.aiUsers.create({
         id: "NIKO",
         tag: "niko",
-        bio: txt(<>our host and ancient text expert</>),
+        bio: txt(<>our ancient text expert</>),
       }),
       this.aiUsers.create({
         id: "NOTE",
@@ -168,19 +168,24 @@ export class DBService {
         bio: txt(<>an expert on buddhist teachings</>),
       }),
       this.aiUsers.create({
+        id: "WHY",
+        tag: "why",
+        bio: txt(<>a gifted story teller</>),
+      }),
+      this.aiUsers.create({
         id: "TINY",
         tag: "tiny",
-        bio: txt(<>helps with config and small tasks</>),
+        bio: txt(<>our host and helper for small tasks</>),
       }),
       this.aiUsers.create({
-        id: "ALBERT",
-        tag: "albert",
-        bio: txt(<>veteran physics and maths smarty</>),
+        id: "TAG",
+        tag: "tag",
+        bio: txt(<>can update your tag</>),
       }),
       this.aiUsers.create({
-        id: "PROSE",
-        tag: "prose",
-        bio: txt(<>creative story teller</>),
+        id: "IRIS",
+        tag: "iris",
+        bio: txt(<>can create and update themes</>),
       }),
     ]);
 
@@ -240,7 +245,19 @@ export class DBService {
       }),
       this.userEnvironmentPresences.create({
         environmentId: universe.environmentId,
+        userId: why.userId,
+      }),
+      this.userEnvironmentPresences.create({
+        environmentId: universe.environmentId,
         userId: tiny.userId,
+      }),
+      this.userEnvironmentPresences.create({
+        environmentId: universe.environmentId,
+        userId: tag.userId,
+      }),
+      this.userEnvironmentPresences.create({
+        environmentId: universe.environmentId,
+        userId: iris.userId,
       }),
       // Photography
       this.userEnvironmentPresences.create({
@@ -253,7 +270,15 @@ export class DBService {
       }),
       this.userEnvironmentPresences.create({
         environmentId: photography.environmentId,
+        userId: why.userId,
+      }),
+      this.userEnvironmentPresences.create({
+        environmentId: photography.environmentId,
         userId: tiny.userId,
+      }),
+      this.userEnvironmentPresences.create({
+        environmentId: photography.environmentId,
+        userId: iris.userId,
       }),
     ]);
 
@@ -268,31 +293,6 @@ export class DBService {
     await this.humanPosts.create({
       userId: jake.data.userId,
       environmentId: photography.environmentId,
-    });
-
-    await this.humanMessages.create({
-      userId: jake.data.userId,
-      environmentId: universe.environmentId,
-      text: "thank you sir",
-      json: {
-        type: "doc",
-        content: [
-          {
-            type: "paragraph",
-            content: [
-              {
-                type: "text",
-                text: "thank you ",
-              },
-              {
-                type: "text",
-                marks: [{ type: "bold" }],
-                text: "sir",
-              },
-            ],
-          },
-        ],
-      },
     });
 
     // await this.bibleVerseReferences.create({

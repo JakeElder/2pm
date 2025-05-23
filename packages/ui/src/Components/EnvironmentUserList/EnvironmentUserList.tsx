@@ -1,7 +1,5 @@
 import React from "react";
 import css from "./EnvironmentUserList.module.css";
-import { UserDto } from "@2pm/core";
-import UserTag from "../UserTag/UserTag";
 
 /*
  * Root
@@ -19,17 +17,17 @@ export const Root = ({ children }: RootProps) => {
  * User
  */
 
-type UserProps = UserDto & { showHash?: boolean };
+type UserProps = {
+  children: React.ReactNode;
+};
 
-export const User = (props: UserProps) => {
+export const User = ({ children }: UserProps) => {
   return (
     <li className={css["user"]}>
       <div className={css["meta"]}>
         <div className={css["placeholder"]} />
       </div>
-      <div className={css["tag"]}>
-        <UserTag {...props} />
-      </div>
+      <div className={css["tag"]}>{children}</div>
     </li>
   );
 };

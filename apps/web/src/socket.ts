@@ -4,6 +4,7 @@ import {
   EnvironmentsClientSocket,
   EnvironmentUserListsClientSocket,
   HumanUserConfigsClientSocket,
+  HumanUsersClientSocket,
   HumanUserThemesClientSocket,
   SpaceListsClientSocket,
   ThemesClientSocket,
@@ -40,4 +41,8 @@ export const themesSocket: ThemesClientSocket = io(
 
 export const humanUserConfigsSocket: HumanUserConfigsClientSocket = io(
   `${process.env.NEXT_PUBLIC_SOCKET_BASE_URL}/human-user-configs`,
+);
+
+export const humanUsersSocket: HumanUsersClientSocket = io(
+  `${process.env.NEXT_PUBLIC_SOCKET_BASE_URL}/human-users`,
 );

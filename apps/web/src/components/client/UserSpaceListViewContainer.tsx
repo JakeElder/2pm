@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { UserSpaceList, UserTag } from "@2pm/ui/components";
+import { UserSpaceList } from "@2pm/ui/components";
 import { Environment, UserSpaceListDto } from "@2pm/core";
+import UserTagViewContainer from "./UserTagViewContainer";
 
 type Props = {
   user: UserSpaceListDto[number];
@@ -19,7 +20,7 @@ const UserSpaceListViewContainer = ({ activeEnvironmentId, user }: Props) => {
   return (
     <UserSpaceList.Root>
       <UserSpaceList.Tag>
-        <UserTag {...user.humanUser} />
+        <UserTagViewContainer {...user.humanUser} />
       </UserSpaceList.Tag>
       <UserSpaceList.Channels>
         {user.spaces.map((space) => {

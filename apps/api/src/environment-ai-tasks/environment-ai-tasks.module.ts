@@ -6,9 +6,13 @@ import { EnvironmentAiTasksController } from './environment-ai-tasks.controller'
 import { EnvironmentAiTasksProcessor } from './environment-ai-tasks.processor';
 import { EnvironmentAiTasksGateway } from './environment-ai-tasks.gateway';
 import { DatabaseModule } from '../database/database.module';
+
+import { IrisModule } from '../iris/iris.module';
 import { NikoModule } from '../niko/niko.module';
-import { TinyModule } from '../tiny/tiny.module';
 import { NoteModule } from '../note/note.module';
+import { TagModule } from '../tag/tag.module';
+import { TinyModule } from '../tiny/tiny.module';
+import { WhyModule } from '../why/why.module';
 
 @Module({
   imports: [
@@ -20,9 +24,13 @@ import { NoteModule } from '../note/note.module';
       name: 'environment-ai-tasks',
       adapter: BullAdapter,
     }),
+
+    IrisModule,
     NikoModule,
-    TinyModule,
     NoteModule,
+    TagModule,
+    TinyModule,
+    WhyModule,
   ],
   providers: [EnvironmentAiTasksProcessor, EnvironmentAiTasksGateway],
   controllers: [EnvironmentAiTasksController],
