@@ -1,3 +1,5 @@
+// AI Generated code, here be dragons
+
 import { Command } from "commander";
 import { OllamaEmbeddings } from "@langchain/ollama";
 import { Document } from "@langchain/core/documents";

@@ -1,15 +1,16 @@
-# 2pm
+# 2PM
 
-A monorepo for a full-stack application with Next.js frontend, NestJS API backend, and supporting services.
+2PM is an open source social platform designed to help people connect with their friends and family.
+
+It uses a powerful framework that allows the use of AI bots to interact with data, play games and perform tasks
 
 ## Project Structure
 
 - `apps/web`: Next.js frontend application
 - `apps/api`: NestJS backend API
-- `apps/character-engine`: Service for character interactions
 - `apps/cli`: Command-line interface tools
-- `apps/mailer`: Email service
-- `packages/`: Shared libraries and modules
+- `packages/ui`: Interface components built with Storybook
+- `packages/core`: Shared libraries and modules
 
 ## Technologies
 
@@ -21,6 +22,14 @@ A monorepo for a full-stack application with Next.js frontend, NestJS API backen
 
 ## Getting Started
 
+This is a monorepo for a full-stack application with Next.js frontend, NestJS API backend, and supporting services.
+
+There is a script in the root of the repo `./start` which loads each of the apps in it's own Tmux session, with the socket set to `2pm`
+
+I switch between apps using `CTRL+B s`
+
+NX can also be used for those that don't use Tmux, though I haven't configured this
+
 ### Prerequisites
 
 - Node.js (recommended version in `.nvmrc`)
@@ -29,73 +38,68 @@ A monorepo for a full-stack application with Next.js frontend, NestJS API backen
 
 ### Installation
 
+<img src="./assets/install.gif" width="600" />
+
 1. Install dependencies:
 
 ```bash
 bun install
 ```
 
-2. Set up environment variables:
+2. Initialise library database
+
+```bash
+# Ensure Git LFS is installed
+git lfs install
+
+# Initialize LFS for the repo (if not already done)
+git lfs install --local
+
+# Pull the specific LFS file
+git lfs pull --include="2pm_library.dump"
+```
+
+Then restore the [sql dump](./2pm_library.dump) to your Postgres instance
+
+3. Initialise the app database
+
+`cd packages/core` package and run either `bun setup`, or
+
+```bash
+bun niko db create
+bun drizzle:app push
+bun niko db seed
+```
+
+4. Set up environment variables:
+
    - Copy `.env.example` to `.env` in each app directory
    - Update with your configuration
 
 ### Running the Project
 
-Start the development server for all applications:
+Start the development servers for all applications:
 
 ```bash
-# Start the entire stack
+# Start the entire stack (from project root)
 ./start
-
-# Or use tmuxinator
-tmuxinator start 2pm
-```
-
-To run individual applications:
-
-```bash
-# Web frontend
-cd apps/web
-bun dev
-
-# API backend
-cd apps/api
-bun start:dev
 ```
 
 ## Development
 
-### Code Generation
+### URLs
 
-The project uses code generators to streamline development:
-
-```bash
-# Generate a new module
-bun generate:module
-
-# Generate API client from controllers
-bun generate:api-client
-
-# Watch for controller changes and auto-generate API client
-bun watch:controllers
-```
-
-### API Documentation
-
-API documentation is available when the API is running:
-- Swagger UI: http://localhost:3001/docs
+- Application: http://localhost:3000
+- Storybook UI: http://localhost:3001
+- Swagger UI (API documentation): http://localhost:3002/docs
+- Bull Dashboard: http://localhost:3002/queues
 
 ## Testing
 
 Each application has its own testing configuration. Run tests from the individual app directories.
 
-## Project Architecture
-
-The system uses a microservices architecture with:
-- NestJS modular backend services
-- Socket.IO for real-time communication
-- Messaging and event-driven architecture
-
 ## License
+
+This project is open sourced under the MIT License, with a single provision that servers leave an attribution to the original project
 
 See the [LICENSE](LICENSE) file for details.

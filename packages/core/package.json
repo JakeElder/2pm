@@ -9,6 +9,7 @@
     ".": "./src/index.ts"
   },
   "scripts": {
+    "setup": "niko db create && bun drizzle:app push && niko db seed",
     "studio:app": "drizzle-kit --config=drizzle-app.config.ts studio",
     "drizzle:app": "drizzle-kit --config=drizzle-app.config.ts",
     "drizzle:library": "drizzle-kit --config=drizzle-library.config.ts",
@@ -27,6 +28,13 @@
   },
   "devDependencies": {
     "drizzle-kit": "^0.31.0",
-    "drizzle-seed": "^0.3.1"
+    "drizzle-seed": "^0.3.1",
+    "@types/bun": "latest"
+  },
+  "module": "src/index.ts",
+  "type": "module",
+  "private": true,
+  "peerDependencies": {
+    "typescript": "^5"
   }
 }
